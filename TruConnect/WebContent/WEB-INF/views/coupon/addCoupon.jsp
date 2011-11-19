@@ -40,7 +40,7 @@
 
           <script type="text/javascript">
           	function setAccount(accountNumber, obj) {
-          		$(obj).css("border", "1px dashed blue");
+          		$("#deviceLabel").css("font-weight", "bold").css("color", "blue");
           		$("#account").val(accountNumber);
           		alert($("#account").val());
           	}
@@ -48,7 +48,7 @@
 
           <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
             <div class="span-6">
-              <div style="font-weight: bold; margin-bottom: 10px;">${accountDetail.deviceInfo.deviceLabel}</div>
+              <div id="deviceLabel" style="font-weight: bold; margin-bottom: 10px;">${accountDetail.deviceInfo.deviceLabel}</div>
               <div class="clear"></div>
               <a href="#" onclick="setAccount('${accountDetail.encodedAccountNum}', this)" class="button semi-s"><span>Select</span>
               </a>

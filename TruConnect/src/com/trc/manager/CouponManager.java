@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.trc.coupon.Coupon;
 import com.trc.coupon.CouponDetail;
+import com.trc.coupon.validator.CouponValidator;
 import com.trc.dao.CouponDao;
 import com.trc.dao.CouponDetailDao;
 import com.trc.exception.management.CouponManagementException;
@@ -18,6 +19,8 @@ import com.tscp.mvne.ServiceInstance;
 public class CouponManager {
 	@Autowired
 	private CouponService couponService;
+	@Autowired
+	private CouponValidator couponValidator;
 	@Autowired
 	private CouponDao couponDao;
 	@Autowired
@@ -72,6 +75,19 @@ public class CouponManager {
 	}
 
 	public boolean redeemCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
+			throws CouponManagementException {
+		if (validateCoupon(coupon, user, account)) {
+			return applyCoupon(coupon, user, account, serviceInstance);
+		} else {
+			return false;
+		}
+	}
+
+	private boolean validateCoupon(Coupon coupon, User user, Account account) {
+		return couponValidator.couponExists(coupon) && couponValidator.validateCoupon(coupon, user, account);
+	}
+
+	private boolean applyCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
 			throws CouponManagementException {
 		try {
 			couponDao.insertUserCoupon(user, coupon, account);

@@ -64,7 +64,11 @@ public class CouponController extends EncryptedController {
 			Account account = accountManager.getAccount(accountNumber);
 			account = accountManager.getAccounts(user).get(0);
 			ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
-			couponManager.redeemCoupon(coupon, user, account, serviceInstance);
+			if (couponManager.redeemCoupon(coupon, user, account, serviceInstance)) {
+				return model.getSuccess();
+			} else {
+				return model.getAccessException();
+			}
 		} catch (AccountManagementException e) {
 			System.out.println("TC! something wrong with account retrieval");
 			e.printStackTrace();

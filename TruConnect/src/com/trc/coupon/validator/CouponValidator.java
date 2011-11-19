@@ -90,4 +90,7 @@ public class CouponValidator {
 		return (startDate != null && startDate.compareTo(new Date()) <= 0);
 	}
 
+	public boolean couponExists(Coupon coupon) {
+		return coupon != null;
+	}
 }
