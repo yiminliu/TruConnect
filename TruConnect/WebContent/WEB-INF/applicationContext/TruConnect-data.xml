@@ -17,6 +17,10 @@
         <value>com.trc.user.User</value>
         <value>com.trc.user.authority.Authority</value>
         <value>com.trc.user.security.SecurityQuestion</value>
+        <value>com.trc.coupon.Coupon</value>
+        <value>com.trc.coupon.CouponDetail</value>
+        <value>com.trc.coupon.contract.Contract</value>
+        <value>com.trc.coupon.UserCoupon</value>
       </list>
     </property>
     <property name="hibernateProperties">

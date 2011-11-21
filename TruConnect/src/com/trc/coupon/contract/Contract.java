@@ -53,4 +53,13 @@ public class Contract implements Serializable {
 		this.couponDetails = couponDetails;
 	}
 
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("CONTRACT").append("\n");
+		sb.append("Contract ID: ").append(contractId).append("\n");
+		sb.append("Description: ").append(description);
+		return sb.toString();
+	}
+
 }

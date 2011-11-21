@@ -1,80 +1,47 @@
 package com.trc.coupon.validator;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Component;
 
 import com.trc.coupon.Coupon;
-import com.trc.coupon.hibernate.HibernateUtil;
+import com.trc.coupon.UserCoupon;
+import com.trc.exception.management.CouponManagementException;
 import com.trc.manager.CouponManager;
 import com.trc.user.User;
+import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
 
 @Component
-public class CouponValidator {
-	private static final CouponManager couponManager = new CouponManager();
+public class CouponValidator extends HibernateDaoSupport {
+	@Autowired
+	private CouponManager couponManager;
+	@Resource
+	private DevLogger devLogger;
 
-	public boolean validateCoupon(Coupon coupon, Account account) {
-		// TODO Auto-generated method stub
-		return true;
+	@Autowired
+	public void init(HibernateTemplate hibernateTemplate) {
+		setHibernateTemplate(hibernateTemplate);
 	}
 
-	public boolean validateCoupon(final Coupon coupon, final User user, final Account account) {
-		Session session = HibernateUtil.getCurrentSession();
-		Transaction transaction = session.beginTransaction();
-		int existingCouponCount = 0;
-		if (validateCoupon(coupon)) {
-			if (!session.isOpen()) {
-				session = HibernateUtil.getCurrentSession();
-				transaction = session.beginTransaction();
-			}
-			try {
-				Connection connection = session.connection();
-				PreparedStatement statement = connection
-						.prepareStatement("select count(*) from user_coupons where user_id = ? and coupon_id = ? and account_number = ?");
-				statement.setInt(1, user.getUserId());
-				statement.setInt(2, coupon.getCouponId());
-				statement.setInt(3, account.getAccountno());
-				statement.execute();
-				ResultSet resultSet = statement.getResultSet();
-				while (resultSet.next()) {
-					existingCouponCount = resultSet.getInt(1);
-				}
-				System.out.println(1);
-				return existingCouponCount < 1;
-			} catch (SQLException e) {
-				transaction.rollback();
-				e.printStackTrace();
-				return false;
-			}
-		} else {
-			System.out.println(2);
-			return false;
-		}
+	public boolean validateCoupon(Coupon coupon, User user, Account account) {
+		return validateCoupon(coupon) && !couponUsed(coupon, user, account);
 	}
 
-	public boolean validateCoupon(Coupon coupon) {
-		coupon = couponManager.getCouponByCode(coupon.getCouponCode());
-		if (validateCouponProperties(coupon)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private boolean validateCouponProperties(Coupon coupon) {
-		return coupon != null && coupon.isEnabled() && validateStartDate(coupon.getStartDate())
-				&& validateEndDate(coupon.getEndDate()) && validateCouponCode(coupon.getCouponCode());
+	private boolean validateCoupon(Coupon coupon) {
+		return couponExists(coupon) && coupon.isEnabled() && validateCouponCode(coupon.getCouponCode())
+				&& validateEndDate(coupon.getEndDate()) && validateStartDate(coupon.getStartDate());
 	}
 
 	private boolean validateCouponCode(String couponCode) {
-		// TODO
+		// TODO there are no specifications as to what coupon codes will look like.
+		// This assumes that all coupons will be a string beginning with "tru"
 		if (couponCode != null) {
 			return couponCode.substring(0, 3).equals("tru");
 		} else {
@@ -93,4 +60,22 @@ public class CouponValidator {
 	public boolean couponExists(Coupon coupon) {
 		return coupon != null;
 	}
+
+	public boolean couponUsed(Coupon coupon, User user, Account account) {
+		devLogger.log("Checking if coupon has already been redeemed...");
+		try {
+			List<UserCoupon> userCoupons = couponManager.getUserCoupons(coupon, user, account);
+			if (userCoupons.size() < 1) {
+				devLogger.log("Coupon has not yet been applied");
+				return false;
+			} else {
+				devLogger.log("Coupon has already been applied. Found " + userCoupons.size() + " for user " + user.getUserId()
+						+ " on account " + account.getAccountno());
+				return true;
+			}
+		} catch (CouponManagementException e) {
+			return true;
+		}
+	}
+
 }

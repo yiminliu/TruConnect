@@ -20,6 +20,7 @@ import com.trc.manager.UserManager;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
 import com.trc.user.account.Overview;
+import com.trc.util.ClassUtils;
 import com.trc.web.model.ResultModel;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.ServiceInstance;
@@ -56,15 +57,19 @@ public class CouponController extends EncryptedController {
 	public ModelAndView postRedeemCoupon(HttpServletRequest request, @ModelAttribute("coupon") Coupon coupon) {
 		ResultModel model = new ResultModel("test/success");
 		coupon = couponManager.getCouponByCode(coupon.getCouponCode());
+		System.out.println("TC! - " + coupon.getCouponCode());
 		User user = userManager.getCurrentUser();
+		System.out.println("TC! - user " + user.getUsername() + " fetched");
 		String encodedAccountNumber = request.getParameter("account");
+		System.out.println("TC! - encoded account " + encodedAccountNumber);
 		int accountNumber = super.decryptId(encodedAccountNumber);
-
+		System.out.println("TC! - decoded accoiunt " + accountNumber);
+		System.out.println("TC! - trying to get account");
 		try {
 			Account account = accountManager.getAccount(accountNumber);
 			account = accountManager.getAccounts(user).get(0);
 			ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
-			if (couponManager.redeemCoupon(coupon, user, account, serviceInstance)) {
+			if (couponManager.applyCoupon(coupon, user, account, serviceInstance)) {
 				return model.getSuccess();
 			} else {
 				return model.getAccessException();

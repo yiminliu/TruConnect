@@ -56,7 +56,7 @@
           </c:forEach>
 
           <div class="row hidden">
-            <input type="hidden" id="account" />
+            <input type="hidden" name="account" id="account" />
           </div>
 
           <!-- Device Esn -->

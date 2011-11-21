@@ -95,4 +95,18 @@ public class Coupon implements Serializable {
 		this.couponDetail = couponDetail;
 	}
 
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("COUPON").append("\n");
+		sb.append("ID: ").append(couponId).append("\n");
+		sb.append("Code: ").append(couponCode).append("\n");
+		sb.append("Start: ").append(startDate).append("\n");
+		sb.append("End: ").append(endDate).append("\n");
+		sb.append("Enabled: ").append(enabled).append("\n");
+		sb.append("Used: ").append(used).append("\n");
+		sb.append(couponDetail.toString());
+		return sb.toString();
+	}
+
 }

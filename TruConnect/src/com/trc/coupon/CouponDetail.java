@@ -66,4 +66,14 @@ public class CouponDetail implements Serializable {
 		this.duration = duration;
 	}
 
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("COUPON DETAIL").append("\n");
+		sb.append("Coupon Detail ID: ").append(couponDetailId).append("\n");
+		sb.append("Duration: ").append(duration).append("\n");
+		sb.append(contract.toString());
+		return sb.toString();
+	}
+
 }

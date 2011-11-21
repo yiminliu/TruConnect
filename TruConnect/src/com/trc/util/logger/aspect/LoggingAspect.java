@@ -21,7 +21,7 @@ import com.trc.user.account.AccountDetail;
 import com.trc.user.activation.Registration;
 import com.trc.user.contact.Address;
 import com.trc.util.logger.LogLevel;
-import com.trc.util.logger.Logger;
+import com.trc.util.logger.Slf4jLogger;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.Customer;
@@ -44,7 +44,7 @@ public class LoggingAspect {
 	private StartTimeStack startTimeStack = new StartTimeStack();
 
 	@Resource
-	private Logger logger;
+	private Slf4jLogger logger;
 	@Autowired
 	private LoggingHelper loggingHelper;
 
