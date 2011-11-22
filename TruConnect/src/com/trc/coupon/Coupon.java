@@ -12,9 +12,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+
+/**
+ * This object represents a Coupon that refers to a Contract in Kenan.
+ * 
+ */
 
 @Entity
 @Table(name = "coupons")
@@ -25,7 +31,8 @@ public class Coupon implements Serializable {
 	private Date startDate;
 	private Date endDate;
 	private boolean enabled;
-	private boolean used;
+	private int quantity;
+	private int used;
 	private CouponDetail couponDetail;
 
 	@Id
@@ -75,12 +82,21 @@ public class Coupon implements Serializable {
 		this.enabled = enabled;
 	}
 
-	@Column(name = "used", columnDefinition = "BOOLEAN")
-	public boolean isUsed() {
+	@Column(name = "quantity")
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	@Column(name = "used")
+	public int getUsed() {
 		return used;
 	}
 
-	public void setUsed(boolean used) {
+	public void setUsed(int used) {
 		this.used = used;
 	}
 
@@ -107,6 +123,11 @@ public class Coupon implements Serializable {
 		sb.append("Used: ").append(used).append("\n");
 		sb.append(couponDetail.toString());
 		return sb.toString();
+	}
+
+	@Transient
+	public boolean isEmpty() {
+		return couponCode == null || couponCode.isEmpty();
 	}
 
 }

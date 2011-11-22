@@ -1,7 +1,7 @@
 $.fn.enableResultsBox = function() {
 	var resultsBox = $(this).next(".search_results_box");
 	$(this).keyup(function(e) {
-		$(resultsBox).toggleSlideDown();
+		$(resultsBox).toggleSlideDownFullHeight();
 	});
 	$(this).blur(function() {
 		if ($(this).val() == "") {

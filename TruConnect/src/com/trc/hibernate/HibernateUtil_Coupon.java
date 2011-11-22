@@ -1,4 +1,4 @@
-package com.trc.coupon.hibernate;
+package com.trc.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,7 +9,12 @@ import com.trc.coupon.Coupon;
 import com.trc.coupon.CouponDetail;
 import com.trc.coupon.contract.Contract;
 
-public class HibernateUtil {
+/**
+ * Used for Coupon testing.
+ * 
+ */
+@Deprecated
+public class HibernateUtil_Coupon {
 	private static final String configurationFile = "hibernate.coupon.cfg.xml";
 	private static final SessionFactory sessionFactory = buildSessionFactory();
 

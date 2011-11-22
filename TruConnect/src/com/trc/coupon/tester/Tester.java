@@ -8,11 +8,11 @@ import org.hibernate.Transaction;
 import com.trc.coupon.Coupon;
 import com.trc.coupon.CouponDetail;
 import com.trc.coupon.contract.Contract;
-import com.trc.coupon.hibernate.HibernateUtil;
-import com.trc.coupon.validator.CouponValidator;
+import com.trc.hibernate.HibernateUtil_Coupon;
 import com.trc.manager.CouponManager;
 import com.trc.user.User;
 import com.trc.util.ClassUtils;
+import com.trc.web.validation.CouponValidator;
 import com.tscp.mvne.Account;
 
 public class Tester {
@@ -20,7 +20,7 @@ public class Tester {
 	private static final CouponValidator couponValidator = new CouponValidator();
 
 	public static void main(String[] args) {
-		Session session = HibernateUtil.getCurrentSession();
+		Session session = HibernateUtil_Coupon.getCurrentSession();
 		Transaction transaction = session.beginTransaction();
 
 		CouponDetail couponDetail = (CouponDetail) session.get(CouponDetail.class, 5);
@@ -40,7 +40,7 @@ public class Tester {
 	}
 
 	public static CouponDetail getCouponDetail(int id) {
-		Session session = HibernateUtil.getCurrentSession();
+		Session session = HibernateUtil_Coupon.getCurrentSession();
 		Transaction transaction = session.beginTransaction();
 		CouponDetail couponDetail = (CouponDetail) session.get(CouponDetail.class, id);
 		return couponDetail;
@@ -75,7 +75,7 @@ public class Tester {
 	}
 
 	private Contract getContract() {
-		Session session = HibernateUtil.getCurrentSession();
+		Session session = HibernateUtil_Coupon.getCurrentSession();
 		Transaction transaction = session.beginTransaction();
 		Contract contract = (Contract) session.get(Contract.class, 10007);
 		return contract;

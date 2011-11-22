@@ -2,10 +2,12 @@ package com.trc.web.controller;
 
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,8 +22,9 @@ import com.trc.manager.UserManager;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
 import com.trc.user.account.Overview;
-import com.trc.util.ClassUtils;
+import com.trc.util.logger.DevLogger;
 import com.trc.web.model.ResultModel;
+import com.trc.web.validation.CouponValidator;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.ServiceInstance;
 
@@ -34,6 +37,10 @@ public class CouponController extends EncryptedController {
 	private UserManager userManager;
 	@Autowired
 	private AccountManager accountManager;
+	@Autowired
+	private CouponValidator couponValidator;
+	@Resource
+	private DevLogger devLogger;
 
 	private void encodeAccountNums(List<AccountDetail> accountDetailList) {
 		for (AccountDetail accountDetail : accountDetailList) {
@@ -54,34 +61,42 @@ public class CouponController extends EncryptedController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView postRedeemCoupon(HttpServletRequest request, @ModelAttribute("coupon") Coupon coupon) {
-		ResultModel model = new ResultModel("test/success");
+	public ModelAndView postRedeemCoupon(HttpServletRequest request, @ModelAttribute("coupon") Coupon coupon,
+			BindingResult result) {
+		devLogger.log("Form submitted to redeem coupon...");
+		ResultModel model = new ResultModel("test/success", "coupon/addCoupon");
 		coupon = couponManager.getCouponByCode(coupon.getCouponCode());
-		System.out.println("TC! - " + coupon.getCouponCode());
-		User user = userManager.getCurrentUser();
-		System.out.println("TC! - user " + user.getUsername() + " fetched");
-		String encodedAccountNumber = request.getParameter("account");
-		System.out.println("TC! - encoded account " + encodedAccountNumber);
-		int accountNumber = super.decryptId(encodedAccountNumber);
-		System.out.println("TC! - decoded accoiunt " + accountNumber);
-		System.out.println("TC! - trying to get account");
-		try {
-			Account account = accountManager.getAccount(accountNumber);
-			account = accountManager.getAccounts(user).get(0);
-			ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
-			if (couponManager.applyCoupon(coupon, user, account, serviceInstance)) {
-				return model.getSuccess();
-			} else {
-				return model.getAccessException();
-			}
-		} catch (AccountManagementException e) {
-			System.out.println("TC! something wrong with account retrieval");
-			e.printStackTrace();
-		} catch (CouponManagementException e) {
-			System.out.println("TC! something wrong with coupon redemption");
-			e.printStackTrace();
-		}
 
-		return model.getSuccess();
+		couponValidator.validate(coupon, result);
+		if (result.hasErrors()) {
+			return model.getError();
+		} else {
+			devLogger.log("Found coupon " + coupon.getCouponId() + " with coupon code " + coupon.getCouponCode());
+			User user = userManager.getCurrentUser();
+			devLogger.log("User " + user.getUsername() + " fetched");
+			String encodedAccountNumber = request.getParameter("account");
+			devLogger.log("Encoded account " + encodedAccountNumber);
+			int accountNumber = super.decryptId(encodedAccountNumber);
+			devLogger.log("Decoded account " + accountNumber);
+			try {
+				devLogger.log("Fetching account...");
+				Account account = accountManager.getAccount(accountNumber);
+				account = accountManager.getAccounts(user).get(0);
+				devLogger.log("Fetchin service instance, there should only be one instance per account");
+				ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
+				if (couponManager.applyCoupon(coupon, user, account, serviceInstance)) {
+					return model.getSuccess();
+				} else {
+					return model.getAccessException();
+				}
+			} catch (AccountManagementException e) {
+				devLogger.log("Something went wrong with account management");
+				e.printStackTrace();
+			} catch (CouponManagementException e) {
+				devLogger.log("Something went wrong with coupon management");
+				e.printStackTrace();
+			}
+			return model.getSuccess();
+		}
 	}
 }

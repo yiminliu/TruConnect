@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.hibernate.Session;
 
-import com.trc.hibernate.HibernateUtil;
+import com.trc.hibernate.HibernateUtil_Activation;
 import com.trc.util.ClassUtils;
 
 public class ActStateTester {
@@ -12,7 +12,7 @@ public class ActStateTester {
 	private static ActivationMap regMap;
 
 	public static void main(String... args) {
-		Session session = HibernateUtil.beginTransaction();
+		Session session = HibernateUtil_Activation.beginTransaction();
 
 		ActivationMap regMap = (ActivationMap) session.get(ActivationMap.class, 116);
 		System.out.println("\n" + ClassUtils.toString(regMap));
@@ -34,8 +34,8 @@ public class ActStateTester {
 		// System.out.println("\n" +
 		// ClassUtils.toString(regState.getRegistrationMap().getUser()));
 
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		HibernateUtil_Activation.commitTransaction();
+		HibernateUtil_Activation.closeSession();
 
 	}
 

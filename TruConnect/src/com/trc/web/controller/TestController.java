@@ -34,9 +34,9 @@ import com.tscp.mvne.ServiceInstance;
 @RequestMapping("/test")
 @SuppressWarnings("unused")
 public class TestController {
-	@Autowired
+	// @Autowired
 	private Destination networkQueue;
-	@Autowired
+	// @Autowired
 	private Destination kenanQueue;
 	@Autowired
 	private PaymentFlowManager paymentFlowManager;
@@ -78,7 +78,7 @@ public class TestController {
 
 			Account account = accountManager.getAccounts(user).get(0);
 			System.out.println(ClassUtils.toString(account));
-			
+
 			CreditCard creditCard = new CreditCard();
 			creditCard.setNameOnCreditCard("Happy Dude");
 			creditCard.setAddress1("1234 test st");
@@ -104,12 +104,12 @@ public class TestController {
 
 	@RequestMapping(value = "/jms", method = RequestMethod.GET)
 	public String testJms() {
-//		try {
-//			//queueSender.send(generateNetworkActivation(), networkQueue);
-//			//queueSender.send(generateKenanActivation(), kenanQueue);
-//		} catch (JMSException e) {
-//			e.printStackTrace();
-//		}
+		// try {
+		// //queueSender.send(generateNetworkActivation(), networkQueue);
+		// //queueSender.send(generateKenanActivation(), kenanQueue);
+		// } catch (JMSException e) {
+		// e.printStackTrace();
+		// }
 		return "test/success";
 	}
 

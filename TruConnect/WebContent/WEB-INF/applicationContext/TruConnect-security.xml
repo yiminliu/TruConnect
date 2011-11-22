@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security" xmlns:beans="http://www.springframework.org/schema/beans"
-  xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-           http://www.springframework.org/schema/util 
-           http://www.springframework.org/schema/util/spring-util-3.0.xsd
+           http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/security
-           http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
+           http://www.springframework.org/schema/security/spring-security.xsd">
 
   <global-method-security pre-post-annotations="enabled" secured-annotations="enabled" />
 
@@ -14,6 +12,7 @@
     <custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
     <custom-filter position="FORM_LOGIN_FILTER" ref="myAuthFilter" />
     <session-management session-authentication-strategy-ref="sas" />
+    <intercept-url pattern="/flowDev/**" filters="none" />
     <intercept-url pattern="/test/**" filters="none" />
     <intercept-url pattern="/static/**" filters="none" />
     <intercept-url pattern="/favicon.ico" filters="none" />

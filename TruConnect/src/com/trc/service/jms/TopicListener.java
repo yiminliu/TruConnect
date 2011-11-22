@@ -9,7 +9,7 @@ import org.springframework.jms.core.JmsTemplate;
 public class TopicListener extends Listener implements MessageListener {
 	//private static final Logger logger = LoggerFactory.getLogger(KenanQueueListener.class);
 
-	@Autowired
+	//@Autowired
 	public void init(JmsTemplate kenanTopicJmsTemplate) {
 		setJmsTemplate(kenanTopicJmsTemplate);
 	}

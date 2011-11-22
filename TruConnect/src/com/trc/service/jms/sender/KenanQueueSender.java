@@ -15,11 +15,11 @@ import com.trc.service.jms.message.KenanServiceInstance;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.NetworkInfo;
 
-@Service
+//@Service
 public class KenanQueueSender {
 	private static final Logger logger = LoggerFactory.getLogger(KenanQueueSender.class);
 
-	@Autowired
+	//@Autowired
 	private JmsTemplate kenanJmsTemplate;
 
 	public void generateMessages() throws JMSException {

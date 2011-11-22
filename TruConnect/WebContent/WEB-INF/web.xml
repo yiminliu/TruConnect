@@ -58,7 +58,6 @@
       /WEB-INF/applicationContext/TruConnect-context.xml
       /WEB-INF/applicationContext/TruConnect-security.xml
       /WEB-INF/applicationContext/TruConnect-data.xml
-      /WEB-INF/applicationContext/TruConnect-jms.xml
     </param-value>
   </context-param>
   

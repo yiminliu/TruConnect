@@ -12,7 +12,13 @@ import com.trc.util.logger.activation.ActivationMap;
 import com.trc.util.logger.activation.ActivationState;
 import com.trc.util.logger.activation.ActivationStateId;
 
-public class HibernateUtil {
+/**
+ * Used for Activation logging testing
+ * 
+ */
+
+@Deprecated
+public class HibernateUtil_Activation {
 
 	private static SessionFactory sessionFactory;
 
@@ -30,7 +36,7 @@ public class HibernateUtil {
 
 	public static Session getSession() {
 		if (sessionFactory == null) {
-			Configuration config = HibernateUtil.getInitializedConfiguration();
+			Configuration config = HibernateUtil_Activation.getInitializedConfiguration();
 			sessionFactory = config.buildSessionFactory();
 		}
 		Session hibernateSession = sessionFactory.getCurrentSession();
@@ -38,32 +44,32 @@ public class HibernateUtil {
 	}
 
 	public static void closeSession() {
-		HibernateUtil.getSession().close();
+		HibernateUtil_Activation.getSession().close();
 	}
 
 	public static void recreateDatabase() {
 		Configuration config;
-		config = HibernateUtil.getInitializedConfiguration();
+		config = HibernateUtil_Activation.getInitializedConfiguration();
 		new SchemaExport(config).create(true, true);
 	}
 
 	public static Session beginTransaction() {
 		Session hibernateSession;
-		hibernateSession = HibernateUtil.getSession();
+		hibernateSession = HibernateUtil_Activation.getSession();
 		hibernateSession.beginTransaction();
 		return hibernateSession;
 	}
 
 	public static void commitTransaction() {
-		HibernateUtil.getSession().getTransaction().commit();
+		HibernateUtil_Activation.getSession().getTransaction().commit();
 	}
 
 	public static void rollbackTransaction() {
-		HibernateUtil.getSession().getTransaction().rollback();
+		HibernateUtil_Activation.getSession().getTransaction().rollback();
 	}
 
 	public static void main(String args[]) {
-		HibernateUtil.recreateDatabase();
+		HibernateUtil_Activation.recreateDatabase();
 	}
 
 }

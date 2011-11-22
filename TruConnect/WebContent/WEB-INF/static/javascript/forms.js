@@ -1,6 +1,15 @@
-$.fn.toggleSlideDown = function() {
+$.fn.toggleSlideDownFullHeight = function() {
 	if (!$(this).is(":visible")) {
 		$(this).css("height", $(window).height() - 200);
+		$(this).slideDown({
+			easing : "easeOutBounce",
+			duration : 1000
+		});
+	}
+};
+
+$.fn.toggleSlideDown = function() {
+	if (!$(this).is(":visible")) {
 		$(this).slideDown({
 			easing : "easeOutBounce",
 			duration : 1000
@@ -14,6 +23,12 @@ $.fn.toggleSlideUp = function() {
 			easing : "easeInQuad",
 			duration : 500
 		});
+	}
+};
+
+$.fn.toggleSlide = function() {
+	if ($(this).is(":visible")) {
+		$(this).toggleSlideUp();
 	}
 };
 

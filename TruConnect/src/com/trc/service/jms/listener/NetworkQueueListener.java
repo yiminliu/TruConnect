@@ -15,7 +15,7 @@ import com.trc.service.jms.message.NetworkActivation;
 public class NetworkQueueListener extends Listener {
 	private static final Logger logger = LoggerFactory.getLogger(NetworkQueueListener.class);
 
-	@Autowired
+	//@Autowired
 	public void init(JmsTemplate networkJmsTemplate) {
 		setJmsTemplate(networkJmsTemplate);
 	}

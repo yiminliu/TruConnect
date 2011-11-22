@@ -16,6 +16,11 @@ import org.hibernate.annotations.CascadeType;
 
 import com.trc.coupon.CouponDetail;
 
+/**
+ * This object is the representation of a Contract in Kenan.
+ * 
+ */
+
 @Entity
 @Table(name = "coupon_contracts")
 public class Contract implements Serializable {

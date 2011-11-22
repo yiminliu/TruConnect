@@ -2,7 +2,6 @@ package com.trc.service.jms;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
 import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
@@ -10,20 +9,18 @@ import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.springframework.stereotype.Service;
 
 //@Service
 public class QueueSender {
 	private JmsTemplate jmsTemplate = new JmsTemplate();
-	//@Autowired
+	// @Autowired
 	private ConnectionFactory jmsConnectionFactory;
-	//@Autowired
+	// @Autowired
 	private Destination truConnectQueue;
 
-	//@PostConstruct
+	// @PostConstruct
 	public void init() {
 		jmsTemplate.setConnectionFactory(jmsConnectionFactory);
 		jmsTemplate.setDefaultDestination(truConnectQueue);

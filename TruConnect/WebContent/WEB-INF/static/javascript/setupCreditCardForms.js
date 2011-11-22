@@ -1,3 +1,5 @@
+//TODO generalize this to work with CreditCardPayment and CreditCard class
+
 /**
  * Adds a tool-tip to the cvv info link
  */
@@ -19,7 +21,7 @@ $(function() {
 	});
 });
 
-$(document).ready(function() {
+$(function() {
 	highlightCard();
 	setupCreditCardForms();
 });
@@ -55,26 +57,28 @@ function setupCreditCardForms() {
  */
 function highlightCard() {
 	var cardNumber = $("#creditCardNumber").val();
-	var cardType = cardNumber.substring(0, 1);
-	var cvv = document.getElementById("verificationcode");
-	if (mod10(cardNumber)) {
-		if (cardType == 4) {
-			cvv.maxLength = 3;
-			blurAllExcept($("#ImgVisa"));
-		} else if (cardType == "5") {
-			cvv.maxLength = 3;
-			blurAllExcept($("#ImgMastercard"));
-		} else if (cardType == "3") {
-			cvv.maxLength = 4;
-			blurAllExcept($("#ImgAmex"));
-		} else if (cardType == "6") {
-			cvv.maxLength = 3;
-			blurAllExcept($("#ImgDiscover"));
+	if (cardNumber.length > 0) {
+		var cardType = cardNumber.substring(0, 1);
+		var cvv = document.getElementById("verificationcode");
+		if (mod10(cardNumber)) {
+			if (cardType == 4) {
+				cvv.maxLength = 3;
+				blurAllExcept($("#ImgVisa"));
+			} else if (cardType == "5") {
+				cvv.maxLength = 3;
+				blurAllExcept($("#ImgMastercard"));
+			} else if (cardType == "3") {
+				cvv.maxLength = 4;
+				blurAllExcept($("#ImgAmex"));
+			} else if (cardType == "6") {
+				cvv.maxLength = 3;
+				blurAllExcept($("#ImgDiscover"));
+			} else {
+				blurAllExcept("unknown");
+			}
 		} else {
-			blurAllExcept("unknown");
+			$("#creditCardImages").find("img").fadeTo("slow", 1);
 		}
-	} else {
-		$("#creditCardImages").find("img").fadeTo("slow", 1);
 	}
 	return false;
 }

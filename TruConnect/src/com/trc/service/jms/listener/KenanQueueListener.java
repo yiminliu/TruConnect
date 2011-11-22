@@ -15,7 +15,7 @@ import com.trc.service.jms.message.KenanServiceInstance;
 public class KenanQueueListener extends Listener {
 	private static final Logger logger = LoggerFactory.getLogger(KenanQueueListener.class);
 
-	@Autowired
+	//@Autowired
 	public void init(JmsTemplate kenanJmsTemplate) {
 		setJmsTemplate(kenanJmsTemplate);
 	}

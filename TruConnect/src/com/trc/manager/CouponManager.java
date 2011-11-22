@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import com.trc.coupon.Coupon;
 import com.trc.coupon.CouponDetail;
 import com.trc.coupon.UserCoupon;
-import com.trc.coupon.validator.CouponValidator;
 import com.trc.exception.management.CouponManagementException;
 import com.trc.exception.service.CouponServiceException;
 import com.trc.service.CouponService;
@@ -18,6 +17,7 @@ import com.trc.user.User;
 import com.trc.util.logger.DevLogger;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
+import com.trc.web.validation.CouponValidator;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.ServiceInstance;
 
@@ -33,7 +33,7 @@ public class CouponManager {
 	@Loggable(value = LogLevel.TRACE)
 	public boolean applyCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
 			throws CouponManagementException {
-		if (validateCoupon(coupon, user, account)) {
+		if (!couponValidator.checkUsed(coupon, user, account)) {
 			try {
 				devLogger.log("Inserting UserCoupon and applying contract in Kenan");
 				couponService.insertUserCoupon(user, coupon, account);
@@ -45,7 +45,8 @@ public class CouponManager {
 				throw new CouponManagementException(e.getMessage(), e.getCause());
 			}
 		} else {
-			return false;
+			throw new CouponManagementException("Coupon " + coupon.getCouponId() + " has already been applied by user "
+					+ user.getUserId());
 		}
 	}
 
@@ -61,11 +62,6 @@ public class CouponManager {
 			// TODO should attempt to cancel again or queue for cancelation
 			throw new CouponManagementException(e.getMessage(), e.getCause());
 		}
-	}
-
-	private boolean validateCoupon(Coupon coupon, User user, Account account) {
-		devLogger.log("Validating coupon...");
-		return couponValidator.couponExists(coupon) && couponValidator.validateCoupon(coupon, user, account);
 	}
 
 	/* *****************************************************************
@@ -99,6 +95,7 @@ public class CouponManager {
 	}
 
 	public Coupon getCouponByCode(String couponCode) {
+		devLogger.log("CouponManager.getCouponByCode");
 		return couponService.getCouponByCode(couponCode);
 	}
 

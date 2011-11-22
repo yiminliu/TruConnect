@@ -15,11 +15,11 @@ import com.trc.service.jms.message.NetworkActivation;
 import com.trc.user.User;
 import com.tscp.mvne.NetworkInfo;
 
-@Service
+//@Service
 public class NetworkQueueSender {
 	private static final Logger logger = LoggerFactory.getLogger(NetworkQueueSender.class);
 
-	@Autowired
+	//@Autowired
 	private JmsTemplate networkJmsTemplate;
 
 	public void generateMessages() throws JMSException {

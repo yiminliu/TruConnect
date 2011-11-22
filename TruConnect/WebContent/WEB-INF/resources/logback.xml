@@ -23,8 +23,25 @@
     </layout>
   </appender>
 
+  <appender name="DEV_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>../logs/devlogger.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>devlogger.%d{yyyy-MM-dd}.log</FileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>4MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36}: %msg%n</pattern>
+    </layout>
+  </appender>
+
   <logger name="truconnect" level="ALL">
     <appender-ref ref="ROLLINGFILE" />
+  </logger>
+
+  <logger name="devLogger" level="ALL">
+    <appender-ref ref="DEV_ROLLINGFILE" />
   </logger>
 
   <root>

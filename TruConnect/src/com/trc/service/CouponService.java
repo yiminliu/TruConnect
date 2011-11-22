@@ -2,6 +2,7 @@ package com.trc.service;
 
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.xml.ws.WebServiceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.trc.dao.CouponDao;
 import com.trc.exception.service.CouponServiceException;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.user.User;
+import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.KenanContract;
 import com.tscp.mvne.ServiceInstance;
@@ -24,6 +26,8 @@ import com.tscp.mvne.TruConnect;
 public class CouponService {
 	private TruConnect truConnect;
 	private CouponDao couponDao;
+	@Resource
+	private DevLogger devLogger;
 
 	/* *****************************************************************
 	 * Initialization
@@ -63,6 +67,7 @@ public class CouponService {
 
 	@Transactional
 	public Coupon getCouponByCode(String couponCode) {
+		devLogger.log("couponService.getCouponByCode");
 		return couponDao.getCouponByCode(couponCode);
 	}
 

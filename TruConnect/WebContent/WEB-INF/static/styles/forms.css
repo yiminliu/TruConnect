@@ -59,7 +59,8 @@ form.validatedForm {
   padding-bottom: 40px;
 }
 
-form.validatedForm::after {
+form.validatedForm div.buttons::before {
+  float:left;
   content: '* required information';
   color: #bb0000;
 }

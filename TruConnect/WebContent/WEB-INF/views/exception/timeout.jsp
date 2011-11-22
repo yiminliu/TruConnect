@@ -22,11 +22,11 @@
   		$(this).css("color", "#4A87F0").css("font-weight", "bold").css("font-size", "1.2em");
   		var counter = $(this);
 		var count = $(this).html();
-		var url = '<spring:url value="/manage" />';
+		var targetUrl = '<spring:url value="/manage" />';
   		setInterval(function() {
   			$(counter).html(count);
   			if (count == 0) {
-  				window.location = url; 
+  				window.location = targetUrl; 
   			}
   			count--;
   		}, 1000);

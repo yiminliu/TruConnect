@@ -17,6 +17,12 @@ import javax.persistence.Table;
 
 import com.trc.coupon.contract.Contract;
 
+/**
+ * This object contains the duration of a Coupon and the Contract that it maps
+ * to in Kenan.
+ * 
+ */
+
 @Entity
 @Table(name = "coupon_detail")
 public class CouponDetail implements Serializable {
