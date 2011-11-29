@@ -3,26 +3,35 @@ package com.trc.util;
 public final class Formatter {
 
 	public static String formatDollarAmount(Double inAmount) {
-		return formatDollarAmount(Double.toString(inAmount));
+		return formatDollarAmount(Double.toString(inAmount), false);
 	}
 
-	public static String formatDollarAmount(String inAmount) {
-		String[] amount = inAmount.split("\\.");
-		if (amount.length > 1) {
-			switch (amount[1].length()) {
-			case 0:
-				amount[1] = "00";
-				break;
-			case 1:
-				amount[1] = amount[1] + "0";
-				break;
-			case 2:
-				break;
-			default:
-				return null;
+	public static String formatDollarAmountQuery(Double inAmount) {
+		return formatDollarAmount(Double.toString(inAmount), true);
+	}
+
+	public static String formatDollarAmount(String inAmount, boolean query) {
+		String[] splitAmount = inAmount.split("\\.");
+		String dollars = "";
+		String cents = "";
+		if (splitAmount.length > 1) {
+			dollars = splitAmount[0];
+			cents = splitAmount[1];
+			while (cents.length() != 2) {
+				cents = cents + "0";
 			}
-			return amount[0] + "." + amount[1];
+		} else {
+			dollars = inAmount;
 		}
-		return inAmount + ".00";
+		if (query) {
+			return dollars + cents;
+		} else {
+			return dollars + "." + cents;
+		}
+	}
+
+	public static void main(String[] args) {
+		String result = formatDollarAmountQuery(13.32);
+		System.out.println(result);
 	}
 }

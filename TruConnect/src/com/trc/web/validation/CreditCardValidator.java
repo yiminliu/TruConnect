@@ -9,7 +9,6 @@ import org.springframework.validation.Errors;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.contact.Address;
 import com.trc.util.SimpleDate;
-import com.trc.web.validation.util.ValidationUtil;
 import com.tscp.mvne.CreditCard;
 
 @Component

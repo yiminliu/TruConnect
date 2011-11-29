@@ -8,7 +8,6 @@ import org.springframework.validation.Validator;
 import com.trc.manager.UserManager;
 import com.trc.user.SecurityQuestionAnswer;
 import com.trc.user.User;
-import com.trc.web.validation.util.ValidationUtil;
 
 @Component
 public class UserValidator implements Validator {

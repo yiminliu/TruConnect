@@ -1,8 +1,9 @@
 package com.trc.web.controller;
 
 import java.util.List;
+import java.util.Vector;
 
-import javax.jms.Destination;
+import javax.annotation.Resource;
 import javax.jms.JMSException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,34 +11,34 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.trc.coupon.Coupon;
+import com.trc.coupon.UserCoupon;
 import com.trc.exception.management.AccountManagementException;
-import com.trc.exception.management.DeviceManagementException;
+import com.trc.exception.management.CouponManagementException;
 import com.trc.exception.management.PaymentManagementException;
 import com.trc.manager.AccountManager;
+import com.trc.manager.CouponManager;
 import com.trc.manager.DeviceManager;
 import com.trc.manager.PaymentManager;
 import com.trc.manager.UserManager;
 import com.trc.manager.webflow.PaymentFlowManager;
 import com.trc.service.gateway.TruConnectGateway;
-import com.trc.service.gateway.TruConnectUtil;
-import com.trc.service.jms.QueueSender;
 import com.trc.service.jms.message.KenanServiceInstance;
 import com.trc.service.jms.message.NetworkActivation;
 import com.trc.user.User;
 import com.trc.util.ClassUtils;
+import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.CreditCard;
+import com.tscp.mvne.KenanContract;
 import com.tscp.mvne.NetworkInfo;
 import com.tscp.mvne.ServiceInstance;
+import com.tscp.mvne.TruConnect;
 
 @Controller
 @RequestMapping("/test")
 @SuppressWarnings("unused")
 public class TestController {
-	// @Autowired
-	private Destination networkQueue;
-	// @Autowired
-	private Destination kenanQueue;
 	@Autowired
 	private PaymentFlowManager paymentFlowManager;
 	@Autowired
@@ -49,19 +50,109 @@ public class TestController {
 	@Autowired
 	private DeviceManager deviceManager;
 	@Autowired
-	private TruConnectGateway truConnectGateway;
+	private CouponManager couponManager;
+	@Resource
+	private DevLogger devLogger;
 
-	@RequestMapping(value = "/notification", method = RequestMethod.GET)
-	public String testNotifications() {
+	private TruConnect truConnect;
+
+	@Autowired
+	public void init(TruConnectGateway truConnectGateway) {
+		truConnect = truConnectGateway.getPort();
+	}
+
+	@RequestMapping(value = "/coupon/insert")
+	public String testInsertCoupon() {
+		return "test/success";
+	}
+
+	@RequestMapping(value = "/coupon/payment")
+	public String testCouponPayment() {
+		devLogger.log("TestController /coupon/payment");
+		devLogger.log("fetching user...");
 		User user = userManager.getUserByEmail("jonathan.pong@gmail.com");
-		Account account = new Account();
+		devLogger.log("found user:" + user.toString());
 		try {
-			account = accountManager.getAccounts(user).get(0);
+			devLogger.log("fetching account...");
+			Account account = accountManager.getAccounts(user).get(0);
+			devLogger.log("found account: " + account.toString());
+			devLogger.log("attempting to apply coupon payment...");
+			couponManager.applyCouponPayment(account, 14.32);
 		} catch (AccountManagementException e) {
+			devLogger.log("error while fetching account");
+			e.printStackTrace();
+		} catch (CouponManagementException e) {
+			devLogger.log("error while applying coupon payment");
 			e.printStackTrace();
 		}
+		return "test/success";
+	}
 
-		truConnectGateway.getPort().sendWelcomeNotification(TruConnectUtil.toCustomer(user), account);
+	@RequestMapping(value = "/coupon/fetch")
+	public String testFetchCoupons() {
+		try {
+			User user = userManager.getUserByEmail("jonathan.pong@gmail.com");
+			devLogger.log(ClassUtils.toString(user));
+			devLogger.log("fetching account");
+			Account account = accountManager.getAccounts(user).get(0);
+			devLogger.log(ClassUtils.toString(account));
+			devLogger.log("fetching service instance");
+			ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
+			devLogger.log(ClassUtils.toString(serviceInstance));
+			List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
+			devLogger.log("found " + contracts.size() + " contracts");
+			devLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalid());
+			for (KenanContract kc : contracts) {
+				devLogger.log(kc.toString());
+			}
+		} catch (AccountManagementException e) {
+			devLogger.log("error while fetching account");
+			e.printStackTrace();
+		}
+		return "test/success";
+	}
+
+	@RequestMapping(value = "/coupon/cancel")
+	public String testUpdateCoupon() {
+		try {
+			User user = userManager.getUserByEmail("jonathan.pong@gmail.com");
+			devLogger.log(ClassUtils.toString(user));
+			devLogger.log("fetching account");
+			Account account = accountManager.getAccounts(user).get(0);
+			devLogger.log(ClassUtils.toString(account));
+			devLogger.log("fetching service instance");
+			ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
+			devLogger.log(ClassUtils.toString(serviceInstance));
+			List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
+			devLogger.log("found " + contracts.size() + " contracts");
+			devLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalid());
+
+			for (KenanContract kc : contracts) {
+				devLogger.log("contract: " + kc.getContractId() + " " + kc.getContractType() + " " + kc.getDuration());
+			}
+
+			Coupon coupon = new Coupon();
+			List<UserCoupon> userCoupons = couponManager.getUserCoupons(user.getUserId());
+			devLogger.log("found " + userCoupons.size() + " user coupons in local database");
+			List<Coupon> coupons = new Vector<Coupon>();
+			for (UserCoupon uc : userCoupons) {
+				coupon = couponManager.getCoupon(uc.getId().getCouponId());
+				devLogger.log("" + coupon.toString());
+				coupons.add(coupon);
+			}
+
+			for (Coupon c : coupons) {
+				try {
+					couponManager.cancelCoupon(coupon, user, account, serviceInstance);
+				} catch (CouponManagementException e) {
+					e.printStackTrace();
+				}
+			}
+
+		} catch (AccountManagementException e) {
+			devLogger.log("error while fetching account");
+			e.printStackTrace();
+		}
 		return "test/success";
 	}
 
@@ -70,14 +161,14 @@ public class TestController {
 		try {
 			User user = userManager.getUserByUsername("jonathan.pong@gmail.com");
 			user.setUserId(547);
-			System.out.println(ClassUtils.toString(user));
+			devLogger.log(ClassUtils.toString(user));
 			List<Account> accounts = accountManager.getAccounts(user);
 			for (Account account : accounts) {
-				System.out.println(ClassUtils.toString(account));
+				devLogger.log(ClassUtils.toString(account));
 			}
 
 			Account account = accountManager.getAccounts(user).get(0);
-			System.out.println(ClassUtils.toString(account));
+			devLogger.log(ClassUtils.toString(account));
 
 			CreditCard creditCard = new CreditCard();
 			creditCard.setNameOnCreditCard("Happy Dude");
@@ -93,51 +184,37 @@ public class TestController {
 			paymentManager.makePayment(user, account, creditCard, "10.00");
 			// paymentFlowManager.makeActivationPayment(user, account, creditCard);
 		} catch (AccountManagementException e) {
-			System.out.println("asdf");
+			devLogger.log("asdf");
 			e.printStackTrace();
 		} catch (PaymentManagementException e) {
-			System.out.println("qwerty");
+			devLogger.log("qwerty");
 			e.printStackTrace();
 		}
 		return "test/success";
 	}
-
-	@RequestMapping(value = "/jms", method = RequestMethod.GET)
-	public String testJms() {
-		// try {
-		// //queueSender.send(generateNetworkActivation(), networkQueue);
-		// //queueSender.send(generateKenanActivation(), kenanQueue);
-		// } catch (JMSException e) {
-		// e.printStackTrace();
-		// }
-		return "test/success";
-	}
-
-	private NetworkActivation generateNetworkActivation() throws JMSException {
-		User user = new User();
-		user.setUsername("Super King");
-		NetworkInfo networkInfo = new NetworkInfo();
-		networkInfo.setEsnmeiddec("01234567891");
-		networkInfo.setMdn("1234567");
-		networkInfo.setStatus("test case");
-		NetworkActivation truConnectActivation = new NetworkActivation();
-		truConnectActivation.setUser(user);
-		truConnectActivation.setNetworkInfo(networkInfo);
-		return truConnectActivation;
-	}
-
-	private KenanServiceInstance generateKenanActivation() throws JMSException {
-		Account account = new Account();
-		account.setAccountno(123456);
-		account.setFirstname("Captain");
-		account.setLastname("Yesterday");
-		NetworkInfo networkInfo = new NetworkInfo();
-		networkInfo.setEsnmeiddec("01234567891");
-		networkInfo.setMdn("1234567");
-		networkInfo.setStatus("test case");
-		KenanServiceInstance kenanActivation = new KenanServiceInstance();
-		kenanActivation.setAccount(account);
-		kenanActivation.setNetworkInfo(networkInfo);
-		return kenanActivation;
-	}
+	
+	/*
+	 * @RequestMapping(value = "/jms", method = RequestMethod.GET) public String
+	 * testJms() { try { queueSender.send(generateNetworkActivation(),
+	 * networkQueue); queueSender.send(generateKenanActivation(), kenanQueue); }
+	 * catch (JMSException e) { e.printStackTrace(); } return "test/success"; }
+	 * 
+	 * private NetworkActivation generateNetworkActivation() throws JMSException {
+	 * User user = new User(); user.setUsername("Super King"); NetworkInfo
+	 * networkInfo = new NetworkInfo(); networkInfo.setEsnmeiddec("01234567891");
+	 * networkInfo.setMdn("1234567"); networkInfo.setStatus("test case");
+	 * NetworkActivation truConnectActivation = new NetworkActivation();
+	 * truConnectActivation.setUser(user);
+	 * truConnectActivation.setNetworkInfo(networkInfo); return
+	 * truConnectActivation; }
+	 * 
+	 * private KenanServiceInstance generateKenanActivation() throws JMSException
+	 * { Account account = new Account(); account.setAccountno(123456);
+	 * account.setFirstname("Captain"); account.setLastname("Yesterday");
+	 * NetworkInfo networkInfo = new NetworkInfo();
+	 * networkInfo.setEsnmeiddec("01234567891"); networkInfo.setMdn("1234567");
+	 * networkInfo.setStatus("test case"); KenanServiceInstance kenanActivation =
+	 * new KenanServiceInstance(); kenanActivation.setAccount(account);
+	 * kenanActivation.setNetworkInfo(networkInfo); return kenanActivation; }
+	 */
 }

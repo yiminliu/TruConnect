@@ -1,8 +1,8 @@
 package com.trc.coupon.contract;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -27,7 +28,7 @@ public class Contract implements Serializable {
 	private static final long serialVersionUID = 2814309740931497593L;
 	private int contractId;
 	private String description;
-	private Set<CouponDetail> couponDetails = new HashSet<CouponDetail>();
+	private Collection<CouponDetail> couponDetails = new HashSet<CouponDetail>();
 
 	@Id
 	@Column(name = "contract_id")
@@ -50,20 +51,28 @@ public class Contract implements Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contract")
 	@Cascade(CascadeType.SAVE_UPDATE)
-	public Set<CouponDetail> getCoupons() {
+	public Collection<CouponDetail> getCoupons() {
 		return couponDetails;
 	}
 
-	public void setCoupons(Set<CouponDetail> couponDetails) {
+	public void setCoupons(Collection<CouponDetail> couponDetails) {
 		this.couponDetails = couponDetails;
 	}
 
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("CONTRACT").append("\n");
-		sb.append("Contract ID: ").append(contractId).append("\n");
-		sb.append("Description: ").append(description);
+		sb.append("contractId=").append(contractId).append(", ");
+		sb.append("description=").append(description);
+		return sb.toString();
+	}
+
+	@Transient
+	public String toFormattedString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("--Contract--").append("\n");
+		sb.append("  Contract ID=").append(contractId).append("\n");
+		sb.append("  Description=").append(description);
 		return sb.toString();
 	}
 

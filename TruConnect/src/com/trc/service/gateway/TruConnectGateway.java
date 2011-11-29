@@ -20,7 +20,7 @@ public class TruConnectGateway {
 		try {
 			String namespace = TSCPMVNE.namespace;
 			String servicename = TSCPMVNE.serviceName;
-			String location = TSCPMVNE.Location.developmentIP;
+			String location = TSCPMVNE.Location.couponDevIP;
 			service = new TruConnectService(new URL(location), new QName(namespace, servicename));
 		} catch (Exception e) {
 			e.printStackTrace();

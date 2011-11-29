@@ -75,7 +75,7 @@ public class CouponValidator implements Validator {
 	public boolean checkUsed(Coupon coupon, User user, Account account) {
 		devLogger.log("Checking if coupon has already been redeemed...");
 		try {
-			List<UserCoupon> userCoupons = couponManager.getUserCoupons(coupon, user, account);
+			List<UserCoupon> userCoupons = couponManager.getUserCoupon(coupon, user, account);
 			if (userCoupons.size() < 1) {
 				devLogger.log("Coupon has not yet been applied");
 				return false;

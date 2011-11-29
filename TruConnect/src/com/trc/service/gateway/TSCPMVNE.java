@@ -8,6 +8,9 @@ public class TSCPMVNE {
 		public static final String localhost = "http://localhost:8080/TSCPMVNE/TruConnectService?wsdl";
 		public static final String development = "http://USCAEL010-VM1:8080/TSCPMVNE/TruConnectService?wsdl";
 		public static final String developmentIP = "http://10.10.30.188:8080/TSCPMVNE/TruConnectService?wsdl";
+
+		public static final String couponDevIP = "http://10.10.30.188:8080/TSCPMVNE_coupon/TruConnectService?wsdl";
+
 		public static final String production = "http://USCAEL010-VM3:8080/TSCPMVNE/TruConnectService?wsdl";
 		public static final String productionIP = "http://10.10.30.190:8080/TSCPMVNE/TruConnectService?wsdl";
 		@Deprecated

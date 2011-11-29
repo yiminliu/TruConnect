@@ -21,24 +21,13 @@ import com.trc.util.logger.DevLogger;
  */
 
 @Repository
+@SuppressWarnings("unchecked")
 public class CouponDao extends HibernateDaoSupport {
-	@Resource
-	private DevLogger devLogger;
-
-	/* *****************************************************************
-	 * Initialization
-	 * *****************************************************************
-	 */
 
 	@Autowired
 	public void init(HibernateTemplate hibernateTemplate) {
 		setHibernateTemplate(hibernateTemplate);
 	}
-
-	/* *****************************************************************
-	 * Coupon DAO methods
-	 * *****************************************************************
-	 */
 
 	public int insertCoupon(Coupon coupon) {
 		return (Integer) getHibernateTemplate().save(coupon);
@@ -57,59 +46,12 @@ public class CouponDao extends HibernateDaoSupport {
 	}
 
 	public Coupon getCouponByCode(String couponCode) {
-		devLogger.log("CouponDao querying for couponCode " + couponCode);
 		List<Coupon> coupons = getHibernateTemplate().find("from Coupon c where c.couponCode = ?", couponCode);
 		if (coupons.size() != 1) {
-			devLogger.log("WARN: CouponDao found " + coupons.size() + " results");
 			return null;
 		} else {
-			devLogger.log("Success: CouponDao found coupon " + coupons.get(0).getCouponId());
 			return coupons.get(0);
 		}
-	}
-
-	/* *****************************************************************
-	 * CouponDetail DAO methods
-	 * *****************************************************************
-	 */
-
-	public int insertCouponDetail(CouponDetail couponDetail) {
-		return (Integer) getHibernateTemplate().save(couponDetail);
-	}
-
-	public void deleteCouponDetail(CouponDetail couponDetail) {
-		getHibernateTemplate().delete(couponDetail);
-	}
-
-	public void updateCouponDetail(CouponDetail couponDetail) {
-		getHibernateTemplate().update(couponDetail);
-	}
-
-	public CouponDetail getCouponDetail(int couponDetailId) {
-		return getHibernateTemplate().get(CouponDetail.class, couponDetailId);
-	}
-
-	/* *****************************************************************
-	 * UserCoupon DAO methods
-	 * *****************************************************************
-	 */
-
-	public void insertUserCoupon(UserCoupon userCoupon) {
-		getHibernateTemplate().save(userCoupon);
-	}
-
-	public void deleteUserCoupon(UserCoupon userCoupon) {
-		getHibernateTemplate().delete(userCoupon);
-	}
-
-	public List<UserCoupon> getUserCoupons(UserCoupon userCoupon) {
-		int userId = userCoupon.getId().getUserId();
-		int couponId = userCoupon.getId().getCouponId();
-		int accountNumber = userCoupon.getId().getAccountNumber();
-		List<UserCoupon> userCoupons = getHibernateTemplate().find(
-				"from UserCoupon uc where uc.id.userId = ? and uc.id.couponId = ? and uc.id.accountNumber = ?", userId,
-				couponId, accountNumber);
-		return userCoupons;
 	}
 
 }

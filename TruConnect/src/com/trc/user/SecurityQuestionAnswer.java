@@ -28,4 +28,11 @@ public class SecurityQuestionAnswer implements Serializable {
 	public void setHintAnswer(String hintAnswer) {
 		this.hintAnswer = hintAnswer;
 	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("hintId=").append(hintId).append(", ").append("hintAnswer=").append(hintAnswer);
+		return sb.toString();
+	}
 }

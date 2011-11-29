@@ -64,7 +64,8 @@ public class CouponController extends EncryptedController {
 	public ModelAndView postRedeemCoupon(HttpServletRequest request, @ModelAttribute("coupon") Coupon coupon,
 			BindingResult result) {
 		devLogger.log("Form submitted to redeem coupon...");
-		ResultModel model = new ResultModel("test/success", "coupon/addCoupon");
+		// TODO create a succes page
+		ResultModel model = new ResultModel("coupon/addCouponSuccess", "coupon/addCoupon");
 		coupon = couponManager.getCouponByCode(coupon.getCouponCode());
 
 		couponValidator.validate(coupon, result);

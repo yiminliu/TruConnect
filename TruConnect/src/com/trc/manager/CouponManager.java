@@ -1,6 +1,8 @@
 package com.trc.manager;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 import javax.annotation.Resource;
 
@@ -19,6 +21,7 @@ import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.validation.CouponValidator;
 import com.tscp.mvne.Account;
+import com.tscp.mvne.KenanContract;
 import com.tscp.mvne.ServiceInstance;
 
 @Component
@@ -30,17 +33,39 @@ public class CouponManager {
 	@Resource
 	private DevLogger devLogger;
 
+	public void applyCouponPayment(Account account, Double amount) throws CouponManagementException {
+		// TODO coupon application should really just take a coupon, the account and
+		// the service instance
+		try {
+			devLogger.log("..applying coupon payment on account " + account.getAccountno() + " for " + amount);
+			couponService.applyCouponPayment(account, amount, new Date());
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
+	}
+
+	public List<Coupon> getCoupons(Account account, ServiceInstance serviceInstance) throws CouponManagementException {
+		try {
+			// TODO convert contracts to coupons
+			List<Coupon> coupons = new Vector<Coupon>();
+			List<KenanContract> contracts = couponService.getContracts(account, serviceInstance);
+			return coupons;
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
+	}
+
 	@Loggable(value = LogLevel.TRACE)
 	public boolean applyCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
 			throws CouponManagementException {
 		if (!couponValidator.checkUsed(coupon, user, account)) {
 			try {
 				devLogger.log("Inserting UserCoupon and applying contract in Kenan");
-				couponService.insertUserCoupon(user, coupon, account);
-				couponService.applyContract(coupon, account, serviceInstance);
+				couponService.applyCoupon(user, coupon, account, serviceInstance);
 				return true;
 			} catch (CouponServiceException e) {
-				// TODO clean-up exception and rollback
+				// TODO clean-up exception and rollback. only cancel if coupon was
+				// actually applied.
 				cancelCoupon(coupon, user, account, serviceInstance);
 				throw new CouponManagementException(e.getMessage(), e.getCause());
 			}
@@ -54,9 +79,8 @@ public class CouponManager {
 	public boolean cancelCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
 			throws CouponManagementException {
 		try {
-			devLogger.log("Deleting UserCoupon and removing contract in Kenan");
-			couponService.deleteUserCoupon(user, coupon, account);
-			couponService.cancelContract(coupon, account, serviceInstance);
+			devLogger.log("Canceling Coupon");
+			couponService.cancelCoupon(user, coupon, account, serviceInstance);
 			return true;
 		} catch (CouponServiceException e) {
 			// TODO should attempt to cancel again or queue for cancelation
@@ -69,8 +93,12 @@ public class CouponManager {
 	 * *****************************************************************
 	 */
 
-	public List<UserCoupon> getUserCoupons(Coupon coupon, User user, Account account) throws CouponManagementException {
-		return couponService.getUserCoupons(user, coupon, account);
+	public List<UserCoupon> getUserCoupon(Coupon coupon, User user, Account account) throws CouponManagementException {
+		return couponService.getUserCoupon(user, coupon, account);
+	}
+
+	public List<UserCoupon> getUserCoupons(int userId) {
+		return couponService.getUserCoupons(userId);
 	}
 
 	/* *****************************************************************

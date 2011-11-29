@@ -1,4 +1,4 @@
-package com.trc.web.validation.util;
+package com.trc.web.validation;
 
 import java.util.Collection;
 

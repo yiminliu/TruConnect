@@ -7,7 +7,6 @@ import com.trc.user.User;
 import com.trc.user.security.UpdateEmail;
 import com.trc.user.security.UpdatePassword;
 import com.trc.user.security.UpdateUser;
-import com.trc.web.validation.util.ValidationUtil;
 
 @Component
 public class UserUpdateValidator extends UserValidator {

@@ -59,7 +59,6 @@ public class UserManager implements UserManagerModel {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public User getUserByEmail(String email) {
 		return userDao.getUserByEmail(email);
 	}

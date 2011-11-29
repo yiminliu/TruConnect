@@ -10,6 +10,7 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.trc.user.User;
 
@@ -53,11 +54,18 @@ public class Authority implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("[ userId: ").append(getUser().getUserId());
-		buffer.append(" | ");
-		buffer.append("authority: ").append(getAuthority());
-		buffer.append(" ]");
-		return buffer.toString();
+		StringBuffer sb = new StringBuffer();
+		sb.append("userId=").append(getUser().getUserId()).append(", ");
+		sb.append("authority=").append(getAuthority());
+		return sb.toString();
+	}
+
+	@Transient
+	public String toFormattedString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("--Authority--").append("\n");
+		sb.append("  User ID=").append(getUser().getUserId()).append("\n");
+		sb.append("  Authority=").append(getAuthority());
+		return sb.toString();
 	}
 }

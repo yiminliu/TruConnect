@@ -5,7 +5,6 @@ import org.springframework.validation.Errors;
 
 import com.trc.user.contact.Address;
 import com.trc.user.contact.ContactInfo;
-import com.trc.web.validation.util.ValidationUtil;
 
 @Component
 public class ContactInfoValidator extends AddressValidator {

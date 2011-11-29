@@ -9,7 +9,6 @@ import org.springframework.validation.Errors;
 import com.trc.user.User;
 import com.trc.user.activation.Registration;
 import com.trc.user.contact.ContactInfo;
-import com.trc.web.validation.util.ValidationUtil;
 
 @Component
 public class RegistrationValidator extends UserValidator {

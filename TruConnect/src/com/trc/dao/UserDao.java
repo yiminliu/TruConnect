@@ -19,6 +19,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.trc.user.Admin;
 import com.trc.user.User;
@@ -69,6 +70,7 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public User getUserByEmail(String email) {
 		List<User> results = getHibernateTemplate().find("from User user where email = ?", email);
 		if (isUniqueResult(results)) {

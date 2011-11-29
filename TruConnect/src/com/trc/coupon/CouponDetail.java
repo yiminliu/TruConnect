@@ -1,8 +1,8 @@
 package com.trc.coupon;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.trc.coupon.contract.Contract;
 
@@ -30,7 +31,7 @@ public class CouponDetail implements Serializable {
 	private int couponDetailId;
 	private int duration;
 	private Contract contract = new Contract();
-	private Set<Coupon> coupons = new HashSet<Coupon>();
+	private Collection<Coupon> coupons = new HashSet<Coupon>();
 
 	@Id
 	@Column(name = "coupon_detail_id")
@@ -55,11 +56,11 @@ public class CouponDetail implements Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "coupon_type", nullable = false)
-	public Set<Coupon> getCoupons() {
+	public Collection<Coupon> getCoupons() {
 		return coupons;
 	}
 
-	public void setCoupons(Set<Coupon> coupons) {
+	public void setCoupons(Collection<Coupon> coupons) {
 		this.coupons = coupons;
 	}
 
@@ -75,10 +76,19 @@ public class CouponDetail implements Serializable {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("COUPON DETAIL").append("\n");
-		sb.append("Coupon Detail ID: ").append(couponDetailId).append("\n");
-		sb.append("Duration: ").append(duration).append("\n");
-		sb.append(contract.toString());
+		sb.append("couponDetailId=").append(couponDetailId).append(", ");
+		sb.append("duration=").append(duration).append(", ");
+		sb.append("contract=").append(contract.toString());
+		return sb.toString();
+	}
+
+	@Transient
+	public String toFormattedString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("--Coupon Detail--").append("\n");
+		sb.append("  Coupon Detail ID=").append(couponDetailId).append("\n");
+		sb.append("  Duration=").append(duration).append("\n");
+		sb.append("  Contract=").append(contract.toString());
 		return sb.toString();
 	}
 
