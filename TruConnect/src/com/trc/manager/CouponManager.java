@@ -2,7 +2,6 @@ package com.trc.manager;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 import javax.annotation.Resource;
 
@@ -21,11 +20,10 @@ import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.validation.CouponValidator;
 import com.tscp.mvne.Account;
-import com.tscp.mvne.KenanContract;
 import com.tscp.mvne.ServiceInstance;
 
 @Component
-public class CouponManager {
+public class CouponManager implements CouponManagerModel {
 	@Autowired
 	private CouponService couponService;
 	@Autowired
@@ -33,72 +31,46 @@ public class CouponManager {
 	@Resource
 	private DevLogger devLogger;
 
-	public void applyCouponPayment(Account account, Double amount) throws CouponManagementException {
-		// TODO coupon application should really just take a coupon, the account and
-		// the service instance
+	@Loggable(value = LogLevel.TRACE)
+	public List<UserCoupon> getUserCoupons(int userId) throws CouponManagementException {
 		try {
-			devLogger.log("..applying coupon payment on account " + account.getAccountno() + " for " + amount);
-			couponService.applyCouponPayment(account, amount, new Date());
+			return couponService.getUserCoupons(userId);
 		} catch (CouponServiceException e) {
-			throw new CouponManagementException(e.getMessage(), e.getCause());
-		}
-	}
-
-	public List<Coupon> getCoupons(Account account, ServiceInstance serviceInstance) throws CouponManagementException {
-		try {
-			// TODO convert contracts to coupons
-			List<Coupon> coupons = new Vector<Coupon>();
-			List<KenanContract> contracts = couponService.getContracts(account, serviceInstance);
-			return coupons;
-		} catch (CouponServiceException e) {
-			throw new CouponManagementException(e.getMessage(), e.getCause());
+			throw new CouponManagementException("Error getting UserCoupon for user " + userId + ": " + e.getMessage());
 		}
 	}
 
 	@Loggable(value = LogLevel.TRACE)
-	public boolean applyCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
+	public void applyCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
 			throws CouponManagementException {
-		if (!couponValidator.checkUsed(coupon, user, account)) {
+		if (!couponValidator.checkAccountRedeemedAndLimit(coupon, user, account)) {
 			try {
-				devLogger.log("Inserting UserCoupon and applying contract in Kenan");
-				couponService.applyCoupon(user, coupon, account, serviceInstance);
-				return true;
+				if (coupon.getCouponDetail().getContract().getContractType() == -1) {
+					devLogger.log("Inserting UserCoupon and applying credit payment in Kenan");
+					couponService.applyCouponPayment(coupon, user, account, new Date());
+				} else {
+					devLogger.log("Inserting UserCoupon and applying contract in Kenan");
+					couponService.applyCoupon(user, coupon, account, serviceInstance);
+				}
 			} catch (CouponServiceException e) {
-				// TODO clean-up exception and rollback. only cancel if coupon was
-				// actually applied.
-				cancelCoupon(coupon, user, account, serviceInstance);
 				throw new CouponManagementException(e.getMessage(), e.getCause());
 			}
 		} else {
-			throw new CouponManagementException("Coupon " + coupon.getCouponId() + " has already been applied by user "
-					+ user.getUserId());
+			throw new CouponManagementException("Coupon " + coupon.getCouponId()
+					+ " has already been applied to it's limit by user " + user.getUserId());
 		}
 	}
 
 	@Loggable(value = LogLevel.TRACE)
-	public boolean cancelCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
+	public void cancelCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
 			throws CouponManagementException {
 		try {
 			devLogger.log("Canceling Coupon");
 			couponService.cancelCoupon(user, coupon, account, serviceInstance);
-			return true;
 		} catch (CouponServiceException e) {
-			// TODO should attempt to cancel again or queue for cancelation
+			// TODO should attempt to cancel again or queue for cancellation
 			throw new CouponManagementException(e.getMessage(), e.getCause());
 		}
-	}
-
-	/* *****************************************************************
-	 * UserCoupon Management
-	 * *****************************************************************
-	 */
-
-	public List<UserCoupon> getUserCoupon(Coupon coupon, User user, Account account) throws CouponManagementException {
-		return couponService.getUserCoupon(user, coupon, account);
-	}
-
-	public List<UserCoupon> getUserCoupons(int userId) {
-		return couponService.getUserCoupons(userId);
 	}
 
 	/* *****************************************************************
@@ -106,25 +78,45 @@ public class CouponManager {
 	 * *****************************************************************
 	 */
 
-	public int insertCoupon(Coupon coupon) {
-		return couponService.insertCoupon(coupon);
+	public int insertCoupon(Coupon coupon) throws CouponManagementException {
+		try {
+			return couponService.insertCoupon(coupon);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
 	}
 
-	public void deleteCoupon(Coupon coupon) {
-		couponService.deleteCoupon(coupon);
+	public void deleteCoupon(Coupon coupon) throws CouponManagementException {
+		try {
+			couponService.deleteCoupon(coupon);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
 	}
 
-	public void updateCoupon(Coupon coupon) {
-		couponService.updateCoupon(coupon);
+	public void updateCoupon(Coupon coupon) throws CouponManagementException {
+		try {
+			couponService.updateCoupon(coupon);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
 	}
 
-	public Coupon getCoupon(int couponId) {
-		return couponService.getCoupon(couponId);
+	public Coupon getCoupon(int couponId) throws CouponManagementException {
+		try {
+			return couponService.getCoupon(couponId);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
 	}
 
-	public Coupon getCouponByCode(String couponCode) {
-		devLogger.log("CouponManager.getCouponByCode");
-		return couponService.getCouponByCode(couponCode);
+	public Coupon getCouponByCode(String couponCode) throws CouponManagementException {
+		try {
+			devLogger.log("CouponManager.getCouponByCode");
+			return couponService.getCouponByCode(couponCode);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
 	}
 
 	/* *****************************************************************
@@ -132,19 +124,35 @@ public class CouponManager {
 	 * *****************************************************************
 	 */
 
-	public int insertCouponDetail(CouponDetail couponDetail) {
-		return couponService.insertCouponDetail(couponDetail);
+	public int insertCouponDetail(CouponDetail couponDetail) throws CouponManagementException {
+		try {
+			return couponService.insertCouponDetail(couponDetail);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
 	}
 
-	public void deleteCouponDetail(CouponDetail couponDetail) {
-		couponService.deleteCouponDetail(couponDetail);
+	public void deleteCouponDetail(CouponDetail couponDetail) throws CouponManagementException {
+		try {
+			couponService.deleteCouponDetail(couponDetail);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
 	}
 
-	public void updateCouponDetail(CouponDetail couponDetail) {
-		couponService.updateCouponDetail(couponDetail);
+	public void updateCouponDetail(CouponDetail couponDetail) throws CouponManagementException {
+		try {
+			couponService.updateCouponDetail(couponDetail);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
 	}
 
-	public CouponDetail getCouponDetail(int couponDetailId) {
-		return couponService.getCouponDetail(couponDetailId);
+	public CouponDetail getCouponDetail(int couponDetailId) throws CouponManagementException {
+		try {
+			return couponService.getCouponDetail(couponDetailId);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
 	}
 }

@@ -30,8 +30,12 @@ public class CouponDetail implements Serializable {
 	private static final long serialVersionUID = -237740560474759272L;
 	private int couponDetailId;
 	private int duration;
+	private String durationUnit;
+	private Double amount;
+	private int accountLimit;
 	private Contract contract = new Contract();
 	private Collection<Coupon> coupons = new HashSet<Coupon>();
+	private Collection<CouponStackable> stackable = new HashSet<CouponStackable>();
 
 	@Id
 	@Column(name = "coupon_detail_id")
@@ -45,7 +49,7 @@ public class CouponDetail implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "contract_id", nullable = false, insertable = false)
+	@JoinColumn(name = "contract_type", nullable = false, insertable = false)
 	public Contract getContract() {
 		return contract;
 	}
@@ -73,12 +77,110 @@ public class CouponDetail implements Serializable {
 		this.duration = duration;
 	}
 
+	@Column(name = "duration_unit")
+	public String getDurationUnit() {
+		return durationUnit;
+	}
+
+	public void setDurationUnit(String durationUnit) {
+		this.durationUnit = durationUnit;
+	}
+
+	@Column(name = "amount")
+	public Double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+
+	@Column(name = "account_limit")
+	public int getAccountLimit() {
+		return accountLimit;
+	}
+
+	public void setAccountLimit(int accountLimit) {
+		this.accountLimit = accountLimit;
+	}
+
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinColumn(name = "coupon_detail_id", nullable = false)
+	public Collection<CouponStackable> getStackable() {
+		return stackable;
+	}
+
+	public void setStackable(Collection<CouponStackable> stackable) {
+		this.stackable = stackable;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + accountLimit;
+		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
+		result = prime * result + ((contract == null) ? 0 : contract.hashCode());
+		result = prime * result + couponDetailId;
+		result = prime * result + ((coupons == null) ? 0 : coupons.hashCode());
+		result = prime * result + duration;
+		result = prime * result + ((durationUnit == null) ? 0 : durationUnit.hashCode());
+		result = prime * result + ((stackable == null) ? 0 : stackable.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CouponDetail other = (CouponDetail) obj;
+		if (accountLimit != other.accountLimit)
+			return false;
+		if (amount == null) {
+			if (other.amount != null)
+				return false;
+		} else if (!amount.equals(other.amount))
+			return false;
+		if (contract == null) {
+			if (other.contract != null)
+				return false;
+		} else if (!contract.equals(other.contract))
+			return false;
+		if (couponDetailId != other.couponDetailId)
+			return false;
+		if (coupons == null) {
+			if (other.coupons != null)
+				return false;
+		} else if (!coupons.equals(other.coupons))
+			return false;
+		if (duration != other.duration)
+			return false;
+		if (durationUnit == null) {
+			if (other.durationUnit != null)
+				return false;
+		} else if (!durationUnit.equals(other.durationUnit))
+			return false;
+		if (stackable == null) {
+			if (other.stackable != null)
+				return false;
+		} else if (!stackable.equals(other.stackable))
+			return false;
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("couponDetailId=").append(couponDetailId).append(", ");
 		sb.append("duration=").append(duration).append(", ");
+		sb.append("durationUnit=").append(durationUnit).append(", ");
+		sb.append("amount=").append(amount).append(", ");
 		sb.append("contract=").append(contract.toString());
+		sb.append("stackable=").append(stackable.toString());
 		return sb.toString();
 	}
 
@@ -88,7 +190,10 @@ public class CouponDetail implements Serializable {
 		sb.append("--Coupon Detail--").append("\n");
 		sb.append("  Coupon Detail ID=").append(couponDetailId).append("\n");
 		sb.append("  Duration=").append(duration).append("\n");
-		sb.append("  Contract=").append(contract.toString());
+		sb.append("  Duration Unit=").append(durationUnit).append("\n");
+		sb.append("  Amount=").append(amount).append("\n");
+		sb.append("  Contract=").append(contract.toString()).append("\n");
+		sb.append("  Stackable=").append(stackable.toString());
 		return sb.toString();
 	}
 

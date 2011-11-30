@@ -102,7 +102,7 @@ public class Coupon implements Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@Cascade(CascadeType.SAVE_UPDATE)
-	@JoinColumn(name = "coupon_type", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "coupon_Detail_id", nullable = false, insertable = false, updatable = false)
 	public CouponDetail getCouponDetail() {
 		return couponDetail;
 	}

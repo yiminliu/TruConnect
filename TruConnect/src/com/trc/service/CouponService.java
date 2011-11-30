@@ -3,7 +3,6 @@ package com.trc.service;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Vector;
 
 import javax.annotation.Resource;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -61,28 +60,48 @@ public class CouponService {
 	 */
 
 	@Transactional
-	public int insertCoupon(Coupon coupon) {
-		return couponDao.insertCoupon(coupon);
+	public int insertCoupon(Coupon coupon) throws CouponServiceException {
+		try {
+			return couponDao.insertCoupon(coupon);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error inserting Coupon from DAO layer: " + e.getMessage());
+		}
 	}
 
 	@Transactional
-	public void deleteCoupon(Coupon coupon) {
-		couponDao.deleteCoupon(coupon);
+	public void deleteCoupon(Coupon coupon) throws CouponServiceException {
+		try {
+			couponDao.deleteCoupon(coupon);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error deleting Coupon from DAO layer: " + e.getMessage());
+		}
 	}
 
 	@Transactional
-	public void updateCoupon(Coupon coupon) {
-		couponDao.updateCoupon(coupon);
+	public void updateCoupon(Coupon coupon) throws CouponServiceException {
+		try {
+			couponDao.updateCoupon(coupon);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error updating Coupon from DAO layer: " + e.getMessage());
+		}
 	}
 
 	@Transactional
-	public Coupon getCoupon(int couponId) {
-		return couponDao.getCoupon(couponId);
+	public Coupon getCoupon(int couponId) throws CouponServiceException {
+		try {
+			return couponDao.getCoupon(couponId);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error fetching Coupon from DAO layer: " + e.getMessage());
+		}
 	}
 
 	@Transactional
-	public Coupon getCouponByCode(String couponCode) {
-		return couponDao.getCouponByCode(couponCode);
+	public Coupon getCouponByCode(String couponCode) throws CouponServiceException {
+		try {
+			return couponDao.getCouponByCode(couponCode);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error fetching Coupon from DAO layer: " + e.getMessage());
+		}
 	}
 
 	/* *****************************************************************
@@ -91,23 +110,39 @@ public class CouponService {
 	 */
 
 	@Transactional
-	public int insertCouponDetail(CouponDetail couponDetail) {
-		return (Integer) couponDetailDao.insertCouponDetail(couponDetail);
+	public int insertCouponDetail(CouponDetail couponDetail) throws CouponServiceException {
+		try {
+			return (Integer) couponDetailDao.insertCouponDetail(couponDetail);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error inserting CouponDetail from DAO layer: " + e.getMessage());
+		}
 	}
 
 	@Transactional
-	public void deleteCouponDetail(CouponDetail couponDetail) {
-		couponDetailDao.deleteCouponDetail(couponDetail);
+	public void deleteCouponDetail(CouponDetail couponDetail) throws CouponServiceException {
+		try {
+			couponDetailDao.deleteCouponDetail(couponDetail);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error deleting CouponDetail from DAO layer: " + e.getMessage());
+		}
 	}
 
 	@Transactional
-	public void updateCouponDetail(CouponDetail couponDetail) {
-		couponDetailDao.updateCouponDetail(couponDetail);
+	public void updateCouponDetail(CouponDetail couponDetail) throws CouponServiceException {
+		try {
+			couponDetailDao.updateCouponDetail(couponDetail);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error updating CouponDetail from DAO layer: " + e.getMessage());
+		}
 	}
 
 	@Transactional
-	public CouponDetail getCouponDetail(int couponDetailId) {
-		return couponDetailDao.getCouponDetail(couponDetailId);
+	public CouponDetail getCouponDetail(int couponDetailId) throws CouponServiceException {
+		try {
+			return couponDetailDao.getCouponDetail(couponDetailId);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error fetching CouponDetail from DAO layer: " + e.getMessage());
+		}
 	}
 
 	/* *****************************************************************
@@ -116,61 +151,34 @@ public class CouponService {
 	 */
 
 	@Transactional
-	public void insertUserCoupon(UserCoupon userCoupon) {
-		userCouponDao.insertUserCoupon(userCoupon);
-	}
-
-	@Transactional
-	public void deleteUserCoupon(User user, Coupon coupon, Account account) {
-		UserCoupon userCoupon = new UserCoupon(user, coupon, account);
-		userCouponDao.deleteUserCoupon(userCoupon);
-	}
-
-	@Transactional
-	public void updateUserCoupon(UserCoupon userCoupon) {
-		userCouponDao.updateUserCoupon(userCoupon);
-	}
-
-	@Transactional
-	public List<UserCoupon> getUserCoupon(User user, Coupon coupon, Account account) {
-		UserCoupon userCoupon = new UserCoupon(user, coupon, account);
-		return userCouponDao.getUserCoupon(userCoupon);
-	}
-
-	@Transactional
-	public List<UserCoupon> getUserCoupons(int userId) {
-		return userCouponDao.getUserCoupons(userId);
-	}
-
-	/* *****************************************************************
-	 * Application of Coupons in Kenan using TSCPMVNE
-	 * *****************************************************************
-	 */
-
-	@Transactional
-	public void applyCouponPayment(Account account, Double amount, Date date) throws CouponServiceException {
+	public void insertUserCoupon(UserCoupon userCoupon) throws CouponServiceException {
 		try {
-			GregorianCalendar calendar = new GregorianCalendar();
-			calendar.setTime(date);
-			XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
-			String stringAmount = Formatter.formatDollarAmountQuery(amount);
-			devLogger.log("....applying coupon payment for string amount of " + amount);
-			truConnect.applyCouponPayment(account, stringAmount, xmlCal);
-			devLogger.log("....finished applying coupon payment");
-		} catch (DatatypeConfigurationException dce) {
-			devLogger.error("....Error applying coupon payment in kenan: could not create XMLGregorianCalendar");
-			throw new CouponServiceException(dce.getMessage(), dce.getCause());
-		} catch (WebServiceException e) {
-			devLogger.error("....Error applying coupon payment in kenan " + e.getMessage());
-			throw new CouponServiceException("Error applying coupon payment: " + e.getMessage(), e.getCause());
+			userCouponDao.insertUserCoupon(userCoupon);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error inserting UserCoupon from DAO layer: " + e.getMessage());
 		}
 	}
 
-	public List<Coupon> getCoupons() {
-		// TODO
-		return new Vector<Coupon>();
+	@Transactional
+	public void deleteUserCoupon(User user, Coupon coupon, Account account) throws CouponServiceException {
+		UserCoupon userCoupon = new UserCoupon(user, coupon, account);
+		try {
+			userCouponDao.deleteUserCoupon(userCoupon);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error updating UserCoupon from DAO layer: " + e.getMessage());
+		}
 	}
 
+	@Transactional
+	public void updateUserCoupon(UserCoupon userCoupon) throws CouponServiceException {
+		try {
+			userCouponDao.updateUserCoupon(userCoupon);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error updating UserCoupon from DAO layer: " + e.getMessage());
+		}
+	}
+
+	@Deprecated
 	public List<KenanContract> getContracts(Account account, ServiceInstance serviceInstance)
 			throws CouponServiceException {
 		// TODO there needs to be a way for individual contracts to map back to
@@ -186,6 +194,49 @@ public class CouponService {
 	}
 
 	@Transactional
+	public List<UserCoupon> getUserCoupons(int userId) throws CouponServiceException {
+		try {
+			return userCouponDao.getUserCoupons(userId);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error fetching UserCoupon from DAO layer: " + e.getMessage());
+		}
+	}
+
+	/* *****************************************************************
+	 * Application of Coupons in Kenan using TSCPMVNE
+	 * *****************************************************************
+	 */
+
+	@Transactional
+	public void applyCouponPayment(Coupon coupon, User user, Account account, Date date) throws CouponServiceException {
+		try {
+			GregorianCalendar calendar = new GregorianCalendar();
+			calendar.setTime(date);
+			XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+			String stringAmount = Formatter.formatDollarAmountQuery(coupon.getCouponDetail().getAmount());
+			devLogger.log("....applying coupon payment for string amount of " + stringAmount);
+			truConnect.applyCouponPayment(account, stringAmount, xmlCal);
+			try {
+				UserCoupon userCoupon = new UserCoupon(user, coupon, account);
+				userCoupon.setKenanContractId(-1);
+				userCoupon.setActive(true);
+				insertUserCoupon(userCoupon);
+			} catch (DataAccessException e) {
+				// TODO rollback the credit that was given
+				devLogger.log("Error inserting UserCoupon");
+				throw new CouponServiceException("Error inserting UserCoupon: " + e.getMessage(), e.getCause());
+			}
+			devLogger.log("....finished applying coupon payment");
+		} catch (DatatypeConfigurationException dce) {
+			devLogger.error("....Error applying coupon payment in kenan: could not create XMLGregorianCalendar");
+			throw new CouponServiceException(dce.getMessage(), dce.getCause());
+		} catch (WebServiceException e) {
+			devLogger.error("....Error applying coupon payment in kenan " + e.getMessage());
+			throw new CouponServiceException("Error applying coupon payment: " + e.getMessage(), e.getCause());
+		}
+	}
+
+	@Transactional
 	public void applyCoupon(User user, Coupon coupon, Account account, ServiceInstance serviceInstance)
 			throws CouponServiceException {
 		try {
@@ -193,7 +244,7 @@ public class CouponService {
 			KenanContract kenanContract = new KenanContract();
 			kenanContract.setAccount(account);
 			kenanContract.setServiceInstance(serviceInstance);
-			kenanContract.setContractType(coupon.getCouponDetail().getContract().getContractId());
+			kenanContract.setContractType(coupon.getCouponDetail().getContract().getContractType());
 			kenanContract.setDuration(coupon.getCouponDetail().getDuration());
 			truConnect.applyContract(kenanContract);
 			try {
@@ -202,6 +253,7 @@ public class CouponService {
 				userCoupon.setActive(true);
 				insertUserCoupon(userCoupon);
 			} catch (DataAccessException e) {
+				devLogger.log("Error inserting UserCoupon");
 				kenanContract.setDuration(0);
 				truConnect.updateContract(kenanContract);
 				throw new CouponServiceException("Error inserting UserCoupon: " + e.getMessage(), e.getCause());
@@ -212,25 +264,13 @@ public class CouponService {
 		}
 	}
 
-	private KenanContract findContractInList(List<KenanContract> contracts, int contractId) {
-		for (KenanContract kc : contracts) {
-			if (kc.getContractType() == contractId) {
-				return kc;
-			}
-		}
-		return null;
-	}
-
 	@Transactional
 	public void cancelCoupon(User user, Coupon coupon, Account account, ServiceInstance serviceInstance)
 			throws CouponServiceException {
-		// TODO contract ID should also be mapped in the database to make fetch's
-		// easier. Then we can check for the contract Id rather than checking by
-		// contract type
 		try {
 			List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
 			KenanContract kenanContract = findContractInList(contracts, coupon.getCouponDetail().getContract()
-					.getContractId());
+					.getContractType());
 			if (kenanContract != null) {
 				int originalDuration = kenanContract.getDuration();
 				kenanContract.setAccount(account);
@@ -254,5 +294,14 @@ public class CouponService {
 			devLogger.error("Error canceling coupon");
 			throw new CouponServiceException(e.getMessage(), e.getCause());
 		}
+	}
+
+	private KenanContract findContractInList(List<KenanContract> contracts, int contractId) {
+		for (KenanContract kc : contracts) {
+			if (kc.getContractType() == contractId) {
+				return kc;
+			}
+		}
+		return null;
 	}
 }

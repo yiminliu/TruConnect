@@ -21,6 +21,9 @@
         <value>com.trc.coupon.CouponDetail</value>
         <value>com.trc.coupon.contract.Contract</value>
         <value>com.trc.coupon.UserCoupon</value>
+        <value>com.trc.coupon.UserCouponId</value>
+        <value>com.trc.coupon.CouponStackable</value>
+        <value>com.trc.coupon.CouponStackableId</value>
       </list>
     </property>
     <property name="hibernateProperties">

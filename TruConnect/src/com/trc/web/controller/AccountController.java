@@ -20,6 +20,7 @@ import com.trc.user.account.Overview;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.model.ResultModel;
+import com.tscp.mvne.UsageDetail;
 
 @Controller
 @RequestMapping("/account")

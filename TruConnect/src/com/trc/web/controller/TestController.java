@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.annotation.Resource;
-import javax.jms.JMSException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,15 +22,12 @@ import com.trc.manager.PaymentManager;
 import com.trc.manager.UserManager;
 import com.trc.manager.webflow.PaymentFlowManager;
 import com.trc.service.gateway.TruConnectGateway;
-import com.trc.service.jms.message.KenanServiceInstance;
-import com.trc.service.jms.message.NetworkActivation;
 import com.trc.user.User;
 import com.trc.util.ClassUtils;
 import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.KenanContract;
-import com.tscp.mvne.NetworkInfo;
 import com.tscp.mvne.ServiceInstance;
 import com.tscp.mvne.TruConnect;
 
@@ -75,9 +71,11 @@ public class TestController {
 		try {
 			devLogger.log("fetching account...");
 			Account account = accountManager.getAccounts(user).get(0);
+			ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
 			devLogger.log("found account: " + account.toString());
 			devLogger.log("attempting to apply coupon payment...");
-			couponManager.applyCouponPayment(account, 14.32);
+			Coupon coupon = new Coupon();
+			couponManager.applyCoupon(coupon, user, account, serviceInstance);
 		} catch (AccountManagementException e) {
 			devLogger.log("error while fetching account");
 			e.printStackTrace();
@@ -91,7 +89,7 @@ public class TestController {
 	@RequestMapping(value = "/coupon/fetch")
 	public String testFetchCoupons() {
 		try {
-			User user = userManager.getUserByEmail("jonathan.pong@gmail.com");
+			User user = userManager.getUserById(547);
 			devLogger.log(ClassUtils.toString(user));
 			devLogger.log("fetching account");
 			Account account = accountManager.getAccounts(user).get(0);
@@ -99,11 +97,23 @@ public class TestController {
 			devLogger.log("fetching service instance");
 			ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
 			devLogger.log(ClassUtils.toString(serviceInstance));
+			devLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalid());
 			List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
 			devLogger.log("found " + contracts.size() + " contracts");
-			devLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalid());
 			for (KenanContract kc : contracts) {
 				devLogger.log(kc.toString());
+			}
+			devLogger.log("fetching coupons");
+			List<UserCoupon> userCoupons;
+			try {
+				userCoupons = couponManager.getUserCoupons(user.getUserId());
+			} catch (CouponManagementException e) {
+				devLogger.log("error fetching coupons, returning empty list");
+				userCoupons = new Vector<UserCoupon>();
+			}
+			devLogger.log("found " + userCoupons.size() + " coupons");
+			for (UserCoupon userCoupon : userCoupons) {
+				devLogger.log(userCoupon.toString());
 			}
 		} catch (AccountManagementException e) {
 			devLogger.log("error while fetching account");
@@ -132,11 +142,18 @@ public class TestController {
 			}
 
 			Coupon coupon = new Coupon();
-			List<UserCoupon> userCoupons = couponManager.getUserCoupons(user.getUserId());
+			List<UserCoupon> userCoupons;
+			try {
+				userCoupons = couponManager.getUserCoupons(user.getUserId());
+			} catch (CouponManagementException e) {
+				devLogger.log("error fetching coupons, returning empty list");
+				userCoupons = new Vector<UserCoupon>();
+			}
 			devLogger.log("found " + userCoupons.size() + " user coupons in local database");
 			List<Coupon> coupons = new Vector<Coupon>();
 			for (UserCoupon uc : userCoupons) {
-				coupon = couponManager.getCoupon(uc.getId().getCouponId());
+				// coupon = couponManager.getCoupon(uc.getId().getCouponId());
+				coupon = uc.getId().getCoupon();
 				devLogger.log("" + coupon.toString());
 				coupons.add(coupon);
 			}
@@ -192,7 +209,7 @@ public class TestController {
 		}
 		return "test/success";
 	}
-	
+
 	/*
 	 * @RequestMapping(value = "/jms", method = RequestMethod.GET) public String
 	 * testJms() { try { queueSender.send(generateNetworkActivation(),

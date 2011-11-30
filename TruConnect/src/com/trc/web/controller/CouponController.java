@@ -66,7 +66,11 @@ public class CouponController extends EncryptedController {
 		devLogger.log("Form submitted to redeem coupon...");
 		// TODO create a succes page
 		ResultModel model = new ResultModel("coupon/addCouponSuccess", "coupon/addCoupon");
-		coupon = couponManager.getCouponByCode(coupon.getCouponCode());
+		try {
+			coupon = couponManager.getCouponByCode(coupon.getCouponCode());
+		} catch (CouponManagementException e) {
+			return model.getAccessException();
+		}
 
 		couponValidator.validate(coupon, result);
 		if (result.hasErrors()) {
@@ -85,16 +89,14 @@ public class CouponController extends EncryptedController {
 				account = accountManager.getAccounts(user).get(0);
 				devLogger.log("Fetchin service instance, there should only be one instance per account");
 				ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
-				if (couponManager.applyCoupon(coupon, user, account, serviceInstance)) {
-					return model.getSuccess();
-				} else {
-					return model.getAccessException();
-				}
+				couponManager.applyCoupon(coupon, user, account, serviceInstance);
 			} catch (AccountManagementException e) {
 				devLogger.log("Something went wrong with account management");
+				model.getAccessException();
 				e.printStackTrace();
 			} catch (CouponManagementException e) {
 				devLogger.log("Something went wrong with coupon management");
+				model.getException();
 				e.printStackTrace();
 			}
 			return model.getSuccess();

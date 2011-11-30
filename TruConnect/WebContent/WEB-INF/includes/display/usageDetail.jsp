@@ -8,7 +8,17 @@
   <td>${usageDetail.usageType}</td>
   <td style="text-align: right;">${usageDetail.usageAmount} <c:if test="${usageDetail.usageAmount > 0.0}">Mb</c:if>
   </td>
-  <td style="text-align: right;">$<fmt:formatNumber value="${usageDetail.dollarAmount}" pattern="0.000" /></td>
+  <td style="text-align: right;">
+    <c:choose>
+      <c:when test="${usageDetail.usageType == 'Access Fee' && usageDetail.dollarAmount != -4.99}">
+        <c:set var="fullAmount" value="${usageDetail.dollarAmount - usageDetail.discount}" />
+        $<fmt:formatNumber value="${fullAmount}" pattern="0.000" /> + $<fmt:formatNumber value="${usageDetail.discount}" pattern="0.000" />
+      </c:when>
+      <c:otherwise>
+        $<fmt:formatNumber value="${usageDetail.dollarAmount}" pattern="0.000" />
+      </c:otherwise>
+    </c:choose>  
+  </td>
   <td style="text-align: right;">$<fmt:formatNumber value="${usageDetail.balance}" pattern="0.00" />
   </td>
   <td><img class="info" src="<spring:url value="/static/images/buttons/i.png" />" /> <%@ include

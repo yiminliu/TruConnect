@@ -1,3 +1,10 @@
+2.5.6
+-------------------------------------------------------------
+- created pages for entering coupons during activation and in management
+- added jquery to management coupon page to shuffle between form pages
+  rather than created multiple pages
+- modified WEB-INF/includes/display/usageDetail.jsp to show coupon discounts
+
 2.5.5
 -------------------------------------------------------------
 - updated jquery to v1.7

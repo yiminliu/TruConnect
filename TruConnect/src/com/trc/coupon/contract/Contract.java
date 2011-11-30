@@ -26,18 +26,18 @@ import com.trc.coupon.CouponDetail;
 @Table(name = "coupon_contracts")
 public class Contract implements Serializable {
 	private static final long serialVersionUID = 2814309740931497593L;
-	private int contractId;
+	private int contractType;
 	private String description;
 	private Collection<CouponDetail> couponDetails = new HashSet<CouponDetail>();
 
 	@Id
-	@Column(name = "contract_id")
-	public int getContractId() {
-		return contractId;
+	@Column(name = "contract_type")
+	public int getContractType() {
+		return contractType;
 	}
 
-	public void setContractId(int contractId) {
-		this.contractId = contractId;
+	public void setContractType(int contractType) {
+		this.contractType = contractType;
 	}
 
 	@Column(name = "description")
@@ -60,18 +60,49 @@ public class Contract implements Serializable {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + contractType;
+		result = prime * result + ((couponDetails == null) ? 0 : couponDetails.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Contract other = (Contract) obj;
+		if (contractType != other.contractType)
+			return false;
+		if (couponDetails == null) {
+			if (other.couponDetails != null)
+				return false;
+		} else if (!couponDetails.equals(other.couponDetails))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		return true;
+	}
+
+	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("contractId=").append(contractId).append(", ");
-		sb.append("description=").append(description);
-		return sb.toString();
+		return "Contract [contractId=" + contractType + ", description=" + description + "]";
 	}
 
 	@Transient
 	public String toFormattedString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("--Contract--").append("\n");
-		sb.append("  Contract ID=").append(contractId).append("\n");
+		sb.append("  Contract ID=").append(contractType).append("\n");
 		sb.append("  Description=").append(description);
 		return sb.toString();
 	}

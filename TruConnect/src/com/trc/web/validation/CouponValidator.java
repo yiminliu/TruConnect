@@ -72,13 +72,19 @@ public class CouponValidator implements Validator {
 		}
 	}
 
-	public boolean checkUsed(Coupon coupon, User user, Account account) {
-		devLogger.log("Checking if coupon has already been redeemed...");
+	public boolean checkAccountRedeemedAndLimit(Coupon coupon, User user, Account account) {
+		devLogger.log("Checking if coupon has already been redeemed for this account...");
 		try {
-			List<UserCoupon> userCoupons = couponManager.getUserCoupon(coupon, user, account);
+			List<UserCoupon> userCoupons = couponManager.getUserCoupons(user.getUserId());
 			if (userCoupons.size() < 1) {
 				devLogger.log("Coupon has not yet been applied");
-				return false;
+				if (checkAccountLimit(coupon, userCoupons)) {
+					devLogger.log("Coupon is not at account limit");
+					return false;
+				} else {
+					devLogger.log("Coupon has reached account limit or has been redeemed on this account");
+					return true;
+				}
 			} else {
 				devLogger.log("Coupon has already been applied. Found " + userCoupons.size() + " for user " + user.getUserId()
 						+ " on account " + account.getAccountno());
@@ -87,6 +93,29 @@ public class CouponValidator implements Validator {
 		} catch (CouponManagementException e) {
 			return true;
 		}
+	}
+
+	private boolean checkAccountLimit(Coupon coupon, List<UserCoupon> userCoupons) {
+		int accountLimit = coupon.getCouponDetail().getAccountLimit();
+		int count = 0;
+		for (UserCoupon uc : userCoupons) {
+			if (uc.getId().getCoupon().equals(coupon)) {
+				return false;
+			}
+			if (uc.getId().getCoupon().getCouponDetail().equals(coupon.getCouponDetail())) {
+				count++;
+			}
+		}
+		if (count < accountLimit) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean isRecurring(Coupon coupon) {
+		return coupon.getCouponDetail().getDuration() == 0
+				&& coupon.getCouponDetail().getContract().getContractType() != -1 && coupon.getCouponDetail().getAmount() > 0;
 	}
 
 }
