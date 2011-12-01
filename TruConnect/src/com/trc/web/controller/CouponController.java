@@ -63,43 +63,39 @@ public class CouponController extends EncryptedController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView postRedeemCoupon(HttpServletRequest request, @ModelAttribute("coupon") Coupon coupon,
 			BindingResult result) {
-		devLogger.log("Form submitted to redeem coupon...");
-		// TODO create a succes page
 		ResultModel model = new ResultModel("coupon/addCouponSuccess", "coupon/addCoupon");
+		User user = userManager.getCurrentUser();
+		String encodedAccountNumber = request.getParameter("account");
 		try {
 			coupon = couponManager.getCouponByCode(coupon.getCouponCode());
-		} catch (CouponManagementException e) {
-			return model.getAccessException();
-		}
-
-		couponValidator.validate(coupon, result);
-		if (result.hasErrors()) {
-			return model.getError();
-		} else {
-			devLogger.log("Found coupon " + coupon.getCouponId() + " with coupon code " + coupon.getCouponCode());
-			User user = userManager.getCurrentUser();
-			devLogger.log("User " + user.getUsername() + " fetched");
-			String encodedAccountNumber = request.getParameter("account");
-			devLogger.log("Encoded account " + encodedAccountNumber);
-			int accountNumber = super.decryptId(encodedAccountNumber);
-			devLogger.log("Decoded account " + accountNumber);
-			try {
-				devLogger.log("Fetching account...");
-				Account account = accountManager.getAccount(accountNumber);
-				account = accountManager.getAccounts(user).get(0);
-				devLogger.log("Fetchin service instance, there should only be one instance per account");
-				ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
-				couponManager.applyCoupon(coupon, user, account, serviceInstance);
-			} catch (AccountManagementException e) {
-				devLogger.log("Something went wrong with account management");
-				model.getAccessException();
-				e.printStackTrace();
-			} catch (CouponManagementException e) {
-				devLogger.log("Something went wrong with coupon management");
-				model.getException();
-				e.printStackTrace();
+			couponValidator.validate(coupon, encodedAccountNumber, result);
+			if (result.hasErrors()) {
+				List<AccountDetail> accountList = accountManager.getOverview(user).getAccountDetails();
+				encodeAccountNums(accountList);
+				model.addObject("accountList", accountList);
+				return model.getError();
+			} else {
+				int accountNumber = super.decryptId(encodedAccountNumber);
+				devLogger.log("Found coupon " + coupon.getCouponId() + " with coupon code " + coupon.getCouponCode());
+				devLogger.log("User " + user.getUsername() + " fetched");
+				devLogger.log("Encoded account " + encodedAccountNumber);
+				devLogger.log("Decoded account " + accountNumber);
+				try {
+					devLogger.log("Fetching account...");
+					Account account = accountManager.getAccount(accountNumber);
+					account = accountManager.getAccounts(user).get(0);
+					devLogger.log("Fetchin service instance, there should only be one instance per account");
+					ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
+					couponManager.applyCoupon(coupon, user, account, serviceInstance);
+				} catch (AccountManagementException e) {
+					devLogger.log("Something went wrong with account management: " + e.getMessage());
+					model.getAccessException();
+				}
+				return model.getSuccess();
 			}
-			return model.getSuccess();
+		} catch (CouponManagementException e) {
+			devLogger.log("Something went wrong with coupon Management: " + e.getMessage());
+			return model.getAccessException();
 		}
 	}
 }

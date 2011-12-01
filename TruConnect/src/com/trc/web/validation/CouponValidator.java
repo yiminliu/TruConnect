@@ -44,6 +44,13 @@ public class CouponValidator implements Validator {
 		}
 	}
 
+	public void validate(Coupon coupon, String accountNumber, Errors errors) {
+		validate(coupon, errors);
+		if (accountNumber == null || accountNumber.isEmpty()) {
+			errors.reject("You must choose a device to apply the coupon to");
+		}
+	}
+
 	private void checkCouponCode(String couponCode, Errors errors) {
 		if (couponCode == null || couponCode.length() < 3 || !couponCode.substring(0, 3).equals("tru")) {
 			errors.rejectValue("couponCode", "coupon.code.invalid", "Not a valid coupon code");

@@ -24,7 +24,23 @@
 						$(nextSlider).css("display", "block");
 						$(nextSlider).animate({
 							marginLeft : '0px'
-						}, 1000);
+						}, 250);
+					});
+				});
+			});
+
+			$(function() {
+				$("div.slider a.back").click(function() {
+					var slider = $(this).parent().parent();
+					var prevSlider = $(this).parent().parent().prev();
+					$(slider).animate({
+						marginLeft : '1000px'
+					}, 500, function() {
+						$(slider).css("display", "none");
+						$(prevSlider).css("display", "block");
+						$(prevSlider).animate({
+							marginLeft : '0px'
+						}, 250);
 					});
 				});
 			});
@@ -80,15 +96,11 @@
               </c:forEach>
             </div>
             <input type="hidden" name="account" id="account" />
-            <div class="clear"></div>
-
-            <!-- Buttons -->
             <div class="buttons">
-
               <a id="addCouponButton" href="#" class="button action-m"><span>Continue</span> </a> <input
-                id="addCouponSubmit" type="submit" name="_eventId_submit" value="Continue" class="hidden" />
+                id="addCouponSubmit" type="submit" name="_eventId_submit" value="Continue" class="hidden" /><a href="#"
+                class="button action-m back" style="margin-right: 30px;"><span>Back</span> </a>
             </div>
-            <div class="clear"></div>
           </div>
 
 

@@ -111,6 +111,16 @@ public class Coupon implements Serializable {
 		this.couponDetail = couponDetail;
 	}
 
+	@Transient
+	public boolean isContract() {
+		return getCouponDetail().getContract().getContractType() > 0;
+	}
+
+	@Transient
+	public boolean isPayment() {
+		return getCouponDetail().getContract().getContractType() < 0;
+	}
+
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();

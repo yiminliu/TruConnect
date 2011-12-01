@@ -55,7 +55,7 @@
     <input name="activationMessage" value="activationMessage" />
     <input name="deviceInfo" value="deviceInfo" />
     <input name="networkInfo" value="networkInfo" />
-    <input name="creditCard" value="creditCard" />
+    <input name="creditCardPayment" value="creditCardPayment" />
     <input name="account" value="account" />
     <transition on="success" to="success" />
     <transition on="generalError" to="generalError" />
