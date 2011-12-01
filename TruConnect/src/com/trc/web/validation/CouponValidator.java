@@ -1,5 +1,6 @@
 package com.trc.web.validation;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.trc.coupon.Coupon;
+import com.trc.coupon.CouponStackable;
 import com.trc.coupon.UserCoupon;
 import com.trc.exception.management.CouponManagementException;
 import com.trc.manager.CouponManager;
@@ -38,7 +40,7 @@ public class CouponValidator implements Validator {
 			checkCouponCode(coupon.getCouponCode(), errors);
 			checkStartDate(coupon.getStartDate(), errors);
 			checkEndDate(coupon.getEndDate(), errors);
-			checkAvailability(coupon, errors);
+			checkQuantity(coupon, errors);
 		}
 	}
 
@@ -60,7 +62,7 @@ public class CouponValidator implements Validator {
 		}
 	}
 
-	private void checkAvailability(Coupon coupon, Errors errors) {
+	private void checkQuantity(Coupon coupon, Errors errors) {
 		if (coupon.getQuantity() > 0 && (coupon.getQuantity() - coupon.getUsed()) < 1) {
 			errors.rejectValue("quantity", "coupon.quantity.insufficient", "This coupon has been exhausted");
 		}
@@ -72,50 +74,91 @@ public class CouponValidator implements Validator {
 		}
 	}
 
-	public boolean checkAccountRedeemedAndLimit(Coupon coupon, User user, Account account) {
-		devLogger.log("Checking if coupon has already been redeemed for this account...");
+	public boolean isEligible(Coupon coupon, User user, Account account) {
+		boolean isAvailable = isAvailable(coupon);
+		boolean isApplied = isApplied(coupon, user, account);
+		boolean isAtAccountLimit = isAtAccountLimit(coupon, user, account);
+		boolean isExistingStackable;
+		boolean isStackable;
 		try {
 			List<UserCoupon> userCoupons = couponManager.getUserCoupons(user.getUserId());
-			if (userCoupons.size() < 1) {
-				devLogger.log("Coupon has not yet been applied");
-				if (checkAccountLimit(coupon, userCoupons)) {
-					devLogger.log("Coupon is not at account limit");
-					return false;
+			Coupon existingCoupon;
+			for (UserCoupon uc : userCoupons) {
+				existingCoupon = uc.getId().getCoupon();
+				isExistingStackable = isStackable(existingCoupon);
+				if (isExistingStackable) {
+					isStackable = isStackable(existingCoupon, coupon);
 				} else {
-					devLogger.log("Coupon has reached account limit or has been redeemed on this account");
-					return true;
+					isStackable = isStackable(coupon, existingCoupon);
 				}
-			} else {
-				devLogger.log("Coupon has already been applied. Found " + userCoupons.size() + " for user " + user.getUserId()
-						+ " on account " + account.getAccountno());
+				if (!isStackable) {
+					return false;
+				}
+			}
+			boolean result = isAvailable && !isApplied && !isAtAccountLimit;
+			return result;
+		} catch (CouponManagementException e) {
+			return false;
+		}
+	}
+
+	public boolean isStackable(Coupon coupon) {
+		Collection<CouponStackable> stackable = coupon.getCouponDetail().getStackable();
+		return stackable.size() > 0;
+	}
+
+	public boolean isStackable(Coupon stackableCoupon, Coupon candidate) {
+		Collection<CouponStackable> stackable = stackableCoupon.getCouponDetail().getStackable();
+		for (CouponStackable cs : stackable) {
+			if (cs.getId().getStackableCouponDetailId() == candidate.getCouponDetail().getCouponDetailId()) {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	public boolean isAvailable(Coupon coupon) {
+		return (coupon.getQuantity() - coupon.getUsed()) > 0;
+	}
+
+	public boolean isApplied(Coupon coupon, User user, Account account) {
+		try {
+			UserCoupon userCoupon = couponManager.getUserCoupon(new UserCoupon(coupon, user, account));
+			return userCoupon != null;
+		} catch (CouponManagementException e) {
+			devLogger.log("Error checking if coupon has already been applied while fetching UserCoupon");
+			return true;
+		}
+	}
+
+	public boolean isAtAccountLimit(Coupon coupon, User user, Account account) {
+		int accountLimit = coupon.getCouponDetail().getAccountLimit() == null ? -1 : coupon.getCouponDetail()
+				.getAccountLimit();
+		if (accountLimit == -1) {
+			return false;
+		}
+		// devLogger.log("account limit on coupon " + coupon.getCouponId() + " is "
+		// + accountLimit);
+		int count = 0;
+		try {
+			List<UserCoupon> userCoupons = couponManager.getUserCoupons(user.getUserId());
+			for (UserCoupon userCoupon : userCoupons) {
+				if (userCoupon.getId().getCoupon().getCouponDetail().getCouponDetailId() == coupon.getCouponDetail()
+						.getCouponDetailId()) {
+					count++;
+				}
+			}
+			// devLogger.log("found " + count +
+			// " instances of matching coupon details in the user's existing coupons");
+			return count >= accountLimit;
 		} catch (CouponManagementException e) {
 			return true;
 		}
 	}
 
-	private boolean checkAccountLimit(Coupon coupon, List<UserCoupon> userCoupons) {
-		int accountLimit = coupon.getCouponDetail().getAccountLimit();
-		int count = 0;
-		for (UserCoupon uc : userCoupons) {
-			if (uc.getId().getCoupon().equals(coupon)) {
-				return false;
-			}
-			if (uc.getId().getCoupon().getCouponDetail().equals(coupon.getCouponDetail())) {
-				count++;
-			}
-		}
-		if (count < accountLimit) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public boolean isRecurring(Coupon coupon) {
-		return coupon.getCouponDetail().getDuration() == 0
-				&& coupon.getCouponDetail().getContract().getContractType() != -1 && coupon.getCouponDetail().getAmount() > 0;
+		return coupon.getCouponDetail().getDuration() != 0
+				&& coupon.getCouponDetail().getContract().getContractType() != -1 && coupon.getCouponDetail().getAmount() == 0;
 	}
 
 }

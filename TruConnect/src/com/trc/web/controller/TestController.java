@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.coupon.Coupon;
 import com.trc.coupon.UserCoupon;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.CouponManagementException;
-import com.trc.exception.management.PaymentManagementException;
 import com.trc.manager.AccountManager;
 import com.trc.manager.CouponManager;
 import com.trc.manager.DeviceManager;
@@ -25,8 +25,9 @@ import com.trc.service.gateway.TruConnectGateway;
 import com.trc.user.User;
 import com.trc.util.ClassUtils;
 import com.trc.util.logger.DevLogger;
+import com.trc.web.model.ResultModel;
+import com.trc.web.validation.CouponValidator;
 import com.tscp.mvne.Account;
-import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.KenanContract;
 import com.tscp.mvne.ServiceInstance;
 import com.tscp.mvne.TruConnect;
@@ -49,12 +50,62 @@ public class TestController {
 	private CouponManager couponManager;
 	@Resource
 	private DevLogger devLogger;
+	@Autowired
+	private CouponValidator couponValidator;
 
 	private TruConnect truConnect;
 
 	@Autowired
 	public void init(TruConnectGateway truConnectGateway) {
 		truConnect = truConnectGateway.getPort();
+	}
+
+	@RequestMapping(value = "/coupon/validation", method = RequestMethod.GET)
+	public ModelAndView testCouponValidation() {
+		ResultModel model = new ResultModel("test/success");
+		try {
+			User user = userManager.getUserById(547);
+			Account account = accountManager.getAccounts(user).get(0);
+			ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
+
+			boolean isAvailable;
+			boolean isApplied;
+			boolean isAtAccountLimit;
+			boolean isRecurring;
+			boolean isStackable;
+			boolean isEligible;
+			List<Coupon> allCoupons = couponManager.getAllCoupons();
+			List<UserCoupon> userCoupons = couponManager.getUserCoupons(user.getUserId());
+			for (Coupon coupon : allCoupons) {
+				devLogger.log("\n\nChecking coupon:" + coupon.getCouponId() + " detail:"
+						+ coupon.getCouponDetail().getCouponDetailId() + " " + " contract:"
+						+ coupon.getCouponDetail().getContract().getDescription() + " duration:"
+						+ coupon.getCouponDetail().getDuration() + " amount:" + coupon.getCouponDetail().getAmount());
+				isAvailable = couponValidator.isAvailable(coupon);
+				isApplied = couponValidator.isApplied(coupon, user, account);
+				isAtAccountLimit = couponValidator.isAtAccountLimit(coupon, user, account);
+				isRecurring = couponValidator.isRecurring(coupon);
+				isEligible = couponValidator.isEligible(coupon, user, account);
+				devLogger.log("....isAvailable=" + isAvailable);
+				devLogger.log("....isApplied=" + isApplied);
+				devLogger.log("....isAtAccountLimit=" + isAtAccountLimit);
+				devLogger.log("....isRecurring=" + isRecurring);
+				for (UserCoupon uc : userCoupons) {
+					isStackable = couponValidator.isStackable(coupon, uc.getId().getCoupon());
+					devLogger.log("....isStackable=" + isStackable + " [" + uc.getId().getCoupon().getCouponId() + ", "
+							+ coupon.getCouponId() + "]");
+				}
+				devLogger.log("....isEligible=" + isEligible);
+			}
+
+		} catch (AccountManagementException e) {
+			devLogger.error("Account management error " + e.getMessage());
+			return model.getAccessException();
+		} catch (CouponManagementException e) {
+			devLogger.error("Coupon management error " + e.getMessage());
+			return model.getAccessException();
+		}
+		return model.getSuccess();
 	}
 
 	@RequestMapping(value = "/coupon/insert")
@@ -90,33 +141,21 @@ public class TestController {
 	public String testFetchCoupons() {
 		try {
 			User user = userManager.getUserById(547);
-			devLogger.log(ClassUtils.toString(user));
-			devLogger.log("fetching account");
 			Account account = accountManager.getAccounts(user).get(0);
-			devLogger.log(ClassUtils.toString(account));
-			devLogger.log("fetching service instance");
 			ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
-			devLogger.log(ClassUtils.toString(serviceInstance));
-			devLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalid());
+
 			List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
-			devLogger.log("found " + contracts.size() + " contracts");
 			for (KenanContract kc : contracts) {
 				devLogger.log(kc.toString());
 			}
-			devLogger.log("fetching coupons");
-			List<UserCoupon> userCoupons;
-			try {
-				userCoupons = couponManager.getUserCoupons(user.getUserId());
-			} catch (CouponManagementException e) {
-				devLogger.log("error fetching coupons, returning empty list");
-				userCoupons = new Vector<UserCoupon>();
-			}
-			devLogger.log("found " + userCoupons.size() + " coupons");
-			for (UserCoupon userCoupon : userCoupons) {
-				devLogger.log(userCoupon.toString());
+
+			List<UserCoupon> userCoupons = couponManager.getUserCoupons(user.getUserId());
+			for (UserCoupon uc : userCoupons) {
+				devLogger.log(uc.toString());
 			}
 		} catch (AccountManagementException e) {
-			devLogger.log("error while fetching account");
+			e.printStackTrace();
+		} catch (CouponManagementException e) {
 			e.printStackTrace();
 		}
 		return "test/success";
@@ -168,43 +207,6 @@ public class TestController {
 
 		} catch (AccountManagementException e) {
 			devLogger.log("error while fetching account");
-			e.printStackTrace();
-		}
-		return "test/success";
-	}
-
-	@RequestMapping(value = "/pccharge", method = RequestMethod.GET)
-	public String testPcCharge() {
-		try {
-			User user = userManager.getUserByUsername("jonathan.pong@gmail.com");
-			user.setUserId(547);
-			devLogger.log(ClassUtils.toString(user));
-			List<Account> accounts = accountManager.getAccounts(user);
-			for (Account account : accounts) {
-				devLogger.log(ClassUtils.toString(account));
-			}
-
-			Account account = accountManager.getAccounts(user).get(0);
-			devLogger.log(ClassUtils.toString(account));
-
-			CreditCard creditCard = new CreditCard();
-			creditCard.setNameOnCreditCard("Happy Dude");
-			creditCard.setAddress1("1234 test st");
-			creditCard.setCity("test city");
-			creditCard.setState("CA");
-			creditCard.setZip("85284");
-
-			creditCard.setCreditCardNumber("4387755555555550");
-			creditCard.setExpirationDate("1211");
-			creditCard.setVerificationcode("999");
-
-			paymentManager.makePayment(user, account, creditCard, "10.00");
-			// paymentFlowManager.makeActivationPayment(user, account, creditCard);
-		} catch (AccountManagementException e) {
-			devLogger.log("asdf");
-			e.printStackTrace();
-		} catch (PaymentManagementException e) {
-			devLogger.log("qwerty");
 			e.printStackTrace();
 		}
 		return "test/success";

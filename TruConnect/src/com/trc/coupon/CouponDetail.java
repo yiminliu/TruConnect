@@ -32,7 +32,7 @@ public class CouponDetail implements Serializable {
 	private int duration;
 	private String durationUnit;
 	private Double amount;
-	private int accountLimit;
+	private Integer accountLimit;
 	private Contract contract = new Contract();
 	private Collection<Coupon> coupons = new HashSet<Coupon>();
 	private Collection<CouponStackable> stackable = new HashSet<CouponStackable>();
@@ -96,11 +96,11 @@ public class CouponDetail implements Serializable {
 	}
 
 	@Column(name = "account_limit")
-	public int getAccountLimit() {
+	public Integer getAccountLimit() {
 		return accountLimit;
 	}
 
-	public void setAccountLimit(int accountLimit) {
+	public void setAccountLimit(Integer accountLimit) {
 		this.accountLimit = accountLimit;
 	}
 

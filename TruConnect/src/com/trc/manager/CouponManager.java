@@ -41,9 +41,19 @@ public class CouponManager implements CouponManagerModel {
 	}
 
 	@Loggable(value = LogLevel.TRACE)
+	public UserCoupon getUserCoupon(UserCoupon userCoupon) throws CouponManagementException {
+		try {
+			return couponService.getUserCoupon(userCoupon);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException("Error getting UserCoupon for user " + userCoupon.getId().getUserId() + ": "
+					+ e.getMessage());
+		}
+	}
+
+	@Loggable(value = LogLevel.TRACE)
 	public void applyCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
 			throws CouponManagementException {
-		if (!couponValidator.checkAccountRedeemedAndLimit(coupon, user, account)) {
+		if (!couponValidator.isAtAccountLimit(coupon, user, account)) {
 			try {
 				if (coupon.getCouponDetail().getContract().getContractType() == -1) {
 					devLogger.log("Inserting UserCoupon and applying credit payment in Kenan");
@@ -105,6 +115,14 @@ public class CouponManager implements CouponManagerModel {
 	public Coupon getCoupon(int couponId) throws CouponManagementException {
 		try {
 			return couponService.getCoupon(couponId);
+		} catch (CouponServiceException e) {
+			throw new CouponManagementException(e.getMessage(), e.getCause());
+		}
+	}
+
+	public List<Coupon> getAllCoupons() throws CouponManagementException {
+		try {
+			return couponService.getAllCoupons();
 		} catch (CouponServiceException e) {
 			throw new CouponManagementException(e.getMessage(), e.getCause());
 		}

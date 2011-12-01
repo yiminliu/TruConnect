@@ -96,6 +96,15 @@ public class CouponService {
 	}
 
 	@Transactional
+	public List<Coupon> getAllCoupons() throws CouponServiceException {
+		try {
+			return couponDao.getAllCoupons();
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error fetching Coupon from DAO layer: " + e.getMessage());
+		}
+	}
+
+	@Transactional
 	public Coupon getCouponByCode(String couponCode) throws CouponServiceException {
 		try {
 			return couponDao.getCouponByCode(couponCode);
@@ -161,7 +170,7 @@ public class CouponService {
 
 	@Transactional
 	public void deleteUserCoupon(User user, Coupon coupon, Account account) throws CouponServiceException {
-		UserCoupon userCoupon = new UserCoupon(user, coupon, account);
+		UserCoupon userCoupon = new UserCoupon(coupon, user, account);
 		try {
 			userCouponDao.deleteUserCoupon(userCoupon);
 		} catch (DataAccessException e) {
@@ -194,6 +203,15 @@ public class CouponService {
 	}
 
 	@Transactional
+	public UserCoupon getUserCoupon(UserCoupon userCoupon) throws CouponServiceException {
+		try {
+			return userCouponDao.getUserCoupon(userCoupon);
+		} catch (DataAccessException e) {
+			throw new CouponServiceException("Error fetching UserCoupon from DAO layer: " + e.getMessage());
+		}
+	}
+
+	@Transactional
 	public List<UserCoupon> getUserCoupons(int userId) throws CouponServiceException {
 		try {
 			return userCouponDao.getUserCoupons(userId);
@@ -217,7 +235,7 @@ public class CouponService {
 			devLogger.log("....applying coupon payment for string amount of " + stringAmount);
 			truConnect.applyCouponPayment(account, stringAmount, xmlCal);
 			try {
-				UserCoupon userCoupon = new UserCoupon(user, coupon, account);
+				UserCoupon userCoupon = new UserCoupon(coupon, user, account);
 				userCoupon.setKenanContractId(-1);
 				userCoupon.setActive(true);
 				insertUserCoupon(userCoupon);
@@ -248,7 +266,7 @@ public class CouponService {
 			kenanContract.setDuration(coupon.getCouponDetail().getDuration());
 			truConnect.applyContract(kenanContract);
 			try {
-				UserCoupon userCoupon = new UserCoupon(user, coupon, account);
+				UserCoupon userCoupon = new UserCoupon(coupon, user, account);
 				userCoupon.setKenanContractId(kenanContract.getContractId());
 				userCoupon.setActive(true);
 				insertUserCoupon(userCoupon);
@@ -278,7 +296,7 @@ public class CouponService {
 				kenanContract.setDuration(0);
 				truConnect.updateContract(kenanContract);
 				try {
-					UserCoupon userCoupon = new UserCoupon(user, coupon, account);
+					UserCoupon userCoupon = new UserCoupon(coupon, user, account);
 					userCoupon.setKenanContractId(kenanContract.getContractId());
 					userCoupon.setActive(false);
 					updateUserCoupon(userCoupon);
