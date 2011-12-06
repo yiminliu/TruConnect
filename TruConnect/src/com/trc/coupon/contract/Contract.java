@@ -95,14 +95,14 @@ public class Contract implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Contract [contractId=" + contractType + ", description=" + description + "]";
+		return "Contract [contractType=" + contractType + ", description=" + description + "]";
 	}
 
 	@Transient
 	public String toFormattedString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("--Contract--").append("\n");
-		sb.append("  Contract ID=").append(contractType).append("\n");
+		sb.append("  Contract Type=").append(contractType).append("\n");
 		sb.append("  Description=").append(description);
 		return sb.toString();
 	}

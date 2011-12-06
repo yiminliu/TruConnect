@@ -79,7 +79,8 @@ public class CreditCardValidator extends AddressValidator {
 				errors.rejectValue("expirationDate", "creditCard.expiration.month.invalid", "Invalid date (month)");
 			} else {
 				try {
-					Date expirationDate = SimpleDate.parseShortDate(date);
+					String dateCeiling = Integer.toString(month + 1) + date.substring(2);
+					Date expirationDate = SimpleDate.parseShortDate(dateCeiling);
 					if (expirationDate.before(new Date())) {
 						errors.rejectValue("expirationDate", "creditCard.expiration.expired", "Card is expired");
 					}

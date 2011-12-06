@@ -87,7 +87,10 @@ public class AddressManager implements AddressManagerModel {
 	@Override
 	public List<Address> removeAddress(User user, Address address) throws AddressManagementException {
 		try {
-			List<Address> addressList = addressService.removeAddress(user, address);
+			List<Address> addressList = addressService.getAllAddresses(user);
+			if (addressList.size() > 1) {
+				addressList = addressService.removeAddress(user, address);
+			}
 			CacheManager.clear(CacheKey.ADDRESSES);
 			return addressList;
 		} catch (AddressServiceException e) {

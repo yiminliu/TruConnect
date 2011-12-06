@@ -1,6 +1,7 @@
 $(function() {
+	var caption = $("#processingActivation #message").attr("title");
 	$("#processingActivation #message").val("");
-	showCaption($("#processingActivation #message"));
+	$("#processingActivation #message").showCaption(caption);
 	setTimeout(function() {
 		$("#processingActivationSubmit").click();
 	}, 3000);

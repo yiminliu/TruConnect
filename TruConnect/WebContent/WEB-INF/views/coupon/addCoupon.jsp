@@ -12,40 +12,6 @@
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
-  <script type="text/javascript">
-			$(function() {
-				$("div.slider a.continue").click(function() {
-					var slider = $(this).parent().parent();
-					var nextSlider = $(this).parent().parent().next();
-					$(slider).animate({
-						marginLeft : '-1000px'
-					}, 500, function() {
-						$(slider).css("display", "none");
-						$(nextSlider).css("display", "block");
-						$(nextSlider).animate({
-							marginLeft : '0px'
-						}, 250);
-					});
-				});
-			});
-
-			$(function() {
-				$("div.slider a.back").click(function() {
-					var slider = $(this).parent().parent();
-					var prevSlider = $(this).parent().parent().prev();
-					$(slider).animate({
-						marginLeft : '1000px'
-					}, 500, function() {
-						$(slider).css("display", "none");
-						$(prevSlider).css("display", "block");
-						$(prevSlider).animate({
-							marginLeft : '0px'
-						}, 250);
-					});
-				});
-			});
-		</script>
-
   <div class="blueTruConnectGradient">
     <div class="container">Coupon Information</div>
   </div>
@@ -55,7 +21,7 @@
       <div class="span-18 colborder">
 
         <form:form id="addCoupon" cssClass="validatedForm" method="post" commandName="coupon"
-          cssStyle="overflow:hidden; height: 200px;">
+          cssStyle="overflow:hidden; min-height:200px;">
           <!-- Error Alert -->
           <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.coupon'].allErrors}">
             <div class="row">
@@ -82,7 +48,7 @@
               <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="couponCode" />
             </div>
             <div class="buttons">
-              <a href="#" class="button action-m continue"><span>Continue</span> </a>
+              <a href="#" class="button action-m continue"><span>Next</span> </a>
             </div>
           </div>
 
@@ -91,15 +57,16 @@
             <div class="row deviceList" style="margin-top: 30px;">
               <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
                 <div class="device span-6">
-                  <a href="#" class="button semi-s"><span>${accountDetail.deviceInfo.deviceLabel}</span> </a>
+                  <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span name="wha">${accountDetail.deviceInfo.deviceLabel}</span>
+                  </a>
                 </div>
               </c:forEach>
             </div>
             <input type="hidden" name="account" id="account" />
             <div class="buttons">
-              <a id="addCouponButton" href="#" class="button action-m"><span>Continue</span> </a> <input
+              <a id="addCouponButton" href="#" class="button action-m"><span>Submit</span> </a> <input
                 id="addCouponSubmit" type="submit" name="_eventId_submit" value="Continue" class="hidden" /><a href="#"
-                class="button action-m back" style="margin-right: 30px;"><span>Back</span> </a>
+                class="button action-m back" style="margin-right: 15px;"><span>Back</span> </a>
             </div>
           </div>
 

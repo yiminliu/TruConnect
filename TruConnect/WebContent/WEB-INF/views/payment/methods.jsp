@@ -19,8 +19,7 @@
     <div id="main-content">
       <div class="span-18 colborder">
         <a href="<spring:url value="/account/payment/methods/add" />" class="button action-m" style="float: right;"><span>Add
-            New Card</span>
-        </a>
+            New Card</span> </a>
         <h3 style="margin-bottom: 40px; padding-bottom: 0px;">Credit Cards</h3>
 
         <c:forEach var="creditCard" items="${paymentMethods}" varStatus="status">
@@ -32,14 +31,12 @@
           <div style="font-size: 16px; line-height: 24px; float: left;">${creditCard.city}, ${creditCard.state}
             ${creditCard.zip}</div>
           <div style="float: right;">
-            <c:if test="${fn:length(paymentMethods) >= 1}">
+            <c:if test="${fn:length(paymentMethods) > 1}">
               <a href="<spring:url value="/account/payment/methods/remove/${encodedPaymentIds[status.index]}" />"
-                class="button semi-s" style="float: right;"><span>Remove</span>
-              </a>
+                class="button semi-s" style="float: right;"><span>Remove</span> </a>
             </c:if>
             <a href="<spring:url value="/account/payment/methods/edit/${encodedPaymentIds[status.index]}" />"
-              class="button semi-s multi" style="float: right;"><span>Edit</span>
-            </a>
+              class="button semi-s multi" style="float: right;"><span>Edit</span> </a>
           </div>
           <div style="clear: both; border-bottom: 1px dotted #cccccc; height: 30px; margin-bottom: 20px;"></div>
         </c:forEach>

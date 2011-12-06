@@ -29,6 +29,7 @@ import com.trc.coupon.contract.Contract;
 public class CouponDetail implements Serializable {
 	private static final long serialVersionUID = -237740560474759272L;
 	private int couponDetailId;
+	private CouponDetailType detailType;
 	private int duration;
 	private String durationUnit;
 	private Double amount;
@@ -49,6 +50,16 @@ public class CouponDetail implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "detail_type", nullable = false, insertable = false, updatable = false)
+	public CouponDetailType getDetailType() {
+		return detailType;
+	}
+
+	public void setDetailType(CouponDetailType detailType) {
+		this.detailType = detailType;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "contract_type", nullable = false, insertable = false)
 	public Contract getContract() {
 		return contract;
@@ -59,7 +70,7 @@ public class CouponDetail implements Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "coupon_type", nullable = false)
+	@JoinColumn(name = "coupon_detail_id", nullable = false)
 	public Collection<Coupon> getCoupons() {
 		return coupons;
 	}

@@ -66,16 +66,22 @@ public class CouponController extends EncryptedController {
 		ResultModel model = new ResultModel("coupon/addCouponSuccess", "coupon/addCoupon");
 		User user = userManager.getCurrentUser();
 		String encodedAccountNumber = request.getParameter("account");
+		int accountNumber = 0;
+		if (encodedAccountNumber != null) {
+			devLogger.log("Decrypting account number");
+			accountNumber = super.decryptId(encodedAccountNumber);
+			devLogger.log("Decrypted number is: " + accountNumber);
+		}
+		devLogger.log("Posting coupon request with account: " + accountNumber);
 		try {
 			coupon = couponManager.getCouponByCode(coupon.getCouponCode());
-			couponValidator.validate(coupon, encodedAccountNumber, result);
+			couponValidator.validate(coupon, accountNumber, result);
 			if (result.hasErrors()) {
 				List<AccountDetail> accountList = accountManager.getOverview(user).getAccountDetails();
 				encodeAccountNums(accountList);
 				model.addObject("accountList", accountList);
 				return model.getError();
 			} else {
-				int accountNumber = super.decryptId(encodedAccountNumber);
 				devLogger.log("Found coupon " + coupon.getCouponId() + " with coupon code " + coupon.getCouponCode());
 				devLogger.log("User " + user.getUsername() + " fetched");
 				devLogger.log("Encoded account " + encodedAccountNumber);
@@ -91,6 +97,15 @@ public class CouponController extends EncryptedController {
 					devLogger.log("Something went wrong with account management: " + e.getMessage());
 					model.getAccessException();
 				}
+				List<AccountDetail> accountList = accountManager.getOverview(user).getAccountDetails();
+				AccountDetail accountDetail = null;
+				for (AccountDetail ad : accountList) {
+					if (ad.getAccount().getAccountno() == accountNumber) {
+						accountDetail = ad;
+					}
+				}
+				model.addObject("accountDetail", accountDetail);
+				model.addObject("coupon", coupon);
 				return model.getSuccess();
 			}
 		} catch (CouponManagementException e) {

@@ -7,7 +7,7 @@
   <li>Status ID: ${device.deviceInfo.deviceStatusId}</li>
   </div>
   <div>
-    <c:forEach var="package" items="${device.account.packagelist}">
+    <c:forEach var="package" items="${device.account.packageList}">
       <li class="header">Package Information</li>
       <li>Package ID: ${package.packageid}</li>
       <li>Package Name: ${package.packageName}</li>

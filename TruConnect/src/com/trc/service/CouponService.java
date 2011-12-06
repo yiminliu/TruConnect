@@ -87,6 +87,12 @@ public class CouponService {
 	}
 
 	@Transactional
+	public void incCouponUsedCount(Coupon coupon) throws CouponServiceException {
+		coupon.setUsed(coupon.getUsed() + 1);
+		updateCoupon(coupon);
+	}
+
+	@Transactional
 	public Coupon getCoupon(int couponId) throws CouponServiceException {
 		try {
 			return couponDao.getCoupon(couponId);
@@ -226,25 +232,26 @@ public class CouponService {
 	 */
 
 	@Transactional
-	public void applyCouponPayment(Coupon coupon, User user, Account account, Date date) throws CouponServiceException {
+	public int applyCouponPayment(Coupon coupon, User user, Account account, Date date) throws CouponServiceException {
 		try {
 			GregorianCalendar calendar = new GregorianCalendar();
 			calendar.setTime(date);
 			XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
 			String stringAmount = Formatter.formatDollarAmountQuery(coupon.getCouponDetail().getAmount());
 			devLogger.log("....applying coupon payment for string amount of " + stringAmount);
-			truConnect.applyCouponPayment(account, stringAmount, xmlCal);
+			int trackingId = truConnect.applyCouponPayment(account, stringAmount, xmlCal);
 			try {
 				UserCoupon userCoupon = new UserCoupon(coupon, user, account);
 				userCoupon.setKenanContractId(-1);
 				userCoupon.setActive(true);
 				insertUserCoupon(userCoupon);
+				incCouponUsedCount(coupon);
+				return trackingId;
 			} catch (DataAccessException e) {
 				// TODO rollback the credit that was given
 				devLogger.log("Error inserting UserCoupon");
 				throw new CouponServiceException("Error inserting UserCoupon: " + e.getMessage(), e.getCause());
 			}
-			devLogger.log("....finished applying coupon payment");
 		} catch (DatatypeConfigurationException dce) {
 			devLogger.error("....Error applying coupon payment in kenan: could not create XMLGregorianCalendar");
 			throw new CouponServiceException(dce.getMessage(), dce.getCause());
@@ -255,7 +262,7 @@ public class CouponService {
 	}
 
 	@Transactional
-	public void applyCoupon(User user, Coupon coupon, Account account, ServiceInstance serviceInstance)
+	public int applyCoupon(User user, Coupon coupon, Account account, ServiceInstance serviceInstance)
 			throws CouponServiceException {
 		try {
 			devLogger.log("Applying coupon " + coupon.getCouponId() + " to account " + account.getAccountno());
@@ -264,12 +271,14 @@ public class CouponService {
 			kenanContract.setServiceInstance(serviceInstance);
 			kenanContract.setContractType(coupon.getCouponDetail().getContract().getContractType());
 			kenanContract.setDuration(coupon.getCouponDetail().getDuration());
-			truConnect.applyContract(kenanContract);
+			int contractId = truConnect.applyContract(kenanContract);
 			try {
 				UserCoupon userCoupon = new UserCoupon(coupon, user, account);
 				userCoupon.setKenanContractId(kenanContract.getContractId());
 				userCoupon.setActive(true);
 				insertUserCoupon(userCoupon);
+				incCouponUsedCount(coupon);
+				return contractId;
 			} catch (DataAccessException e) {
 				devLogger.log("Error inserting UserCoupon");
 				kenanContract.setDuration(0);

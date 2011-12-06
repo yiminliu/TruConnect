@@ -30,9 +30,9 @@ public class Coupon implements Serializable {
 	private String couponCode;
 	private Date startDate;
 	private Date endDate;
-	private boolean enabled;
 	private int quantity;
 	private int used;
+	private boolean enabled;
 	private CouponDetail couponDetail = new CouponDetail();
 
 	@Id
@@ -111,6 +111,16 @@ public class Coupon implements Serializable {
 		this.couponDetail = couponDetail;
 	}
 
+	/* ****************************************************************
+	 * Helper Methods
+	 * ****************************************************************
+	 */
+
+	@Transient
+	public boolean isEmpty() {
+		return couponCode == null || couponCode.isEmpty();
+	}
+
 	@Transient
 	public boolean isContract() {
 		return getCouponDetail().getContract().getContractType() > 0;
@@ -119,6 +129,17 @@ public class Coupon implements Serializable {
 	@Transient
 	public boolean isPayment() {
 		return getCouponDetail().getContract().getContractType() < 0;
+	}
+
+	@Transient
+	public boolean isRecurring() {
+		return getCouponDetail().getDuration() != 0 && getCouponDetail().getContract().getContractType() != -1
+				&& getCouponDetail().getAmount() == 0;
+	}
+
+	@Transient
+	public boolean isStackable() {
+		return getCouponDetail().getStackable().size() > 0;
 	}
 
 	@Override
@@ -146,11 +167,6 @@ public class Coupon implements Serializable {
 		sb.append("  Used=").append(used).append("\n");
 		sb.append("  Coupon Detail=").append(couponDetail.toString());
 		return sb.toString();
-	}
-
-	@Transient
-	public boolean isEmpty() {
-		return couponCode == null || couponCode.isEmpty();
 	}
 
 }

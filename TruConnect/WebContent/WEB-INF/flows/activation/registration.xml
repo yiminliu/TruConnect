@@ -44,7 +44,7 @@
   <subflow-state id="requestCreditCardInfo" subflow="addCreditCard_initial">
     <input name="user" value="registration.user" />
     <input name="creditCardPayment" value="creditCardPayment" />
-    <transition on="success" to="processing_createShellAccount">
+    <transition on="success" to="processActivation">
       <evaluate expression="activationLogger.logPaymentInfo()" />
     </transition>
   </subflow-state>

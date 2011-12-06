@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.coupon.Coupon;
 import com.trc.coupon.UserCoupon;
+import com.trc.exception.ValidationException;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.CouponManagementException;
 import com.trc.manager.AccountManager;
@@ -84,7 +85,7 @@ public class TestController {
 				isAvailable = couponValidator.isAvailable(coupon);
 				isApplied = couponValidator.isApplied(coupon, user, account);
 				isAtAccountLimit = couponValidator.isAtAccountLimit(coupon, user, account);
-				isRecurring = couponValidator.isRecurring(coupon);
+				isRecurring = coupon.isRecurring();
 				isEligible = couponValidator.isEligible(coupon, user, account);
 				devLogger.log("....isAvailable=" + isAvailable);
 				devLogger.log("....isApplied=" + isApplied);
@@ -103,6 +104,9 @@ public class TestController {
 			return model.getAccessException();
 		} catch (CouponManagementException e) {
 			devLogger.error("Coupon management error " + e.getMessage());
+			return model.getAccessException();
+		} catch (ValidationException e) {
+			devLogger.error("Exception while checking if coupon is applied");
 			return model.getAccessException();
 		}
 		return model.getSuccess();

@@ -213,7 +213,8 @@ public class DeviceController extends EncryptedController {
 	}
 
 	@RequestMapping(value = "/reinstall/{encodedDeviceId}", method = RequestMethod.POST)
-	public ModelAndView postReinstallDevice(@PathVariable String encodedDeviceId, Errors errors) {
+	public ModelAndView postReinstallDevice(@PathVariable String encodedDeviceId, @ModelAttribute DeviceInfo deviceInfo,
+			Errors errors) {
 		ResultModel model = new ResultModel("redirect:/devices", "devices/reinstallPrompt");
 		User user = userManager.getCurrentUser();
 		try {

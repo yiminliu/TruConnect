@@ -25,4 +25,19 @@ public final class SimpleDate {
 	public static synchronized Date parseShortDate(String string) throws ParseException {
 		return shortDateFormat.parse(string);
 	}
+
+	public static void main(String[] args) {
+		String date = "1311";
+		Date simpleDate = null;
+		int month = Integer.parseInt(date.substring(0, 2));
+		int year = Integer.parseInt(date.substring(2));
+		try {
+			simpleDate = SimpleDate.parseShortDate(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		System.out.println(month);
+		System.out.println(year);
+		System.out.println(simpleDate);
+	}
 }

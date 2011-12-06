@@ -59,16 +59,20 @@
           <sec:authorize ifAnyGranted="ROLE_ADMIN, ROLE_MANAGER">
             <span class="span-6" style="line-height: 36px;">Status:</span>
             <span class="span-8" style="line-height: 36px;"> <c:choose>
-              <c:when test="${user.enabled}">
+                <c:when test="${user.enabled}">
                 Enabled
-                </span>
-                <a href="<spring:url value="/profile/user/disable"/>" class="button escape-s"
-                  onclick="return confirm('Do you want to disable ${user.email}?')"><span>Disable</span> </a>
-              </c:when>
-              <c:otherwise>Disabled</span>
-                <a href="<spring:url value="/profile/user/enable"/>" class="button escape-s"
-                  onclick="return confirm('Do you want to enable ${user.email}?')"><span>Enable</span> </a>
-              </c:otherwise>
+                
+            
+            
+            
+            </span>
+            <a href="<spring:url value="/profile/user/disable"/>" class="button escape-s"
+              onclick="return confirm('Do you want to disable ${user.email}?')"><span>Disable</span> </a>
+            </c:when>
+            <c:otherwise>Disabled</span>
+              <a href="<spring:url value="/profile/user/enable"/>" class="button escape-s"
+                onclick="return confirm('Do you want to enable ${user.email}?')"><span>Enable</span> </a>
+            </c:otherwise>
             </c:choose>
             <div class="clear"></div>
           </sec:authorize>
@@ -98,9 +102,12 @@
             </c:if>
             <div class=addressButtons>
               <a href="<spring:url value="/profile/address/edit/${address.encodedAddressId}" />"
-                class="button semi-s multi"><span>Edit</span> </a> <a class="button semi-s"
-                href="<spring:url value="/profile/address/remove/${address.encodedAddressId}" />"><span>Remove</span>
-              </a>
+                class="button semi-s multi"><span>Edit</span> </a>
+              <c:if test="${fn:length(addressList) > 1}">
+                <a class="button semi-s"
+                  href="<spring:url value="/profile/address/remove/${address.encodedAddressId}" />"><span>Remove</span>
+                </a>
+              </c:if>
             </div>
           </div>
         </c:forEach>

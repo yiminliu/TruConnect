@@ -51,21 +51,23 @@ public class CouponManager implements CouponManagerModel {
 	}
 
 	@Loggable(value = LogLevel.TRACE)
-	public void applyCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
+	public int applyCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
 			throws CouponManagementException {
 		if (!couponValidator.isAtAccountLimit(coupon, user, account)) {
 			try {
 				if (coupon.getCouponDetail().getContract().getContractType() == -1) {
 					devLogger.log("Inserting UserCoupon and applying credit payment in Kenan");
-					couponService.applyCouponPayment(coupon, user, account, new Date());
+					return couponService.applyCouponPayment(coupon, user, account, new Date());
 				} else {
 					devLogger.log("Inserting UserCoupon and applying contract in Kenan");
-					couponService.applyCoupon(user, coupon, account, serviceInstance);
+					return couponService.applyCoupon(user, coupon, account, serviceInstance);
 				}
 			} catch (CouponServiceException e) {
 				throw new CouponManagementException(e.getMessage(), e.getCause());
 			}
 		} else {
+			devLogger.error("couponManager.applyCoupon = coupon is at account limit. Result of call was "
+					+ couponValidator.isAtAccountLimit(coupon, user, account));
 			throw new CouponManagementException("Coupon " + coupon.getCouponId()
 					+ " has already been applied to it's limit by user " + user.getUserId());
 		}
@@ -130,8 +132,8 @@ public class CouponManager implements CouponManagerModel {
 
 	public Coupon getCouponByCode(String couponCode) throws CouponManagementException {
 		try {
-			devLogger.log("CouponManager.getCouponByCode");
-			return couponService.getCouponByCode(couponCode);
+			Coupon coupon = couponService.getCouponByCode(couponCode);
+			return coupon;
 		} catch (CouponServiceException e) {
 			throw new CouponManagementException(e.getMessage(), e.getCause());
 		}

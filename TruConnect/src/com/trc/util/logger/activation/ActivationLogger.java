@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import com.trc.coupon.Coupon;
 import com.trc.dao.ActivationStateDao;
 import com.trc.user.User;
+import com.trc.util.logger.DevLogger;
 
 @Service
 @Scope("session")
@@ -16,6 +18,8 @@ public class ActivationLogger {
 	private ActivationStateDao activationStateDao;
 	private ActivationMap activationMap = null;
 	private ActivationState previousState = null;
+	@Autowired
+	private DevLogger devLogger;
 
 	public void startLogging(User user) {
 		setActivationMap(new ActivationMap(user));
@@ -104,6 +108,33 @@ public class ActivationLogger {
 
 	public void logWelcome() {
 		logState(ActState.NOTIFY_WELCOME);
+	}
+
+	public void logHasCoupon(Coupon coupon) {
+		devLogger.log("hasCoupon");
+		devLogger.log("... coupon during processing: " + coupon.toString() + " " + coupon.isContract() + " "
+				+ coupon.isPayment());
+		logState(ActState.HAS_COUPON);
+	}
+
+	public void logIsCouponPayment() {
+		devLogger.log("isCouponPayment");
+		logState(ActState.IS_COUPON_PAYMENT);
+	}
+
+	public void logApplyCouponPayment() {
+		devLogger.log("applyCouponPayment");
+		logState(ActState.APPLY_COUPON_PAYMENT);
+	}
+
+	public void logCheckCouponContract() {
+		devLogger.log("checkCouponContract");
+		logState(ActState.CHECK_COUPON_CONTRACT);
+	}
+
+	public void logApplyContract() {
+		devLogger.log("applyContract");
+		logState(ActState.APPLY_CONTRACT);
 	}
 
 	/* **************************************************************

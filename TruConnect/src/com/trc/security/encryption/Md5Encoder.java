@@ -71,6 +71,6 @@ public final class Md5Encoder {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(Md5Encoder.encode("trup1152"));
+		System.out.println(Md5Encoder.encode("truconnect1"));
 	}
 }

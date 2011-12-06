@@ -40,13 +40,15 @@ $(function() {
 
 $.fn.setupCreditCardForm = function() {
 	var formName = $(this).attr("id");
-	$("#" + formName).submit(function() {
-		$("#expirationDate").val($("#monthSelect").val() + $("#yearSelect").val());
-	});
+	$("#" + formName).submit(
+			function() {
+				$("#.expirationDate").val(
+						$("#monthSelect").val() + $("#yearSelect").val());
+			});
 };
 
 function setupCreditCardForms() {
-	$(document).find("form").setupCreditCardForm();
+	$(document).find("form").not($("#adminControl")).setupCreditCardForm();
 }
 
 /**

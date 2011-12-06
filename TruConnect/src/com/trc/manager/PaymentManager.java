@@ -111,8 +111,13 @@ public class PaymentManager implements PaymentManagerModel {
 	@Loggable(value = LogLevel.TRACE)
 	public List<CustPmtMap> removeCreditCard(User user, int paymentId) throws PaymentManagementException {
 		try {
-			CacheManager.clear(CacheKey.CREDIT_CARDS);
-			return paymentService.removeCreditCard(user, paymentId);
+			List<CustPmtMap> paymentMethods = paymentService.getPaymentMap(user);
+			if (paymentMethods.size() > 1) {
+				CacheManager.clear(CacheKey.CREDIT_CARDS);
+				return paymentService.removeCreditCard(user, paymentId);
+			} else {
+				return paymentMethods;
+			}
 		} catch (PaymentServiceException e) {
 			throw new PaymentManagementException(e.getMessage(), e.getCause());
 		}

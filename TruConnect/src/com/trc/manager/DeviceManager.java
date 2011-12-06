@@ -122,6 +122,7 @@ public class DeviceManager implements DeviceManagerModel {
 	public NetworkInfo swapDevice(User user, DeviceInfo oldDeviceInfo, DeviceInfo newDeviceInfo)
 			throws DeviceManagementException {
 		try {
+			clearDevicesFromCache();
 			NetworkInfo oldNetworkInfo = deviceService.getNetworkInfo(oldDeviceInfo.getDeviceValue(), null);
 			NetworkInfo newNetworkInfo = deviceService.swapDevice(user, oldNetworkInfo, newDeviceInfo);
 			return newNetworkInfo;
@@ -234,7 +235,7 @@ public class DeviceManager implements DeviceManagerModel {
 	public boolean isDeviceAvailable(String esn) {
 		try {
 			NetworkInfo networkInfo = deviceService.getNetworkInfo(esn, null);
-			if (compareEsn(networkInfo, esn) && !isEsnInUse(networkInfo)) {
+			if (networkInfo != null && compareEsn(networkInfo, esn) && !isEsnInUse(networkInfo)) {
 				return true;
 			} else {
 				return false;
@@ -264,7 +265,8 @@ public class DeviceManager implements DeviceManagerModel {
 	}
 
 	private boolean isEsnInUse(NetworkInfo networkInfo) {
-		return networkInfo.getStatus().equals("A") || networkInfo.getStatus().equals("S");
+		return networkInfo.getStatus().equals("A") || networkInfo.getStatus().equals("S")
+				|| networkInfo.getStatus().equals("H");
 	}
 
 	private static boolean isDec(String esn) {
