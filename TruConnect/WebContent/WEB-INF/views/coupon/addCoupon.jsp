@@ -7,13 +7,14 @@
 <script type="text/javascript" src="<spring:url value="/static/javascript/setupForms.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/addCoupon.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/highlight/step/addPaymentMethod.js" />"></script>
+
 </head>
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
   <div class="blueTruConnectGradient">
-    <div class="container">Coupon Information</div>
+    <div class="container">Redeem Coupon</div>
   </div>
 
   <div class="container">
@@ -21,7 +22,7 @@
       <div class="span-18 colborder">
 
         <form:form id="addCoupon" cssClass="validatedForm" method="post" commandName="coupon"
-          cssStyle="overflow:hidden; min-height:200px;">
+          cssStyle="overflow:hidden; height:300px;">
           <!-- Error Alert -->
           <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.coupon'].allErrors}">
             <div class="row">
@@ -42,10 +43,15 @@
 
           <div class="slider" style="height: 140px;">
             <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Enter a Coupon Code</h3>
-            <p>Enter a coupon to save Tru-bucks on your Tru-account!</p>
+            <p>If you have a coupon code, enter the code below, select your device, and click "Apply". The coupon
+              will be applied to your account automatically. If the coupon you have received is a discount on the
+              monthly access fee, the discount will be applied when the monthly access fee is charged.</p>
             <div class="row">
               <form:label cssClass="required" path="couponCode">Coupon Code</form:label>
               <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="couponCode" />
+            </div>
+            <div class="row pushed">
+              <span id="couponMessage"></span>
             </div>
             <div class="buttons">
               <a href="#" class="button action-m continue"><span>Next</span> </a>
@@ -54,22 +60,20 @@
 
           <div class="slider hidden" style="margin-left: 1000px; height: 140px;">
             <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Select the Device you want to apply the offer to</h3>
-            <div class="row deviceList" style="margin-top: 30px;">
+
+
+            <div class="row deviceList" style="margin-top: 30px; position: relative; height: 50px;">
               <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
-                <div class="device span-6">
-                  <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span name="wha">${accountDetail.deviceInfo.deviceLabel}</span>
-                  </a>
-                </div>
+                <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" /><span>${accountDetail.deviceInfo.deviceLabel}</span><br/>
               </c:forEach>
             </div>
-            <input type="hidden" name="account" id="account" />
+
             <div class="buttons">
-              <a id="addCouponButton" href="#" class="button action-m"><span>Submit</span> </a> <input
+              <a id="addCouponButton" href="#" class="button action-m"><span>Apply</span> </a> <input
                 id="addCouponSubmit" type="submit" name="_eventId_submit" value="Continue" class="hidden" /><a href="#"
                 class="button action-m back" style="margin-right: 15px;"><span>Back</span> </a>
             </div>
           </div>
-
 
         </form:form>
       </div>

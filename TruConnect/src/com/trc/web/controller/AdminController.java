@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.manager.UserManager;
@@ -23,6 +26,7 @@ import com.trc.security.encryption.Md5Encoder;
 import com.trc.user.SecurityQuestionAnswer;
 import com.trc.user.User;
 import com.trc.user.authority.Authority;
+import com.trc.util.logger.DevLogger;
 import com.trc.web.model.ResultModel;
 import com.trc.web.session.cache.CacheManager;
 import com.trc.web.validation.AdminValidator;
@@ -36,6 +40,8 @@ public class AdminController {
 	private SessionRegistry sessionRegistry;
 	@Autowired
 	private AdminValidator adminValidator;
+	@Resource
+	private DevLogger devLogger;
 
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
 	@RequestMapping(value = "/managers", method = RequestMethod.GET)
@@ -160,6 +166,42 @@ public class AdminController {
 		List<User> searchResults = userManager.searchByEmail(request.getParameter("email"));
 		model.addObject("searchResults", searchResults);
 		return model.getSuccess();
+	}
+
+	@RequestMapping(value = "/search/email/ajax", method = RequestMethod.GET)
+	public @ResponseBody
+	SearchResponse searchByEmailAjax(@RequestParam String email) {
+		devLogger.log("ajax request for user search caught");
+		List<User> searchResults = userManager.searchByEmail(email);
+		String[] emails = new String[searchResults.size()];
+		for (int i = 0; i < searchResults.size(); i++) {
+			emails[i] = searchResults.get(i).getEmail();
+		}
+		if (searchResults.size() > 0) {
+			devLogger.log("returning " + searchResults.size() + " results");
+			return new SearchResponse(true, emails);
+		} else {
+			devLogger.log("returning " + searchResults.size() + " results");
+			return new SearchResponse(false, emails);
+		}
+	}
+
+	public static class SearchResponse {
+		private String[] users;
+		private boolean success;
+
+		public String[] getUsers() {
+			return users;
+		}
+
+		public boolean isSuccess() {
+			return success;
+		}
+
+		public SearchResponse(boolean success, String[] users) {
+			this.success = success;
+			this.users = users;
+		}
 	}
 
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")

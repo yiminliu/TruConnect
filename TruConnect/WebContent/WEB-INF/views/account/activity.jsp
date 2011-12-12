@@ -6,9 +6,10 @@
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
 <script type="text/javascript" src="<spring:url value="/static/javascript/mousePositionPopup.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/infoIconPopup.js" />"></script>
+<script type="text/javascript" src="<spring:url value="/static/javascript/pages/accountActivity.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/highlight/navigation/activity.js" />"></script>
 </head>
-<body class="app">
+<body class="app" onload="highlightRadio('${encodedAccountNumber}')">
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
@@ -21,21 +22,23 @@
       <div class="span-18 colborder">
 
         <c:if test="${fn:length(accountDetails) > 0}">
-          <c:forEach var="accountDetail" items="${accountList}">
-            <div class="span-6">
-              <div style="font-weight: bold; margin-bottom: 10px;">${accountDetail.deviceInfo.deviceLabel}</div>
-              <div class="clear"></div>
-              <a href="<spring:url value="/account/activity/${accountDetail.encodedAccountNum}"/>" class="button semi-s"><span>View
-                  Activity</span> </a>
-            </div>
-          </c:forEach>
-          <div class="clear"></div>
+          <p>Select the device that you would like to see the activity for.</p>
+          <div id="accountList" style="max-height: 100px; width: 700px;">
+            <c:forEach var="accountDetail" items="${accountList}">
+              <div style="height: 20px; width: 233px; float: left;">
+                <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" /><span>${accountDetail.deviceInfo.deviceLabel}</span>
+              </div>
+            </c:forEach>
+            <div class="clear"></div>
+          </div>
+          <br/>
+          <hr/>
         </c:if>
 
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">History</h3>
         <c:forEach var="accountDetail" items="${accountDetails}">
-          <h4 style="float: left; display: inline-block">${accountDetail.deviceInfo.deviceLabel}</h4>
-          <h4 style="float: right; display: inline-block">Current Balance: $${accountDetail.account.balance}</h4>
+          <h4 style="float: left; display: inline-block;">${accountDetail.deviceInfo.deviceLabel}</h4>
+          <h4 style="float: right; display: inline-block;">Current Balance: $${accountDetail.account.balance}</h4>
           <c:set var="currentBalance" value="${accountDetail.account.balance}" />
           <table>
             <tr>

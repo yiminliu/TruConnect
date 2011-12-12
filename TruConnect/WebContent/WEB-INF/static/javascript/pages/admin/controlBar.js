@@ -31,6 +31,23 @@ $.fn.loadAjax = function(url, params) {
 	return $(this);
 };
 
+function loadUsers(email) {
+	alert('making ajax request');
+	$.getJSON("admin/search/email/ajax", {
+		email : email
+	}, function(searchResponse) {
+		alert("0");
+		if (searchResponse.success) {
+			alert("1");
+			var asdf = "asdf " + searchResponse.users;
+			$("#admin_search_results").html(asdf);
+			alert("3");
+		} else {
+			alert("2");
+		}
+	});
+}
+
 $(function() {
 	$("#admin_search_email").enableCaption().enableResultsBox();
 });
@@ -53,6 +70,7 @@ $(function() {
 function makeBufferedAjaxCall(url) {
 	if (currentAjaxRequest == null) {
 		params = "email=" + $("#admin_search_email").val();
+		//loadUsers($("#admin_search_email").val());
 		$("#admin_search_results").loadAjax(url, params);
 		currentAjaxRequest = "complete";
 	} else {

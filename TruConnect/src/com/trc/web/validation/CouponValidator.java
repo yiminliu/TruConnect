@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -21,7 +19,6 @@ import com.trc.manager.AccountManager;
 import com.trc.manager.CouponManager;
 import com.trc.manager.UserManager;
 import com.trc.user.User;
-import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
 
 @Component
@@ -32,8 +29,9 @@ public class CouponValidator implements Validator {
 	private UserManager userManager;
 	@Autowired
 	private AccountManager accountManager;
-	@Resource
-	private DevLogger devLogger;
+
+	// @Resource
+	// private DevLogger devLogger;
 
 	@Override
 	public boolean supports(Class<?> myClass) {
@@ -57,8 +55,10 @@ public class CouponValidator implements Validator {
 	}
 
 	public void validate(Coupon coupon, int accountNumber, Errors errors) {
+		// devLogger.log("validating coupon");
 		checkExists(coupon, errors);
 		if (!errors.hasErrors()) {
+			// devLogger.log("existence verified, checking others...");
 			try {
 				User user = userManager.getCurrentUser();
 				Account account = accountManager.getAccount(accountNumber);
@@ -73,72 +73,76 @@ public class CouponValidator implements Validator {
 	}
 
 	private void checkAccount(int accountNumber, Errors errors) {
-		devLogger.log("...checking account number");
+		// devLogger.log("checking account number");
 		if (accountNumber == 0) {
-			devLogger.error("......error found with account number");
+			// devLogger.log("error checking account number");
 			errors.reject("coupon.device.required", "You must choose a device to apply the coupon to");
 		}
 	}
 
 	private void checkCouponCode(String couponCode, Errors errors) {
-		devLogger.log("...checking coupon code");
+		// devLogger.log("checking coupon code");
 		if (couponCode == null || couponCode.length() < 3 || !couponCode.substring(0, 3).equals("tru")) {
-			devLogger.error("......error found with coupon code");
+			// devLogger.log("error checking coupon code");
 			errors.rejectValue("couponCode", "coupon.code.invalid", "Not a valid coupon code");
 		}
 	}
 
 	private void checkEndDate(Date endDate, Errors errors) {
-		devLogger.log("...checking end date");
+		// devLogger.log("checking end date");
 		if (endDate != null && endDate.compareTo(new Date()) <= 0) {
-			devLogger.error("......error found with end date");
+			// devLogger.log("error checking end date");
 			errors.rejectValue("endDate", "coupon.date.expired", "Coupon is expired");
 		}
 	}
 
 	private void checkStartDate(Date startDate, Errors errors) {
-		devLogger.log("...checking start date");
+		// devLogger.log("checking start date");
 		if (startDate != null && startDate.compareTo(new Date()) >= 0) {
-			devLogger.error("......error found with start date");
+			// devLogger.log("error checking start date");
 			errors.rejectValue("startDate", "coupon.date.notActive", "Coupon has not started");
 		}
 	}
 
 	private void checkQuantity(Coupon coupon, Errors errors) {
-		devLogger.log("...checking quantity");
+		// devLogger.log("checking quantity");
 		if (coupon.getQuantity() > 0 && (coupon.getQuantity() - coupon.getUsed()) < 1) {
-			devLogger.error("......error found with quantity");
+			// devLogger.log("error checking quantity");
 			errors.rejectValue("quantity", "coupon.quantity.insufficient", "This coupon has been exhausted");
 		}
 	}
 
 	private void checkExists(Coupon coupon, Errors errors) {
-		devLogger.log("...checking if coupon exists");
 		if (coupon == null) {
-			devLogger.error("......error: coupon is null");
+			// devLogger.log("...checkExists: coupon is null");
 			errors.rejectValue("couponCode", "coupon.code.invalid", "Not a valid coupon code");
 		} else if (coupon.isEmpty()) {
-			devLogger.error("......error: coupon code is empty");
+			// devLogger.log("...checkExists: coupon is empty");
 			errors.rejectValue("couponCode", "coupon.code.required", "You must enter a coupon code");
 		} else {
 			try {
+				// devLogger.log("...checkExists: fetching coupon...");
 				Coupon fetchedCoupon = couponManager.getCouponByCode(coupon.getCouponCode());
+				// devLogger.log("...checkExists: found coupon - " + coupon.toString());
 				if (fetchedCoupon == null || fetchedCoupon.isEmpty()) {
+					// devLogger.log("...checkExists: fetchedCoupon is null or empty");
 					errors.rejectValue("couponCode", "coupon.code.invalid", "Not a valid coupon code");
 				} else {
+					// devLogger.log("...checkExists: returning fetched coupon");
 					coupon = fetchedCoupon;
 				}
 			} catch (CouponManagementException e) {
+				// devLogger.log("...checkExists: error checking existence");
 				errors.rejectValue("couponCode", "coupon.code.invalid", "Not a valid coupon code");
 			}
 		}
 	}
 
 	private void checkApplied(Coupon coupon, User user, Account account, Errors errors) {
-		devLogger.log("...checking if coupon is applied");
+		// devLogger.log("checking applied");
 		try {
 			if (isApplied(coupon, user, account)) {
-				devLogger.error("......error: coupon already applied");
+				// devLogger.log("error checking applied");
 				errors.reject("coupon.applied", "Coupon has already been applied to your account");
 			}
 		} catch (ValidationException e) {
@@ -147,14 +151,15 @@ public class CouponValidator implements Validator {
 	}
 
 	private void checkLimit(Coupon coupon, User user, Account account, Errors errors) {
-		devLogger.log("...checking account limit");
+		// devLogger.log("checking limit");
 		if (isAtAccountLimit(coupon, user, account)) {
-			devLogger.error("......error with account limit");
+			// devLogger.log("error checking limit");
 			errors.reject("coupon.limit", "You cannot apply anymore coupons of this type");
 		}
 	}
 
 	public boolean isEligible(Coupon coupon, User user, Account account) {
+		// devLogger.log("checking eligibility");
 		try {
 			boolean isAvailable = isAvailable(coupon);
 			boolean isApplied = isApplied(coupon, user, account);
@@ -176,6 +181,7 @@ public class CouponValidator implements Validator {
 				}
 			}
 			boolean result = isAvailable && !isApplied && !isAtAccountLimit;
+			// devLogger.log("eligible: " + result);
 			return result;
 		} catch (CouponManagementException e) {
 			return false;
@@ -185,22 +191,29 @@ public class CouponValidator implements Validator {
 	}
 
 	public boolean isStackable(Coupon stackableCoupon, Coupon candidate) {
+		// devLogger.log("checking stackibility");
 		Collection<CouponStackable> stackable = stackableCoupon.getCouponDetail().getStackable();
 		for (CouponStackable cs : stackable) {
 			if (cs.getId().getStackableCouponDetailId() == candidate.getCouponDetail().getCouponDetailId()) {
+				// devLogger.log("stackable: " + true);
 				return true;
 			}
 		}
+		// devLogger.log("stackable: " + false);
 		return false;
 	}
 
 	public boolean isAvailable(Coupon coupon) {
+		// devLogger.log("checking availability: " + ((coupon.getQuantity() -
+		// coupon.getUsed()) > 0));
 		return (coupon.getQuantity() - coupon.getUsed()) > 0;
 	}
 
 	public boolean isApplied(Coupon coupon, User user, Account account) throws ValidationException {
+		// devLogger.log("checking applied");
 		try {
 			UserCoupon userCoupon = couponManager.getUserCoupon(new UserCoupon(coupon, user, account));
+			// devLogger.log("applied: " + (userCoupon != null));
 			return userCoupon != null;
 		} catch (CouponManagementException e) {
 			throw new ValidationException(e.getMessage(), e.getCause());
@@ -208,11 +221,11 @@ public class CouponValidator implements Validator {
 	}
 
 	public boolean isAtAccountLimit(Coupon coupon, User user, Account account) {
-		devLogger.log("......checking account limit");
+		// devLogger.log("checking account limit");
 		int accountLimit = coupon.getCouponDetail().getAccountLimit() == null ? -1 : coupon.getCouponDetail()
 				.getAccountLimit();
-		devLogger.log("......account limit is " + accountLimit);
 		if (accountLimit == -1) {
+			// devLogger.log("account limit: " + false);
 			return false;
 		}
 		int count = 0;
@@ -224,11 +237,9 @@ public class CouponValidator implements Validator {
 					count++;
 				}
 			}
-			devLogger.log("......final count of userCoupons is " + count + ". Result of count >= accountLimit is "
-					+ (count >= accountLimit));
+			// devLogger.log("account limit: " + (count >= accountLimit));
 			return count >= accountLimit;
 		} catch (CouponManagementException e) {
-			devLogger.error("......an error occured while fetching userCoupons");
 			return true;
 		}
 	}

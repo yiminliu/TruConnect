@@ -20,7 +20,6 @@ import com.trc.user.account.Overview;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.model.ResultModel;
-import com.tscp.mvne.UsageDetail;
 
 @Controller
 @RequestMapping("/account")
@@ -86,6 +85,7 @@ public class AccountController extends EncryptedController {
 		model.addObject("numAccounts", numAccounts);
 		model.addObject("accountList", accountList);
 		model.addObject("accountDetails", accountDetails);
+		model.addObject("encodedAccountNumber", encodedAccountNum);
 		return model.getSuccess();
 	}
 

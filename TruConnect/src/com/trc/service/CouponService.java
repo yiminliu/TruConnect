@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.trc.coupon.Coupon;
 import com.trc.coupon.CouponDetail;
 import com.trc.coupon.UserCoupon;
+import com.trc.coupon.contract.ProrationCalculator;
 import com.trc.dao.CouponDao;
 import com.trc.dao.CouponDetailDao;
 import com.trc.dao.UserCouponDao;
@@ -272,6 +273,18 @@ public class CouponService {
 			kenanContract.setContractType(coupon.getCouponDetail().getContract().getContractType());
 			kenanContract.setDuration(coupon.getCouponDetail().getDuration());
 			int contractId = truConnect.applyContract(kenanContract);
+
+			// Previously wanted to credit the customer for the prorated amount they
+			// would be charged for the first month before the coupon took effect
+			//
+			// ProrationCalculator pc = new ProrationCalculator();
+			// double amount = pc.getProratedAmount();
+			// GregorianCalendar calendar = new GregorianCalendar();
+			// XMLGregorianCalendar xmlCal =
+			// DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+			// String stringAmount = Formatter.formatDollarAmountQuery(amount);
+			// truConnect.applyCouponPayment(account, stringAmount, xmlCal);
+
 			try {
 				UserCoupon userCoupon = new UserCoupon(coupon, user, account);
 				userCoupon.setKenanContractId(kenanContract.getContractId());

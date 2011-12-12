@@ -2,7 +2,6 @@ package com.trc.web.controller;
 
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +10,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.coupon.Coupon;
+import com.trc.coupon.ajax.CouponResponse;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.CouponManagementException;
 import com.trc.manager.AccountManager;
@@ -39,12 +41,31 @@ public class CouponController extends EncryptedController {
 	private AccountManager accountManager;
 	@Autowired
 	private CouponValidator couponValidator;
-	@Resource
+	@Autowired
 	private DevLogger devLogger;
 
 	private void encodeAccountNums(List<AccountDetail> accountDetailList) {
 		for (AccountDetail accountDetail : accountDetailList) {
 			accountDetail.setEncodedAccountNum(super.encryptId(accountDetail.getAccount().getAccountno()));
+		}
+	}
+
+	@RequestMapping(value = "/validate", method = RequestMethod.GET)
+	public @ResponseBody	CouponResponse validateCoupon(@RequestParam String couponCode) {
+		try {
+			Coupon coupon = couponManager.getCouponByCode(couponCode);
+			if (coupon != null) {
+				if (coupon.getCouponDetail().getContract().getContractType() > 0) {
+					return new CouponResponse(true, coupon.getCouponDetail().getContract().getDescription() + " for "
+							+ coupon.getCouponDetail().getDuration() + " months");
+				} else {
+					return new CouponResponse(true, "Credit value of $" + coupon.getCouponDetail().getAmount());
+				}
+			} else {
+				return new CouponResponse(false, "Not a valid coupon");
+			}
+		} catch (CouponManagementException e) {
+			return new CouponResponse(false, "Internal error, try again");
 		}
 	}
 
@@ -63,18 +84,22 @@ public class CouponController extends EncryptedController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView postRedeemCoupon(HttpServletRequest request, @ModelAttribute("coupon") Coupon coupon,
 			BindingResult result) {
+		devLogger.log("form submission caught, fetching coupon with code: " + coupon.getCouponCode());
 		ResultModel model = new ResultModel("coupon/addCouponSuccess", "coupon/addCoupon");
 		User user = userManager.getCurrentUser();
 		String encodedAccountNumber = request.getParameter("account");
+		devLogger.log("selected radio button has value of: " + encodedAccountNumber);
 		int accountNumber = 0;
 		if (encodedAccountNumber != null) {
-			devLogger.log("Decrypting account number");
 			accountNumber = super.decryptId(encodedAccountNumber);
-			devLogger.log("Decrypted number is: " + accountNumber);
+			devLogger.log("decoded radio button value is: " + accountNumber);
 		}
-		devLogger.log("Posting coupon request with account: " + accountNumber);
 		try {
+			
 			coupon = couponManager.getCouponByCode(coupon.getCouponCode());
+			if (coupon != null) {
+				devLogger.log("received coupon: " + coupon.toFormattedString());
+			}
 			couponValidator.validate(coupon, accountNumber, result);
 			if (result.hasErrors()) {
 				List<AccountDetail> accountList = accountManager.getOverview(user).getAccountDetails();
@@ -82,19 +107,12 @@ public class CouponController extends EncryptedController {
 				model.addObject("accountList", accountList);
 				return model.getError();
 			} else {
-				devLogger.log("Found coupon " + coupon.getCouponId() + " with coupon code " + coupon.getCouponCode());
-				devLogger.log("User " + user.getUsername() + " fetched");
-				devLogger.log("Encoded account " + encodedAccountNumber);
-				devLogger.log("Decoded account " + accountNumber);
 				try {
-					devLogger.log("Fetching account...");
 					Account account = accountManager.getAccount(accountNumber);
 					account = accountManager.getAccounts(user).get(0);
-					devLogger.log("Fetchin service instance, there should only be one instance per account");
 					ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
 					couponManager.applyCoupon(coupon, user, account, serviceInstance);
 				} catch (AccountManagementException e) {
-					devLogger.log("Something went wrong with account management: " + e.getMessage());
 					model.getAccessException();
 				}
 				List<AccountDetail> accountList = accountManager.getOverview(user).getAccountDetails();
@@ -109,7 +127,6 @@ public class CouponController extends EncryptedController {
 				return model.getSuccess();
 			}
 		} catch (CouponManagementException e) {
-			devLogger.log("Something went wrong with coupon Management: " + e.getMessage());
 			return model.getAccessException();
 		}
 	}

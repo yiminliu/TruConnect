@@ -54,17 +54,17 @@
 
           <!-- First/Last Name -->
           <div class="row">
-            <form:label path="user.contactInfo.firstName" cssClass="required">First Name</form:label>
+            <form:label path="user.contactInfo.firstName" cssClass="required">First Name </form:label>
             <form:input path="user.contactInfo.firstName" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
           </div>
           <div class="row">
-            <form:label path="user.contactInfo.lastName" cssClass="required">Last Name</form:label>
+            <form:label path="user.contactInfo.lastName" cssClass="required">Last Name </form:label>
             <form:input path="user.contactInfo.lastName" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
           </div>
 
           <!-- Username -->
           <div class="row hidden">
-            <form:label path="user.username" cssClass="required">Choose a Username</form:label>
+            <form:label path="user.username" cssClass="required">Choose a Username </form:label>
             <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="user.username" />
           </div>
 
@@ -98,7 +98,7 @@
 
           <!-- Security question -->
           <div class="row">
-            <form:label path="user.userHint.hintId" cssClass="required">Security Question</form:label>
+            <form:label path="user.userHint.hintId" cssClass="required">Security Question </form:label>
             <form:select cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:312px;"
               path="user.userHint.hintId">
               <form:option value="0">
@@ -120,7 +120,7 @@
 
           <!-- Jcaptcha -->
           <div class="row" style="margin-bottom: 0px; padding-bottom: 0px;">
-            <form:label path="jcaptcha" cssClass="required">Word Verification</form:label>
+            <form:label path="jcaptcha" cssClass="required">Word Verification </form:label>
             <div style="border: 1px #bbb solid; width: 310px; text-align: center; float: left;">
               <span style="color: #666; float: left; margin-left: 5px;">Enter the text in the image below</span> <img
                 id="jCaptchaImage" src="<spring:url value='/static/images/jcaptcha.jpg' htmlEscape='true' />"
@@ -129,8 +129,8 @@
           </div>
           <div class="row pushed" style="margin-top: -5px; padding-top: 0px;">
             <div style="width: 300px; text-align: right;">
-              <a href="#" onclick="reloadJCaptchaImage('<spring:url value="/static/images/jcaptcha.jpg" />')">request
-                another image</a>
+              <a href="#" onclick="reloadJCaptchaImage('<spring:url value="/static/images/jcaptcha.jpg" />')"
+                tabindex="-1">request another image</a>
             </div>
           </div>
           <div class="row pushed">

@@ -29,7 +29,7 @@
 
         <c:forEach var="device" items="${devices}">
           <h4 style="float: left; display: inline-block">
-            <span class="deviceLabel">${device.deviceInfo.deviceLabel}</span>
+            <span class="deviceLabel" style="display:inline-block;">${device.deviceInfo.deviceLabel}</span>
             
             <sec:authorize ifAnyGranted="ROLE_ADMIN, ROLE_MANAGER">
               <%@ include file="/WEB-INF/includes/admin/devices/deviceInfo.jsp"%>

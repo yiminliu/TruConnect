@@ -42,7 +42,7 @@ $.fn.setupCreditCardForm = function() {
 	var formName = $(this).attr("id");
 	$("#" + formName).submit(
 			function() {
-				$("#.expirationDate").val(
+				$("#expirationDate").val(
 						$("#monthSelect").val() + $("#yearSelect").val());
 			});
 };
