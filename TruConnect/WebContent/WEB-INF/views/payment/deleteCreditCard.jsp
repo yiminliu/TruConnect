@@ -186,7 +186,7 @@
                   <form:option value="KS">Kansas</form:option>
                   <form:option value="KY">Kentucky</form:option>
                   <form:option value="LA">Louisiana</form:option>
-                  <form:option value="MN">Maine</form:option>
+                  <form:option value="ME">Maine</form:option>
                   <form:option value="MD">Maryland</form:option>
                   <form:option value="MA">Massachusetts</form:option>
                   <form:option value="MI">Michigan</form:option>

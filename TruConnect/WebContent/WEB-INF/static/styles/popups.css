@@ -1,7 +1,7 @@
 #curtain {
   background-color: #111;
   opacity: 0.4;
-  filter: alpha(opacity = 0.4);
+  filter: alpha(opacity =     0.4);
   /*position: absolute;
   top: 0px;
   left: 0px;*/
@@ -11,15 +11,20 @@
 
 #centerPopup {
   z-index: 201;
-  background-color: #eee;
   padding: 10px;
-  border: 2px solid #333;
+  /*border: 2px solid #333;
+   background-color: #eee;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 110, 179, 1);
   -webkit-box-shadow: 0 0 15px rgba(0, 110, 179, 1);
-  -moz-box-shadow: 0 0 15px rgba(0, 110, 179, 1);
+  -moz-box-shadow: 0 0 15px rgba(0, 110, 179, 1); */
   overflow: hidden;
   display: table;
+}
+
+#centerPopupContent {
+  color: white;
+  font-size: 2em;
 }
 
 #popupWrapper {

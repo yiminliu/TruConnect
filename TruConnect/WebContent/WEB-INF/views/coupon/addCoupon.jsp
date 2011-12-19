@@ -48,13 +48,13 @@
               monthly access fee, the discount will be applied when the monthly access fee is charged.</p>
             <div class="row">
               <form:label cssClass="required" path="couponCode">Coupon Code</form:label>
-              <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="couponCode" />
+              <form:input cssClass="span-8 noSubmit" cssErrorClass="span-8 validationFailed noSubmit" path="couponCode" />
             </div>
             <div class="row pushed">
               <span id="couponMessage"></span>
             </div>
             <div class="buttons">
-              <a href="#" class="button action-m continue"><span>Next</span> </a>
+              <a href="#" class="button action-m continue" id="next_1"><span>Next</span> </a>
             </div>
           </div>
 
@@ -64,7 +64,9 @@
 
             <div class="row deviceList" style="margin-top: 30px; position: relative; height: 50px;">
               <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
-                <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" /><span>${accountDetail.deviceInfo.deviceLabel}</span><br/>
+                <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />
+                <span>${accountDetail.deviceInfo.deviceLabel}</span>
+                <br />
               </c:forEach>
             </div>
 

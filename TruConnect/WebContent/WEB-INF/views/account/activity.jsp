@@ -25,7 +25,7 @@
           <p>Select the device that you would like to see the activity for.</p>
           <div id="accountList" style="max-height: 100px; width: 700px;">
             <c:forEach var="accountDetail" items="${accountList}">
-              <div style="height: 20px; width: 233px; float: left;">
+              <div style="height: 20px; width: 233px; float: left; font-size:0.95em;">
                 <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" /><span>${accountDetail.deviceInfo.deviceLabel}</span>
               </div>
             </c:forEach>

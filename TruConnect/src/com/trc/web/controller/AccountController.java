@@ -57,6 +57,7 @@ public class AccountController extends EncryptedController {
 		model.addObject("numAccounts", numAccounts);
 		model.addObject("accountList", accountList);
 		model.addObject("accountDetails", firstAccount);
+		model.addObject("encodedAccountNumber", firstAccount.get(0).getEncodedAccountNum());
 		return model.getSuccess();
 	}
 

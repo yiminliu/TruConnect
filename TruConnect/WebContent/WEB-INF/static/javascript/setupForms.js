@@ -12,7 +12,7 @@ $.fn.setupForm = function() {
 	var formResetButton = "#" + formName + "ResetButton";
 	var formSubmit = "#" + formName + "Submit";
 	var formReset = "#" + formName + "Reset";
-	$(formInput).keypress(function(e) {
+	$(formInput).not(".noSubmit").keypress(function(e) {
 		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
 			$(formButton).click();
 			return false;
