@@ -34,179 +34,179 @@ import com.trc.web.validation.AdminValidator;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-	@Autowired
-	private UserManager userManager;
-	@Autowired
-	private SessionRegistry sessionRegistry;
-	@Autowired
-	private AdminValidator adminValidator;
-	@Resource
-	private DevLogger devLogger;
+  @Autowired
+  private UserManager userManager;
+  @Autowired
+  private SessionRegistry sessionRegistry;
+  @Autowired
+  private AdminValidator adminValidator;
+  @Resource
+  private DevLogger devLogger;
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-	@RequestMapping(value = "/managers", method = RequestMethod.GET)
-	public ModelAndView showServiceReps() {
-		ResultModel model = new ResultModel("admin/managers");
-		List<User> managers = userManager.getAllManagers();
-		model.addObject("managers", managers);
-		return model.getSuccess();
-	}
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+  @RequestMapping(value = "/managers", method = RequestMethod.GET)
+  public ModelAndView showServiceReps() {
+    ResultModel model = new ResultModel("admin/managers");
+    List<User> managers = userManager.getAllManagers();
+    model.addObject("managers", managers);
+    return model.getSuccess();
+  }
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/managers/disable/{userId}", method = RequestMethod.GET)
-	public String disableServiceRep(@PathVariable("userId") int userId) {
-		User manager = userManager.getUserById(userId);
-		userManager.disableUser(manager);
-		return "redirect:/admin/managers";
-	}
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @RequestMapping(value = "/managers/disable/{userId}", method = RequestMethod.GET)
+  public String disableServiceRep(@PathVariable("userId") int userId) {
+    User manager = userManager.getUserById(userId);
+    userManager.disableUser(manager);
+    return "redirect:/admin/managers";
+  }
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/managers/enable/{userId}", method = RequestMethod.GET)
-	public String enableServiceRep(@PathVariable("userId") int userId) {
-		User manager = userManager.getUserById(userId);
-		userManager.enableUser(manager);
-		return "redirect:/admin/managers";
-	}
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @RequestMapping(value = "/managers/enable/{userId}", method = RequestMethod.GET)
+  public String enableServiceRep(@PathVariable("userId") int userId) {
+    User manager = userManager.getUserById(userId);
+    userManager.enableUser(manager);
+    return "redirect:/admin/managers";
+  }
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public ModelAndView createServiceRep() {
-		ResultModel model = new ResultModel("admin/create");
-		model.addObject("user", new User());
-		return model.getSuccess();
-	}
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @RequestMapping(value = "/create", method = RequestMethod.GET)
+  public ModelAndView createServiceRep() {
+    ResultModel model = new ResultModel("admin/create");
+    model.addObject("user", new User());
+    return model.getSuccess();
+  }
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ModelAndView postCreateServiceRep(HttpServletRequest request, @ModelAttribute User user, BindingResult result) {
-		ResultModel model = new ResultModel("redirect:/admin/managers", "admin/create");
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @RequestMapping(value = "/create", method = RequestMethod.POST)
+  public ModelAndView postCreateServiceRep(HttpServletRequest request, @ModelAttribute User user, BindingResult result) {
+    ResultModel model = new ResultModel("redirect:/admin/managers", "admin/create");
 
-		SecurityQuestionAnswer userHint = new SecurityQuestionAnswer();
-		userHint.setHintId(1);
-		userHint.setHintAnswer("truconnect");
-		user.setUsername(user.getEmail());
-		user.setUserHint(userHint);
-		user.setEnabled(true);
-		user.setDateEnabled(new Date());
-		user.getRoles().add(new Authority(user, request.getParameter("user_role")));
+    SecurityQuestionAnswer userHint = new SecurityQuestionAnswer();
+    userHint.setHintId(1);
+    userHint.setHintAnswer("truconnect");
+    user.setUsername(user.getEmail());
+    user.setUserHint(userHint);
+    user.setEnabled(true);
+    user.setDateEnabled(new Date());
+    user.getRoles().add(new Authority(user, request.getParameter("user_role")));
 
-		adminValidator.validate(user, result);
-		if (result.hasErrors()) {
-			return model.getError();
-		} else {
-			user.setPassword(Md5Encoder.encode(user.getPassword()));
-			userManager.saveUser(user);
-			return model.getSuccess();
-		}
-	}
+    adminValidator.validate(user, result);
+    if (result.hasErrors()) {
+      return model.getError();
+    } else {
+      user.setPassword(Md5Encoder.encode(user.getPassword()));
+      userManager.saveUser(user);
+      return model.getSuccess();
+    }
+  }
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/admins", method = RequestMethod.GET)
-	public ModelAndView showAdmins() {
-		ResultModel model = new ResultModel("admin/admins");
-		List<User> admins = userManager.getAllAdmins();
-		model.addObject("admins", admins);
-		return model.getSuccess();
-	}
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @RequestMapping(value = "/admins", method = RequestMethod.GET)
+  public ModelAndView showAdmins() {
+    ResultModel model = new ResultModel("admin/admins");
+    List<User> admins = userManager.getAllAdmins();
+    model.addObject("admins", admins);
+    return model.getSuccess();
+  }
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView showAdminHome() {
-		ResultModel model = new ResultModel("admin/home");
-		List<Object> activePrincipals = sessionRegistry.getAllPrincipals();
-		List<User> activeUsers = new ArrayList<User>();
-		List<List<SessionInformation>> userSessionInfo = new ArrayList<List<SessionInformation>>();
-		User activeUser;
-		for (Object principal : activePrincipals) {
-			activeUser = (User) principal;
-			activeUsers.add(activeUser);
-			userSessionInfo.add(sessionRegistry.getAllSessions(activeUser, false));
-		}
-		model.addObject("userSessionInfo", userSessionInfo);
-		model.addObject("activeUsers", activeUsers);
-		return model.getSuccess();
-	}
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+  @RequestMapping(method = RequestMethod.GET)
+  public ModelAndView showAdminHome() {
+    ResultModel model = new ResultModel("admin/home");
+    List<Object> activePrincipals = sessionRegistry.getAllPrincipals();
+    List<User> activeUsers = new ArrayList<User>();
+    List<List<SessionInformation>> userSessionInfo = new ArrayList<List<SessionInformation>>();
+    User activeUser;
+    for (Object principal : activePrincipals) {
+      activeUser = (User) principal;
+      activeUsers.add(activeUser);
+      userSessionInfo.add(sessionRegistry.getAllSessions(activeUser, false));
+    }
+    model.addObject("userSessionInfo", userSessionInfo);
+    model.addObject("activeUsers", activeUsers);
+    return model.getSuccess();
+  }
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-	@RequestMapping(value = "/logout/{userId}", method = RequestMethod.GET)
-	public String forceLogout(@PathVariable("userId") int userId) {
-		List<Object> activePrincipals = sessionRegistry.getAllPrincipals();
-		User activeUser;
-		for (Object principal : activePrincipals) {
-			activeUser = (User) principal;
-			if (activeUser.getUserId() == userId) {
-				forceLogout(activeUser);
-				break;
-			}
-		}
-		return "redirect:/admin";
-	}
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+  @RequestMapping(value = "/logout/{userId}", method = RequestMethod.GET)
+  public String forceLogout(@PathVariable("userId") int userId) {
+    List<Object> activePrincipals = sessionRegistry.getAllPrincipals();
+    User activeUser;
+    for (Object principal : activePrincipals) {
+      activeUser = (User) principal;
+      if (activeUser.getUserId() == userId) {
+        forceLogout(activeUser);
+        break;
+      }
+    }
+    return "redirect:/admin";
+  }
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-	private void forceLogout(User user) {
-		List<SessionInformation> sessionInfo = sessionRegistry.getAllSessions(user, false);
-		for (SessionInformation si : sessionInfo) {
-			si.expireNow();
-		}
-	}
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+  private void forceLogout(User user) {
+    List<SessionInformation> sessionInfo = sessionRegistry.getAllSessions(user, false);
+    for (SessionInformation si : sessionInfo) {
+      si.expireNow();
+    }
+  }
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-	@RequestMapping(value = "/user", method = RequestMethod.POST)
-	public ModelAndView showUser(HttpServletRequest request) {
-		String userId = request.getParameter("admin_search_id");
-		ResultModel model = new ResultModel("redirect:/account");
-		setUserToView(userManager.getUserById(Integer.parseInt(userId)));
-		return model.getSuccess();
-	}
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+  @RequestMapping(value = "/user", method = RequestMethod.POST)
+  public ModelAndView showUser(HttpServletRequest request) {
+    String userId = request.getParameter("admin_search_id");
+    ResultModel model = new ResultModel("redirect:/account");
+    setUserToView(userManager.getUserById(Integer.parseInt(userId)));
+    return model.getSuccess();
+  }
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-	@RequestMapping(value = "/search/email", method = RequestMethod.GET)
-	public ModelAndView searchByEmail(HttpServletRequest request) {
-		ResultModel model = new ResultModel("admin/search/jquery_username");
-		List<User> searchResults = userManager.searchByEmail(request.getParameter("email"));
-		model.addObject("searchResults", searchResults);
-		return model.getSuccess();
-	}
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+  @RequestMapping(value = "/search/email", method = RequestMethod.GET)
+  public ModelAndView searchByEmail(HttpServletRequest request) {
+    ResultModel model = new ResultModel("admin/search/jquery_username");
+    List<User> searchResults = userManager.searchByEmail(request.getParameter("email"));
+    model.addObject("searchResults", searchResults);
+    return model.getSuccess();
+  }
 
-	@RequestMapping(value = "/search/email/ajax", method = RequestMethod.GET)
-	public @ResponseBody
-	SearchResponse searchByEmailAjax(@RequestParam String email) {
-		devLogger.log("ajax request for user search caught");
-		List<User> searchResults = userManager.searchByEmail(email);
-		String[] emails = new String[searchResults.size()];
-		for (int i = 0; i < searchResults.size(); i++) {
-			emails[i] = searchResults.get(i).getEmail();
-		}
-		if (searchResults.size() > 0) {
-			devLogger.log("returning " + searchResults.size() + " results");
-			return new SearchResponse(true, emails);
-		} else {
-			devLogger.log("returning " + searchResults.size() + " results");
-			return new SearchResponse(false, emails);
-		}
-	}
+  @RequestMapping(value = "/search/email/ajax", method = RequestMethod.GET)
+  public @ResponseBody
+  SearchResponse searchByEmailAjax(@RequestParam String email) {
+    devLogger.log("ajax request for user search caught");
+    List<User> searchResults = userManager.searchByEmail(email);
+    String[] emails = new String[searchResults.size()];
+    for (int i = 0; i < searchResults.size(); i++) {
+      emails[i] = searchResults.get(i).getEmail();
+    }
+    if (searchResults.size() > 0) {
+      devLogger.log("returning " + searchResults.size() + " results");
+      return new SearchResponse(true, emails);
+    } else {
+      devLogger.log("returning " + searchResults.size() + " results");
+      return new SearchResponse(false, emails);
+    }
+  }
 
-	public static class SearchResponse {
-		private String[] users;
-		private boolean success;
+  public static class SearchResponse {
+    private String[] users;
+    private boolean success;
 
-		public String[] getUsers() {
-			return users;
-		}
+    public String[] getUsers() {
+      return users;
+    }
 
-		public boolean isSuccess() {
-			return success;
-		}
+    public boolean isSuccess() {
+      return success;
+    }
 
-		public SearchResponse(boolean success, String[] users) {
-			this.success = success;
-			this.users = users;
-		}
-	}
+    public SearchResponse(boolean success, String[] users) {
+      this.success = success;
+      this.users = users;
+    }
+  }
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-	private void setUserToView(User user) {
-		userManager.setSessionUser(user);
-		CacheManager.clearCache();
-	}
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+  private void setUserToView(User user) {
+    userManager.setSessionUser(user);
+    CacheManager.clearCache();
+  }
 }

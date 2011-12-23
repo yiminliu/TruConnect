@@ -20,7 +20,8 @@ public class TruConnectGateway {
 		try {
 			String namespace = TSCPMVNE.namespace;
 			String servicename = TSCPMVNE.serviceName;
-			String location = TSCPMVNE.Location.couponDevIP;
+			//String location = "http://10.10.30.190:8080/TSCPMVNE_prod_1.9.3.6/TruConnectService?wsdl";
+			String location = TSCPMVNE.Location.productionIP;
 			service = new TruConnectService(new URL(location), new QName(namespace, servicename));
 		} catch (Exception e) {
 			e.printStackTrace();
