@@ -93,29 +93,30 @@ public class CreditCardValidator extends AddressValidator {
     }
   }
 
-//  private static boolean checkExpDate(String date) {
-//    if (!date.matches("\\d{4}")) {
-//      return false;
-//    } else {
-//      int month = Integer.parseInt(date.substring(0, 2));
-//      if (month < 1 || month > 12) {
-//        return false;
-//      } else {
-//        try {
-//          String dateCeiling = padString(Integer.toString(month + 1)) + date.substring(2);
-//          Date expirationDate = SimpleDate.parseShortDate(dateCeiling);
-//          if (expirationDate.before(new Date())) {
-//            return false;
-//          }
-//        } catch (ParseException e) {
-//          e.printStackTrace();
-//          return false;
-//        }
-//      }
-//    }
-//    return true;
-//  }
-  
+  // private static boolean checkExpDate(String date) {
+  // if (!date.matches("\\d{4}")) {
+  // return false;
+  // } else {
+  // int month = Integer.parseInt(date.substring(0, 2));
+  // if (month < 1 || month > 12) {
+  // return false;
+  // } else {
+  // try {
+  // String dateCeiling = padString(Integer.toString(month + 1)) +
+  // date.substring(2);
+  // Date expirationDate = SimpleDate.parseShortDate(dateCeiling);
+  // if (expirationDate.before(new Date())) {
+  // return false;
+  // }
+  // } catch (ParseException e) {
+  // e.printStackTrace();
+  // return false;
+  // }
+  // }
+  // }
+  // return true;
+  // }
+
   private static String padString(String value) {
     while (value.length() < 2) {
       value = "0" + value;

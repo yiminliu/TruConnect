@@ -1,3 +1,20 @@
+2.8
+-------------------------------------------------------------
+- created com.trc.config.Config to load properties files for all
+  changeable properties of the web application
+
+2.7.1
+-------------------------------------------------------------
+- updated RetrieveController to point to correct error page when
+  updating password
+- updated RetrieveController, no longer shows an error page if
+  the requested user does not exist
+
+2.7
+-------------------------------------------------------------
+- major coupon update. needs to be documented
+
+
 2.5.6
 -------------------------------------------------------------
 - created pages for entering coupons during activation and in management

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component("securityContextFacade")
 public interface SecurityContextFacade {
 
-	SecurityContext getContext();
+  SecurityContext getContext();
 
-	void setContext(SecurityContext securityContext);
+  void setContext(SecurityContext securityContext);
 }

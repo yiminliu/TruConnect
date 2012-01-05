@@ -24,6 +24,7 @@
   <!--<aop:config> <aop:advisor advice-ref="customizableTraceInterceptor" pointcut="execution(public * com.trc.manager..*(..))" /> </aop:config> -->
 
   <!-- Begin Component Scan -->
+  <context:component-scan base-package="com.trc.config.**" />
   <context:component-scan base-package="com.trc.coupon.**" />
   <context:component-scan base-package="com.trc.dao.**" />
   <context:component-scan base-package="com.trc.service.**" />

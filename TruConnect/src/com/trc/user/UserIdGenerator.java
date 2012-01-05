@@ -8,10 +8,10 @@ import org.hibernate.id.IdentifierGenerator;
 
 public class UserIdGenerator implements IdentifierGenerator {
 
-	@Override
-	public Serializable generate(SessionImplementor arg0, Object arg1) throws HibernateException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Serializable generate(SessionImplementor arg0, Object arg1) throws HibernateException {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }

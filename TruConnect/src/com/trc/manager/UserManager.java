@@ -1,6 +1,7 @@
 package com.trc.manager;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,224 +24,234 @@ import com.tscp.mvne.CustInfo;
 
 @Service
 public class UserManager implements UserManagerModel {
-	public static final String USER_KEY = "user";
-	public static final String ADMIN_KEY = "admin";
-	public static final String MANAGER_KEY = "manager";
-	private static SecurityContextFacade securityContext;
-	private UserDao userDao;
-	private SecurityQuestionManager securityQuestionManager;
-	private AccountManager accountManager;
+  public static final String USER_KEY = "user";
+  public static final String ADMIN_KEY = "admin";
+  public static final String MANAGER_KEY = "manager";
+  private static SecurityContextFacade securityContext;
+  private UserDao userDao;
+  private SecurityQuestionManager securityQuestionManager;
+  private AccountManager accountManager;
 
-	@Autowired
-	public void init(UserDao userDao, SecurityQuestionManager securityQuestionManager, AccountManager accountManager,
-			SecurityContextFacade securityContextFacade) {
-		this.userDao = userDao;
-		this.securityQuestionManager = securityQuestionManager;
-		this.accountManager = accountManager;
-		securityContext = securityContextFacade;
-	}
+  @Autowired
+  public void init(UserDao userDao, SecurityQuestionManager securityQuestionManager, AccountManager accountManager,
+      SecurityContextFacade securityContextFacade) {
+    this.userDao = userDao;
+    this.securityQuestionManager = securityQuestionManager;
+    this.accountManager = accountManager;
+    securityContext = securityContextFacade;
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<User> getAllUsers() {
-		return userDao.getAllUsers();
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public List<User> getAllUsers() {
+    return userDao.getAllUsers();
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<User> getAllAdmins() {
-		return userDao.getAllUsersWithRole("ROLE_ADMIN");
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public List<User> getAllAdmins() {
+    return userDao.getAllUsersWithRole("ROLE_ADMIN");
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<User> getAllManagers() {
-		return userDao.getAllUsersWithRole("ROLE_MANAGER");
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public List<User> getAllManagers() {
+    return userDao.getAllUsersWithRole("ROLE_MANAGER");
+  }
 
-	@Override
-	public User getUserByEmail(String email) {
-		return userDao.getUserByEmail(email);
-	}
+  @Override
+  public User getUserByEmail(String email) {
+    return userDao.getUserByEmail(email);
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public User getUserByUsername(String username) {
-		return userDao.getUserByUsername(username);
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public User getUserByUsername(String username) {
+    return userDao.getUserByUsername(username);
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public User getUserById(int id) {
-		return userDao.getUserById(id);
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public User getUserById(int id) {
+    return userDao.getUserById(id);
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<User> searchByEmail(String email) {
-		return userDao.searchByEmail(email);
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public List<User> searchByEmail(String email) {
+    return userDao.searchByEmail(email);
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<User> searchByUsername(String username) {
-		return userDao.searchByUsername(username);
-	}
+  @Transactional(readOnly = true)
+  public List<User> searchByEmailAndDate(String email, Date startDate, Date endDate) {
+    return userDao.searchByEmailAndDate(email, startDate, endDate);
+  }
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<User> search(String param) {
-		return userDao.search(param);
-	}
+  @Transactional(readOnly = true)
+  public List<User> searchByNotEmailAndDate(String email, Date startDate, Date endDate) {
+    return userDao.searchByNotEmailAndDate(email, startDate, endDate);
+  }
 
-	@Override
-	public User getLoggedInUser() {
-		Authentication authentication = getAuthentication();
-		if (authentication == null || isAnonymousUser(authentication)) {
-			return new AnonymousUser();
-		} else {
-			return (User) authentication.getPrincipal();
-		}
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public List<User> searchByUsername(String username) {
+    return userDao.searchByUsername(username);
+  }
 
-	private boolean isAnonymousUser(Authentication authentication) {
-		return authentication.getName().equals("anonymousUser");
-	}
+  @Override
+  @Transactional(readOnly = true)
+  public List<User> search(String param) {
+    return userDao.search(param);
+  }
 
-	@Override
-	public User getCurrentUser() {
-		return getSessionUser();
-	}
+  @Override
+  public User getLoggedInUser() {
+    Authentication authentication = getAuthentication();
+    if (authentication == null || isAnonymousUser(authentication)) {
+      return new AnonymousUser();
+    } else {
+      return (User) authentication.getPrincipal();
+    }
+  }
 
-	@Override
-	@Transactional(readOnly = false)
-	public Serializable saveUser(User user) {
-		if (user.getAuthorities().isEmpty()) {
-			user.getRoles().add(new Authority(user, "ROLE_USER"));
-		}
-		return userDao.saveUser(user);
-	}
+  private boolean isAnonymousUser(Authentication authentication) {
+    return authentication.getName().equals("anonymousUser");
+  }
 
-	public void saveAdminSql(User user) {
-		userDao.saveAdminSql(user);
-	}
+  @Override
+  public User getCurrentUser() {
+    return getSessionUser();
+  }
 
-	public void saveAdminHql(Admin admin) {
-		userDao.saveAdminHql(admin);
-	}
+  @Override
+  @Transactional(readOnly = false)
+  public Serializable saveUser(User user) {
+    if (user.getAuthorities().isEmpty()) {
+      user.getRoles().add(new Authority(user, "ROLE_USER"));
+    }
+    return userDao.saveUser(user);
+  }
 
-	@Override
-	@Transactional
-	public void saveOrUpdateUser(User user) {
-		userDao.saveOrUpdateUser(user);
-	}
+  public void saveAdminSql(User user) {
+    userDao.saveAdminSql(user);
+  }
 
-	@Override
-	@Transactional
-	public void persistUser(User user) {
-		userDao.persistUser(user);
-	}
+  public void saveAdminHql(Admin admin) {
+    userDao.saveAdminHql(admin);
+  }
 
-	@Override
-	@Transactional(readOnly = false)
-	public void deleteUser(User user) {
-		userDao.deleteUser(user);
-	}
+  @Override
+  @Transactional
+  public void saveOrUpdateUser(User user) {
+    userDao.saveOrUpdateUser(user);
+  }
 
-	@Override
-	@Transactional(readOnly = false)
-	public void updateUser(User user) {
-		userDao.updateUser(user);
-	}
+  @Override
+  @Transactional
+  public void persistUser(User user) {
+    userDao.persistUser(user);
+  }
 
-	@Override
-	@Transactional(readOnly = false)
-	public void enableUser(User user) {
-		userDao.enableUser(user);
-	}
+  @Override
+  @Transactional(readOnly = false)
+  public void deleteUser(User user) {
+    userDao.deleteUser(user);
+  }
 
-	@Override
-	@Transactional(readOnly = false)
-	public void disableUser(User user) {
-		userDao.disableUser(user);
-	}
+  @Override
+  @Transactional(readOnly = false)
+  public void updateUser(User user) {
+    userDao.updateUser(user);
+  }
 
-	@Override
-	public boolean isUsernameAvailable(String username) {
-		return getUserByUsername(username) == null;
-	}
+  @Override
+  @Transactional(readOnly = false)
+  public void enableUser(User user) {
+    userDao.enableUser(user);
+  }
 
-	@Override
-	public boolean isEmailAvailable(String email) {
-		return getUserByEmail(email) == null;
-	}
+  @Override
+  @Transactional(readOnly = false)
+  public void disableUser(User user) {
+    userDao.disableUser(user);
+  }
 
-	public User getSessionUser() {
-		User user = (User) SessionManager.get(USER_KEY);
-		return user == null ? new AnonymousUser() : user;
-	}
+  @Override
+  public boolean isUsernameAvailable(String username) {
+    return getUserByUsername(username) == null;
+  }
 
-	public User getSessionAdmin() {
-		return (User) SessionManager.get(ADMIN_KEY);
-	}
+  @Override
+  public boolean isEmailAvailable(String email) {
+    return getUserByEmail(email) == null;
+  }
 
-	public User getSessionManager() {
-		return (User) SessionManager.get(MANAGER_KEY);
-	}
+  public User getSessionUser() {
+    User user = (User) SessionManager.get(USER_KEY);
+    return user == null ? new AnonymousUser() : user;
+  }
 
-	public void setSessionUser(User user) {
-		SessionManager.set(USER_KEY, user);
-	}
+  public User getSessionAdmin() {
+    return (User) SessionManager.get(ADMIN_KEY);
+  }
 
-	public void setSessionAdmin(User user) {
-		SessionManager.set(ADMIN_KEY, user);
-	}
+  public User getSessionManager() {
+    return (User) SessionManager.get(MANAGER_KEY);
+  }
 
-	public void setSessionManager(User user) {
-		SessionManager.set(MANAGER_KEY, user);
-	}
+  public void setSessionUser(User user) {
+    SessionManager.set(USER_KEY, user);
+  }
 
-	private Authentication getAuthentication() {
-		return securityContext.getContext().getAuthentication();
-	}
+  public void setSessionAdmin(User user) {
+    SessionManager.set(ADMIN_KEY, user);
+  }
 
-	@Deprecated
-	public List<SecurityQuestion> getSecurityQuestions() {
-		return securityQuestionManager.getSecurityQuestions();
-	}
+  public void setSessionManager(User user) {
+    SessionManager.set(MANAGER_KEY, user);
+  }
 
-	@Deprecated
-	public SecurityQuestion getSecurityQuestion(int id) {
-		return securityQuestionManager.getSecurityQuestion(id);
-	}
+  private Authentication getAuthentication() {
+    return securityContext.getContext().getAuthentication();
+  }
 
-	@Loggable(value = LogLevel.TRACE)
-	public void getUserRealName(User user) {
-		if (user.isAdmin()) {
-			user.getContactInfo().setFirstName(user.getUsername());
-			user.getContactInfo().setLastName("Administrator");
-		} else if (user.isManager()) {
-			user.getContactInfo().setFirstName(user.getUsername());
-			user.getContactInfo().setLastName("Manager");
-		} else if (user.isUser()) {
-			try {
-				CustInfo custInfo = accountManager.getCustInfo(user);
-				user.getContactInfo().setFirstName(custInfo.getFirstName());
-				user.getContactInfo().setLastName(custInfo.getLastName());
-			} catch (AccountManagementException e) {
-				user.getContactInfo().setFirstName(user.getUsername());
-			}
-			// try {
-			// List<Account> accountList = accountManager.getAccounts(user);
-			// Account account = accountList.get(0);
-			// user.getContactInfo().setFirstName(account.getFirstname());
-			// user.getContactInfo().setLastName(account.getLastname());
-			// } catch (AccountManagementException e) {
-			// user.getContactInfo().setFirstName(user.getUsername());
-			// }
-		} else {
-			user.getContactInfo().setFirstName(user.getUsername());
-		}
-	}
+  @Deprecated
+  public List<SecurityQuestion> getSecurityQuestions() {
+    return securityQuestionManager.getSecurityQuestions();
+  }
+
+  @Deprecated
+  public SecurityQuestion getSecurityQuestion(int id) {
+    return securityQuestionManager.getSecurityQuestion(id);
+  }
+
+  @Loggable(value = LogLevel.TRACE)
+  public void getUserRealName(User user) {
+    if (user.isAdmin()) {
+      user.getContactInfo().setFirstName(user.getUsername());
+      user.getContactInfo().setLastName("Administrator");
+    } else if (user.isManager()) {
+      user.getContactInfo().setFirstName(user.getUsername());
+      user.getContactInfo().setLastName("Manager");
+    } else if (user.isUser()) {
+      try {
+        CustInfo custInfo = accountManager.getCustInfo(user);
+        user.getContactInfo().setFirstName(custInfo.getFirstName());
+        user.getContactInfo().setLastName(custInfo.getLastName());
+      } catch (AccountManagementException e) {
+        user.getContactInfo().setFirstName(user.getUsername());
+      }
+      // try {
+      // List<Account> accountList = accountManager.getAccounts(user);
+      // Account account = accountList.get(0);
+      // user.getContactInfo().setFirstName(account.getFirstname());
+      // user.getContactInfo().setLastName(account.getLastname());
+      // } catch (AccountManagementException e) {
+      // user.getContactInfo().setFirstName(user.getUsername());
+      // }
+    } else {
+      user.getContactInfo().setFirstName(user.getUsername());
+    }
+  }
 
 }

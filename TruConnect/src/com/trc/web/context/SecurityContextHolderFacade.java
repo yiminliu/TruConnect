@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityContextHolderFacade implements SecurityContextFacade {
 
-	@Override
-	public SecurityContext getContext() {
-		return SecurityContextHolder.getContext();
-	}
+  @Override
+  public SecurityContext getContext() {
+    return SecurityContextHolder.getContext();
+  }
 
-	@Override
-	public void setContext(SecurityContext securityContext) {
-		SecurityContextHolder.setContext(securityContext);
-	}
+  @Override
+  public void setContext(SecurityContext securityContext) {
+    SecurityContextHolder.setContext(securityContext);
+  }
 }

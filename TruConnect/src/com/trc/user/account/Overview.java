@@ -17,56 +17,56 @@ import com.tscp.mvne.DeviceInfo;
  * 
  */
 public class Overview {
-	private List<AccountDetail> accountDetails;
-	private PaymentHistory paymentHistory;
+  private List<AccountDetail> accountDetails;
+  private PaymentHistory paymentHistory;
 
-	public Overview(AccountManager accountManager, List<DeviceInfo> devices, User user) {
-		this.accountDetails = new ArrayList<AccountDetail>();
+  public Overview(AccountManager accountManager, List<DeviceInfo> devices, User user) {
+    this.accountDetails = new ArrayList<AccountDetail>();
 
-		AccountDetail accountDetail;
-		Account account;
+    AccountDetail accountDetail;
+    Account account;
 
-		try {
-			// devices = accountManager.getDeviceList(user);
-			this.paymentHistory = new PaymentHistory(accountManager.getPaymentRecords(user), user);
-			for (DeviceInfo deviceInfo : devices) {
-				account = accountManager.getAccount(deviceInfo.getAccountNo());
-				accountDetail = new AccountDetail();
-				accountDetail.setAccount(account);
-				accountDetail.setDeviceInfo(deviceInfo);
-				accountDetail.setTopUp(accountManager.getTopUp(user, account).getTopupAmount());
-				accountDetail.setUsageHistory(new UsageHistory(accountManager.getChargeHistory(user, account.getAccountno()),
-						user, account.getAccountno()));
-				this.accountDetails.add(accountDetail);
-			}
-		} catch (AccountManagementException e) {
-			e.printStackTrace();
-		}
-	}
+    try {
+      // devices = accountManager.getDeviceList(user);
+      this.paymentHistory = new PaymentHistory(accountManager.getPaymentRecords(user), user);
+      for (DeviceInfo deviceInfo : devices) {
+        account = accountManager.getAccount(deviceInfo.getAccountNo());
+        accountDetail = new AccountDetail();
+        accountDetail.setAccount(account);
+        accountDetail.setDeviceInfo(deviceInfo);
+        accountDetail.setTopUp(accountManager.getTopUp(user, account).getTopupAmount());
+        accountDetail.setUsageHistory(new UsageHistory(accountManager.getChargeHistory(user, account.getAccountno()),
+            user, account.getAccountno()));
+        this.accountDetails.add(accountDetail);
+      }
+    } catch (AccountManagementException e) {
+      e.printStackTrace();
+    }
+  }
 
-	public PaymentHistory getPaymentDetails() {
-		return paymentHistory;
-	}
+  public PaymentHistory getPaymentDetails() {
+    return paymentHistory;
+  }
 
-	public void setPaymentDetails(PaymentHistory paymentDetails) {
-		this.paymentHistory = paymentDetails;
-	}
+  public void setPaymentDetails(PaymentHistory paymentDetails) {
+    this.paymentHistory = paymentDetails;
+  }
 
-	public AccountDetail getAccountDetail(int accountNum) {
-		for (AccountDetail accountDetail : accountDetails) {
-			if (accountDetail.getAccount().getAccountno() == accountNum) {
-				return accountDetail;
-			}
-		}
-		return null;
-	}
+  public AccountDetail getAccountDetail(int accountNum) {
+    for (AccountDetail accountDetail : accountDetails) {
+      if (accountDetail.getAccount().getAccountno() == accountNum) {
+        return accountDetail;
+      }
+    }
+    return null;
+  }
 
-	public List<AccountDetail> getAccountDetails() {
-		return accountDetails;
-	}
+  public List<AccountDetail> getAccountDetails() {
+    return accountDetails;
+  }
 
-	public void setAccountDetails(List<AccountDetail> accountDetails) {
-		this.accountDetails = accountDetails;
-	}
+  public void setAccountDetails(List<AccountDetail> accountDetails) {
+    this.accountDetails = accountDetails;
+  }
 
 }

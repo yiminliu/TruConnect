@@ -60,11 +60,7 @@
             <span class="span-6" style="line-height: 36px;">Status:</span>
             <span class="span-8" style="line-height: 36px;"> <c:choose>
                 <c:when test="${user.enabled}">
-                Enabled
-                
-            
-            
-            
+                Enabled     
             </span>
             <a href="<spring:url value="/profile/user/disable"/>" class="button escape-s"
               onclick="return confirm('Do you want to disable ${user.email}?')"><span>Disable</span> </a>
@@ -88,6 +84,7 @@
         <div class="clear"></div>
         <h3 style="margin-bottom: 10px; padding-bottom: 0px; padding-top: 10px; border-top: 1px #ccc solid;">Addresses</h3>
         <c:forEach var="address" items="${addressList}">
+          
           <div class="span-6 address">
             <c:if test="${address.default}">
               <div>
@@ -110,6 +107,8 @@
               </c:if>
             </div>
           </div>
+          
+          
         </c:forEach>
         <div class="span-6 address" style="color: #ccc;">
           <div class=addressButtons>

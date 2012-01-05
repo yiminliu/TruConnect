@@ -18,8 +18,10 @@
   <div class="container">
     <div id="main-content">
       <div class="span-18 colborder">
-        <a href="<spring:url value="/account/payment/methods/add" />" class="button action-m" style="float: right;"><span>Add
-            New Card</span> </a>
+        <c:if test="${fn:length(paymentMethods) < 1}">
+          <a href="<spring:url value="/account/payment/methods/add" />" class="button action-m" style="float: right;"><span>Add
+              New Card</span> </a>
+        </c:if>
         <h3 style="margin-bottom: 40px; padding-bottom: 0px;">Credit Cards</h3>
 
         <c:forEach var="creditCard" items="${paymentMethods}" varStatus="status">

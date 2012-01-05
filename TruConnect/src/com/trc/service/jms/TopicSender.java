@@ -17,30 +17,30 @@ import org.springframework.stereotype.Service;
 
 //@Service
 public class TopicSender {
-	private JmsTemplate jmsTemplate = new JmsTemplate();
-	//@Autowired
-	private ConnectionFactory jmsTopicConnectionFactory;
-	//@Autowired
-	private Destination kenanTopic;
+  private JmsTemplate jmsTemplate = new JmsTemplate();
+  // @Autowired
+  private ConnectionFactory jmsTopicConnectionFactory;
+  // @Autowired
+  private Destination kenanTopic;
 
-	//@PostConstruct
-	public void init() {
-		jmsTemplate.setConnectionFactory(jmsTopicConnectionFactory);
-		jmsTemplate.setDefaultDestination(kenanTopic);
-		jmsTemplate.setSessionTransacted(true);
-		jmsTemplate.setDeliveryMode(DeliveryMode.PERSISTENT);
-		jmsTemplate.setSessionAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
-		jmsTemplate.setPubSubDomain(true);
-	}
+  // @PostConstruct
+  public void init() {
+    jmsTemplate.setConnectionFactory(jmsTopicConnectionFactory);
+    jmsTemplate.setDefaultDestination(kenanTopic);
+    jmsTemplate.setSessionTransacted(true);
+    jmsTemplate.setDeliveryMode(DeliveryMode.PERSISTENT);
+    jmsTemplate.setSessionAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
+    jmsTemplate.setPubSubDomain(true);
+  }
 
-	public void send(final Serializable object, Destination destination) {
-		jmsTemplate.send(destination, new MessageCreator() {
-			public ObjectMessage createMessage(Session session) throws JMSException {
-				ObjectMessage message = session.createObjectMessage(object);
-				message.setIntProperty("attempt", 1);
-				return message;
-			}
-		});
-	}
+  public void send(final Serializable object, Destination destination) {
+    jmsTemplate.send(destination, new MessageCreator() {
+      public ObjectMessage createMessage(Session session) throws JMSException {
+        ObjectMessage message = session.createObjectMessage(object);
+        message.setIntProperty("attempt", 1);
+        return message;
+      }
+    });
+  }
 
 }

@@ -988,7 +988,9 @@ a.escape-l span {
 .centerFloats li {
   float: left;
   position: relative;
-} /* ie needs position:relative here*/
+  /* ie needs position:relative here*/
+}
+
 .formProgress h4 {
   padding: 0px;
   margin: 8px 0px 8px 0px;
@@ -1059,7 +1061,7 @@ div.address div:first-child {
 #jsCheckCurtain {
   background-color: #111;
   opacity: 0.45;
-  filter: alpha(opacity =               0.45);
+  filter: alpha(opacity =                     0.45);
   position: fixed;
   top: 0px;
   left: 0px;

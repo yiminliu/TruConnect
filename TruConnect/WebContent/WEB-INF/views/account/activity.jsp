@@ -9,7 +9,7 @@
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/accountActivity.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/highlight/navigation/activity.js" />"></script>
 </head>
-<body class="app" onload="highlightRadio('${encodedAccountNumber}')">
+<body class="app" onload="highlightRadio('account', '${encodedAccountNumber}')">
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
@@ -25,7 +25,7 @@
           <p>Select the device that you would like to see the activity for.</p>
           <div id="accountList" style="max-height: 100px; width: 700px;">
             <c:forEach var="accountDetail" items="${accountList}">
-              <div style="height: 20px; width: 233px; float: left; font-size:0.95em;">
+              <div style="height: 20px; width: 233px; float: left;">
                 <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" /><span>${accountDetail.deviceInfo.deviceLabel}</span>
               </div>
             </c:forEach>

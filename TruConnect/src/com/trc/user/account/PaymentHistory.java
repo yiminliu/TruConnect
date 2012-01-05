@@ -16,20 +16,20 @@ import com.tscp.mvne.PaymentRecord;
  */
 public class PaymentHistory extends Paginator {
 
-	public PaymentHistory(List<PaymentRecord> paymentRecords, User user) {
-		super.setRecords(paymentRecords);
-		super.setSummarySize(3);
-	}
+  public PaymentHistory(List<PaymentRecord> paymentRecords, User user) {
+    super.setRecords(paymentRecords);
+    super.setSummarySize(3);
+  }
 
-	@Deprecated
-	public PaymentHistory(AccountManager accountManager, User user) throws AccountManagementException {
-		List<PaymentRecord> paymentRecords;
-		try {
-			paymentRecords = accountManager.getPaymentRecords(user);
-			super.setRecords(paymentRecords);
-			super.setSummarySize(3);
-		} catch (AccountManagementException e) {
-			throw e;
-		}
-	}
+  @Deprecated
+  public PaymentHistory(AccountManager accountManager, User user) throws AccountManagementException {
+    List<PaymentRecord> paymentRecords;
+    try {
+      paymentRecords = accountManager.getPaymentRecords(user);
+      super.setRecords(paymentRecords);
+      super.setSummarySize(3);
+    } catch (AccountManagementException e) {
+      throw e;
+    }
+  }
 }

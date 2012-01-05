@@ -13,22 +13,22 @@ import com.trc.user.authority.Authority;
 @Deprecated
 public class Assembler {
 
-	@Transactional(readOnly = true)
-	public User buildUserFromUser(com.trc.user.User myUser) {
-		String username = myUser.getUsername();
-		String password = myUser.getPassword();
-		boolean enabled = myUser.isEnabled();
-		boolean accountNonExpired = enabled;
-		boolean credentialsNonExpired = enabled;
-		boolean accountNonLocked = enabled;
+  @Transactional(readOnly = true)
+  public User buildUserFromUser(com.trc.user.User myUser) {
+    String username = myUser.getUsername();
+    String password = myUser.getPassword();
+    boolean enabled = myUser.isEnabled();
+    boolean accountNonExpired = enabled;
+    boolean credentialsNonExpired = enabled;
+    boolean accountNonLocked = enabled;
 
-		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		for (Authority auth : myUser.getRoles()) {
-			authorities.add(new GrantedAuthorityImpl(auth.getAuthority()));
-		}
+    Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+    for (Authority auth : myUser.getRoles()) {
+      authorities.add(new GrantedAuthorityImpl(auth.getAuthority()));
+    }
 
-		User springUser = new User(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
-				authorities);
-		return springUser;
-	}
+    User springUser = new User(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
+        authorities);
+    return springUser;
+  }
 }

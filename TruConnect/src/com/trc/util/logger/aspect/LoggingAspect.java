@@ -27,6 +27,7 @@ import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.Customer;
 import com.tscp.mvne.DeviceInfo;
 import com.tscp.mvne.NetworkInfo;
+import com.tscp.mvne.ServiceInstance;
 
 @Aspect
 @Component
@@ -168,6 +169,9 @@ public class LoggingAspect {
       clazz = null;
       id = null;
       descriptor = null;
+    } else if (arg instanceof java.lang.String) {
+      String string = (String) arg;
+      clazz = string.getClass().getSimpleName();
     } else if (arg instanceof com.trc.user.User) {
       User user = (User) arg;
       clazz = user.getClass().getSimpleName();
@@ -213,6 +217,11 @@ public class LoggingAspect {
       clazz = networkInfo.getClass().getSimpleName();
       id = networkInfo.getEsnmeiddec();
       descriptor = networkInfo.getMdn();
+    } else if (arg instanceof com.tscp.mvne.ServiceInstance) {
+      ServiceInstance serviceInstance = (ServiceInstance) arg;
+      clazz = serviceInstance.getClass().getSimpleName();
+      id = serviceInstance.getExternalid();
+      descriptor = serviceInstance.getSubscrno();
     } else {
       clazz = arg.getClass().getSimpleName();
       id = "unknown";

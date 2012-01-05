@@ -1,3 +1,41 @@
+/* **************************************************
+ * Radio Button Effects
+ ************************************************** */
+function highlightRadio(name, val) {
+	var radioButtons = $("input[name='" + name + "']:radio");
+	var selectedRadio = $("input[value='" + val + "']");
+	$(selectedRadio).attr("checked", true);
+	$(radioButtons).selectRadioFromList($(selectedRadio));
+}
+
+$.fn.fadeInRadio = function() {
+	var label = $(this).next("span");
+	$(label).css("font-style", "italic").css("color", "#0067B2").fadeTo("slow",
+			1.0);
+};
+
+$.fn.fadeOutRadio = function() {
+	var label = $(this).next("span");
+	$(label).css("font-style", "").css("color", "").fadeTo("slow", 0.5);
+};
+
+$.fn.selectRadio = function(radioButtons) {
+	$(this).fadeInRadio();
+	$(radioButtons).not($(this)).each(function() {
+		$(this).fadeOutRadio();
+	});
+};
+
+$.fn.selectRadioFromList = function(selected) {
+	$(selected).fadeInRadio();
+	$(this).not($(selected)).each(function() {
+		$(this).fadeOutRadio();
+	});
+};
+
+/*******************************************************************************
+ * Toggle Slide Effects
+ ******************************************************************************/
 $.fn.toggleSlideDownFullHeight = function() {
 	if (!$(this).is(":visible")) {
 		$(this).css("height", $(window).height() - 200);
@@ -29,9 +67,16 @@ $.fn.toggleSlideUp = function() {
 $.fn.toggleSlide = function() {
 	if ($(this).is(":visible")) {
 		$(this).toggleSlideUp();
+		return false;
+	} else {
+		$(this).toggleSlideDown();
+		return false;
 	}
 };
 
+/*******************************************************************************
+ * Caption Effects
+ ******************************************************************************/
 $.fn.enableCaption = function() {
 	var caption = $(this).attr("title");
 	var val = $(this).val();

@@ -12,15 +12,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 public class MyAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
 
-	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-			Authentication authResult) throws IOException, ServletException {
-		super.successfulAuthentication(request, response, authResult);
-	}
+  @Override
+  protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+      Authentication authResult) throws IOException, ServletException {
+    super.successfulAuthentication(request, response, authResult);
+  }
 
-	@Override
-	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException failed) throws IOException, ServletException {
-		super.unsuccessfulAuthentication(request, response, failed);
-	}
+  @Override
+  protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+      AuthenticationException failed) throws IOException, ServletException {
+    super.unsuccessfulAuthentication(request, response, failed);
+  }
 }

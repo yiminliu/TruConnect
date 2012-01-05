@@ -13,19 +13,19 @@ import com.trc.user.security.SecurityQuestion;
 @SuppressWarnings("unchecked")
 public class SecurityQuestionDao extends HibernateDaoSupport implements SecurityQuestionDaoModel {
 
-	@Autowired
-	public void init(HibernateTemplate hibernateTemplate) {
-		setHibernateTemplate(hibernateTemplate);
-	}
+  @Autowired
+  public void init(HibernateTemplate hibernateTemplate) {
+    setHibernateTemplate(hibernateTemplate);
+  }
 
-	@Override
-	public List<SecurityQuestion> getSecurityQuestions() {
-		return getHibernateTemplate().find("from SecurityQuestion");
-	}
+  @Override
+  public List<SecurityQuestion> getSecurityQuestions() {
+    return getHibernateTemplate().find("from SecurityQuestion");
+  }
 
-	@Override
-	public SecurityQuestion getSecurityQuestion(int id) {
-		return getHibernateTemplate().get(SecurityQuestion.class, id);
-	}
+  @Override
+  public SecurityQuestion getSecurityQuestion(int id) {
+    return getHibernateTemplate().get(SecurityQuestion.class, id);
+  }
 
 }

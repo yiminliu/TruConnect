@@ -14,29 +14,29 @@ import org.springframework.jms.core.MessageCreator;
 
 //@Service
 public class QueueSender {
-	private JmsTemplate jmsTemplate = new JmsTemplate();
-	// @Autowired
-	private ConnectionFactory jmsConnectionFactory;
-	// @Autowired
-	private Destination truConnectQueue;
+  private JmsTemplate jmsTemplate = new JmsTemplate();
+  // @Autowired
+  private ConnectionFactory jmsConnectionFactory;
+  // @Autowired
+  private Destination truConnectQueue;
 
-	// @PostConstruct
-	public void init() {
-		jmsTemplate.setConnectionFactory(jmsConnectionFactory);
-		jmsTemplate.setDefaultDestination(truConnectQueue);
-		jmsTemplate.setSessionTransacted(true);
-		jmsTemplate.setDeliveryMode(DeliveryMode.PERSISTENT);
-		jmsTemplate.setSessionAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
-	}
+  // @PostConstruct
+  public void init() {
+    jmsTemplate.setConnectionFactory(jmsConnectionFactory);
+    jmsTemplate.setDefaultDestination(truConnectQueue);
+    jmsTemplate.setSessionTransacted(true);
+    jmsTemplate.setDeliveryMode(DeliveryMode.PERSISTENT);
+    jmsTemplate.setSessionAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
+  }
 
-	public void send(final Serializable object, Destination destination) {
-		jmsTemplate.send(destination, new MessageCreator() {
-			public ObjectMessage createMessage(Session session) throws JMSException {
-				ObjectMessage message = session.createObjectMessage(object);
-				message.setIntProperty("attempt", 1);
-				return message;
-			}
-		});
-	}
+  public void send(final Serializable object, Destination destination) {
+    jmsTemplate.send(destination, new MessageCreator() {
+      public ObjectMessage createMessage(Session session) throws JMSException {
+        ObjectMessage message = session.createObjectMessage(object);
+        message.setIntProperty("attempt", 1);
+        return message;
+      }
+    });
+  }
 
 }

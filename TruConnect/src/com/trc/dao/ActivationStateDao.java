@@ -15,52 +15,52 @@ import com.trc.util.logger.activation.ActivationStateId;
 @Repository
 public class ActivationStateDao extends HibernateDaoSupport implements ActivationStateDaoModel {
 
-	@Autowired
-	public void init(HibernateTemplate hibernateTemplate) {
-		setHibernateTemplate(hibernateTemplate);
-	}
+  @Autowired
+  public void init(HibernateTemplate hibernateTemplate) {
+    setHibernateTemplate(hibernateTemplate);
+  }
 
-	@Override
-	public int saveRegistrationMap(ActivationMap registrationMap) {
-		return (Integer) getHibernateTemplate().save(registrationMap);
-	}
+  @Override
+  public int saveRegistrationMap(ActivationMap activationMap) {
+    return (Integer) getHibernateTemplate().save(activationMap);
+  }
 
-	@Override
-	public void updateRegistrationMap(ActivationMap registrationMap) {
-		getHibernateTemplate().update(registrationMap);
-	}
+  @Override
+  public void updateRegistrationMap(ActivationMap activationMap) {
+    getHibernateTemplate().update(activationMap);
+  }
 
-	@Override
-	public void saveRegistrationState(ActivationState registrationState) {
-		getHibernateTemplate().save(registrationState);
-	}
+  @Override
+  public void saveRegistrationState(ActivationState activationState) {
+    getHibernateTemplate().save(activationState);
+  }
 
-	@Override
-	public void updateRegistratonState(ActivationState registrationState) {
-		getHibernateTemplate().update(registrationState);
-	}
+  @Override
+  public void updateRegistratonState(ActivationState activationState) {
+    getHibernateTemplate().update(activationState);
+  }
 
-	@Override
-	public ActivationState getRegistrationState(ActivationStateId registrationStateId) {
-		return getHibernateTemplate().get(ActivationState.class, registrationStateId);
-	}
+  @Override
+  public ActivationState getRegistrationState(ActivationStateId activationStateId) {
+    return getHibernateTemplate().get(ActivationState.class, activationStateId);
+  }
 
-	@Override
-	public ActivationMap getRegistrationMap(int regId) {
-		return getHibernateTemplate().get(ActivationMap.class, regId);
-	}
+  @Override
+  public ActivationMap getRegistrationMap(int activationId) {
+    return getHibernateTemplate().get(ActivationMap.class, activationId);
+  }
 
-	public ActivationState getRegistrationState(ActivationMap registrationMap, ActState regState) {
-		for (ActivationState rState : registrationMap.getStates()) {
-			if (rState.getState().equals(regState)) {
-				return rState;
-			}
-		}
-		return null;
-	}
+  public ActivationState getRegistrationState(ActivationMap activationMap, ActState actState) {
+    for (ActivationState rState : activationMap.getStates()) {
+      if (rState.getState().equals(actState)) {
+        return rState;
+      }
+    }
+    return null;
+  }
 
-	@SuppressWarnings("unchecked")
-	public List<ActivationMap> getRegistrationMapByUserId(int userId) {
-		return getHibernateTemplate().find("from RegistrationMap registrationMap where userId = ?", userId);
-	}
+  @SuppressWarnings("unchecked")
+  public List<ActivationMap> getRegistrationMapByUserId(int userId) {
+    return getHibernateTemplate().find("from ActivationMap activationMap where activationMap.user.userId = ?", userId);
+  }
 }

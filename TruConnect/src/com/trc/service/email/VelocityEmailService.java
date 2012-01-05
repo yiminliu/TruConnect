@@ -17,34 +17,34 @@ import com.trc.exception.EmailException;
 
 @Service
 public class VelocityEmailService {
-	@Autowired
-	private VelocityEngine velocityEngine;
-	@Autowired
-	private JavaMailSender mailSender;
+  @Autowired
+  private VelocityEngine velocityEngine;
+  @Autowired
+  private JavaMailSender mailSender;
 
-	public void setVelocityEngine(VelocityEngine velocityEngine) {
-		this.velocityEngine = velocityEngine;
-	}
+  public void setVelocityEngine(VelocityEngine velocityEngine) {
+    this.velocityEngine = velocityEngine;
+  }
 
-	public void setMailSender(JavaMailSender mailSender) {
-		this.mailSender = mailSender;
-	}
+  public void setMailSender(JavaMailSender mailSender) {
+    this.mailSender = mailSender;
+  }
 
-	public void send(String template, final SimpleMailMessage message, final Map<Object, Object> model)
-			throws EmailException {
-		final String vmTemplate = "/" + template + ".vm";
-		MimeMessagePreparator preparator = new MimeMessagePreparator() {
-			public void prepare(MimeMessage mimeMessage) throws Exception {
-				MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-				messageHelper.setTo(message.getTo());
-				messageHelper.setFrom(message.getFrom());
-				messageHelper.setSubject(message.getSubject());
-				String body = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, vmTemplate, model);
-				messageHelper.setText(body, true);
-			}
-		};
-		mailSender.send(preparator);
-		preparator = null;
-	}
+  public void send(String template, final SimpleMailMessage message, final Map<Object, Object> model)
+      throws EmailException {
+    final String vmTemplate = "/" + template + ".vm";
+    MimeMessagePreparator preparator = new MimeMessagePreparator() {
+      public void prepare(MimeMessage mimeMessage) throws Exception {
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+        messageHelper.setTo(message.getTo());
+        messageHelper.setFrom(message.getFrom());
+        messageHelper.setSubject(message.getSubject());
+        String body = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, vmTemplate, model);
+        messageHelper.setText(body, true);
+      }
+    };
+    mailSender.send(preparator);
+    preparator = null;
+  }
 
 }

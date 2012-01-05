@@ -16,21 +16,21 @@ import com.tscp.mvne.UsageDetail;
  */
 public class UsageHistory extends Paginator {
 
-	public UsageHistory(List<UsageDetail> usageDetails, User user, int accountNumber) {
-		super.setRecords(usageDetails);
-		super.setSummarySize(3);
-	}
+  public UsageHistory(List<UsageDetail> usageDetails, User user, int accountNumber) {
+    super.setRecords(usageDetails);
+    super.setSummarySize(3);
+  }
 
-	@Deprecated
-	public UsageHistory(AccountManager accountManager, User user, int accountNumber) throws AccountManagementException {
-		List<UsageDetail> usageDetails;
-		try {
-			usageDetails = accountManager.getChargeHistory(user, accountNumber);
-			super.setRecords(usageDetails);
-			super.setSummarySize(3);
-		} catch (AccountManagementException e) {
-			throw e;
-		}
-	}
+  @Deprecated
+  public UsageHistory(AccountManager accountManager, User user, int accountNumber) throws AccountManagementException {
+    List<UsageDetail> usageDetails;
+    try {
+      usageDetails = accountManager.getChargeHistory(user, accountNumber);
+      super.setRecords(usageDetails);
+      super.setSummarySize(3);
+    } catch (AccountManagementException e) {
+      throw e;
+    }
+  }
 
 }

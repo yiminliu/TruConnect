@@ -14,20 +14,20 @@ import com.tscp.mvne.TruConnect;
 
 @Service
 public class TruConnectEmailService implements TruConnectEmailServiceModel {
-	private TruConnect truConnect;
+  private TruConnect truConnect;
 
-	@Autowired
-	public void init(TruConnectGateway truConnectGateway) {
-		this.truConnect = truConnectGateway.getPort();
-	}
+  @Autowired
+  public void init(TruConnectGateway truConnectGateway) {
+    this.truConnect = truConnectGateway.getPort();
+  }
 
-	@Override
-	public void sendActivationEmail(User user, Account account) throws GatewayException {
-		try {
-			truConnect.sendWelcomeNotification(TruConnectUtil.toCustomer(user), account);
-		} catch (WebServiceException e) {
-			throw new GatewayException(e.getMessage(), e.getCause());
-		}
-	}
+  @Override
+  public void sendActivationEmail(User user, Account account) throws GatewayException {
+    try {
+      truConnect.sendWelcomeNotification(TruConnectUtil.toCustomer(user), account);
+    } catch (WebServiceException e) {
+      throw new GatewayException(e.getMessage(), e.getCause());
+    }
+  }
 
 }

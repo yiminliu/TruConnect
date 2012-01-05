@@ -8,12 +8,12 @@ import com.tscp.mvne.Account;
 
 public interface RegistrationManagerModel {
 
-	public abstract void reserveUserId(Registration registration) throws UserManagementException;
+  public abstract void reserveUserId(Registration registration) throws UserManagementException;
 
-	public abstract void sendActivationEmail(User user, Account account);
+  public abstract void sendActivationEmail(User user, Account account);
 
-	public abstract void sendActivationEmail(User user) throws EmailException;
+  public abstract void sendActivationEmail(User user) throws EmailException;
 
-	public abstract void cancelRegistration(Registration registration) throws UserManagementException;
+  public abstract void cancelRegistration(Registration registration) throws UserManagementException;
 
 }

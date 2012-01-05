@@ -18,54 +18,54 @@ import com.trc.user.User;
 @Table(name = "authorities")
 @IdClass(AuthorityId.class)
 public class Authority implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private User user;
-	private String authority;
+  private static final long serialVersionUID = 1L;
+  private User user;
+  private String authority;
 
-	public Authority() {
-		// default
-	}
+  public Authority() {
+    // default
+  }
 
-	public Authority(User user, String authority) {
-		setUser(user);
-		setAuthority(authority);
-	}
+  public Authority(User user, String authority) {
+    setUser(user);
+    setAuthority(authority);
+  }
 
-	@Id
-	@Column(name = "authority")
-	public String getAuthority() {
-		return this.authority;
-	}
+  @Id
+  @Column(name = "authority")
+  public String getAuthority() {
+    return this.authority;
+  }
 
-	public void setAuthority(String authority) {
-		this.authority = authority;
-	}
+  public void setAuthority(String authority) {
+    this.authority = authority;
+  }
 
-	@Id
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id", nullable = false, insertable = false)
-	public User getUser() {
-		return this.user;
-	}
+  @Id
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_id", nullable = false, insertable = false)
+  public User getUser() {
+    return this.user;
+  }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-	@Override
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("userId=").append(getUser().getUserId()).append(", ");
-		sb.append("authority=").append(getAuthority());
-		return sb.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append("userId=").append(getUser().getUserId()).append(", ");
+    sb.append("authority=").append(getAuthority());
+    return sb.toString();
+  }
 
-	@Transient
-	public String toFormattedString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("--Authority--").append("\n");
-		sb.append("  User ID=").append(getUser().getUserId()).append("\n");
-		sb.append("  Authority=").append(getAuthority());
-		return sb.toString();
-	}
+  @Transient
+  public String toFormattedString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append("--Authority--").append("\n");
+    sb.append("  User ID=").append(getUser().getUserId()).append("\n");
+    sb.append("  Authority=").append(getAuthority());
+    return sb.toString();
+  }
 }

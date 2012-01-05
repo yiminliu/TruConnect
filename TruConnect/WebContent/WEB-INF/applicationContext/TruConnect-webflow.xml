@@ -28,7 +28,7 @@
   <flow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
     <flow:flow-location path="/WEB-INF/flows/flowDev.xml" />
     <flow:flow-location path="/WEB-INF/flows/add/payment/addCreditCard_initial.xml" />
-    
+
     <flow:flow-location path="/WEB-INF/flows/activation/activateAdditionalDevice.xml" />
     <flow:flow-location path="/WEB-INF/flows/activation/registration.xml" />
     <flow:flow-location path="/WEB-INF/flows/activation/script/processActivation.xml" />
@@ -36,6 +36,11 @@
     <flow:flow-location path="/WEB-INF/flows/activation/script/createShellAccount.xml" />
     <flow:flow-location path="/WEB-INF/flows/activation/script/makeActivationPayment.xml" />
     <flow:flow-location path="/WEB-INF/flows/activation/script/testActivation.xml" />
+
+    <flow:flow-location path="/WEB-INF/flows/activation/script/applyCouponContract.xml" />
+    <flow:flow-location path="/WEB-INF/flows/activation/script/applyCouponPayment.xml" />
+    <flow:flow-location path="/WEB-INF/flows/activation/script/checkCoupon.xml" />
+
     <flow:flow-location path="/WEB-INF/flows/add/contact/addContactInfo.xml" />
     <flow:flow-location path="/WEB-INF/flows/add/device/addDevice_noAction.xml" />
     <flow:flow-location path="/WEB-INF/flows/add/payment/addCreditCard_noAction.xml" />

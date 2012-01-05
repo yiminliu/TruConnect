@@ -27,8 +27,8 @@
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
                 <form:errors path="oldPassword" />
-                <form:errors path="newPassword" />
-                <form:errors path="confirmNewPassword" />
+                <form:errors path="password" />
+                <form:errors path="confirmPassword" />
               </div>
             </div>
           </c:if>
@@ -40,13 +40,13 @@
           </div>
 
           <div class="row">
-            <form:label path="newPassword" cssClass="required">New Password</form:label>
-            <form:password path="newPassword" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+            <form:label path="password" cssClass="required">New Password</form:label>
+            <form:password path="password" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
           </div>
 
           <div class="row">
-            <form:label path="confirmNewPassword" cssClass="required">Confirm Password</form:label>
-            <form:password path="confirmNewPassword" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+            <form:label path="confirmPassword" cssClass="required">Confirm Password</form:label>
+            <form:password path="confirmPassword" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
           </div>
 
           <!-- Buttons -->

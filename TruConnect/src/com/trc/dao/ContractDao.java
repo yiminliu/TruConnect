@@ -10,24 +10,24 @@ import com.trc.coupon.contract.Contract;
 @Repository
 public class ContractDao extends HibernateDaoSupport {
 
-	@Autowired
-	public void init(HibernateTemplate hibernateTemplate) {
-		setHibernateTemplate(hibernateTemplate);
-	}
+  @Autowired
+  public void init(HibernateTemplate hibernateTemplate) {
+    setHibernateTemplate(hibernateTemplate);
+  }
 
-	public int insertContract(Contract contract) {
-		return (Integer) getHibernateTemplate().save(contract);
-	}
+  public int insertContract(Contract contract) {
+    return (Integer) getHibernateTemplate().save(contract);
+  }
 
-	public void deleteContract(Contract contract) {
-		getHibernateTemplate().delete(contract);
-	}
+  public void deleteContract(Contract contract) {
+    getHibernateTemplate().delete(contract);
+  }
 
-	public void updateContract(Contract contract) {
-		getHibernateTemplate().update(contract);
-	}
+  public void updateContract(Contract contract) {
+    getHibernateTemplate().update(contract);
+  }
 
-	public Contract getContract(int contractId) {
-		return getHibernateTemplate().get(Contract.class, contractId);
-	}
+  public Contract getContract(int contractId) {
+    return getHibernateTemplate().get(Contract.class, contractId);
+  }
 }

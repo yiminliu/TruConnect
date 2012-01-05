@@ -6,5 +6,5 @@ import com.tscp.mvne.Account;
 
 public interface TruConnectEmailServiceModel {
 
-	public void sendActivationEmail(User user, Account account) throws GatewayException;
+  public void sendActivationEmail(User user, Account account) throws GatewayException;
 }

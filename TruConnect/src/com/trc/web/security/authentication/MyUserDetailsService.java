@@ -12,36 +12,36 @@ import com.trc.user.User;
 
 //TODO reimplement this service with assembler to keep Spring model seperated from our internal model
 public class MyUserDetailsService implements UserDetailsService {
-	@Autowired
-	private UserManager userManager;
+  @Autowired
+  private UserManager userManager;
 
-	// @Autowired
-	// private Assembler assembler;
+  // @Autowired
+  // private Assembler assembler;
 
-	@Transactional(readOnly = true)
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-		User user = userManager.getUserByUsername(username);
-		user = user != null ? user : userManager.getUserByEmail(username);
-		if (user == null) {
-			throw new UsernameNotFoundException("User: " + username + " could not be found.");
-		}
-		return user;
-		// return assembler.buildUserFromUser(user);
-	}
+  @Transactional(readOnly = true)
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
+    User user = userManager.getUserByUsername(username);
+    user = user != null ? user : userManager.getUserByEmail(username);
+    if (user == null) {
+      throw new UsernameNotFoundException("User: " + username + " could not be found.");
+    }
+    return user;
+    // return assembler.buildUserFromUser(user);
+  }
 
-	public UserManager getUserManager() {
-		return userManager;
-	}
+  public UserManager getUserManager() {
+    return userManager;
+  }
 
-	public void setUserManager(UserManager userManager) {
-		this.userManager = userManager;
-	}
+  public void setUserManager(UserManager userManager) {
+    this.userManager = userManager;
+  }
 
-	// public Assembler getAssembler() {
-	// return assembler;
-	// }
-	//
-	// public void setAssembler(Assembler assembler) {
-	// this.assembler = assembler;
-	// }
+  // public Assembler getAssembler() {
+  // return assembler;
+  // }
+  //
+  // public void setAssembler(Assembler assembler) {
+  // this.assembler = assembler;
+  // }
 }

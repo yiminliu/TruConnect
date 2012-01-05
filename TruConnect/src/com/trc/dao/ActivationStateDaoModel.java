@@ -6,16 +6,16 @@ import com.trc.util.logger.activation.ActivationStateId;
 
 public interface ActivationStateDaoModel {
 
-	public int saveRegistrationMap(ActivationMap registrationMap);
+  public int saveRegistrationMap(ActivationMap registrationMap);
 
-	public void updateRegistrationMap(ActivationMap registrationMap);
+  public void updateRegistrationMap(ActivationMap registrationMap);
 
-	public ActivationMap getRegistrationMap(int registrationId);
+  public ActivationMap getRegistrationMap(int registrationId);
 
-	public void saveRegistrationState(ActivationState registrationState);
+  public void saveRegistrationState(ActivationState registrationState);
 
-	public void updateRegistratonState(ActivationState registrationState);
+  public void updateRegistratonState(ActivationState registrationState);
 
-	public ActivationState getRegistrationState(ActivationStateId registrationStateId);
+  public ActivationState getRegistrationState(ActivationStateId registrationStateId);
 
 }

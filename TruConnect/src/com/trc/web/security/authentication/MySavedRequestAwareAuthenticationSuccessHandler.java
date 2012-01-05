@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
+import com.trc.config.Config;
 import com.trc.manager.UserManager;
 import com.trc.security.encryption.StringEncrypter;
 import com.trc.user.AnonymousUser;
@@ -19,12 +20,10 @@ import com.trc.web.session.SessionKey;
 import com.trc.web.session.SessionManager;
 
 public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-  private UserManager userManager;
-
   @Autowired
-  public void init(UserManager userManager) {
-    this.userManager = userManager;
-  }
+  private UserManager userManager;
+  @Autowired
+  private Config config;
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -32,13 +31,14 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
     User user = userManager.getLoggedInUser();
     userManager.getUserRealName(user);
     MDC.put("sessionId", SessionManager.getCurrentSessionId());
-    if (user.isAdmin()) {
+
+    if (config.isAdmin() && user.isAdmin()) {
       MDC.put("internalUser", user.getUsername());
       userManager.setSessionAdmin(user);
       userManager.setSessionUser(new AnonymousUser());
       setAlwaysUseDefaultTargetUrl(true);
       setDefaultTargetUrl("/admin");
-    } else if (user.isManager()) {
+    } else if (config.isAdmin() && user.isManager()) {
       MDC.put("internalUser", user.getUsername());
       userManager.setSessionManager(user);
       userManager.setSessionUser(new AnonymousUser());
@@ -50,6 +50,7 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
       setAlwaysUseDefaultTargetUrl(false);
       setDefaultTargetUrl("/manage");
     }
+
     SessionManager.set(SessionKey.ENCRYPTER, new StringEncrypter(SessionManager.getCurrentSessionId()));
     super.onAuthenticationSuccess(request, response, authentication);
   }

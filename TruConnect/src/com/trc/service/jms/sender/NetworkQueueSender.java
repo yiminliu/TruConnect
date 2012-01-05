@@ -17,35 +17,35 @@ import com.tscp.mvne.NetworkInfo;
 
 //@Service
 public class NetworkQueueSender {
-	private static final Logger logger = LoggerFactory.getLogger(NetworkQueueSender.class);
+  private static final Logger logger = LoggerFactory.getLogger(NetworkQueueSender.class);
 
-	//@Autowired
-	private JmsTemplate networkJmsTemplate;
+  // @Autowired
+  private JmsTemplate networkJmsTemplate;
 
-	public void generateMessages() throws JMSException {
-		User user = new User();
-		user.setUsername("Super King");
+  public void generateMessages() throws JMSException {
+    User user = new User();
+    user.setUsername("Super King");
 
-		NetworkInfo networkInfo = new NetworkInfo();
-		networkInfo.setEsnmeiddec("01234567891");
-		networkInfo.setMdn("1234567");
-		networkInfo.setStatus("test case");
+    NetworkInfo networkInfo = new NetworkInfo();
+    networkInfo.setEsnmeiddec("01234567891");
+    networkInfo.setMdn("1234567");
+    networkInfo.setStatus("test case");
 
-		NetworkActivation networkActivation = new NetworkActivation();
-		networkActivation.setUser(user);
-		networkActivation.setNetworkInfo(networkInfo);
+    NetworkActivation networkActivation = new NetworkActivation();
+    networkActivation.setUser(user);
+    networkActivation.setNetworkInfo(networkInfo);
 
-		final NetworkActivation truConnectActivationMsg = networkActivation;
+    final NetworkActivation truConnectActivationMsg = networkActivation;
 
-		networkJmsTemplate.send(new MessageCreator() {
-			public ObjectMessage createMessage(Session session) throws JMSException {
-				ObjectMessage message = session.createObjectMessage(truConnectActivationMsg);
-				message.setIntProperty("attempt", 1);
-				logger.info("\n\tTC JMS! Sending object: " + session.getAcknowledgeMode() + " "
-						+ truConnectActivationMsg.getUser().getUsername());
-				return message;
-			}
-		});
+    networkJmsTemplate.send(new MessageCreator() {
+      public ObjectMessage createMessage(Session session) throws JMSException {
+        ObjectMessage message = session.createObjectMessage(truConnectActivationMsg);
+        message.setIntProperty("attempt", 1);
+        logger.info("\n\tTC JMS! Sending object: " + session.getAcknowledgeMode() + " "
+            + truConnectActivationMsg.getUser().getUsername());
+        return message;
+      }
+    });
 
-	}
+  }
 }

@@ -20,56 +20,56 @@ import com.trc.util.logger.activation.ActivationStateId;
 @Deprecated
 public class HibernateUtil_Activation {
 
-	private static SessionFactory sessionFactory;
+  private static SessionFactory sessionFactory;
 
-	public static Configuration getInitializedConfiguration() {
-		Configuration config = new Configuration();
-		config.addAnnotatedClass(ActivationMap.class);
-		config.addAnnotatedClass(ActivationState.class);
-		config.addAnnotatedClass(ActivationStateId.class);
-		config.addAnnotatedClass(User.class);
-		config.addAnnotatedClass(Authority.class);
-		config.addAnnotatedClass(SecurityQuestion.class);
-		config.configure();
-		return config;
-	}
+  public static Configuration getInitializedConfiguration() {
+    Configuration config = new Configuration();
+    config.addAnnotatedClass(ActivationMap.class);
+    config.addAnnotatedClass(ActivationState.class);
+    config.addAnnotatedClass(ActivationStateId.class);
+    config.addAnnotatedClass(User.class);
+    config.addAnnotatedClass(Authority.class);
+    config.addAnnotatedClass(SecurityQuestion.class);
+    config.configure();
+    return config;
+  }
 
-	public static Session getSession() {
-		if (sessionFactory == null) {
-			Configuration config = HibernateUtil_Activation.getInitializedConfiguration();
-			sessionFactory = config.buildSessionFactory();
-		}
-		Session hibernateSession = sessionFactory.getCurrentSession();
-		return hibernateSession;
-	}
+  public static Session getSession() {
+    if (sessionFactory == null) {
+      Configuration config = HibernateUtil_Activation.getInitializedConfiguration();
+      sessionFactory = config.buildSessionFactory();
+    }
+    Session hibernateSession = sessionFactory.getCurrentSession();
+    return hibernateSession;
+  }
 
-	public static void closeSession() {
-		HibernateUtil_Activation.getSession().close();
-	}
+  public static void closeSession() {
+    HibernateUtil_Activation.getSession().close();
+  }
 
-	public static void recreateDatabase() {
-		Configuration config;
-		config = HibernateUtil_Activation.getInitializedConfiguration();
-		new SchemaExport(config).create(true, true);
-	}
+  public static void recreateDatabase() {
+    Configuration config;
+    config = HibernateUtil_Activation.getInitializedConfiguration();
+    new SchemaExport(config).create(true, true);
+  }
 
-	public static Session beginTransaction() {
-		Session hibernateSession;
-		hibernateSession = HibernateUtil_Activation.getSession();
-		hibernateSession.beginTransaction();
-		return hibernateSession;
-	}
+  public static Session beginTransaction() {
+    Session hibernateSession;
+    hibernateSession = HibernateUtil_Activation.getSession();
+    hibernateSession.beginTransaction();
+    return hibernateSession;
+  }
 
-	public static void commitTransaction() {
-		HibernateUtil_Activation.getSession().getTransaction().commit();
-	}
+  public static void commitTransaction() {
+    HibernateUtil_Activation.getSession().getTransaction().commit();
+  }
 
-	public static void rollbackTransaction() {
-		HibernateUtil_Activation.getSession().getTransaction().rollback();
-	}
+  public static void rollbackTransaction() {
+    HibernateUtil_Activation.getSession().getTransaction().rollback();
+  }
 
-	public static void main(String args[]) {
-		HibernateUtil_Activation.recreateDatabase();
-	}
+  public static void main(String args[]) {
+    HibernateUtil_Activation.recreateDatabase();
+  }
 
 }

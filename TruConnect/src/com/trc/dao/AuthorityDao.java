@@ -13,34 +13,34 @@ import com.trc.user.authority.Authority;
 @SuppressWarnings("unchecked")
 public class AuthorityDao extends HibernateDaoSupport implements AuthorityDaoModel {
 
-	@Autowired
-	public void init(HibernateTemplate hibernateTemplate) {
-		setHibernateTemplate(hibernateTemplate);
-	}
+  @Autowired
+  public void init(HibernateTemplate hibernateTemplate) {
+    setHibernateTemplate(hibernateTemplate);
+  }
 
-	@Override
-	public void saveAuthority(Authority authority) {
-		getHibernateTemplate().save(authority);
-	}
+  @Override
+  public void saveAuthority(Authority authority) {
+    getHibernateTemplate().save(authority);
+  }
 
-	@Override
-	public void deleteAuthority(Authority authority) {
-		getHibernateTemplate().delete(authority);
-	}
+  @Override
+  public void deleteAuthority(Authority authority) {
+    getHibernateTemplate().delete(authority);
+  }
 
-	@Override
-	public void updateAuthority(Authority authority) {
-		getHibernateTemplate().update(authority);
-	}
+  @Override
+  public void updateAuthority(Authority authority) {
+    getHibernateTemplate().update(authority);
+  }
 
-	@Override
-	public List<Authority> getAuthoritiesWithRole(String role) {
-		return getHibernateTemplate().find("from Authority authority where authority.authority = ?", role);
-	}
+  @Override
+  public List<Authority> getAuthoritiesWithRole(String role) {
+    return getHibernateTemplate().find("from Authority authority where authority.authority = ?", role);
+  }
 
-	@Override
-	public List<Authority> getAuthoritiesForUser(int userId) {
-		return getHibernateTemplate().find("from Authority authority where authority.userId = ?", userId);
-	}
+  @Override
+  public List<Authority> getAuthoritiesForUser(int userId) {
+    return getHibernateTemplate().find("from Authority authority where authority.userId = ?", userId);
+  }
 
 }

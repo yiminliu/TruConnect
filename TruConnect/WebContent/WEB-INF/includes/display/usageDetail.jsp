@@ -1,3 +1,4 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <tr>
   <td>
     ${usageDetail.dateAndTime.month}/${usageDetail.dateAndTime.day}/${usageDetail.dateAndTime.year}

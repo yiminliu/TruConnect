@@ -48,7 +48,7 @@
               monthly access fee, the discount will be applied when the monthly access fee is charged.</p>
             <div class="row">
               <form:label cssClass="required" path="couponCode">Coupon Code</form:label>
-              <form:input cssClass="span-8 noSubmit" cssErrorClass="span-8 validationFailed noSubmit" path="couponCode" />
+              <form:input cssClass="span-8 noSubmit" cssErrorClass="span-8 validationFailed noSubmit" path="couponCode" autocomplete="off" />
             </div>
             <div class="row pushed">
               <span id="couponMessage"></span>
@@ -58,7 +58,7 @@
             </div>
           </div>
 
-          <div class="slider hidden" style="margin-left: 1000px; height: 140px;">
+          <div class="slider hidden" style="height: 140px;">
             <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Select the Device you want to apply the offer to</h3>
 
 

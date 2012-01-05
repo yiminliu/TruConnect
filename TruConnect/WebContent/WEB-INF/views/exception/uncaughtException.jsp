@@ -13,7 +13,7 @@
   </div>
 
   <div class="blueTruConnectGradient">
-    <div class="container">Whoops!</div>
+    <div class="container">Our Apologies</div>
   </div>
 
   <div class="container">
@@ -21,42 +21,43 @@
       <div class="span-18 colborder">
         <h3 style="margin-bottom: 10px; padding-bottom: 0px; border-bottom: 1px #ccc dotted;">There was a problem</h3>
         <p style="font-size: 1.3em;">
-          An error has occured, no changes were made to your account. Please try your request again.<br /> If the error
-          persists please contact us and our customer support will be happy to assist you.
+          Your request could not be completed at this time and no changes were made to your account. Please try again
+          later or contact TruConnect Customer Support at 855-878-2666 (Monday-Friday 7am-8pm PST, Saturday 8am - 5pm
+          PST) or via <a href="http://support.truconnect.com/">http://support.truconect.com/</a>.
         </p>
         <sec:authorize access="hasRole('ROLE_ADMIN')">
           <hr />
           <%
-          	try {
-          			// The Servlet spec guarantees this attribute will be available
-          			Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
-          			if (exception != null) {
-          				if (exception instanceof ServletException) {
-          					// It's a ServletException: we should extract the root cause
-          					ServletException sex = (ServletException) exception;
-          					Throwable rootCause = sex.getRootCause();
-          					if (rootCause == null)
-          						rootCause = sex;
-          					out.println("** Root cause is: " + rootCause.getMessage());
-          					rootCause.printStackTrace(new java.io.PrintWriter(out));
-          				} else {
-          					// It's not a ServletException, so we'll just show it
-          					exception.printStackTrace(new java.io.PrintWriter(out));
-          				}
-          			} else {
-          				out.println("No error information available");
-          			}
-          			// Display cookies
-          			out.println("\nCookies:\n");
-          			Cookie[] cookies = request.getCookies();
-          			if (cookies != null) {
-          				for (int i = 0; i < cookies.length; i++) {
-          					out.println(cookies[i].getName() + "=[" + cookies[i].getValue() + "]");
-          				}
-          			}
-          		} catch (Exception ex) {
-          			ex.printStackTrace(new java.io.PrintWriter(out));
-          		}
+            try {
+                // The Servlet spec guarantees this attribute will be available
+                Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
+                if (exception != null) {
+                  if (exception instanceof ServletException) {
+                    // It's a ServletException: we should extract the root cause
+                    ServletException sex = (ServletException) exception;
+                    Throwable rootCause = sex.getRootCause();
+                    if (rootCause == null)
+                      rootCause = sex;
+                    out.println("** Root cause is: " + rootCause.getMessage());
+                    rootCause.printStackTrace(new java.io.PrintWriter(out));
+                  } else {
+                    // It's not a ServletException, so we'll just show it
+                    exception.printStackTrace(new java.io.PrintWriter(out));
+                  }
+                } else {
+                  out.println("No error information available");
+                }
+                // Display cookies
+                out.println("\nCookies:\n");
+                Cookie[] cookies = request.getCookies();
+                if (cookies != null) {
+                  for (int i = 0; i < cookies.length; i++) {
+                    out.println(cookies[i].getName() + "=[" + cookies[i].getValue() + "]");
+                  }
+                }
+              } catch (Exception ex) {
+                ex.printStackTrace(new java.io.PrintWriter(out));
+              }
           %>
         </sec:authorize>
       </div>

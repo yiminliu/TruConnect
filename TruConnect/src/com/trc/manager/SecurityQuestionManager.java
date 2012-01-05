@@ -10,21 +10,21 @@ import com.trc.user.security.SecurityQuestion;
 
 @Service
 public class SecurityQuestionManager implements SecurityQuestionManagerModel {
-	private SecurityQuestionDao securityQuestionDao;
+  private SecurityQuestionDao securityQuestionDao;
 
-	@Autowired
-	public void init(SecurityQuestionDao securityQuestionDao) {
-		this.securityQuestionDao = securityQuestionDao;
-	}
+  @Autowired
+  public void init(SecurityQuestionDao securityQuestionDao) {
+    this.securityQuestionDao = securityQuestionDao;
+  }
 
-	@Override
-	public List<SecurityQuestion> getSecurityQuestions() {
-		return securityQuestionDao.getSecurityQuestions();
-	}
+  @Override
+  public List<SecurityQuestion> getSecurityQuestions() {
+    return securityQuestionDao.getSecurityQuestions();
+  }
 
-	@Override
-	public SecurityQuestion getSecurityQuestion(int id) {
-		return securityQuestionDao.getSecurityQuestion(id);
-	}
+  @Override
+  public SecurityQuestion getSecurityQuestion(int id) {
+    return securityQuestionDao.getSecurityQuestion(id);
+  }
 
 }

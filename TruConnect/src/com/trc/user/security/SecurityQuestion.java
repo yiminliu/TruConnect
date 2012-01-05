@@ -10,26 +10,26 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "hints")
 public class SecurityQuestion implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private int hintId;
-	private String hintQuestion;
+  private static final long serialVersionUID = 1L;
+  private int hintId;
+  private String hintQuestion;
 
-	@Id
-	@Column(name = "hint_id")
-	public int getHintId() {
-		return hintId;
-	}
+  @Id
+  @Column(name = "hint_id")
+  public int getHintId() {
+    return hintId;
+  }
 
-	public void setHintId(int hintId) {
-		this.hintId = hintId;
-	}
+  public void setHintId(int hintId) {
+    this.hintId = hintId;
+  }
 
-	@Column(name = "question")
-	public String getHintQuestion() {
-		return hintQuestion;
-	}
+  @Column(name = "question")
+  public String getHintQuestion() {
+    return hintQuestion;
+  }
 
-	public void setHintQuestion(String hintQuestion) {
-		this.hintQuestion = hintQuestion;
-	}
+  public void setHintQuestion(String hintQuestion) {
+    this.hintQuestion = hintQuestion;
+  }
 }

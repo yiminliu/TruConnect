@@ -103,15 +103,15 @@
   width: 240px;
 }
 
-.admin_tooltip li {
+.admin_tooltip li, .device_detail li {
   list-style: none;
 }
 
-.admin_tooltip div {
+.admin_tooltip div, .device_detail div {
   margin: 10px 0px 10px 0px;
 }
 
-.admin_tooltip li.header {
+.admin_tooltip li.header, .device_detail li.header {
   font-weight: bold;
   border-bottom: 1px #121212 solid;
   width: 100%;

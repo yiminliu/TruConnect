@@ -11,5 +11,5 @@ import com.trc.util.logger.LogLevel;
 @Target(ElementType.METHOD)
 public @interface Loggable {
 
-	LogLevel value();
+  LogLevel value();
 }

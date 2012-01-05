@@ -8,39 +8,39 @@ import com.trc.user.contact.ContactInfo;
 
 public interface UserModel {
 
-	public int getUserId();
+  public int getUserId();
 
-	public void setUserId(int userId);
+  public void setUserId(int userId);
 
-	public String getUsername();
+  public String getUsername();
 
-	public void setUsername(String username);
+  public void setUsername(String username);
 
-	public String getPassword();
+  public String getPassword();
 
-	public void setPassword(String password);
+  public void setPassword(String password);
 
-	public boolean isEnabled();
+  public boolean isEnabled();
 
-	public void setEnabled(boolean enabled);
+  public void setEnabled(boolean enabled);
 
-	public Date getDateEnabled();
+  public Date getDateEnabled();
 
-	public void setDateEnabled(Date date);
+  public void setDateEnabled(Date date);
 
-	public Date getDateDisabled();
+  public Date getDateDisabled();
 
-	public void setDateDisabled(Date date);
+  public void setDateDisabled(Date date);
 
-	public SecurityQuestionAnswer getUserHint();
+  public SecurityQuestionAnswer getUserHint();
 
-	public void setUserHint(SecurityQuestionAnswer securityQuestionAnswer);
+  public void setUserHint(SecurityQuestionAnswer securityQuestionAnswer);
 
-	public Collection<Authority> getRoles();
+  public Collection<Authority> getRoles();
 
-	public void setRoles(Collection<Authority> roles);
+  public void setRoles(Collection<Authority> roles);
 
-	public ContactInfo getContactInfo();
+  public ContactInfo getContactInfo();
 
-	public void setContactInfo(ContactInfo contactInfo);
+  public void setContactInfo(ContactInfo contactInfo);
 }
