@@ -6,6 +6,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/WebContent/WEB-INF/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/WebContent/WEB-INF/resources/messages"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/WebContent/WEB-INF/resources/messages/emailTemplates"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src_report"/>
         <property name="java-output-path" value="/TruConnect/build/classes"/>
         <property name="context-root" value="TruConnect"/>
     </wb-module>

@@ -42,8 +42,6 @@ public class CouponController extends EncryptedController {
   private AccountManager accountManager;
   @Autowired
   private CouponValidator couponValidator;
-  @Autowired
-  private DevLogger devLogger;
 
   private void encodeAccountNums(List<AccountDetail> accountDetailList) {
     for (AccountDetail accountDetail : accountDetailList) {
@@ -87,21 +85,21 @@ public class CouponController extends EncryptedController {
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView postRedeemCoupon(HttpServletRequest request, @ModelAttribute("coupon") Coupon coupon,
       BindingResult result) {
-    devLogger.log("form submission caught, fetching coupon with code: " + coupon.getCouponCode());
+    DevLogger.log("form submission caught, fetching coupon with code: " + coupon.getCouponCode());
     ResultModel model = new ResultModel("coupon/addCouponSuccess", "coupon/addCoupon");
     User user = userManager.getCurrentUser();
     String encodedAccountNumber = request.getParameter("account");
-    devLogger.log("selected radio button has value of: " + encodedAccountNumber);
+    DevLogger.log("selected radio button has value of: " + encodedAccountNumber);
     int accountNumber = 0;
     if (encodedAccountNumber != null) {
       accountNumber = super.decryptId(encodedAccountNumber);
-      devLogger.log("decoded radio button value is: " + accountNumber);
+      DevLogger.log("decoded radio button value is: " + accountNumber);
     }
     try {
 
       coupon = couponManager.getCouponByCode(coupon.getCouponCode());
       if (coupon != null) {
-        devLogger.log("received coupon: " + coupon.toFormattedString());
+        DevLogger.log("received coupon: " + coupon.toFormattedString());
       }
       couponValidator.validate(coupon, accountNumber, result);
       if (result.hasErrors()) {

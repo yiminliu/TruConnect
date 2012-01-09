@@ -5,29 +5,26 @@ import java.net.URL;
 import javax.annotation.PostConstruct;
 import javax.xml.namespace.QName;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trc.config.Config;
-import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.TruConnect;
 import com.tscp.mvne.TruConnectService;
 
 @Service
 public class TruConnectGateway {
-  @Autowired
-  private Config config;
   private TruConnectService service;
   private TruConnect port;
-  @Autowired
-  private DevLogger devLogger;
 
   @PostConstruct
   public void init() {
     try {
-      String namespace = config.getTSCPMVNE().getNamespace();
-      String servicename = config.getTSCPMVNE().getServiceName();
-      String location = config.getTSCPMVNE().getLocation();
+      if (!TSCPMVNE.initialized) {
+        Config.loadProperties();
+      }
+      String namespace = TSCPMVNE.namespace;
+      String servicename = TSCPMVNE.serviceName;
+      String location = TSCPMVNE.location;
       service = new TruConnectService(new URL(location), new QName(namespace, servicename));
     } catch (Exception e) {
       e.printStackTrace();

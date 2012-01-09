@@ -49,8 +49,6 @@ public class TestController {
   private DeviceManager deviceManager;
   // @Autowired
   private CouponManager couponManager;
-  // @Resource
-  private DevLogger devLogger;
   // @Autowired
   private CouponValidator couponValidator;
 
@@ -78,7 +76,7 @@ public class TestController {
       List<Coupon> allCoupons = couponManager.getAllCoupons();
       List<UserCoupon> userCoupons = couponManager.getUserCoupons(user.getUserId());
       for (Coupon coupon : allCoupons) {
-        devLogger.log("\n\nChecking coupon:" + coupon.getCouponId() + " detail:"
+        DevLogger.log("\n\nChecking coupon:" + coupon.getCouponId() + " detail:"
             + coupon.getCouponDetail().getCouponDetailId() + " " + " contract:"
             + coupon.getCouponDetail().getContract().getDescription() + " duration:"
             + coupon.getCouponDetail().getDuration() + " amount:" + coupon.getCouponDetail().getAmount());
@@ -87,26 +85,26 @@ public class TestController {
         isAtAccountLimit = couponValidator.isAtAccountLimit(coupon, user, account);
         isRecurring = coupon.isRecurring();
         isEligible = couponValidator.isEligible(coupon, user, account);
-        devLogger.log("....isAvailable=" + isAvailable);
-        devLogger.log("....isApplied=" + isApplied);
-        devLogger.log("....isAtAccountLimit=" + isAtAccountLimit);
-        devLogger.log("....isRecurring=" + isRecurring);
+        DevLogger.log("....isAvailable=" + isAvailable);
+        DevLogger.log("....isApplied=" + isApplied);
+        DevLogger.log("....isAtAccountLimit=" + isAtAccountLimit);
+        DevLogger.log("....isRecurring=" + isRecurring);
         for (UserCoupon uc : userCoupons) {
           isStackable = couponValidator.isStackable(coupon, uc.getId().getCoupon());
-          devLogger.log("....isStackable=" + isStackable + " [" + uc.getId().getCoupon().getCouponId() + ", "
+          DevLogger.log("....isStackable=" + isStackable + " [" + uc.getId().getCoupon().getCouponId() + ", "
               + coupon.getCouponId() + "]");
         }
-        devLogger.log("....isEligible=" + isEligible);
+        DevLogger.log("....isEligible=" + isEligible);
       }
 
     } catch (AccountManagementException e) {
-      devLogger.error("Account management error " + e.getMessage());
+      DevLogger.log("Account management error " + e.getMessage());
       return model.getAccessException();
     } catch (CouponManagementException e) {
-      devLogger.error("Coupon management error " + e.getMessage());
+      DevLogger.log("Coupon management error " + e.getMessage());
       return model.getAccessException();
     } catch (ValidationException e) {
-      devLogger.error("Exception while checking if coupon is applied");
+      DevLogger.log("Exception while checking if coupon is applied");
       return model.getAccessException();
     }
     return model.getSuccess();
@@ -119,23 +117,23 @@ public class TestController {
 
   // @RequestMapping(value = "/coupon/payment")
   public String testCouponPayment() {
-    devLogger.log("TestController /coupon/payment");
-    devLogger.log("fetching user...");
+    DevLogger.log("TestController /coupon/payment");
+    DevLogger.log("fetching user...");
     User user = userManager.getUserByEmail("jonathan.pong@gmail.com");
-    devLogger.log("found user:" + user.toString());
+    DevLogger.log("found user:" + user.toString());
     try {
-      devLogger.log("fetching account...");
+      DevLogger.log("fetching account...");
       Account account = accountManager.getAccounts(user).get(0);
       ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
-      devLogger.log("found account: " + account.toString());
-      devLogger.log("attempting to apply coupon payment...");
+      DevLogger.log("found account: " + account.toString());
+      DevLogger.log("attempting to apply coupon payment...");
       Coupon coupon = new Coupon();
       couponManager.applyCoupon(coupon, user, account, serviceInstance);
     } catch (AccountManagementException e) {
-      devLogger.log("error while fetching account");
+      DevLogger.log("error while fetching account");
       e.printStackTrace();
     } catch (CouponManagementException e) {
-      devLogger.log("error while applying coupon payment");
+      DevLogger.log("error while applying coupon payment");
       e.printStackTrace();
     }
     return "test/success";
@@ -150,12 +148,12 @@ public class TestController {
 
       List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
       for (KenanContract kc : contracts) {
-        devLogger.log(kc.toString());
+        DevLogger.log(kc.toString());
       }
 
       List<UserCoupon> userCoupons = couponManager.getUserCoupons(user.getUserId());
       for (UserCoupon uc : userCoupons) {
-        devLogger.log(uc.toString());
+        DevLogger.log(uc.toString());
       }
     } catch (AccountManagementException e) {
       e.printStackTrace();
@@ -169,19 +167,19 @@ public class TestController {
   public String testUpdateCoupon() {
     try {
       User user = userManager.getUserByEmail("jonathan.pong@gmail.com");
-      devLogger.log(ClassUtils.toString(user));
-      devLogger.log("fetching account");
+      DevLogger.log(ClassUtils.toString(user));
+      DevLogger.log("fetching account");
       Account account = accountManager.getAccounts(user).get(0);
-      devLogger.log(ClassUtils.toString(account));
-      devLogger.log("fetching service instance");
+      DevLogger.log(ClassUtils.toString(account));
+      DevLogger.log("fetching service instance");
       ServiceInstance serviceInstance = account.getServiceinstancelist().get(0);
-      devLogger.log(ClassUtils.toString(serviceInstance));
+      DevLogger.log(ClassUtils.toString(serviceInstance));
       List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
-      devLogger.log("found " + contracts.size() + " contracts");
-      devLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalid());
+      DevLogger.log("found " + contracts.size() + " contracts");
+      DevLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalid());
 
       for (KenanContract kc : contracts) {
-        devLogger.log("contract: " + kc.getContractId() + " " + kc.getContractType() + " " + kc.getDuration());
+        DevLogger.log("contract: " + kc.getContractId() + " " + kc.getContractType() + " " + kc.getDuration());
       }
 
       Coupon coupon = new Coupon();
@@ -189,15 +187,15 @@ public class TestController {
       try {
         userCoupons = couponManager.getUserCoupons(user.getUserId());
       } catch (CouponManagementException e) {
-        devLogger.log("error fetching coupons, returning empty list");
+        DevLogger.log("error fetching coupons, returning empty list");
         userCoupons = new Vector<UserCoupon>();
       }
-      devLogger.log("found " + userCoupons.size() + " user coupons in local database");
+      DevLogger.log("found " + userCoupons.size() + " user coupons in local database");
       List<Coupon> coupons = new Vector<Coupon>();
       for (UserCoupon uc : userCoupons) {
         // coupon = couponManager.getCoupon(uc.getId().getCouponId());
         coupon = uc.getId().getCoupon();
-        devLogger.log("" + coupon.toString());
+        DevLogger.log("" + coupon.toString());
         coupons.add(coupon);
       }
 
@@ -210,7 +208,7 @@ public class TestController {
       }
 
     } catch (AccountManagementException e) {
-      devLogger.log("error while fetching account");
+      DevLogger.log("error while fetching account");
       e.printStackTrace();
     }
     return "test/success";

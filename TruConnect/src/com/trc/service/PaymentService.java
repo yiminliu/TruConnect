@@ -82,6 +82,9 @@ public class PaymentService implements PaymentServiceModel {
       if (creditCard.getAddress2() == null || creditCard.getAddress2().isEmpty()) {
         creditCard.setAddress2("{}");
       }
+      if (creditCard.getCreditCardNumber().toLowerCase().contains("x")) {
+        creditCard.setCreditCardNumber(null);
+      }
       List<CustPmtMap> paymentMapList = truConnect.updateCreditCardPaymentMethod(TruConnectUtil.toCustomer(user),
           creditCard);
       CustPmtMap paymentMap = getPaymentMap(paymentMapList, creditCard.getPaymentid());

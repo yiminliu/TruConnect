@@ -22,8 +22,6 @@ import com.trc.web.session.SessionManager;
 public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
   @Autowired
   private UserManager userManager;
-  @Autowired
-  private Config config;
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -32,13 +30,13 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
     userManager.getUserRealName(user);
     MDC.put("sessionId", SessionManager.getCurrentSessionId());
 
-    if (config.isAdmin() && user.isAdmin()) {
+    if (Config.admin && user.isAdmin()) {
       MDC.put("internalUser", user.getUsername());
       userManager.setSessionAdmin(user);
       userManager.setSessionUser(new AnonymousUser());
       setAlwaysUseDefaultTargetUrl(true);
       setDefaultTargetUrl("/admin");
-    } else if (config.isAdmin() && user.isManager()) {
+    } else if (Config.admin && user.isManager()) {
       MDC.put("internalUser", user.getUsername());
       userManager.setSessionManager(user);
       userManager.setSessionUser(new AnonymousUser());

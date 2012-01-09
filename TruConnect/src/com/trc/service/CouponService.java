@@ -38,8 +38,6 @@ public class CouponService {
   private CouponDao couponDao;
   private CouponDetailDao couponDetailDao;
   private UserCouponDao userCouponDao;
-  @Resource
-  private DevLogger devLogger;
 
   /* *****************************************************************
    * Initialization
@@ -200,11 +198,9 @@ public class CouponService {
     // TODO there needs to be a way for individual contracts to map back to
     // individual coupons
     try {
-      devLogger.error("Fetching contracts in kenan");
       List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
       return contracts;
     } catch (WebServiceException e) {
-      devLogger.error("Error fetching contracts in kenan");
       throw new CouponServiceException(e.getMessage(), e.getCause());
     }
   }
@@ -239,7 +235,6 @@ public class CouponService {
       calendar.setTime(date);
       XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
       String stringAmount = Formatter.formatDollarAmountQuery(coupon.getCouponDetail().getAmount());
-      devLogger.log("....applying coupon payment for string amount of " + stringAmount);
       int trackingId = truConnect.applyCouponPayment(account, stringAmount, xmlCal);
       try {
         UserCoupon userCoupon = new UserCoupon(coupon, user, account);
@@ -250,14 +245,11 @@ public class CouponService {
         return trackingId;
       } catch (DataAccessException e) {
         // TODO rollback the credit that was given
-        devLogger.log("Error inserting UserCoupon");
         throw new CouponServiceException("Error inserting UserCoupon: " + e.getMessage(), e.getCause());
       }
     } catch (DatatypeConfigurationException dce) {
-      devLogger.error("....Error applying coupon payment in kenan: could not create XMLGregorianCalendar");
       throw new CouponServiceException(dce.getMessage(), dce.getCause());
     } catch (WebServiceException e) {
-      devLogger.error("....Error applying coupon payment in kenan " + e.getMessage());
       throw new CouponServiceException("Error applying coupon payment: " + e.getMessage(), e.getCause());
     }
   }
@@ -266,7 +258,6 @@ public class CouponService {
   public int applyCoupon(User user, Coupon coupon, Account account, ServiceInstance serviceInstance)
       throws CouponServiceException {
     try {
-      devLogger.log("Applying coupon " + coupon.getCouponId() + " to account " + account.getAccountno());
       KenanContract kenanContract = new KenanContract();
       kenanContract.setAccount(account);
       kenanContract.setServiceInstance(serviceInstance);
@@ -293,13 +284,11 @@ public class CouponService {
         incCouponUsedCount(coupon);
         return contractId;
       } catch (DataAccessException e) {
-        devLogger.log("Error inserting UserCoupon");
         kenanContract.setDuration(0);
         truConnect.updateContract(kenanContract);
         throw new CouponServiceException("Error inserting UserCoupon: " + e.getMessage(), e.getCause());
       }
     } catch (WebServiceException e) {
-      devLogger.error("Error applying contract in kenan");
       throw new CouponServiceException(e.getMessage(), e.getCause());
     }
   }
@@ -331,7 +320,6 @@ public class CouponService {
         throw new CouponServiceException("Could not find associated contract for coupon " + coupon.getCouponId());
       }
     } catch (WebServiceException e) {
-      devLogger.error("Error canceling coupon");
       throw new CouponServiceException(e.getMessage(), e.getCause());
     }
   }

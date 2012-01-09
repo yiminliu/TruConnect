@@ -31,9 +31,6 @@ public class CouponValidator implements Validator {
   @Autowired
   private AccountManager accountManager;
 
-  // @Resource
-  // private DevLogger devLogger;
-
   @Override
   public boolean supports(Class<?> myClass) {
     return Coupon.class.isAssignableFrom(myClass);

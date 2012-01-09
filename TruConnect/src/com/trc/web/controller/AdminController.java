@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +40,12 @@ public class AdminController {
   private SessionRegistry sessionRegistry;
   @Autowired
   private AdminValidator adminValidator;
-  @Autowired
-  private Config config;
-  @Resource
-  private DevLogger devLogger;
 
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
   @RequestMapping(value = "/managers", method = RequestMethod.GET)
   public ModelAndView showServiceReps() {
     ResultModel model = new ResultModel("admin/managers");
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return model.getAccessDenied();
     }
     List<User> managers = userManager.getAllManagers();
@@ -61,7 +56,7 @@ public class AdminController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @RequestMapping(value = "/managers/disable/{userId}", method = RequestMethod.GET)
   public String disableServiceRep(@PathVariable("userId") int userId) {
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return "exception/accessDenied";
     }
     User manager = userManager.getUserById(userId);
@@ -72,7 +67,7 @@ public class AdminController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @RequestMapping(value = "/managers/enable/{userId}", method = RequestMethod.GET)
   public String enableServiceRep(@PathVariable("userId") int userId) {
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return "exception/accessDenied";
     }
     User manager = userManager.getUserById(userId);
@@ -84,7 +79,7 @@ public class AdminController {
   @RequestMapping(value = "/create", method = RequestMethod.GET)
   public ModelAndView createServiceRep() {
     ResultModel model = new ResultModel("admin/create");
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return model.getAccessDenied();
     }
     model.addObject("user", new User());
@@ -95,7 +90,7 @@ public class AdminController {
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   public ModelAndView postCreateServiceRep(HttpServletRequest request, @ModelAttribute User user, BindingResult result) {
     ResultModel model = new ResultModel("redirect:/admin/managers", "admin/create");
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return model.getAccessDenied();
     }
 
@@ -122,7 +117,7 @@ public class AdminController {
   @RequestMapping(value = "/admins", method = RequestMethod.GET)
   public ModelAndView showAdmins() {
     ResultModel model = new ResultModel("admin/admins");
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return model.getAccessDenied();
     }
     List<User> admins = userManager.getAllAdmins();
@@ -134,7 +129,7 @@ public class AdminController {
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView showAdminHome() {
     ResultModel model = new ResultModel("admin/home");
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return model.getAccessDenied();
     }
     List<Object> activePrincipals = sessionRegistry.getAllPrincipals();
@@ -154,7 +149,7 @@ public class AdminController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
   @RequestMapping(value = "/logout/{userId}", method = RequestMethod.GET)
   public String forceLogout(@PathVariable("userId") int userId) {
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return "exception/accessDenied";
     }
     List<Object> activePrincipals = sessionRegistry.getAllPrincipals();
@@ -182,7 +177,7 @@ public class AdminController {
   public ModelAndView showUser(HttpServletRequest request) {
     String userId = request.getParameter("admin_search_id");
     ResultModel model = new ResultModel("redirect:/account");
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return model.getAccessDenied();
     }
     setUserToView(userManager.getUserById(Integer.parseInt(userId)));
@@ -193,7 +188,7 @@ public class AdminController {
   @RequestMapping(value = "/search/email", method = RequestMethod.GET)
   public ModelAndView searchByEmail(HttpServletRequest request) {
     ResultModel model = new ResultModel("admin/search/jquery_username");
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return model.getAccessDenied();
     }
     List<User> searchResults = userManager.searchByEmail(request.getParameter("email"));
@@ -204,7 +199,7 @@ public class AdminController {
   @RequestMapping(value = "/search/email/ajax", method = RequestMethod.GET)
   public @ResponseBody
   SearchResponse searchByEmailAjax(@RequestParam String email) {
-    if (!config.isAdmin()) {
+    if (!Config.admin) {
       return new SearchResponse(false, new String[0]);
     }
     List<User> searchResults = userManager.searchByEmail(email);
@@ -213,10 +208,10 @@ public class AdminController {
       emails[i] = searchResults.get(i).getEmail();
     }
     if (searchResults.size() > 0) {
-      devLogger.log("returning " + searchResults.size() + " results");
+      DevLogger.log("returning " + searchResults.size() + " results");
       return new SearchResponse(true, emails);
     } else {
-      devLogger.log("returning " + searchResults.size() + " results");
+      DevLogger.log("returning " + searchResults.size() + " results");
       return new SearchResponse(false, emails);
     }
   }
@@ -241,7 +236,7 @@ public class AdminController {
 
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
   private void setUserToView(User user) {
-    if (config.isAdmin()) {
+    if (Config.admin) {
       userManager.setSessionUser(user);
       CacheManager.clearCache();
     }

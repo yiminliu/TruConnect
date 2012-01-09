@@ -3,8 +3,6 @@ package com.trc.manager;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +13,6 @@ import com.trc.exception.management.CouponManagementException;
 import com.trc.exception.service.CouponServiceException;
 import com.trc.service.CouponService;
 import com.trc.user.User;
-import com.trc.util.logger.DevLogger;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.validation.CouponValidator;
@@ -28,8 +25,6 @@ public class CouponManager implements CouponManagerModel {
   private CouponService couponService;
   @Autowired
   private CouponValidator couponValidator;
-  @Resource
-  private DevLogger devLogger;
 
   @Loggable(value = LogLevel.TRACE)
   public List<UserCoupon> getUserCoupons(int userId) throws CouponManagementException {
@@ -56,18 +51,14 @@ public class CouponManager implements CouponManagerModel {
     if (!couponValidator.isAtAccountLimit(coupon, user, account)) {
       try {
         if (coupon.getCouponDetail().getContract().getContractType() == -1) {
-          devLogger.log("Inserting UserCoupon and applying credit payment in Kenan");
           return couponService.applyCouponPayment(coupon, user, account, new Date());
         } else {
-          devLogger.log("Inserting UserCoupon and applying contract in Kenan");
           return couponService.applyCoupon(user, coupon, account, serviceInstance);
         }
       } catch (CouponServiceException e) {
         throw new CouponManagementException(e.getMessage(), e.getCause());
       }
     } else {
-      devLogger.error("couponManager.applyCoupon = coupon is at account limit. Result of call was "
-          + couponValidator.isAtAccountLimit(coupon, user, account));
       throw new CouponManagementException("Coupon " + coupon.getCouponId()
           + " has already been applied to it's limit by user " + user.getUserId());
     }
@@ -77,7 +68,6 @@ public class CouponManager implements CouponManagerModel {
   public void cancelCoupon(Coupon coupon, User user, Account account, ServiceInstance serviceInstance)
       throws CouponManagementException {
     try {
-      devLogger.log("Canceling Coupon");
       couponService.cancelCoupon(user, coupon, account, serviceInstance);
     } catch (CouponServiceException e) {
       // TODO should attempt to cancel again or queue for cancellation
@@ -90,6 +80,7 @@ public class CouponManager implements CouponManagerModel {
    * *****************************************************************
    */
 
+  @Loggable(value = LogLevel.TRACE)
   public int insertCoupon(Coupon coupon) throws CouponManagementException {
     try {
       return couponService.insertCoupon(coupon);
@@ -98,6 +89,7 @@ public class CouponManager implements CouponManagerModel {
     }
   }
 
+  @Loggable(value = LogLevel.TRACE)
   public void deleteCoupon(Coupon coupon) throws CouponManagementException {
     try {
       couponService.deleteCoupon(coupon);
@@ -106,6 +98,7 @@ public class CouponManager implements CouponManagerModel {
     }
   }
 
+  @Loggable(value = LogLevel.TRACE)
   public void updateCoupon(Coupon coupon) throws CouponManagementException {
     try {
       couponService.updateCoupon(coupon);
@@ -114,6 +107,7 @@ public class CouponManager implements CouponManagerModel {
     }
   }
 
+  @Loggable(value = LogLevel.TRACE)
   public Coupon getCoupon(int couponId) throws CouponManagementException {
     try {
       return couponService.getCoupon(couponId);
@@ -122,6 +116,7 @@ public class CouponManager implements CouponManagerModel {
     }
   }
 
+  @Loggable(value = LogLevel.TRACE)
   public List<Coupon> getAllCoupons() throws CouponManagementException {
     try {
       return couponService.getAllCoupons();
@@ -130,6 +125,7 @@ public class CouponManager implements CouponManagerModel {
     }
   }
 
+  @Loggable(value = LogLevel.TRACE)
   public Coupon getCouponByCode(String couponCode) throws CouponManagementException {
     try {
       Coupon coupon = couponService.getCouponByCode(couponCode);
@@ -144,6 +140,7 @@ public class CouponManager implements CouponManagerModel {
    * *****************************************************************
    */
 
+  @Loggable(value = LogLevel.TRACE)
   public int insertCouponDetail(CouponDetail couponDetail) throws CouponManagementException {
     try {
       return couponService.insertCouponDetail(couponDetail);
@@ -152,6 +149,7 @@ public class CouponManager implements CouponManagerModel {
     }
   }
 
+  @Loggable(value = LogLevel.TRACE)
   public void deleteCouponDetail(CouponDetail couponDetail) throws CouponManagementException {
     try {
       couponService.deleteCouponDetail(couponDetail);
@@ -160,6 +158,7 @@ public class CouponManager implements CouponManagerModel {
     }
   }
 
+  @Loggable(value = LogLevel.TRACE)
   public void updateCouponDetail(CouponDetail couponDetail) throws CouponManagementException {
     try {
       couponService.updateCouponDetail(couponDetail);
@@ -168,6 +167,7 @@ public class CouponManager implements CouponManagerModel {
     }
   }
 
+  @Loggable(value = LogLevel.TRACE)
   public CouponDetail getCouponDetail(int couponDetailId) throws CouponManagementException {
     try {
       return couponService.getCouponDetail(couponDetailId);

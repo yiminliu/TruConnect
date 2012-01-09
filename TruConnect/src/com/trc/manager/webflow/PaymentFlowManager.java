@@ -11,8 +11,6 @@ import com.trc.exception.management.PaymentManagementException;
 import com.trc.manager.PaymentManager;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
-import com.trc.util.logger.LogLevel;
-import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.flow.util.WebFlowUtil;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.CreditCard;
@@ -28,7 +26,6 @@ public class PaymentFlowManager {
   private static final String ERROR_REMOVE_METHOD = "An error occurred while clearing your previous attempt's record. Your account has not been charged or saved. Please try again.";
   private static final String ERROR_RETRIEVE_METHOD = "An error occurred whiled retrieving your payment information. Please try again.";
 
-  @Loggable(value = LogLevel.TRACE)
   public PaymentUnitResponse makeActivationPayment(User user, Account account, CreditCard creditCard)
       throws WebFlowException {
     try {
@@ -39,7 +36,6 @@ public class PaymentFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.TRACE)
   public PaymentUnitResponse makePayment(User user, Account account, CreditCard creditCard, String amount)
       throws WebFlowException {
     try {
@@ -50,7 +46,6 @@ public class PaymentFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.TRACE)
   public PaymentUnitResponse makePayment(User user, Account account, int paymentId, String amount)
       throws GatewayException {
     try {
@@ -61,12 +56,10 @@ public class PaymentFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.TRACE)
   public void bindCreditCard(CreditCard outCreditCard, CreditCard inCreditCard) {
     TruConnectUtil.copyCreditCard(outCreditCard, inCreditCard);
   }
 
-  @Loggable(value = LogLevel.TRACE)
   public void addPaymentMethod(User user, CreditCard creditCard) throws GatewayException {
     try {
       CreditCard createdCreditCard = paymentManager.addCreditCard(user, creditCard);
@@ -78,7 +71,6 @@ public class PaymentFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.TRACE)
   public void removePaymentMethod(User user, CreditCard creditCard) throws WebFlowException {
     try {
       paymentManager.removeCreditCard(user, creditCard);
@@ -88,7 +80,6 @@ public class PaymentFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.TRACE)
   public List<CreditCard> getCreditCards(User user) throws WebFlowException {
     try {
       return paymentManager.getCreditCards(user);
@@ -99,7 +90,6 @@ public class PaymentFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.TRACE)
   public CreditCard getCreditCardDetail(int paymentId) throws WebFlowException {
     try {
       return paymentManager.getCreditCard(paymentId);

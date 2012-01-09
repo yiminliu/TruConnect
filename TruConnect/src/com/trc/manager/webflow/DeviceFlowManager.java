@@ -8,8 +8,6 @@ import com.trc.exception.management.DeviceManagementException;
 import com.trc.manager.DeviceManager;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
-import com.trc.util.logger.LogLevel;
-import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.flow.util.WebFlowUtil;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.DeviceInfo;
@@ -26,12 +24,10 @@ public class DeviceFlowManager {
   private static final String ERROR_DISCONNECT = "An error occurred while testing your device's ability to disconnect. No changes were made. Please try again.";
   private static final String ERROR_CREATE_SERVICE = "An error occurred while preparing your device's service. No changes were made. Please try again.";
 
-  @Loggable(value = LogLevel.INFO)
   public void setDefaultDeviceLabel(DeviceInfo deviceInfo, String firstName) {
     deviceManager.setDefaultDeviceLabel(deviceInfo, firstName);
   }
 
-  @Loggable(value = LogLevel.INFO)
   public void reserveMdn(NetworkInfo networkInfo) throws WebFlowException {
     try {
       NetworkInfo reservedNetworkInfo = deviceManager.reserveMdn();
@@ -43,12 +39,10 @@ public class DeviceFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.INFO)
   public void bindEsn(NetworkInfo networkInfo, DeviceInfo deviceInfo) {
     deviceManager.bindEsn(networkInfo, deviceInfo);
   }
 
-  @Loggable(value = LogLevel.INFO)
   public void addDeviceInfo(DeviceInfo deviceInfo, Account account, User user) throws WebFlowException {
     try {
       DeviceInfo newDeviceInfo = deviceManager.addDeviceInfo(deviceInfo, account, user);
@@ -60,7 +54,6 @@ public class DeviceFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.INFO)
   public void removeDeviceInfo(DeviceInfo deviceInfo, Account account, User user) throws WebFlowException {
     try {
       deviceManager.removeDeviceInfo(deviceInfo, account, user);
@@ -71,7 +64,6 @@ public class DeviceFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.INFO)
   public void activateService(NetworkInfo networkInfo, User user) throws WebFlowException {
     try {
       NetworkInfo newNetworkInfo = deviceManager.activateService(networkInfo, user);
@@ -83,7 +75,6 @@ public class DeviceFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.INFO)
   public void deactivateService(Account account) throws WebFlowException {
     try {
       deviceManager.disconnectService(account);
@@ -94,7 +85,6 @@ public class DeviceFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.INFO)
   public void disconnectFromKenan(Account account) throws WebFlowException {
     try {
       deviceManager.disconnectFromKenan(account, account.getServiceinstancelist().get(0));
@@ -105,7 +95,6 @@ public class DeviceFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.INFO)
   public void disconnectService(NetworkInfo networkInfo) throws WebFlowException {
     try {
       deviceManager.disconnectFromNetwork(networkInfo);
@@ -116,7 +105,6 @@ public class DeviceFlowManager {
     }
   }
 
-  @Loggable(value = LogLevel.INFO)
   public void createServiceInstance(Account account, NetworkInfo networkInfo) throws WebFlowException {
     try {
       Account result = deviceManager.createServiceInstance(account, networkInfo);

@@ -84,48 +84,18 @@
           </div>
 
           <div class="row">
-            <label class="required">Expiration Date</label> <select id="monthSelect"
-              style="width: 50px; margin-right: 10px;">
-              <option value="01">01</option>
-              <option value="02">02</option>
-              <option value="03">03</option>
-              <option value="04">04</option>
-              <option value="05">05</option>
-              <option value="06">06</option>
-              <option value="07">07</option>
-              <option value="08">08</option>
-              <option value="09">09</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
+            <form:label path="expirationDate" cssClass="required">Expiration Date</form:label>
+            <select id="monthSelect" style="width: 50px; margin-right: 10px;">
+              <c:forEach var="month" items="${months}">
+                <option value="${month.key}">${month.key}</option>
+              </c:forEach>
             </select> <select id="yearSelect" style="width: 70px;">
-              <option value="11">2011</option>
-              <option value="12">2012</option>
-              <option value="13">2013</option>
-              <option value="14">2014</option>
-              <option value="15">2015</option>
-              <option value="16">2016</option>
-              <option value="17">2017</option>
-              <option value="18">2018</option>
-              <option value="19">2019</option>
-              <option value="20">2020</option>
-              <option value="21">2021</option>
-              <option value="22">2022</option>
-              <option value="23">2023</option>
-              <option value="24">2024</option>
-              <option value="25">2025</option>
-              <option value="26">2026</option>
-              <option value="27">2027</option>
-              <option value="28">2028</option>
-              <option value="29">2029</option>
-              <option value="30">2030</option>
+              <c:forEach var="year" items="${years}">
+                <option value="${year.value}">${year.key}</option>
+              </c:forEach>
             </select>
-          </div>
-
-          <div class="row" style="display: none;">
-            <form:label path="expirationDate">Expiration Date (MMYY)</form:label>
-            <form:input cssClass="numOnly" maxLength="4" cssErrorClass="numOnly verificationFailed"
-              path="expirationDate" />
+            <form:input cssStyle="display:none;" cssClass="numOnly" maxLength="4"
+              cssErrorClass="numOnly verificationFailed" path="expirationDate" />
           </div>
 
           <div id="creditCardImages" class="row pushed" style="height: 40px; line-height: 40px;">
@@ -192,57 +162,9 @@
                 <form:option value="0">
                   <spring:message code="label.selectOne" />
                 </form:option>
-                <form:option value="AL">Alabama</form:option>
-                <form:option value="AK">Alaska</form:option>
-                <form:option value="AZ">Arizona</form:option>
-                <form:option value="AR">Arkansas</form:option>
-                <form:option value="CA">California</form:option>
-                <form:option value="CO">Colorado</form:option>
-                <form:option value="CT">Connecticut</form:option>
-                <form:option value="DC">District of Columbia</form:option>
-                <form:option value="DE">Delaware</form:option>
-                <form:option value="FL">Florida</form:option>
-                <form:option value="GA">Georgia</form:option>
-                <form:option value="HI">Hawaii</form:option>
-                <form:option value="ID">Idaho</form:option>
-                <form:option value="IL">Illinois</form:option>
-                <form:option value="IN">Indiana</form:option>
-                <form:option value="IA">Iowa</form:option>
-                <form:option value="KS">Kansas</form:option>
-                <form:option value="KY">Kentucky</form:option>
-                <form:option value="LA">Louisiana</form:option>
-                <form:option value="ME">Maine</form:option>
-                <form:option value="MD">Maryland</form:option>
-                <form:option value="MA">Massachusetts</form:option>
-                <form:option value="MI">Michigan</form:option>
-                <form:option value="MN">Minnesota</form:option>
-                <form:option value="MS">Mississippi</form:option>
-                <form:option value="MO">Missouri</form:option>
-                <form:option value="MT">Montana</form:option>
-                <form:option value="NE">Nebraska</form:option>
-                <form:option value="NV">Nevada</form:option>
-                <form:option value="NH">New Hampshire</form:option>
-                <form:option value="NJ">New Jersey</form:option>
-                <form:option value="NM">New Mexico</form:option>
-                <form:option value="NY">New York</form:option>
-                <form:option value="NC">North Carolina</form:option>
-                <form:option value="ND">North Dakota</form:option>
-                <form:option value="OH">Ohio</form:option>
-                <form:option value="OK">Oklahoma</form:option>
-                <form:option value="OR">Oregon</form:option>
-                <form:option value="PA">Pennsylvania</form:option>
-                <form:option value="RI">Rhode Island</form:option>
-                <form:option value="SC">South Carolina</form:option>
-                <form:option value="SD">South Dakota</form:option>
-                <form:option value="TN">Tennessee</form:option>
-                <form:option value="TX">Texas</form:option>
-                <form:option value="UT">Utah</form:option>
-                <form:option value="VT">Vermont</form:option>
-                <form:option value="VA">Virginia</form:option>
-                <form:option value="WA">Washington</form:option>
-                <form:option value="WV">West Virginia</form:option>
-                <form:option value="WI">Wisconsin</form:option>
-                <form:option value="WY">Wyoming</form:option>
+                <c:forEach var="state" items="${states}">
+                  <form:option value="${state.value}">${state.key}</form:option>
+                </c:forEach>
               </form:select>
             </div>
 

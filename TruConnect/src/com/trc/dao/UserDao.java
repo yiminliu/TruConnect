@@ -24,13 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.trc.user.Admin;
 import com.trc.user.User;
 import com.trc.user.authority.Authority;
-import com.trc.util.logger.DevLogger;
 
 @Repository
 @SuppressWarnings("unchecked")
 public class UserDao extends HibernateDaoSupport implements UserDaoModel {
-  @Autowired
-  private DevLogger devLogger;
 
   @Autowired
   public void init(HibernateTemplate hibernateTemplate) {

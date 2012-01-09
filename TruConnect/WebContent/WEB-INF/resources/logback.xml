@@ -12,22 +12,35 @@
   </appender>
 
   <appender name="ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <File>../logs/truconnect_logback.log</File>
+    <File>../logs/truconnect.log</File>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <FileNamePattern>../logs/truconnect/truconnect_logback.%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+      <FileNamePattern>../logs/truconnect/truconnect.%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
       <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
         <maxFileSize>5MB</maxFileSize>
       </timeBasedFileNamingAndTriggeringPolicy>
     </rollingPolicy>
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} %-5level: %msg%n</pattern>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level: %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="ERR_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>../logs/truconnect_errors.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>../logs/truconnect/truconnect_errors.%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>5MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36}: %msg%n</pattern>
     </encoder>
   </appender>
 
   <appender name="DEV_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <File>../logs/devlogger.log</File>
+    <File>../logs/truconnect_dev.log</File>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <FileNamePattern>../logs/dev/devlogger.%d{yyyy-MM-dd}.log.zip</FileNamePattern>
+      <FileNamePattern>../logs/truconnect/truconnect_dev.%d{yyyy-MM-dd}.log.zip</FileNamePattern>
       <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
         <maxFileSize>5MB</maxFileSize>
       </timeBasedFileNamingAndTriggeringPolicy>
@@ -43,6 +56,11 @@
 
   <logger name="devLogger" level="ALL">
     <appender-ref ref="DEV_ROLLINGFILE" />
+  </logger>
+
+  <logger name="com.trc" level="ERROR">
+    <appender-ref ref="DEV_ROLLINGFILE" />
+    <appender-ref ref="ERR_ROLLINGFILE" />
   </logger>
 
   <root>

@@ -3,8 +3,11 @@ package com.trc.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +25,7 @@ import com.trc.manager.PaymentManager;
 import com.trc.manager.UserManager;
 import com.trc.user.User;
 import com.trc.user.account.PaymentHistory;
-import com.trc.user.contact.Address;
+import com.trc.util.logger.DevLogger;
 import com.trc.web.model.ResultModel;
 import com.trc.web.session.SessionKey;
 import com.trc.web.session.SessionManager;
@@ -42,8 +45,20 @@ public class PaymentController extends EncryptedController {
   private PaymentManager paymentManager;
   @Autowired
   private CreditCardValidator creditCardValidator;
-  @Autowired
-  private Config config;
+
+  private static Logger logger = LoggerFactory.getLogger(PaymentController.class);
+
+  @ModelAttribute
+  private void paymentReferenceData(ModelMap modelMap) {
+    modelMap.addAttribute("states", Config.states.entrySet());
+    modelMap.addAttribute("months", Config.months.entrySet());
+    modelMap.addAttribute("years", Config.years.entrySet());
+    try {
+      modelMap.addAttribute("addresses", addressManager.getAllAddresses(userManager.getCurrentUser()));
+    } catch (AddressManagementException e) {
+      logger.error(e.getMessage(), e);
+    }
+  }
 
   @RequestMapping(value = "/history", method = RequestMethod.GET)
   public String showPaymentHistory() {
@@ -65,6 +80,7 @@ public class PaymentController extends EncryptedController {
 
   @RequestMapping(value = "/methods", method = RequestMethod.GET)
   public ModelAndView showPaymentMethods() {
+    DevLogger.debug("showPaymentMethods");
     User user = userManager.getCurrentUser();
     ResultModel model = new ResultModel("payment/methods");
     try {
@@ -89,7 +105,6 @@ public class PaymentController extends EncryptedController {
       CreditCard cardToUpdate = paymentManager.getCreditCard(decodedPaymentId);
       SessionManager.set(SessionKey.CREDITCARD_UPDATE, cardToUpdate);
       model.addObject("creditCard", cardToUpdate);
-      model.addObject("states", config.getStates().entrySet());
       return model.getSuccess();
     } catch (PaymentManagementException e) {
       return model.getAccessException();
@@ -106,9 +121,6 @@ public class PaymentController extends EncryptedController {
     } else {
       try {
         User user = userManager.getCurrentUser();
-        if (creditCard.getCreditCardNumber().toLowerCase().contains("x")) {
-          creditCard.setCreditCardNumber(null);
-        }
         int decodedPaymentId = super.decryptId(encodedPaymentId);
         creditCard.setPaymentid(decodedPaymentId);
         paymentManager.updateCreditCard(user, creditCard);
@@ -126,7 +138,6 @@ public class PaymentController extends EncryptedController {
       int decodedPaymentId = super.decryptId(encodedPaymentId);
       CreditCard creditCard = paymentManager.getCreditCard(decodedPaymentId);
       model.addObject("creditCard", creditCard);
-      model.addObject("states", config.getStates().entrySet());
       return model.getSuccess();
     } catch (PaymentManagementException e) {
       return model.getAccessException();
@@ -148,17 +159,10 @@ public class PaymentController extends EncryptedController {
 
   @RequestMapping(value = "/methods/add", method = RequestMethod.GET)
   public ModelAndView addPaymentMethod() {
-    User user = userManager.getCurrentUser();
     ResultModel model = new ResultModel("payment/addCreditCard_additional");
-    try {
-      CreditCard creditCard = new CreditCard();
-      List<Address> addressList = addressManager.getAllAddresses(user);
-      model.addObject("addresses", addressList);
-      model.addObject("creditCard", creditCard);
-      return model.getSuccess();
-    } catch (AddressManagementException e) {
-      return model.getAccessException();
-    }
+    CreditCard creditCard = new CreditCard();
+    model.addObject("creditCard", creditCard);
+    return model.getSuccess();
   }
 
   @RequestMapping(value = "/methods/add", method = RequestMethod.POST)
@@ -167,13 +171,7 @@ public class PaymentController extends EncryptedController {
     User user = userManager.getCurrentUser();
     creditCardValidator.validate(creditCard, result);
     if (result.hasErrors()) {
-      try {
-        List<Address> addressList = addressManager.getAllAddresses(user);
-        model.addObject("addresses", addressList);
-        return model.getError();
-      } catch (AddressManagementException e) {
-        return model.getAccessException();
-      }
+      return model.getError();
     } else {
       try {
         creditCard.setIsDefault(creditCard.getIsDefault() == null ? "N" : creditCard.getIsDefault());
