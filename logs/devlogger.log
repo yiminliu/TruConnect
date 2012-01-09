@@ -1,0 +1,63 @@
+2012-01-05 12:52:42.470 DEBUG devLogger: Production: false
+2012-01-05 12:52:42.477 DEBUG devLogger: Admin: false
+2012-01-05 12:52:42.477 DEBUG devLogger: Location: http://10.10.30.188:8080/TSCPMVNE_coupon/TruConnectService?wsdl
+2012-01-05 12:52:42.485 DEBUG devLogger: Alabama = AL
+2012-01-05 12:52:42.485 DEBUG devLogger: Alaska = AK
+2012-01-05 12:52:42.486 DEBUG devLogger: Arizona = AZ
+2012-01-05 12:52:42.486 DEBUG devLogger: Arkansas = AR
+2012-01-05 12:52:42.488 DEBUG devLogger: California = CA
+2012-01-05 12:52:42.488 DEBUG devLogger: Colorado = CO
+2012-01-05 12:52:42.488 DEBUG devLogger: Connecticut = CT
+2012-01-05 12:52:42.489 DEBUG devLogger: Delaware = DE
+2012-01-05 12:52:42.489 DEBUG devLogger: District of Columbia = DC
+2012-01-05 12:52:42.489 DEBUG devLogger: Florida = FL
+2012-01-05 12:52:42.489 DEBUG devLogger: Georgia = GA
+2012-01-05 12:52:42.489 DEBUG devLogger: Hawaii = HI
+2012-01-05 12:52:42.491 DEBUG devLogger: Idaho = ID
+2012-01-05 12:52:42.492 DEBUG devLogger: Illinois = IL
+2012-01-05 12:52:42.492 DEBUG devLogger: Indiana = IN
+2012-01-05 12:52:42.492 DEBUG devLogger: Iowa = IA
+2012-01-05 12:52:42.492 DEBUG devLogger: Kansas = KS
+2012-01-05 12:52:42.492 DEBUG devLogger: Kentucky = KY
+2012-01-05 12:52:42.492 DEBUG devLogger: Louisiana = LA
+2012-01-05 12:52:42.493 DEBUG devLogger: Maine = ME
+2012-01-05 12:52:42.493 DEBUG devLogger: Maryland = MD
+2012-01-05 12:52:42.493 DEBUG devLogger: Massachusetts = MA
+2012-01-05 12:52:42.493 DEBUG devLogger: Michigan = MI
+2012-01-05 12:52:42.493 DEBUG devLogger: Minnesota = MN
+2012-01-05 12:52:42.493 DEBUG devLogger: Mississippi = MS
+2012-01-05 12:52:42.493 DEBUG devLogger: Missouri = MO
+2012-01-05 12:52:42.494 DEBUG devLogger: Montana = MT
+2012-01-05 12:52:42.494 DEBUG devLogger: Nebraska = NE
+2012-01-05 12:52:42.496 DEBUG devLogger: Nevada = NV
+2012-01-05 12:52:42.496 DEBUG devLogger: New Hampshire = NH
+2012-01-05 12:52:42.496 DEBUG devLogger: New Jersey = NJ
+2012-01-05 12:52:42.497 DEBUG devLogger: New Mexico = NM
+2012-01-05 12:52:42.497 DEBUG devLogger: New York = NY
+2012-01-05 12:52:42.497 DEBUG devLogger: North Carolina = NC
+2012-01-05 12:52:42.497 DEBUG devLogger: North Dakota = ND
+2012-01-05 12:52:42.497 DEBUG devLogger: Ohio = OH
+2012-01-05 12:52:42.497 DEBUG devLogger: Oklahoma = OK
+2012-01-05 12:52:42.498 DEBUG devLogger: Oregon = OR
+2012-01-05 12:52:42.498 DEBUG devLogger: Pennsylvania = PA
+2012-01-05 12:52:42.498 DEBUG devLogger: Rhode Island = RI
+2012-01-05 12:52:42.498 DEBUG devLogger: South Carolina = SC
+2012-01-05 12:52:42.498 DEBUG devLogger: South Dakota = SD
+2012-01-05 12:52:42.498 DEBUG devLogger: Tennessee = TN
+2012-01-05 12:52:42.498 DEBUG devLogger: Texas = TX
+2012-01-05 12:52:42.501 DEBUG devLogger: Utah = UT
+2012-01-05 12:52:42.501 DEBUG devLogger: Vermont = VT
+2012-01-05 12:52:42.501 DEBUG devLogger: Virginia = VA
+2012-01-05 12:52:42.502 DEBUG devLogger: Washington = WA
+2012-01-05 12:52:42.502 DEBUG devLogger: West = Virginia=WV
+2012-01-05 12:52:42.502 DEBUG devLogger: Wisconsin = WI
+2012-01-05 12:52:42.502 DEBUG devLogger: Wyoming = WY
+2012-01-05 12:52:53.961 DEBUG devLogger: Production: false
+2012-01-05 12:52:53.966 DEBUG devLogger: Admin: false
+2012-01-05 12:52:53.966 DEBUG devLogger: Location: http://10.10.30.188:8080/TSCPMVNE_coupon/TruConnectService?wsdl
+2012-01-05 12:53:29.058 DEBUG devLogger: Production: false
+2012-01-05 12:53:29.062 DEBUG devLogger: Admin: false
+2012-01-05 12:53:29.063 DEBUG devLogger: Location: http://10.10.30.188:8080/TSCPMVNE_coupon/TruConnectService?wsdl
+2012-01-05 12:58:01.772 DEBUG devLogger: Production: false
+2012-01-05 12:58:01.777 DEBUG devLogger: Admin: false
+2012-01-05 12:58:01.778 DEBUG devLogger: Location: http://10.10.30.188:8080/TSCPMVNE_coupon/TruConnectService?wsdl

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<rockstarapps>
+    
+
+
+
+
+<file name="WebContent/WEB-INF/static/javascript/infoIconPopup.js">
+        <min>false</min>
+        <comp>false</comp>
+        <closureCompiler>true</closureCompiler>
+        <gZip>false</gZip>
+        <resolveImports>false</resolveImports>
+        <urlRewriting>false</urlRewriting>
+        <autoBuild>false</autoBuild>
+        <lineLength>-1</lineLength>
+        <autoTimestamps>false</autoTimestamps>
+        <removeLogs>true</removeLogs>
+        <oldFileNames>true</oldFileNames>
+        <dependencies>
+            <file>WebContent/WEB-INF/static/javascript/infoIconPopup.js</file>
+        </dependencies>
+        <properties/>
+    </file>
+
+
+
+
+
+<file name="WebContent/WEB-INF/static/javascript/forms.js">
+        <min>false</min>
+        <comp>false</comp>
+        <closureCompiler>true</closureCompiler>
+        <gZip>false</gZip>
+        <resolveImports>false</resolveImports>
+        <urlRewriting>false</urlRewriting>
+        <autoBuild>false</autoBuild>
+        <lineLength>-1</lineLength>
+        <autoTimestamps>false</autoTimestamps>
+        <removeLogs>true</removeLogs>
+        <oldFileNames>false</oldFileNames>
+        <dependencies>
+            <file>WebContent/WEB-INF/static/javascript/forms.js</file>
+        </dependencies>
+        <properties/>
+    </file>
+
+
+<file name="WebContent/WEB-INF/static/javascript/ccValidation.js">
+        <min>false</min>
+        <comp>false</comp>
+        <closureCompiler>true</closureCompiler>
+        <gZip>false</gZip>
+        <resolveImports>false</resolveImports>
+        <urlRewriting>false</urlRewriting>
+        <autoBuild>false</autoBuild>
+        <lineLength>-1</lineLength>
+        <autoTimestamps>false</autoTimestamps>
+        <removeLogs>true</removeLogs>
+        <oldFileNames>false</oldFileNames>
+        <dependencies>
+            <file>WebContent/WEB-INF/static/javascript/ccValidation.js</file>
+        </dependencies>
+        <properties/>
+    </file>
+
+
+<file name="WebContent/WEB-INF/static/javascript/popup.js">
+        <min>false</min>
+        <comp>false</comp>
+        <closureCompiler>true</closureCompiler>
+        <gZip>false</gZip>
+        <resolveImports>false</resolveImports>
+        <urlRewriting>false</urlRewriting>
+        <autoBuild>false</autoBuild>
+        <lineLength>-1</lineLength>
+        <autoTimestamps>false</autoTimestamps>
+        <removeLogs>true</removeLogs>
+        <oldFileNames>false</oldFileNames>
+        <dependencies>
+            <file>WebContent/WEB-INF/static/javascript/popup.js</file>
+        </dependencies>
+        <properties/>
+    </file>
+</rockstarapps>
