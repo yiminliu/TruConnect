@@ -17,7 +17,7 @@
     value="lang" /> </bean> </mvc:interceptors> <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"> <property 
     name="defaultLocale" value="en" /> </bean> -->
   <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-    <property name="basename" value="classpath:messages" />
+    <property name="basename" value="classpath:messages/messages" />
     <property name="defaultEncoding" value="UTF-8" />
   </bean>
 

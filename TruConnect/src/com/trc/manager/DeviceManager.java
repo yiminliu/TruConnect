@@ -9,6 +9,7 @@ import com.trc.exception.management.DeviceManagementException;
 import com.trc.exception.service.DeviceServiceException;
 import com.trc.service.DeviceService;
 import com.trc.user.User;
+import com.trc.util.logger.DevLogger;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.session.cache.CacheKey;
@@ -235,6 +236,7 @@ public class DeviceManager implements DeviceManagerModel {
   public boolean isDeviceAvailable(String esn) {
     try {
       NetworkInfo networkInfo = deviceService.getNetworkInfo(esn, null);
+      DevLogger.log("isDeviceAvailable: " + esn + " received " + networkInfo);
       if (networkInfo != null && compareEsn(networkInfo, esn) && !isEsnInUse(networkInfo)) {
         return true;
       } else {
@@ -261,10 +263,12 @@ public class DeviceManager implements DeviceManagerModel {
   }
 
   private boolean compareEsn(NetworkInfo networkInfo, String esn) {
+    DevLogger.log("comparEsn: " + networkInfo.getEsnmeiddec() + " " + networkInfo.getEsnmeidhex() + " " + esn);
     return networkInfo != null && (esn.equals(networkInfo.getEsnmeiddec()) || esn.equals(networkInfo.getEsnmeidhex()));
   }
 
   private boolean isEsnInUse(NetworkInfo networkInfo) {
+    DevLogger.log("isEsnInUse: " + networkInfo.getStatus());
     return networkInfo.getStatus() != null
         && (networkInfo.getStatus().equals("A") || networkInfo.getStatus().equals("S") || networkInfo.getStatus()
             .equals("H"));

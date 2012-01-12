@@ -52,7 +52,7 @@ public class PaymentController extends EncryptedController {
   private void paymentReferenceData(ModelMap modelMap) {
     modelMap.addAttribute("states", Config.states.entrySet());
     modelMap.addAttribute("months", Config.months.entrySet());
-    modelMap.addAttribute("years", Config.years.entrySet());
+    modelMap.addAttribute("years", Config.yearsFuture.entrySet());
     try {
       modelMap.addAttribute("addresses", addressManager.getAllAddresses(userManager.getCurrentUser()));
     } catch (AddressManagementException e) {

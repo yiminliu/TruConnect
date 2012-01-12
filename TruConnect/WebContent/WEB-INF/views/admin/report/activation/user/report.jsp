@@ -10,16 +10,19 @@
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
   <div class="blueTruConnectGradient">
-    <div class="container">Activation Report</div>
+    <div class="container">
+      Activation Details: <span style="color: #666;">${report.user.userId} ${report.user.username}</span>
+    </div>
   </div>
 
   <div class="container">
     <div id="main-content">
       <div class="span-18 colborder">
-        <c:forEach var="user" items="${activatedUsers}">
-          ${user.username}<br />
+        <h3 style="margin-bottom: 10px; padding-bottom: 0px; border-bottom: 1px #ccc dotted;">States</h3>
+        <c:if test="${fn:length(report.activationStates) < 1}">None</c:if>
+        <c:forEach var="state" items="${report.activationStates}">
+          <B>${state.activationStateId.actState}</B> ${state.timeSpent} seconds<br />
         </c:forEach>
-
       </div>
 
       <sec:authorize ifAnyGranted="ROLE_ADMIN">
@@ -28,8 +31,6 @@
         </div>
       </sec:authorize>
     </div>
-
-
 
     <!-- Close main-content -->
     <%@ include file="/WEB-INF/includes/footer_nolinks.jsp"%>

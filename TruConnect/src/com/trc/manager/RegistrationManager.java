@@ -47,15 +47,16 @@ public class RegistrationManager implements RegistrationManagerModel {
     // get a user_id without reserving the username/password/email
     registration.getUser().setDateEnabled(new Date());
     registration.getUser().setUsername(registrationTag + username);
-    registration.getUser().setPassword(SessionManager.getCurrentSessionId());
+    // registration.getUser().setPassword(SessionManager.getCurrentSessionId());
     registration.getUser().setEmail(registrationTag + email);
     userManager.saveUser(registration.getUser());
+    userManager.setSessionUser(registration.getUser());
 
     // restore the username/password/email
     registration.getUser().setUsername(username);
-    registration.getUser().setPassword(password);
+    // registration.getUser().setPassword(password);
     registration.getUser().setEmail(email);
-    registration.getUser().setContactInfo(contactInfo);
+    // registration.getUser().setContactInfo(contactInfo);
   }
 
   @Override
@@ -69,6 +70,7 @@ public class RegistrationManager implements RegistrationManagerModel {
   }
 
   @Override
+  @Deprecated
   @Loggable(value = LogLevel.TRACE)
   public void sendActivationEmail(User user) throws EmailException {
     try {

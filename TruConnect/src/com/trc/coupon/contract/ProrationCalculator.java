@@ -38,6 +38,7 @@ public class ProrationCalculator {
     return Double.parseDouble(df.format(amount));
   }
 
+  @SuppressWarnings("unused")
   public static void main(String[] args) {
     ProrationCalculator pc = new ProrationCalculator();
     int days = pc.getDaysInMonth();
@@ -45,9 +46,9 @@ public class ProrationCalculator {
     int daysLeft = days - day;
     float percent = pc.getProratedPercentage();
     double amount = pc.getProratedAmount();
-    System.out.println(days);
-    System.out.println(day);
-    System.out.println(percent);
-    System.out.println(amount);
+    System.out.println("Days in current month:\t\t" + days);
+    System.out.println("Current day of month:\t\t" + day);
+    System.out.println("Remaining percentage:\t\t" + percent);
+    System.out.println("Amount to charge:\t\t" + amount);
   }
 }

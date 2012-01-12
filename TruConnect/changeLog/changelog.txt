@@ -1,3 +1,7 @@
+2.8.0.1
+-------------------------------------------------------------
+- removed temporary check for the string "tru" in coupon validation
+
 2.8
 -------------------------------------------------------------
 - created com.trc.config.Config to load properties files for all

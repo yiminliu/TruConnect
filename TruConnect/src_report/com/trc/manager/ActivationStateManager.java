@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.trc.dao.ActivationStateDao;
-import com.trc.util.logger.DevLogger;
 import com.trc.util.logger.activation.ActState;
 import com.trc.util.logger.activation.ActivationMap;
 import com.trc.util.logger.activation.ActivationState;
@@ -26,7 +25,6 @@ public class ActivationStateManager {
   }
 
   public ActivationState getActivationState(ActivationMap actMap, ActState state) {
-    DevLogger.log("loading root activation state");
     ActivationStateId actStateId = new ActivationStateId();
     actStateId.setActivationMap(actMap);
     actStateId.setActState(state);

@@ -1,7 +1,6 @@
 package com.trc.config;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.SortedMap;
@@ -9,6 +8,7 @@ import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 
+import org.joda.time.DateTime;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
@@ -22,13 +22,13 @@ public final class Config {
   private static final String monthsFile = "config/dates/months.properties";
   private static final String yearsFile = "config/dates/years.properties";
   private static final String statesFile = "config/geo/states.properties";
-  public static TSCPMVNE TSCPMVNE;
   public static boolean production;
   public static boolean admin;
   private static int yearRange;
   public static SortedMap<String, String> states = new TreeMap<String, String>();
   public static SortedMap<String, String> months = new TreeMap<String, String>();
-  public static SortedMap<Integer, String> years = new TreeMap<Integer, String>();
+  public static SortedMap<Integer, String> yearsFuture = new TreeMap<Integer, String>();
+  public static SortedMap<Integer, String> yearsPast = new TreeMap<Integer, String>();
 
   public static boolean initialized = false;
 
@@ -58,8 +58,7 @@ public final class Config {
       admin = props.getProperty("admin").equals("0") ? false : true;
       TSCPMVNE.serviceName = props.getProperty("serviceName");
       TSCPMVNE.namespace = props.getProperty("namespace");
-      TSCPMVNE.location = production ? props.getProperty("wsdl_production_ip") : props
-          .getProperty("wsdl_development_coupon");
+      TSCPMVNE.location = production ? props.getProperty("wsdl_production_ip") : props.getProperty("wsdl");
       TSCPMVNE.initialized = true;
       DevLogger.debug("TSCPMVNE location set to " + TSCPMVNE.location);
     }
@@ -77,13 +76,17 @@ public final class Config {
     Properties properties = new Properties();
     properties.load(classLoader.getResourceAsStream(yearsFile));
     yearRange = Integer.parseInt(properties.getProperty("range"));
-    int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+    int currentYear = new DateTime().getYear();
     String value;
-    int year;
+    int yearFuture;
+    int yearPast;
     for (int i = 0; i < yearRange; i++) {
-      year = currentYear + i;
-      value = Integer.toString(year).substring(2);
-      years.put(year, value);
+      yearFuture = currentYear + i;
+      value = Integer.toString(yearFuture).substring(2);
+      yearsFuture.put(yearFuture, value);
+      yearPast = currentYear - i;
+      value = Integer.toString(yearPast).substring(2);
+      yearsPast.put(yearPast, value);
     }
   }
 

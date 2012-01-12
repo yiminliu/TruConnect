@@ -33,8 +33,9 @@ import com.tscp.mvne.ServiceInstance;
 @Component
 public class LoggingAspect {
   private static final String BEFORE_STRING = "{0} <{1}>";
-  private static final String BEFORE_WITH_PARAMS_STRING = "{0} <{1}> with params {2}";
-  private static final String AFTER_THROWING = "{0} exception thrown <{1}> exception message {2} with params ({3}) ]";
+  private static final String BEFORE_WITH_PARAMS_STRING = "{0} <{1}> params {2}";
+  private static final String AFTER_THROWING = "{0} <{1}> EXCEPTION \"{2}\" with params ({3})";
+  private static final String AFTER_THROWING_NO_PARAMS = "{0} <{1}> EXCEPTION \"{2}\"";
   private static final String AFTER_RETURNING = "{0} <{1}> returned {2} in {3}ms";
   private static final String AFTER_RETURNING_VOID = "{0} <{1}> returned in {2}ms";
   private static final String ARG_PATTERN = "<{0}({1})>";
@@ -95,8 +96,11 @@ public class LoggingAspect {
   public void afterThrowing(JoinPoint joinPoint, Throwable throwable) {
     Class<? extends Object> clazz = joinPoint.getTarget().getClass();
     String name = joinPoint.getSignature().getName();
-    logger.log(LogLevel.ERROR, clazz, throwable, AFTER_THROWING, loggingHelper.getUserStamp(), name, throwable
-        .getMessage(), constructArgString(clazz, joinPoint.getArgs()));
+    // logger.log(LogLevel.ERROR, clazz, throwable, AFTER_THROWING,
+    // loggingHelper.getUserStamp(), name, throwable
+    // .getMessage(), constructArgString(clazz, joinPoint.getArgs()));
+    logger.log(LogLevel.ERROR, clazz, throwable, AFTER_THROWING_NO_PARAMS, loggingHelper.getUserStamp(), name,
+        throwable.getMessage());
   }
 
   @AfterReturning(value = "@annotation(trace)", returning = "returnValue", argNames = "joinPoint, trace, returnValue")
@@ -165,12 +169,15 @@ public class LoggingAspect {
     Object clazz = null;
     String id = null;
     Object descriptor = null;
+
     if (arg == null) {
       clazz = null;
       id = null;
       descriptor = null;
     } else if (arg instanceof java.lang.String) {
       String string = (String) arg;
+      id = "String";
+      descriptor = string;
       clazz = string.getClass().getSimpleName();
     } else if (arg instanceof com.trc.user.User) {
       User user = (User) arg;
@@ -227,6 +234,7 @@ public class LoggingAspect {
       id = "unknown";
       descriptor = arg;
     }
+
     if (arg instanceof java.util.Collection) {
       buffer.append(constructArg((List<Object>) arg));
     } else if (id != null && id.equals("unknown")) {

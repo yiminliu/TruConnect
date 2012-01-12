@@ -1,9 +1,9 @@
 package com.trc.manager;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -83,12 +83,12 @@ public class UserManager implements UserManagerModel {
   }
 
   @Transactional(readOnly = true)
-  public List<User> searchByEmailAndDate(String email, Date startDate, Date endDate) {
+  public List<User> searchByEmailAndDate(String email, DateTime startDate, DateTime endDate) {
     return userDao.searchByEmailAndDate(email, startDate, endDate);
   }
 
   @Transactional(readOnly = true)
-  public List<User> searchByNotEmailAndDate(String email, Date startDate, Date endDate) {
+  public List<User> searchByNotEmailAndDate(String email, DateTime startDate, DateTime endDate) {
     return userDao.searchByNotEmailAndDate(email, startDate, endDate);
   }
 

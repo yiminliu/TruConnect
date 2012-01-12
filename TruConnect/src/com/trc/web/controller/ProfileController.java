@@ -68,7 +68,7 @@ public class ProfileController extends EncryptedController {
     ResultModel model = new ResultModel("profile/address/addAddress");
     model.addObject("states", Config.states.entrySet());
     model.addObject("months", Config.months.entrySet());
-    model.addObject("years", Config.years.entrySet());
+    model.addObject("years", Config.yearsFuture.entrySet());
     model.addObject("address", new Address());
     return model.getSuccess();
   }
@@ -82,7 +82,7 @@ public class ProfileController extends EncryptedController {
     if (result.hasErrors()) {
       model.addObject("states", Config.states.entrySet());
       model.addObject("months", Config.months.entrySet());
-      model.addObject("years", Config.years.entrySet());
+      model.addObject("years", Config.yearsFuture.entrySet());
       model.addObject("address", address);
       return model.getError();
     } else {
@@ -103,7 +103,7 @@ public class ProfileController extends EncryptedController {
       Address address = addressManager.getAddress(user, super.decryptId(encodedAddressId));
       model.addObject("states", Config.states.entrySet());
       model.addObject("months", Config.months.entrySet());
-      model.addObject("years", Config.years.entrySet());
+      model.addObject("years", Config.yearsFuture.entrySet());
       model.addObject("address", address);
       return model.getSuccess();
     } catch (AddressManagementException e) {
@@ -120,7 +120,7 @@ public class ProfileController extends EncryptedController {
     if (result.hasErrors()) {
       model.addObject("states", Config.states.entrySet());
       model.addObject("months", Config.months.entrySet());
-      model.addObject("years", Config.years.entrySet());
+      model.addObject("years", Config.yearsFuture.entrySet());
       model.addObject("address", address);
       return model.getError();
     } else {
@@ -142,7 +142,7 @@ public class ProfileController extends EncryptedController {
       model.addObject("address", address);
       model.addObject("states", Config.states.entrySet());
       model.addObject("months", Config.months.entrySet());
-      model.addObject("years", Config.years.entrySet());
+      model.addObject("years", Config.yearsFuture.entrySet());
       return model.getSuccess();
     } catch (AddressManagementException e) {
       return model.getException();

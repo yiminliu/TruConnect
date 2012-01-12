@@ -137,6 +137,17 @@ public class ActivationState {
     return parentStateId;
   }
 
+  @Transient
+  public long getTimeSpent() {
+    long timespent = (long) 0;
+    if (dateIn != null && dateOut != null) {
+      if (dateOut != null) {
+        timespent = (dateOut.getTime() - dateIn.getTime()) / 1000;
+      }
+    }
+    return timespent;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;

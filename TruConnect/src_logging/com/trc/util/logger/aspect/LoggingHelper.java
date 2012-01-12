@@ -55,9 +55,11 @@ public class LoggingHelper {
         userStamp.append("Admin:");
       } else if (user.isManager()) {
         userStamp.append("Manager:");
+      } else if (!user.isEnabled()) {
+        userStamp.append("Reserve:");
       }
       userStamp.append(user.getUserId());
-      userStamp.append("(").append(user.getUsername()).append(") - ");
+      userStamp.append("(").append(user.getUsername()).append(") -");
       return userStamp.toString();
     } else {
       return "";
@@ -69,9 +71,9 @@ public class LoggingHelper {
     User currentUser = getCurrentUser();
     User controllingUser = getControllingUser();
     if (controllingUser != null) {
-      userStamp.append(getUserStamp(controllingUser)).append("::");
+      userStamp.append(getUserStamp(controllingUser));
     }
-    userStamp.append("[").append(SessionManager.getCurrentSessionId()).append("]");
+    userStamp.append("[").append(SessionManager.getCurrentSessionId()).append("] ");
     userStamp.append(getUserStamp(currentUser));
     return userStamp.toString();
   }

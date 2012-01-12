@@ -1,9 +1,9 @@
 package com.trc.dao;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -14,6 +14,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -93,17 +94,19 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
     return results;
   }
 
-  public List<User> searchByEmailAndDate(String email, Date startDate, Date endDate) {
-    java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
-    java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+  public List<User> searchByEmailAndDate(String email, DateTime startDate, DateTime endDate) {
+    endDate.plusDays(1);
+    Date sqlStartDate = new Date(startDate.getMillis());
+    Date sqlEndDate = new Date(endDate.getMillis());
     List<User> results = getHibernateTemplate().find(
         "from User user where email like ? and dateEnabled between ? and ?", wildcard(email), sqlStartDate, sqlEndDate);
     return results;
   }
 
-  public List<User> searchByNotEmailAndDate(String email, Date startDate, Date endDate) {
-    java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
-    java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+  public List<User> searchByNotEmailAndDate(String email, DateTime startDate, DateTime endDate) {
+    endDate.plusDays(1);
+    Date sqlStartDate = new Date(startDate.getMillis());
+    Date sqlEndDate = new Date(endDate.getMillis());
     List<User> results = getHibernateTemplate().find(
         "from User user where email not like ? and dateEnabled between ? and ?", wildcard(email), sqlStartDate,
         sqlEndDate);
@@ -200,14 +203,14 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
   @Override
   public void enableUser(User user) {
     user.setEnabled(true);
-    user.setDateEnabled(new Date());
+    user.setDateEnabled(new DateTime().toDate());
     updateUser(user);
   }
 
   @Override
   public void disableUser(User user) {
     user.setEnabled(false);
-    user.setDateDisabled(new Date());
+    user.setDateDisabled(new DateTime().toDate());
     updateUser(user);
   }
 }

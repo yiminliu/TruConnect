@@ -17,6 +17,7 @@ import com.trc.exception.EmailException;
 
 @Service
 public class VelocityEmailService {
+  private static final String templatePath = "templates/email/";
   @Autowired
   private VelocityEngine velocityEngine;
   @Autowired
@@ -32,7 +33,8 @@ public class VelocityEmailService {
 
   public void send(String template, final SimpleMailMessage message, final Map<Object, Object> model)
       throws EmailException {
-    final String vmTemplate = "/" + template + ".vm";
+    // final String vmTemplate = "/" + template + ".vm";
+    final String vmTemplate = templatePath + template + ".vm";
     MimeMessagePreparator preparator = new MimeMessagePreparator() {
       public void prepare(MimeMessage mimeMessage) throws Exception {
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);

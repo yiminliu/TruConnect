@@ -1,6 +1,8 @@
-<sec:authorize ifAnyGranted="ROLE_ADMIN, ROLE_MANAGER">
-  <%@ include file="/WEB-INF/includes/admin/control_bar.jsp"%>
-</sec:authorize>
+<c:if test="${!(empty sessionScope.admin) || !(empty sessionScope.manager)}">
+  <sec:authorize ifAnyGranted="ROLE_ADMIN, ROLE_MANAGER">
+    <%@ include file="/WEB-INF/includes/admin/control_bar.jsp"%>
+  </sec:authorize>
+</c:if>
 
 <div class="container">
   <div id="header">
@@ -22,19 +24,16 @@
       <!-- Begin Secondary Navigation -->
       <div class="secondary-navigation">
         <ul>
-          <sec:authorize ifNotGranted="ROLE_ADMIN">
-            <sec:authorize ifNotGranted="ROLE_MANAGER">
-              <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-                <li>Welcome ${user.contactInfo.firstName} ${user.contactInfo.lastName}</li>
-              </sec:authorize>
-              <c:if test="${empty param.login_error}">
-                <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-                  <li><a href="<spring:url value='/j_spring_security_logout' />">Logout</a>
-                  </li>
-                </sec:authorize>
-              </c:if>
+          <c:if test="${(empty sessionScope.admin) && (empty sessionScope.manager)}">
+            <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+              <li>Welcome ${user.contactInfo.firstName} ${user.contactInfo.lastName}</li>
             </sec:authorize>
-          </sec:authorize>
+            <c:if test="${empty param.login_error}">
+              <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+                <li><a href="<spring:url value='/j_spring_security_logout' />">Logout</a></li>
+              </sec:authorize>
+            </c:if>
+          </c:if>
         </ul>
       </div>
       <!-- End Secondary Navigation -->
@@ -43,14 +42,10 @@
       <div class="navigation">
         <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
           <ul>
-            <li><a href="http://www.truconnect.com/">Home</a>
-            </li>
-            <li><a href="http://www.truconnect.com/plans/">Plans</a>
-            </li>
-            <li><a href="https://store.truconnect.com/">Devices</a>
-            </li>
-            <li><a href="http://www.truconnect.com/support/">Support</a>
-            </li>
+            <li><a href="http://www.truconnect.com/">Home</a></li>
+            <li><a href="http://www.truconnect.com/plans/">Plans</a></li>
+            <li><a href="https://store.truconnect.com/">Devices</a></li>
+            <li><a href="http://www.truconnect.com/support/">Support</a></li>
           </ul>
         </sec:authorize>
       </div>

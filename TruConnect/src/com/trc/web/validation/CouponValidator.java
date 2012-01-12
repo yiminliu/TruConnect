@@ -75,7 +75,7 @@ public class CouponValidator implements Validator {
   }
 
   private void checkCouponCode(String couponCode, Errors errors) {
-    if (couponCode == null || couponCode.length() < 3 || !couponCode.substring(0, 3).equals("tru")) {
+    if (couponCode == null || couponCode.length() < 3) {
       errors.rejectValue("couponCode", "coupon.code.invalid", "Not a valid coupon code");
     }
   }
