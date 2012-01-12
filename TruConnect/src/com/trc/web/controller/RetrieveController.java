@@ -126,6 +126,9 @@ public class RetrieveController {
       User user = userManager.getUserByEmail(email);
       if (!isCorrectAnswer(user, verifyIdentity)) {
         errors.reject("securtyQuestion.answer.incorrect", "Your response did not match your saved answer");
+        SecurityQuestion hint = securityQuestionManager.getSecurityQuestion(user.getUserHint().getHintId());
+        model.addObject("verifyIdentity", new VerifyIdentity());
+        model.addObject("question", hint.getHintQuestion());
         return model.getError();
       } else {
         return model.getSuccess();
@@ -158,6 +161,8 @@ public class RetrieveController {
       User user = userManager.getUserByEmail(email);
       userUpdateValidator.validateNewPassword(updatePassword, result);
       if (result.hasErrors()) {
+        model.addObject("user", user);
+        model.addObject("updatePassword", new UpdatePassword());
         return model.getError();
       } else {
         user.setPassword(Md5Encoder.encode(updatePassword.getPassword()));
