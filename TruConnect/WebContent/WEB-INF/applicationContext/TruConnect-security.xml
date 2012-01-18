@@ -15,8 +15,11 @@
     <!-- 
     <intercept-url pattern="/coupons/validate" filters="none" />
     <intercept-url pattern="/flowDev/**" filters="none" /> 
-    <intercept-url pattern="/test/**" filters="none" /> 
+    
     -->
+    
+    <intercept-url pattern="/test/**" filters="none" /> 
+    
     <intercept-url pattern="/static/**" filters="none" />
     <intercept-url pattern="/favicon.ico" filters="none" />
     <intercept-url pattern="/" access="permitAll" />

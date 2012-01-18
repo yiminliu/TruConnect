@@ -27,6 +27,7 @@ public class TruConnectGateway {
       String location = TSCPMVNE.location;
       service = new TruConnectService(new URL(location), new QName(namespace, servicename));
     } catch (Exception e) {
+      System.out.println("tc! could not initialized webservice at " + TSCPMVNE.location);
       e.printStackTrace();
       service = new TruConnectService();
     }

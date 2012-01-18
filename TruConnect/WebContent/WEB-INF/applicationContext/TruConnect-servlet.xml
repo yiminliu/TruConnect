@@ -17,7 +17,7 @@
   <mvc:resources location="/WEB-INF/static/" mapping="/static/**" />
 
   <!-- Transaction Manager -->
-  <tx:annotation-driven proxy-target-class="true" />
+  <tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
 
   <!-- AOP Auto Proxy -->
   <aop:aspectj-autoproxy />

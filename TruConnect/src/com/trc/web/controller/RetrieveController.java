@@ -70,9 +70,6 @@ public class RetrieveController {
     storeEmail(session, verifyIdentity.getEmail());
     User user = userManager.getUserByEmail(verifyIdentity.getEmail());
     if (user == null) {
-      // errors.reject("email.notExist", "User &quot;" +
-      // verifyIdentity.getEmail() + "&quot; not found");
-      // return model.getError();
       return model.getSuccess();
     } else {
       Map<Object, Object> mailModel = new HashMap<Object, Object>();

@@ -132,9 +132,9 @@ public class UserManager implements UserManagerModel {
     return userDao.saveUser(user);
   }
 
-  public void saveAdminSql(User user) {
-    userDao.saveAdminSql(user);
-  }
+//  public void saveAdminSql(User user) {
+//    userDao.saveAdminSql(user);
+//  }
 
   public void saveAdminHql(Admin admin) {
     userDao.saveAdminHql(admin);

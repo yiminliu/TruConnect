@@ -58,7 +58,7 @@ public final class Config {
       admin = props.getProperty("admin").equals("0") ? false : true;
       TSCPMVNE.serviceName = props.getProperty("serviceName");
       TSCPMVNE.namespace = props.getProperty("namespace");
-      TSCPMVNE.location = production ? props.getProperty("wsdl_production_ip") : props.getProperty("wsdl");
+      TSCPMVNE.location = props.getProperty("wsdl");
       TSCPMVNE.initialized = true;
       DevLogger.debug("TSCPMVNE location set to " + TSCPMVNE.location);
     }

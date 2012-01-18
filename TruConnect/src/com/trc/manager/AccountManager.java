@@ -44,7 +44,7 @@ public class AccountManager implements AccountManagerModel {
 
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public Account createShellAccount(User user) throws AccountManagementException, AddressManagementException {
+  public Account createShellAccount(User user) throws AccountManagementException {
     try {
       Account account = accountService.createShellAccount(user);
       return account;

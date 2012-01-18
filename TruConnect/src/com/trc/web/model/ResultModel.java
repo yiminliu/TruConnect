@@ -1,5 +1,8 @@
 package com.trc.web.model;
 
+import java.util.Map;
+
+import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 
 public class ResultModel {
@@ -11,10 +14,24 @@ public class ResultModel {
   private String exceptionViewName = "exception/uncaughtException";
   private String timeoutViewName = "exception/timeout";
 
+  public ResultModel(ModelMap map, String successView, String errorView) {
+    model.addAllObjects(map);
+    setSuccessViewName(successView);
+    setErrorViewName(errorView);
+    setViewName(errorView);
+  }
+
   public ResultModel(String successView, String errorView) {
     setSuccessViewName(successView);
     setErrorViewName(errorView);
     setViewName(errorView);
+  }
+
+  public ResultModel(ModelMap map, String view) {
+    model.addAllObjects(map);
+    setSuccessViewName(view);
+    setErrorViewName(view);
+    setViewName(view);
   }
 
   public ResultModel(String view) {
@@ -37,6 +54,10 @@ public class ResultModel {
 
   public ModelAndView addObject(String attributeName, Object attributeValue) {
     return getModel().addObject(attributeName, attributeValue);
+  }
+
+  public ModelAndView addAll(Map<String, Object> modelMap) {
+    return getModel().addAllObjects(modelMap);
   }
 
   public String getSuccessViewName() {

@@ -1,10 +1,29 @@
 package com.trc.report;
 
+import java.text.DecimalFormat;
+
 public class ActivationReportSummary {
+  private static DecimalFormat twoPlaces = new DecimalFormat("#.##");
   private int activated;
   private int uniqueReservations;
   private int failedReservations;
   private int successfulReservations;
+
+  public int getTotalUsers() {
+    return (uniqueReservations - successfulReservations) + activated;
+  }
+
+  public double getPercentageSuccess() {
+    return Double.valueOf(twoPlaces.format((activated) / (0.0 + getTotalUsers())));
+  }
+
+  public double getPercentageFailure() {
+    return Double.valueOf(twoPlaces.format((uniqueReservations - successfulReservations) / (0.0 + getTotalUsers())));
+  }
+
+  public double getPercentageDifficulty() {
+    return Double.valueOf(twoPlaces.format((successfulReservations) / (0.0 + getTotalUsers())));
+  }
 
   public int getActivated() {
     return activated;

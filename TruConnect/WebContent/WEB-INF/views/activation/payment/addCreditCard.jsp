@@ -57,7 +57,7 @@
           <div>
             <p>If you have received a coupon code, enter the coupon code below.</p>
             <div class="row">
-              <form:label cssClass="required" path="coupon.couponCode">Coupon Code</form:label>
+              <form:label path="coupon.couponCode">Coupon Code</form:label>
               <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="coupon.couponCode" />
             </div>
             <div class="row pushed">

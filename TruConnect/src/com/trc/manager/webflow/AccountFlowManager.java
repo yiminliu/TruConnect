@@ -43,10 +43,6 @@ public class AccountFlowManager {
       e.printStackTrace();
       WebFlowUtil.addError(ERROR_CREATE_SHELL);
       throw new WebFlowException(e.getMessage(), e.getCause());
-    } catch (AddressManagementException e) {
-      e.printStackTrace();
-      WebFlowUtil.addError(ERROR_CREATE_SHELL);
-      throw new WebFlowException(e.getMessage(), e.getCause());
     }
   }
 }

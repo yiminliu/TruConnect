@@ -29,6 +29,11 @@
 
         <h3 style="margin-bottom: 10px; padding-bottom: 0px; border-bottom: 1px #ccc dotted;">Summary</h3>
         <div id="activationReportSummary">
+          Success: ${report.summary.percentageSuccess}<br/>
+          Difficulty: ${report.summary.percentageDifficulty}<br/>
+          Failure: ${report.summary.percentageFailure}<br/><br/>
+          
+          
           Activated: ${report.summary.activated}<br /> Unique Reservations: ${report.summary.uniqueReservations}<br />
           Failed Reservations: ${report.summary.failedReservations}<br /> Successful Reservations:
           ${report.summary.successfulReservations}
