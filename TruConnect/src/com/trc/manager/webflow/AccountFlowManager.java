@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import com.trc.exception.WebFlowException;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.AddressManagementException;
-import com.trc.manager.AccountManager;
+import com.trc.manager.impl.AccountManager;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
 import com.trc.user.contact.ContactInfo;

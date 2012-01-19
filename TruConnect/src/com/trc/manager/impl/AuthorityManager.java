@@ -1,11 +1,12 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.trc.dao.AuthorityDao;
+import com.trc.dao.impl.AuthorityDao;
+import com.trc.manager.AuthorityManagerModel;
 import com.trc.user.authority.Authority;
 
 @Service
@@ -15,17 +16,17 @@ public class AuthorityManager implements AuthorityManagerModel {
 
   @Override
   public void saveAuthority(Authority authority) {
-    authorityDao.saveAuthority(authority);
+    authorityDao.save(authority);
   }
 
   @Override
   public void deleteAuthority(Authority authority) {
-    authorityDao.deleteAuthority(authority);
+    authorityDao.delete(authority);
   }
 
   @Override
   public void updateAuthority(Authority authority) {
-    authorityDao.updateAuthority(authority);
+    authorityDao.update(authority);
   }
 
   @Override

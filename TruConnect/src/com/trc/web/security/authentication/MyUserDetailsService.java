@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 
 //TODO reimplement this service with assembler to keep Spring model seperated from our internal model

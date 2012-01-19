@@ -1,4 +1,4 @@
-package com.trc.dao;
+package com.trc.dao.impl;
 
 import java.util.List;
 

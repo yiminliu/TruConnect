@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.List;
 
@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.trc.exception.management.DeviceManagementException;
 import com.trc.exception.service.DeviceServiceException;
-import com.trc.service.DeviceService;
+import com.trc.manager.DeviceManagerModel;
+import com.trc.service.impl.DeviceService;
 import com.trc.user.User;
 import com.trc.util.logger.DevLogger;
 import com.trc.util.logger.LogLevel;

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.SecurityQuestionAnswer;
 import com.trc.user.User;
 

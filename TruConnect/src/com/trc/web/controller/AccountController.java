@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.manager.AccountManager;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.AccountManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
 import com.trc.user.account.Overview;

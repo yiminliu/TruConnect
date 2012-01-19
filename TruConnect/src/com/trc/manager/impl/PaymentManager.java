@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 
 import com.trc.exception.management.PaymentManagementException;
 import com.trc.exception.service.PaymentServiceException;
-import com.trc.service.PaymentService;
+import com.trc.manager.PaymentManagerModel;
+import com.trc.service.impl.PaymentService;
 import com.trc.user.User;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;

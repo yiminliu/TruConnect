@@ -15,9 +15,9 @@ import com.trc.coupon.UserCoupon;
 import com.trc.exception.ValidationException;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.CouponManagementException;
-import com.trc.manager.AccountManager;
-import com.trc.manager.CouponManager;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.AccountManager;
+import com.trc.manager.impl.CouponManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 import com.tscp.mvne.Account;
 

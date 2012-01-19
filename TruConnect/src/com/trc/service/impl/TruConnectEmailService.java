@@ -1,4 +1,4 @@
-package com.trc.service;
+package com.trc.service.impl;
 
 import javax.xml.ws.WebServiceException;
 
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trc.exception.GatewayException;
+import com.trc.service.TruConnectEmailServiceModel;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;

@@ -3,7 +3,7 @@ package com.trc.util.logger.aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 import com.trc.web.session.SessionManager;
 

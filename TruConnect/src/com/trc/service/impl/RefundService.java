@@ -1,10 +1,9 @@
-package com.trc.service;
+package com.trc.service.impl;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.trc.exception.service.RefundServiceException;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.util.Formatter;
-import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.KenanPayment;

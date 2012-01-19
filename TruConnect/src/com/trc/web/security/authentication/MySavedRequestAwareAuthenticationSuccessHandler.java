@@ -12,7 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import com.trc.config.Config;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.StringEncrypter;
 import com.trc.user.AnonymousUser;
 import com.trc.user.User;

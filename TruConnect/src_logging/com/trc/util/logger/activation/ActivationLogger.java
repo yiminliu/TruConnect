@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.trc.coupon.Coupon;
-import com.trc.dao.ActivationStateDao;
+import com.trc.dao.impl.ActivationStateDao;
 import com.trc.user.User;
 
 @Service

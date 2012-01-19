@@ -1,21 +1,24 @@
 package com.trc.dao;
 
-import java.io.Serializable;
 import java.util.Collection;
+
+import org.joda.time.DateTime;
 
 import com.trc.user.User;
 
 public interface UserDaoModel {
 
-  public Collection<User> getAllUsers();
+  public void enableUser(User user);
 
-  public Collection<User> getAllUsersWithRole(String role);
+  public void disableUser(User user);
 
-  public User getUserByUsername(String username);
+  public User getByEmail(String email);
 
-  public User getUserByEmail(String email);
+  public User getByUsername(String username);
 
-  public User getUserById(int id);
+  public Collection<User> getByDate(DateTime startDate, DateTime endDate);
+
+  public Collection<User> getAllWithRole(String role);
 
   public Collection<User> search(String param);
 
@@ -23,18 +26,8 @@ public interface UserDaoModel {
 
   public Collection<User> searchByUsername(String username);
 
-  public void deleteUser(User user);
+  public Collection<User> searchByEmailAndDate(String email, DateTime startDate, DateTime endDate);
 
-  public void updateUser(User user);
-
-  public Serializable saveUser(User user);
-
-  public void saveOrUpdateUser(User user);
-
-  public void persistUser(User user);
-
-  public void enableUser(User user);
-
-  public void disableUser(User user);
+  public Collection<User> searchByNotEmailAndDate(String email, DateTime startDate, DateTime endDate);
 
 }

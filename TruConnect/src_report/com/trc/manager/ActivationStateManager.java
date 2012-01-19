@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.trc.dao.ActivationStateDao;
+import com.trc.dao.impl.ActivationStateDao;
 import com.trc.util.logger.activation.ActState;
 import com.trc.util.logger.activation.ActivationMap;
 import com.trc.util.logger.activation.ActivationState;

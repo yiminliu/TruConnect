@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.trc.manager.DeviceManager;
+import com.trc.manager.impl.DeviceManager;
 import com.tscp.mvne.DeviceInfo;
 
 @Component

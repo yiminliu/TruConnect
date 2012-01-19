@@ -31,8 +31,6 @@ public interface UserManagerModel {
 
   public Serializable saveUser(User user);
 
-  public void saveOrUpdateUser(User user);
-
   public void persistUser(User user);
 
   public void deleteUser(User user);

@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,8 @@ import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.AddressManagementException;
 import com.trc.exception.management.DeviceManagementException;
 import com.trc.exception.service.AccountServiceException;
-import com.trc.service.AccountService;
+import com.trc.manager.AccountManagerModel;
+import com.trc.service.impl.AccountService;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
 import com.trc.user.account.Overview;

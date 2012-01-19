@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.config.Config;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.Md5Encoder;
 import com.trc.user.SecurityQuestionAnswer;
 import com.trc.user.User;

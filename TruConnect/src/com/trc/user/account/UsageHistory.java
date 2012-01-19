@@ -3,7 +3,7 @@ package com.trc.user.account;
 import java.util.List;
 
 import com.trc.exception.management.AccountManagementException;
-import com.trc.manager.AccountManager;
+import com.trc.manager.impl.AccountManager;
 import com.trc.user.User;
 import com.trc.util.Paginator;
 import com.tscp.mvne.UsageDetail;

@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.CustomizableTraceInterceptor;
 
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 import com.trc.web.session.SessionManager;
 

@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.List;
 
@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 
 import com.trc.exception.management.AddressManagementException;
 import com.trc.exception.service.AddressServiceException;
-import com.trc.service.AddressService;
+import com.trc.manager.AddressManagerModel;
+import com.trc.service.impl.AddressService;
 import com.trc.user.User;
 import com.trc.user.contact.Address;
 import com.trc.util.logger.LogLevel;

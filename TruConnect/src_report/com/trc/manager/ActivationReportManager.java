@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.trc.manager.impl.UserManager;
 import com.trc.report.ActivationReport;
 import com.trc.report.UserActivationReport;
 import com.trc.user.User;

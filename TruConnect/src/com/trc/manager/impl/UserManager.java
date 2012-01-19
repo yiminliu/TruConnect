@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.trc.dao.UserDao;
+import com.trc.dao.impl.UserDao;
 import com.trc.exception.management.AccountManagementException;
-import com.trc.user.Admin;
+import com.trc.manager.UserManagerModel;
 import com.trc.user.AnonymousUser;
 import com.trc.user.User;
 import com.trc.user.authority.Authority;
@@ -44,36 +44,36 @@ public class UserManager implements UserManagerModel {
   @Override
   @Transactional(readOnly = true)
   public List<User> getAllUsers() {
-    return userDao.getAllUsers();
+    return userDao.getAll();
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<User> getAllAdmins() {
-    return userDao.getAllUsersWithRole("ROLE_ADMIN");
+    return userDao.getAllWithRole("ROLE_ADMIN");
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<User> getAllManagers() {
-    return userDao.getAllUsersWithRole("ROLE_MANAGER");
+    return userDao.getAllWithRole("ROLE_MANAGER");
   }
 
   @Override
   public User getUserByEmail(String email) {
-    return userDao.getUserByEmail(email);
+    return userDao.getByEmail(email);
   }
 
   @Override
   @Transactional(readOnly = true)
   public User getUserByUsername(String username) {
-    return userDao.getUserByUsername(username);
+    return userDao.getByUsername(username);
   }
 
   @Override
   @Transactional(readOnly = true)
   public User getUserById(int id) {
-    return userDao.getUserById(id);
+    return userDao.getById(id);
   }
 
   @Override
@@ -129,39 +129,25 @@ public class UserManager implements UserManagerModel {
     if (user.getAuthorities().isEmpty()) {
       user.getRoles().add(new Authority(user, "ROLE_USER"));
     }
-    return userDao.saveUser(user);
-  }
-
-//  public void saveAdminSql(User user) {
-//    userDao.saveAdminSql(user);
-//  }
-
-  public void saveAdminHql(Admin admin) {
-    userDao.saveAdminHql(admin);
-  }
-
-  @Override
-  @Transactional
-  public void saveOrUpdateUser(User user) {
-    userDao.saveOrUpdateUser(user);
+    return userDao.save(user);
   }
 
   @Override
   @Transactional
   public void persistUser(User user) {
-    userDao.persistUser(user);
+    userDao.persist(user);
   }
 
   @Override
   @Transactional(readOnly = false)
   public void deleteUser(User user) {
-    userDao.deleteUser(user);
+    userDao.delete(user);
   }
 
   @Override
   @Transactional(readOnly = false)
   public void updateUser(User user) {
-    userDao.updateUser(user);
+    userDao.update(user);
   }
 
   @Override

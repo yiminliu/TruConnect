@@ -1,4 +1,4 @@
-package com.trc.service;
+package com.trc.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trc.exception.service.AddressServiceException;
+import com.trc.service.AddressServiceModel;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
