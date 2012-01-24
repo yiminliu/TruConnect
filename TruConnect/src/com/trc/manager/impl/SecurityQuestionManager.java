@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.trc.dao.impl.SecurityQuestionDao;
 import com.trc.manager.SecurityQuestionManagerModel;
@@ -15,11 +16,13 @@ public class SecurityQuestionManager implements SecurityQuestionManagerModel {
   private SecurityQuestionDao securityQuestionDao;
 
   @Override
+  @Transactional
   public List<SecurityQuestion> getSecurityQuestions() {
     return securityQuestionDao.getAll();
   }
 
   @Override
+  @Transactional
   public SecurityQuestion getSecurityQuestion(int id) {
     return securityQuestionDao.getById(id);
   }

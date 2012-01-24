@@ -35,7 +35,7 @@
         <prop key="hibernate.format_sql">true</prop>
         <prop key="hibernate.use_sql_comments">${hibernate.use_sql_comments}</prop>
         <!-- <prop key="hibernate.current_session_context_class">thread</prop> -->
-        <prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
+        <!-- <prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop> -->
         <!-- <prop key="hibernate.id.new_generator_mappings">true</prop> -->
       </props>
     </property>
@@ -55,7 +55,6 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
-    <property name="sessionFactory" ref="sessionFactory" />
-  </bean>
+  <!-- <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate"> <property name="sessionFactory" ref="sessionFactory" 
+    /> </bean> -->
 </beans>

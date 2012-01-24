@@ -8,6 +8,6 @@ public interface AuthorityDaoModel {
 
   public Collection<Authority> getAuthoritiesWithRole(String role);
 
-  public Collection<Authority> getAuthoritiesForUser(int userId);
+  public Collection<Authority> getAuthoritiesForUser(Integer userId);
 
 }

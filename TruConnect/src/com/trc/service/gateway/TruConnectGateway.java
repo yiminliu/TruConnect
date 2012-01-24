@@ -8,6 +8,7 @@ import javax.xml.namespace.QName;
 import org.springframework.stereotype.Service;
 
 import com.trc.config.Config;
+import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.TruConnect;
 import com.tscp.mvne.TruConnectService;
 
@@ -25,6 +26,7 @@ public class TruConnectGateway {
       String namespace = TSCPMVNE.namespace;
       String servicename = TSCPMVNE.serviceName;
       String location = TSCPMVNE.location;
+      DevLogger.debug("location set to " + TSCPMVNE.location);
       service = new TruConnectService(new URL(location), new QName(namespace, servicename));
     } catch (Exception e) {
       System.out.println("tc! could not initialized webservice at " + TSCPMVNE.location);

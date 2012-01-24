@@ -164,7 +164,7 @@ public class CouponService {
   @Transactional
   public void insertUserCoupon(UserCoupon userCoupon) throws CouponServiceException {
     try {
-      userCouponDao.insertUserCoupon(userCoupon);
+      userCouponDao.save(userCoupon);
     } catch (DataAccessException e) {
       throw new CouponServiceException("Error inserting UserCoupon from DAO layer: " + e.getMessage());
     }
@@ -174,7 +174,7 @@ public class CouponService {
   public void deleteUserCoupon(User user, Coupon coupon, Account account) throws CouponServiceException {
     UserCoupon userCoupon = new UserCoupon(coupon, user, account);
     try {
-      userCouponDao.deleteUserCoupon(userCoupon);
+      userCouponDao.delete(userCoupon);
     } catch (DataAccessException e) {
       throw new CouponServiceException("Error updating UserCoupon from DAO layer: " + e.getMessage());
     }
@@ -183,7 +183,7 @@ public class CouponService {
   @Transactional
   public void updateUserCoupon(UserCoupon userCoupon) throws CouponServiceException {
     try {
-      userCouponDao.updateUserCoupon(userCoupon);
+      userCouponDao.update(userCoupon);
     } catch (DataAccessException e) {
       throw new CouponServiceException("Error updating UserCoupon from DAO layer: " + e.getMessage());
     }
@@ -214,7 +214,7 @@ public class CouponService {
   @Transactional
   public List<UserCoupon> getUserCoupons(int userId) throws CouponServiceException {
     try {
-      return userCouponDao.getUserCoupons(userId);
+      return userCouponDao.getByUserId(userId);
     } catch (DataAccessException e) {
       throw new CouponServiceException("Error fetching UserCoupon from DAO layer: " + e.getMessage());
     }

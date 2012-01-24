@@ -2,48 +2,47 @@ package com.trc.dao.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
+import com.google.common.base.Preconditions;
 import com.trc.coupon.UserCoupon;
+import com.trc.coupon.UserCouponId;
+import com.trc.dao.UserCouponDaoModel;
 
 @Repository
 @SuppressWarnings("unchecked")
-public class UserCouponDao extends HibernateDaoSupport {
+public class UserCouponDao extends AbstractHibernateDao<UserCoupon> implements UserCouponDaoModel {
 
-  @Autowired
-  public void init(HibernateTemplate hibernateTemplate) {
-    setHibernateTemplate(hibernateTemplate);
+  public UserCouponDao() {
+    setClazz(UserCoupon.class);
   }
 
-  public void insertUserCoupon(UserCoupon userCoupon) {
-    getHibernateTemplate().save(userCoupon);
+  /* (non-Javadoc)
+   * @see com.trc.dao.impl.UserCouponDaoModel#getById(com.trc.coupon.UserCouponId)
+   */
+  @Override
+  public UserCoupon getById(UserCouponId userCouponId) {
+    Preconditions.checkArgument(userCouponId != null);
+    return (UserCoupon) this.getCurrentSession().get(UserCoupon.class, userCouponId);
   }
 
-  public void deleteUserCoupon(UserCoupon userCoupon) {
-    getHibernateTemplate().delete(userCoupon);
-  }
-
-  public void updateUserCoupon(UserCoupon userCoupon) {
-    getHibernateTemplate().update(userCoupon);
-  }
-
+  /* (non-Javadoc)
+   * @see com.trc.dao.impl.UserCouponDaoModel#getUserCoupon(com.trc.coupon.UserCoupon)
+   */
+  @Override
   public UserCoupon getUserCoupon(UserCoupon userCoupon) {
-    return getHibernateTemplate().get(UserCoupon.class, userCoupon.getId());
-    // int userId = userCoupon.getId().getUserId();
-    // Coupon coupon = userCoupon.getId().getCoupon();
-    // int accountNumber = userCoupon.getId().getAccountNumber();
-    // List<UserCoupon> userCoupons = getHibernateTemplate().find(
-    // "from UserCoupon uc where uc.id.userId = ? and uc.id.coupon = ? and uc.id.accountNumber = ?",
-    // userId, coupon,
-    // accountNumber);
-    // return userCoupons;
+    return getById(userCoupon.getId());
   }
 
-  public List<UserCoupon> getUserCoupons(int userId) {
-    List<UserCoupon> userCoupons = getHibernateTemplate().find("from UserCoupon uc where uc.id.userId = ?", userId);
-    return userCoupons;
+  /* (non-Javadoc)
+   * @see com.trc.dao.impl.UserCouponDaoModel#getByUserId(java.lang.Integer)
+   */
+  @Override
+  public List<UserCoupon> getByUserId(Integer userId) {
+    Preconditions.checkArgument(userId != null);
+    Query query = this.getCurrentSession().createQuery("from UserCoupon uc where uc.id.userId = :userId");
+    query.setInteger("userId", userId);
+    return query.list();
   }
 }

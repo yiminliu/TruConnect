@@ -6,7 +6,6 @@ import java.util.Stack;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -83,7 +82,8 @@ public class LoggingAspect {
     Class<? extends Object> clazz = joinPoint.getTarget().getClass();
     String methodName = joinPoint.getSignature().getName();
 
-    if (ArrayUtils.isEmpty(joinPoint.getArgs())) {
+    // if (ArrayUtils.isEmpty(joinPoint.getArgs())) {
+    if (joinPoint.getArgs().length < 1) {
       logger.log(loggable.value(), clazz, null, BEFORE_STRING, loggingHelper.getUserStamp(), methodName,
           constructArgString(clazz, joinPoint.getArgs()));
     } else {

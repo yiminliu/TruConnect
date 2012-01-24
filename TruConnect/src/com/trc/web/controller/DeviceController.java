@@ -112,7 +112,7 @@ public class DeviceController extends EncryptedController {
     String newDeviceLabel = deviceInfo.getDeviceLabel();
     try {
       DeviceInfo oldDeviceInfo = (DeviceInfo) SessionManager.get(SessionKey.DEVICE_SWAP);
-      DeviceInfo newDeviceInfo = (DeviceInfo) SessionManager.get(SessionKey.DEVICE_SWAP);
+      DeviceInfo newDeviceInfo = TruConnectUtil.clone(oldDeviceInfo);
       if (oldDeviceInfo == null) {
         oldDeviceInfo = deviceManager.getDeviceInfo(user, deviceId);
       }

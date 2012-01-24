@@ -1,5 +1,6 @@
 package com.trc.util.logger.activation;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -19,7 +20,8 @@ import com.trc.user.User;
 
 @Entity
 @Table(name = "activation_map")
-public class ActivationMap {
+public class ActivationMap implements Serializable {
+  private static final long serialVersionUID = -7240698116591727312L;
   private User user;
   private int activationId;
   private Collection<ActivationState> states = new HashSet<ActivationState>();

@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.springframework.security.core.codec.Hex;
+import org.springframework.security.crypto.codec.Hex;
 
 /**
  * MD5 encoder

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.trc.coupon.Coupon;
+import com.trc.dao.impl.ActivationMapDao;
 import com.trc.dao.impl.ActivationStateDao;
 import com.trc.user.User;
 
@@ -15,19 +16,21 @@ import com.trc.user.User;
 public class ActivationLogger {
   @Autowired
   private ActivationStateDao activationStateDao;
+  @Autowired
+  private ActivationMapDao activationMapDao;
   private ActivationMap activationMap = null;
   private ActivationState previousState = null;
 
   public void startLogging(User user) {
     setActivationMap(new ActivationMap(user));
-    activationStateDao.saveRegistrationMap(getActivationMap());
+    activationMapDao.save(getActivationMap());
     setPreviousState(new ActivationState(ActState.ROOT, getActivationMap()));
-    activationStateDao.saveRegistrationState(getPreviousState());
+    activationStateDao.save(getPreviousState());
   }
 
   public void finishLogging() {
     getPreviousState().setDateOut(new Date());
-    activationStateDao.updateRegistratonState(getPreviousState());
+    activationStateDao.update(getPreviousState());
   }
 
   public ActivationState logState(ActState state) {
@@ -36,7 +39,7 @@ public class ActivationLogger {
     if (getPreviousState() != null) {
       getPreviousState().getChildren().add(registrationState);
       getPreviousState().setDateOut(new Date());
-      activationStateDao.updateRegistratonState(getPreviousState());
+      activationStateDao.update(getPreviousState());
     }
     setPreviousState(registrationState);
     return registrationState;
@@ -48,11 +51,11 @@ public class ActivationLogger {
    */
 
   public ActivationMap getActivationMap(int actId) {
-    return activationStateDao.getRegistrationMap(actId);
+    return activationMapDao.getById(actId);
   }
 
   public ActivationState getActivationState(ActivationMap activationMap, ActState actState) {
-    return activationStateDao.getRegistrationState(activationMap, actState);
+    return activationStateDao.getState(activationMap, actState);
   }
 
   /* **************************************************************

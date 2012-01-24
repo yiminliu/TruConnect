@@ -15,7 +15,6 @@ import com.trc.manager.UserManagerModel;
 import com.trc.user.AnonymousUser;
 import com.trc.user.User;
 import com.trc.user.authority.Authority;
-import com.trc.user.security.SecurityQuestion;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.context.SecurityContextFacade;
@@ -29,14 +28,11 @@ public class UserManager implements UserManagerModel {
   public static final String MANAGER_KEY = "manager";
   private static SecurityContextFacade securityContext;
   private UserDao userDao;
-  private SecurityQuestionManager securityQuestionManager;
   private AccountManager accountManager;
 
   @Autowired
-  public void init(UserDao userDao, SecurityQuestionManager securityQuestionManager, AccountManager accountManager,
-      SecurityContextFacade securityContextFacade) {
+  public void init(UserDao userDao, AccountManager accountManager, SecurityContextFacade securityContextFacade) {
     this.userDao = userDao;
-    this.securityQuestionManager = securityQuestionManager;
     this.accountManager = accountManager;
     securityContext = securityContextFacade;
   }
@@ -199,16 +195,6 @@ public class UserManager implements UserManagerModel {
 
   private Authentication getAuthentication() {
     return securityContext.getContext().getAuthentication();
-  }
-
-  @Deprecated
-  public List<SecurityQuestion> getSecurityQuestions() {
-    return securityQuestionManager.getSecurityQuestions();
-  }
-
-  @Deprecated
-  public SecurityQuestion getSecurityQuestion(int id) {
-    return securityQuestionManager.getSecurityQuestion(id);
   }
 
   @Loggable(value = LogLevel.TRACE)

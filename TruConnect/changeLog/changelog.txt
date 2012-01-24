@@ -1,3 +1,14 @@
+2.8.0.2
+-------------------------------------------------------------
+- upgrade to Hibernate 4 and Spring 3.1
+- fixed applyCouponPayment flow to check for "creditCard" rather
+  than "creditCardPayment"
+- removed deprecated methods "getSecurityQuestions" from UserManager
+- TruConnectUtil now has method "cloneDeviceInfo"
+- DeviceController.postSwapDevice now calls "cloneDeviceInfo," whereas before
+  both oldDeviceInfo and newDeviceInfo referenced the same object
+
+
 2.8.0.1
 -------------------------------------------------------------
 - removed temporary check for the string "tru" in coupon validation

@@ -60,7 +60,7 @@ public final class Config {
       TSCPMVNE.namespace = props.getProperty("namespace");
       TSCPMVNE.location = props.getProperty("wsdl");
       TSCPMVNE.initialized = true;
-      DevLogger.debug("TSCPMVNE location set to " + TSCPMVNE.location);
+
     }
   }
 

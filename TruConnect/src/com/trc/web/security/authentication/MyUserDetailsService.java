@@ -15,9 +15,6 @@ public class MyUserDetailsService implements UserDetailsService {
   @Autowired
   private UserManager userManager;
 
-  // @Autowired
-  // private Assembler assembler;
-
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
     User user = userManager.getUserByUsername(username);
@@ -37,6 +34,9 @@ public class MyUserDetailsService implements UserDetailsService {
     this.userManager = userManager;
   }
 
+  // @Autowired
+  // private Assembler assembler;
+  //
   // public Assembler getAssembler() {
   // return assembler;
   // }

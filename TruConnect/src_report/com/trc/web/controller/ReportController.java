@@ -26,6 +26,7 @@ public class ReportController {
   @Autowired
   private ActivationReportManager reportManager;
 
+  @SuppressWarnings("unused")
   @ModelAttribute
   private void dateReferenceData(ModelMap modelMap) {
     modelMap.addAttribute("states", Config.states.entrySet());
@@ -104,13 +105,6 @@ public class ReportController {
     UserActivationReport report = reportManager.getUserActivationReport(userId);
     model.addObject("report", report);
     return model.getSuccess();
-  }
-
-  private void printChildren(ActivationState actState) {
-    for (ActivationState child : actState.getChildren()) {
-      DevLogger.log(child.getActivationStateId().getActState().toString());
-      printChildren(child);
-    }
   }
 
 }

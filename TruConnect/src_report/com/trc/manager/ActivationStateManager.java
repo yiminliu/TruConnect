@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.trc.dao.impl.ActivationMapDao;
 import com.trc.dao.impl.ActivationStateDao;
 import com.trc.util.logger.activation.ActState;
 import com.trc.util.logger.activation.ActivationMap;
@@ -15,20 +16,22 @@ import com.trc.util.logger.activation.ActivationStateId;
 public class ActivationStateManager {
   @Autowired
   private ActivationStateDao activationStateDao;
+  @Autowired
+  private ActivationMapDao activationMapDao;
 
   public ActivationMap getActivationMap(int actId) {
-    return activationStateDao.getRegistrationMap(actId);
+    return activationMapDao.getById(actId);
   }
 
   public List<ActivationMap> getActivationMapByUserId(int userId) {
-    return activationStateDao.getRegistrationMapByUserId(userId);
+    return activationMapDao.getByUserId(userId);
   }
 
   public ActivationState getActivationState(ActivationMap actMap, ActState state) {
     ActivationStateId actStateId = new ActivationStateId();
     actStateId.setActivationMap(actMap);
     actStateId.setActState(state);
-    return activationStateDao.getRegistrationState(actStateId);
+    return activationStateDao.getById(actStateId);
   }
 
 }

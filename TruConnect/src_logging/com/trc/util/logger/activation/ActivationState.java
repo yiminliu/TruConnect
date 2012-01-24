@@ -1,5 +1,6 @@
 package com.trc.util.logger.activation;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -20,7 +21,8 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "activation_state")
-public class ActivationState {
+public class ActivationState implements Serializable {
+  private static final long serialVersionUID = 2469744207448362079L;
   private ActivationStateId activationStateId = new ActivationStateId();
   private Date dateIn;
   private Date dateOut;
