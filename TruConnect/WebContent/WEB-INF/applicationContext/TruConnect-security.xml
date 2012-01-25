@@ -8,21 +8,15 @@
 
   <global-method-security pre-post-annotations="enabled" secured-annotations="enabled" />
 
+
+  <http pattern="/test/**" security="none" />
+  <http pattern="/static/**" security="none" />
+  <http pattern="/favicon.ico" security="none" />
+
   <http auto-config="false" use-expressions="true" entry-point-ref="authenticationProcessingFilterEntryPoint">
     <custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
     <custom-filter position="FORM_LOGIN_FILTER" ref="myAuthFilter" />
     <session-management session-authentication-strategy-ref="sas" />
-    <!-- 
-    <intercept-url pattern="/coupons/validate" filters="none" />
-    <intercept-url pattern="/flowDev/**" filters="none" /> 
-    
-    -->
-    
-    <intercept-url pattern="/test/**" filters="none" /> 
-    
-    <intercept-url pattern="/static/**" filters="none" />
-    <intercept-url pattern="/favicon.ico" filters="none" />
-    <intercept-url pattern="/" access="permitAll" />
     <intercept-url pattern="/home" access="permitAll" />
     <intercept-url pattern="/login" access="permitAll" />
     <intercept-url pattern="/accessDenied" access="permitAll" />
@@ -32,9 +26,11 @@
     <intercept-url pattern="/retrieve/**" access="permitAll" />
     <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')" />
     <intercept-url pattern="/**" access="isAuthenticated()" />
+    <intercept-url pattern="/" access="permitAll" />
     <access-denied-handler error-page="/exception/accessDenied.jsp" />
     <logout invalidate-session="true" logout-success-url="http://www.truconnect.com/" />
   </http>
+
 
   <!-- Begin Concurrency Filters -->
   <beans:bean id="authenticationProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
