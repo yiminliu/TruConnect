@@ -49,6 +49,12 @@ public final class TruConnectUtil {
     outDeviceInfo.setModDate(inDeviceInfo.getModDate());
   }
 
+  public static final DeviceInfo clone(DeviceInfo inDeviceInfo) {
+    DeviceInfo outDeviceInfo = new DeviceInfo();
+    copyDeviceInfo(outDeviceInfo, inDeviceInfo);
+    return outDeviceInfo;
+  }
+
   public static final void copyNetworkInfo(NetworkInfo outNetworkInfo, NetworkInfo inNetworkInfo) {
     outNetworkInfo.setEffectivedate(inNetworkInfo.getEffectivedate());
     outNetworkInfo.setEffectivetime(inNetworkInfo.getEffectivetime());
