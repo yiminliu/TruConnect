@@ -7,6 +7,9 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.trc.account.TruConnectAccount;
 import com.tscp.mvne.request.kenan.truconnect.AccountRequest;
 
@@ -14,6 +17,7 @@ import com.tscp.mvne.request.kenan.truconnect.AccountRequest;
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
     @ActivationConfigProperty(propertyName = "destinationName", propertyValue = "jms/KenanPost") }, mappedName = "jms/KenanPost")
 public class KenanTopicSubscriber implements MessageListener {
+  // protected final Logger logger = LoggerFactory.getLogger("kenanService");
 
   @Override
   public void onMessage(Message message) {
@@ -23,7 +27,9 @@ public class KenanTopicSubscriber implements MessageListener {
         if (objectMessage.getObject() instanceof AccountRequest) {
           AccountRequest request = (AccountRequest) objectMessage.getObject();
           if (isSuccessfulResponse(request)) {
-            System.out.println("TC! account created and received successfully");
+            // logger.info("... success message received from topic!");
+            System.out.println("TC! account created and received successfully. Generated number is "
+                + request.getTruConnectAccount().getAccountNumber());
           }
         }
       } catch (JMSException jms_ex) {

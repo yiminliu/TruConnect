@@ -7,6 +7,7 @@
 - TruConnectUtil now has method "cloneDeviceInfo"
 - DeviceController.postSwapDevice now calls "cloneDeviceInfo," whereas before
   both oldDeviceInfo and newDeviceInfo referenced the same object
+- updated to logback 1.0 from logback .93
 
 
 2.8.0.1
