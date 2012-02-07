@@ -36,13 +36,13 @@
         <c:set var="nextPageNum" value="${paymentHistory.currentPageNum + 1}" />
         <c:if test="${prevPageNum > 0}">
           <span style="float: left"><a
-            href="<spring:url value="/account/activity/${accountDetail.account.accountno}/${prevPageNum}" />">&laquo;
+            href="<spring:url value="/account/payment/history/${prevPageNum}" />">&laquo;
               Previous Page</a>
           </span>
         </c:if>
         <c:if test="${paymentHistory.currentPageNum < paymentHistory.pageCount}">
           <span style="float: right"><a
-            href="<spring:url value="/account/activity/${accountDetail.account.accountno}/${nextPageNum}" />">Next
+            href="<spring:url value="/account/payment/history/${nextPageNum}" />">Next
               Page &raquo;</a>
           </span>
         </c:if>
