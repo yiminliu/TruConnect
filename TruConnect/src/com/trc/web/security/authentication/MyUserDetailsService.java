@@ -11,6 +11,13 @@ import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 
 //TODO reimplement this service with assembler to keep Spring model seperated from our internal model
+/**
+ * This is the authenticaiton piece that checks username/password against the
+ * database using userManager.
+ * 
+ * @author Tachikoma
+ * 
+ */
 public class MyUserDetailsService implements UserDetailsService {
   @Autowired
   private UserManager userManager;

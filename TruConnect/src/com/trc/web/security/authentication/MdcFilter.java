@@ -15,6 +15,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
+/**
+ * Currently not used. This was intended to pull user information and tie it to
+ * the thread for logging purposes.
+ * 
+ * @author Tachikoma
+ * 
+ */
 public class MdcFilter implements Filter {
   // private UserManager userManager;
 

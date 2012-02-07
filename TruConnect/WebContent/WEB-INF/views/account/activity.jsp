@@ -13,12 +13,14 @@
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
-  <div class="blueTruConnectGradient">
-    <div class="container">Account Activity</div>
-  </div>
+  <div class="blueTruConnectGradient"></div>
 
   <div class="container">
     <div id="main-content">
+
+      <div style="line-height: 30px; font-size: 20px; font-weight: normal; margin-bottom: 20px; color: #0067B2;">Account
+        Activity</div>
+
       <div class="span-18 colborder">
 
         <c:if test="${fn:length(accountDetails) > 0}">
@@ -31,8 +33,8 @@
             </c:forEach>
             <div class="clear"></div>
           </div>
-          <br/>
-          <hr/>
+          <br />
+          <hr />
         </c:if>
 
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">History</h3>

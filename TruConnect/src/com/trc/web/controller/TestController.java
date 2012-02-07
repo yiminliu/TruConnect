@@ -176,7 +176,7 @@ public class TestController {
       DevLogger.log(ClassUtils.toString(serviceInstance));
       List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
       DevLogger.log("found " + contracts.size() + " contracts");
-      DevLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalid());
+      DevLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalId());
 
       for (KenanContract kc : contracts) {
         DevLogger.log("contract: " + kc.getContractId() + " " + kc.getContractType() + " " + kc.getDuration());

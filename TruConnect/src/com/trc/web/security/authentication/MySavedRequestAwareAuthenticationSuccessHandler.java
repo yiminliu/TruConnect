@@ -19,6 +19,15 @@ import com.trc.user.User;
 import com.trc.web.session.SessionKey;
 import com.trc.web.session.SessionManager;
 
+/**
+ * After authentication this filter sets some MDC variables, and changes the
+ * default target URL based on the user's authority. It also instantiates the
+ * StringEncrypter for the session - if needed this class can setup the
+ * "environment" for the user after they login.
+ * 
+ * @author Tachikoma
+ * 
+ */
 public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
   @Autowired
   private UserManager userManager;

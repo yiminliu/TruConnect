@@ -10,6 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.trc.user.authority.Authority;
 
+/**
+ * Currently not used, but should be re-implemented to separate Spring User
+ * objects and domain User objects. At it's initial implementation this was used
+ * by UserDetailsService to create a SpringUser from the domain User object to
+ * pass authentication.
+ * 
+ * @author Tachikoma
+ * 
+ */
 @Deprecated
 public class Assembler {
 

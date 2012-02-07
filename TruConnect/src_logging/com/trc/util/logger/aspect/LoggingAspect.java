@@ -227,8 +227,8 @@ public class LoggingAspect {
     } else if (arg instanceof com.tscp.mvne.ServiceInstance) {
       ServiceInstance serviceInstance = (ServiceInstance) arg;
       clazz = serviceInstance.getClass().getSimpleName();
-      id = serviceInstance.getExternalid();
-      descriptor = serviceInstance.getSubscrno();
+      id = serviceInstance.getExternalId();
+      descriptor = serviceInstance.getExternalIdType();
     } else {
       clazz = arg.getClass().getSimpleName();
       id = "unknown";

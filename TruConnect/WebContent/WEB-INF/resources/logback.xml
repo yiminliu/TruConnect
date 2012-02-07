@@ -50,6 +50,23 @@
     </encoder>
   </appender>
 
+  <appender name="kenanServiceFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>../logs/kenanService.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>../logs/kenanService/kenanService.%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>5MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level: %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="kenanService" level="ALL">
+    <appender-ref ref="kenanServiceFile" />
+  </logger>
+
   <logger name="truconnect" level="ALL">
     <appender-ref ref="ROLLINGFILE" />
   </logger>

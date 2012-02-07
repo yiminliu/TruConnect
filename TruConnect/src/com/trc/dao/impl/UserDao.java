@@ -10,6 +10,7 @@ import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.trc.dao.UserDaoModel;
 import com.trc.user.User;
@@ -24,6 +25,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional
   public void enableUser(User user) {
     user.setEnabled(true);
     user.setDateEnabled(new DateTime().toDate());
@@ -31,6 +33,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional
   public void disableUser(User user) {
     user.setEnabled(false);
     user.setDateDisabled(new DateTime().toDate());
@@ -38,6 +41,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional(readOnly = true)
   public User getByUsername(String username) {
     Query query = getCurrentSession().createQuery("from User where username = :username");
     query.setString("username", username);
@@ -50,6 +54,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional(readOnly = true)
   public User getByEmail(String email) {
     Query query = getCurrentSession().createQuery("from User where email = :email");
     query.setString("email", email);
@@ -62,6 +67,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<User> getByDate(DateTime startDate, DateTime endDate) {
     Query query = getCurrentSession().createQuery("from User where dateEnabled between :startDate and :endDate");
     query.setDate("startDate", startDate.toDate()).setDate("endDate", endDate.toDate());
@@ -69,6 +75,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<User> getAllWithRole(String role) {
     Criteria criteria = getCurrentSession().createCriteria(Authority.class);
     criteria.add(Property.forName("authority").eq(role));
@@ -77,6 +84,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<User> search(String param) {
     Query query = getCurrentSession().createQuery("from User where username like :username or email like :email");
     query.setString("username", wildcard(param));
@@ -86,6 +94,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<User> searchByUsername(String username) {
     Query query = getCurrentSession().createQuery("from User where username like :username");
     query.setString("username", wildcard(username));
@@ -93,6 +102,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<User> searchByEmail(String email) {
     Query query = getCurrentSession().createQuery("from User where email like :email");
     query.setString("email", wildcard(email));
@@ -100,6 +110,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<User> searchByEmailAndDate(String email, DateTime startDate, DateTime endDate) {
     endDate.plusDays(1);
     Query query = getCurrentSession().createQuery(
@@ -111,6 +122,7 @@ public class UserDao extends AbstractHibernateDao<User> implements UserDaoModel 
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<User> searchByNotEmailAndDate(String email, DateTime startDate, DateTime endDate) {
     Query query = getCurrentSession().createQuery(
         "from User where email not like :email and dateEnabled between :startDate and :endDate");

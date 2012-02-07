@@ -10,29 +10,29 @@ import javax.jms.ObjectMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tscp.mvne.ShellAccount;
+import com.tscp.mvne.PaymentRequest;
 
 @MessageDriven(activationConfig = {
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
-    @ActivationConfigProperty(propertyName = "destinationName", propertyValue = "jms/KenanPost") }, mappedName = "jms/KenanPost")
-public class KenanTopicSubscriber implements MessageListener {
+    @ActivationConfigProperty(propertyName = "destinationName", propertyValue = "jms/PaymentPost") }, mappedName = "jms/PaymentPost")
+public class PaymentTopicSubscriber implements MessageListener {
   protected final Logger devLogger = LoggerFactory.getLogger("devLogger");
-  protected final Logger logger = LoggerFactory.getLogger("kenanService");
+  protected final Logger logger = LoggerFactory.getLogger("paymentService");
 
   @Override
   public void onMessage(Message message) {
     if (message instanceof ObjectMessage) {
       ObjectMessage objectMessage = (ObjectMessage) message;
       try {
-        if (objectMessage.getObject() instanceof ShellAccount) {
-          ShellAccount request = (ShellAccount) objectMessage.getObject();
+        if (objectMessage.getObject() instanceof PaymentRequest) {
+          PaymentRequest request = (PaymentRequest) objectMessage.getObject();
           if (isSuccessfulResponse(request)) {
             logger.info("... success message received by TruConnect from topic for User " + request.getCustomerId()
                 + " Account " + request.getAccountNumber());
             devLogger.debug("success message received by TruConnect from topic for User " + request.getCustomerId()
                 + " Account " + request.getAccountNumber());
-            System.out.println("TC! account created and received successfully. Generated number is "
-                + request.getAccountNumber());
+            System.out.println("TC! payment made and received successfully. Confirmation code is "
+                + request.getConfirmationCode());
           }
         }
       } catch (JMSException jms_ex) {
@@ -41,7 +41,7 @@ public class KenanTopicSubscriber implements MessageListener {
     }
   }
 
-  private boolean isSuccessfulResponse(ShellAccount request) {
-    return request.getAccountNumber() > 0 && request.getCustomerId() > 0;
+  private boolean isSuccessfulResponse(PaymentRequest request) {
+    return !request.getConfirmationCode().equals("-1");
   }
 }

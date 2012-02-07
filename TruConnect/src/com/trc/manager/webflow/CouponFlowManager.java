@@ -23,7 +23,7 @@ public class CouponFlowManager {
   public int applyCoupon(Coupon coupon, User user, Account account, String mdn) throws WebFlowException {
     try {
       ServiceInstance serviceInstance = new ServiceInstance();
-      serviceInstance.setExternalid(mdn);
+      serviceInstance.setExternalId(mdn);
       return couponManager.applyCoupon(coupon, user, account, serviceInstance);
     } catch (CouponManagementException e) {
       WebFlowUtil.addError(ERROR_APPLY_COUPON);
@@ -34,7 +34,7 @@ public class CouponFlowManager {
   public int applyCouponPayment(Coupon coupon, User user, Account account) throws WebFlowException {
     try {
       ServiceInstance serviceInstance = new ServiceInstance();
-      serviceInstance.setExternalid("");
+      serviceInstance.setExternalId("");
       return couponManager.applyCoupon(coupon, user, account, serviceInstance);
     } catch (CouponManagementException e) {
       WebFlowUtil.addError(ERROR_APPLY_COUPON);

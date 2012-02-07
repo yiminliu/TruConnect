@@ -12,12 +12,14 @@
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
-  <div class="blueTruConnectGradient">
-    <div class="container">Account Overview</div>
-  </div>
+  <div class="blueTruConnectGradient"></div>
 
   <div class="container">
     <div id="main-content">
+
+      <div style="line-height: 30px; font-size: 20px; font-weight: normal; margin-bottom: 20px; color: #0067B2;">
+        Account Overview</div>
+
       <div class="span-18 colborder">
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Account Activity</h3>
         <c:forEach var="accountDetail" items="${accountDetails}">

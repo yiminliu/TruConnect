@@ -147,7 +147,7 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public void suspendService(NetworkInfo networkInfo) throws DeviceManagementException {
     ServiceInstance serviceInstance = new ServiceInstance();
-    serviceInstance.setExternalid(networkInfo.getMdn());
+    serviceInstance.setExternalId(networkInfo.getMdn());
     try {
       clearDevicesFromCache();
       deviceService.suspendService(serviceInstance);
@@ -160,7 +160,7 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public void restoreService(NetworkInfo networkInfo) throws DeviceManagementException {
     ServiceInstance serviceInstance = new ServiceInstance();
-    serviceInstance.setExternalid(networkInfo.getMdn());
+    serviceInstance.setExternalId(networkInfo.getMdn());
     try {
       clearDevicesFromCache();
       deviceService.restoreService(serviceInstance);
@@ -174,7 +174,7 @@ public class DeviceManager implements DeviceManagerModel {
   public Account createServiceInstance(Account account, NetworkInfo networkInfo) throws DeviceManagementException {
     try {
       ServiceInstance serviceInstance = new ServiceInstance();
-      serviceInstance.setExternalid(networkInfo.getMdn());
+      serviceInstance.setExternalId(networkInfo.getMdn());
       return deviceService.createServiceInstance(account, serviceInstance);
     } catch (DeviceServiceException e) {
       throw new DeviceManagementException(e.getMessage(), e.getCause());

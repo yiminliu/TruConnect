@@ -149,7 +149,7 @@ public final class TruConnectUtil {
 
   public static final ServiceInstance toServiceInstance(NetworkInfo networkInfo) {
     ServiceInstance serviceInstance = new ServiceInstance();
-    serviceInstance.setExternalid(networkInfo.getMdn());
+    serviceInstance.setExternalId(networkInfo.getMdn());
     return serviceInstance;
   }
 }
