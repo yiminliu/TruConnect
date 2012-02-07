@@ -71,6 +71,7 @@ public class PaymentController extends EncryptedController {
     User user = userManager.getCurrentUser();
     try {
       PaymentHistory paymentHistory = accountManager.getPaymentHistory(user);
+      paymentHistory.setCurrentPageNum(page);
       model.addObject("paymentHistory", paymentHistory);
       return model.getSuccess();
     } catch (AccountManagementException e) {
