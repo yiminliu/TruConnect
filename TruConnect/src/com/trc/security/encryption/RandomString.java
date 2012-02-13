@@ -6,7 +6,7 @@ import java.util.Random;
  * Generates a random string of characters and numbers. Typically used to
  * generate new passwords.
  * 
- * @author User
+ * @author Tachikoma
  * 
  */
 public class RandomString {
@@ -14,10 +14,10 @@ public class RandomString {
   private static final char[] symbols = new char[36];
 
   static {
-    for (int idx = 0; idx < 10; ++idx)
-      symbols[idx] = (char) ('0' + idx);
-    for (int idx = 10; idx < 36; ++idx)
-      symbols[idx] = (char) ('a' + idx - 10);
+    for (int i = 0; i < 10; ++i)
+      symbols[i] = (char) ('0' + i);
+    for (int i = 10; i < 36; ++i)
+      symbols[i] = (char) ('a' + i - 10);
   }
 
   private final Random random = new Random();
@@ -31,8 +31,8 @@ public class RandomString {
   }
 
   public String nextString() {
-    for (int idx = 0; idx < buf.length; ++idx)
-      buf[idx] = symbols[random.nextInt(symbols.length)];
+    for (int i = 0; i < buf.length; ++i)
+      buf[i] = symbols[random.nextInt(symbols.length)];
     return new String(buf);
   }
 
