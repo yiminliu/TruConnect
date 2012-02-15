@@ -12,7 +12,8 @@ import javax.jms.Session;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
-//@Service
+@Deprecated
+// @Service
 public class QueueSender {
   private JmsTemplate jmsTemplate = new JmsTemplate();
   // @Autowired

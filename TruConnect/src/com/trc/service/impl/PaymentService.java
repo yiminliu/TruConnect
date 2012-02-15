@@ -56,8 +56,7 @@ public class PaymentService implements PaymentServiceModel {
   @Override
   public List<CustPmtMap> removeCreditCard(User user, int paymentId) throws PaymentServiceException {
     try {
-      List<CustPmtMap> paymentMapList = truConnect.deleteCreditCardPaymentMethod(TruConnectUtil.toCustomer(user),
-          paymentId);
+      List<CustPmtMap> paymentMapList = truConnect.deleteCreditCardPaymentMethod(TruConnectUtil.toCustomer(user), paymentId);
       if (!paymentMapList.isEmpty()) {
         boolean updateDefault = true;
         CustPmtMap newDefault = paymentMapList.get(0);
@@ -86,8 +85,7 @@ public class PaymentService implements PaymentServiceModel {
       if (creditCard.getCreditCardNumber().toLowerCase().contains("x")) {
         creditCard.setCreditCardNumber(null);
       }
-      List<CustPmtMap> paymentMapList = truConnect.updateCreditCardPaymentMethod(TruConnectUtil.toCustomer(user),
-          creditCard);
+      List<CustPmtMap> paymentMapList = truConnect.updateCreditCardPaymentMethod(TruConnectUtil.toCustomer(user), creditCard);
       CustPmtMap paymentMap = getPaymentMap(paymentMapList, creditCard.getPaymentid());
       paymentMap.setPaymentalias(creditCard.getAlias());
       if (creditCard.getIsDefault() == null) {
@@ -147,12 +145,21 @@ public class PaymentService implements PaymentServiceModel {
     }
   }
 
+  // TODO classes are not unified and there are similar objects such as
+  // CustomerCreditCard and CreditCard.
+  // These should be unified to one object across all the projects.
+  // Temporarily we can convert the classes here.
+  // This request should also be done by creating a JMS Sender and sending
+  // it to MVNEPaymentService
   @Override
   public PaymentUnitResponse makePayment(User user, Account account, int paymentId, String amount)
       throws PaymentServiceException {
     try {
+      // PaymentRequest request = new PaymentRequest();
+      // ... populate paymentRequest
+      // truConnect.submitToMerchant(request);
       return truConnect.submitPaymentByPaymentId(SessionManager.getCurrentSessionId(), TruConnectUtil.toCustomer(user),
-          paymentId, account, amount);
+        paymentId, account, amount);
     } catch (WebServiceException e) {
       throw new PaymentServiceException(e.getMessage(), e.getCause());
     }

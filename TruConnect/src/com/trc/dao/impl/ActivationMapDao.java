@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Preconditions;
 import com.trc.dao.ActivationMapDaoModel;
@@ -16,11 +17,14 @@ public class ActivationMapDao extends AbstractHibernateDao<ActivationMap> implem
     setClazz(ActivationMap.class);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.trc.dao.impl.ActivationMapDaoModel#getByUserId(java.lang.Integer)
    */
   @Override
   @SuppressWarnings("unchecked")
+  @Transactional
   public List<ActivationMap> getByUserId(Integer userId) {
     Preconditions.checkArgument(userId != null);
     Query query = this.getCurrentSession().createQuery("from ActivationMap am where am.user.userId = :userId");

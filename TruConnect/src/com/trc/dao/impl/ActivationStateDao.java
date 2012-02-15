@@ -1,6 +1,7 @@
 package com.trc.dao.impl;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Preconditions;
 import com.trc.dao.ActivationStateDaoModel;
@@ -17,12 +18,14 @@ public class ActivationStateDao extends AbstractHibernateDao<ActivationState> im
   }
 
   @Override
+  @Transactional
   public ActivationState getById(ActivationStateId activationStateId) {
     Preconditions.checkArgument(activationStateId != null);
     return (ActivationState) this.getCurrentSession().get(ActivationState.class, activationStateId);
   }
 
   @Override
+  @Transactional
   public ActivationState getState(ActivationMap activationMap, ActState actState) {
     for (ActivationState rState : activationMap.getStates()) {
       if (rState.getState().equals(actState)) {

@@ -16,6 +16,8 @@ import com.tscp.mvne.Account;
 import com.tscp.mvne.DeviceInfo;
 import com.tscp.mvne.NetworkInfo;
 import com.tscp.mvne.ServiceInstance;
+import com.tscp.mvne.ServiceInstanceRequest;
+import com.tscp.mvne.ServiceInstanceRequestType;
 import com.tscp.mvne.TruConnect;
 
 @Service
@@ -55,8 +57,7 @@ public class DeviceService implements DeviceServiceModel {
   }
 
   @Override
-  public NetworkInfo swapDevice(User user, NetworkInfo oldNetworkInfo, DeviceInfo deviceInfo)
-      throws DeviceServiceException {
+  public NetworkInfo swapDevice(User user, NetworkInfo oldNetworkInfo, DeviceInfo deviceInfo) throws DeviceServiceException {
     try {
       return truConnect.swapDevice(TruConnectUtil.toCustomer(user), oldNetworkInfo, deviceInfo);
     } catch (WebServiceException e) {
@@ -91,6 +92,7 @@ public class DeviceService implements DeviceServiceModel {
     }
   }
 
+  // TODO REIMPLMENET USING JMS
   @Override
   public void suspendService(ServiceInstance serviceInstance) throws DeviceServiceException {
     try {
@@ -100,6 +102,7 @@ public class DeviceService implements DeviceServiceModel {
     }
   }
 
+  // TODO REIMPLMENET USING JMS
   @Override
   public void restoreService(ServiceInstance serviceInstance) throws DeviceServiceException {
     try {
@@ -109,6 +112,7 @@ public class DeviceService implements DeviceServiceModel {
     }
   }
 
+  // TODO REIMPLMENET USING JMS
   @Override
   public NetworkInfo activateService(User user, NetworkInfo networkInfo) throws DeviceServiceException {
     try {
@@ -118,6 +122,7 @@ public class DeviceService implements DeviceServiceModel {
     }
   }
 
+  // TODO REIMPLMENET USING JMS
   @Override
   public Account createServiceInstance(Account account, ServiceInstance serviceInstance) throws DeviceServiceException {
     try {
@@ -127,6 +132,7 @@ public class DeviceService implements DeviceServiceModel {
     }
   }
 
+  // TODO REIMPLMENET USING JMS
   @Override
   public void disconnectService(ServiceInstance serviceInstance) throws DeviceServiceException {
     try {
@@ -136,6 +142,7 @@ public class DeviceService implements DeviceServiceModel {
     }
   }
 
+  // TODO REIMPLMENET USING JMS
   @Override
   public void disconnectFromNetwork(NetworkInfo networkInfo) throws DeviceServiceException {
     try {
@@ -145,6 +152,7 @@ public class DeviceService implements DeviceServiceModel {
     }
   }
 
+  // TODO REIMPLMENET USING JMS
   @Override
   public void disconnectFromKenan(Account account, ServiceInstance serviceInstance) throws DeviceServiceException {
     try {
@@ -154,6 +162,7 @@ public class DeviceService implements DeviceServiceModel {
     }
   }
 
+  // TODO REIMPLMENET USING JMS
   @Override
   public NetworkInfo reinstallCustomerDevice(User user, DeviceInfo deviceInfo) throws DeviceServiceException {
     try {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Preconditions;
 import com.trc.coupon.UserCoupon;
@@ -18,27 +19,39 @@ public class UserCouponDao extends AbstractHibernateDao<UserCoupon> implements U
     setClazz(UserCoupon.class);
   }
 
-  /* (non-Javadoc)
-   * @see com.trc.dao.impl.UserCouponDaoModel#getById(com.trc.coupon.UserCouponId)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.trc.dao.impl.UserCouponDaoModel#getById(com.trc.coupon.UserCouponId)
    */
   @Override
+  @Transactional
   public UserCoupon getById(UserCouponId userCouponId) {
     Preconditions.checkArgument(userCouponId != null);
     return (UserCoupon) this.getCurrentSession().get(UserCoupon.class, userCouponId);
   }
 
-  /* (non-Javadoc)
-   * @see com.trc.dao.impl.UserCouponDaoModel#getUserCoupon(com.trc.coupon.UserCoupon)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * com.trc.dao.impl.UserCouponDaoModel#getUserCoupon(com.trc.coupon.UserCoupon
+   * )
    */
   @Override
+  @Transactional
   public UserCoupon getUserCoupon(UserCoupon userCoupon) {
     return getById(userCoupon.getId());
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.trc.dao.impl.UserCouponDaoModel#getByUserId(java.lang.Integer)
    */
   @Override
+  @Transactional
   public List<UserCoupon> getByUserId(Integer userId) {
     Preconditions.checkArgument(userId != null);
     Query query = this.getCurrentSession().createQuery("from UserCoupon uc where uc.id.userId = :userId");

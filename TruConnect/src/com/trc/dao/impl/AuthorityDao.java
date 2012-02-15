@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Preconditions;
 import com.trc.dao.AuthorityDaoModel;
@@ -18,6 +19,7 @@ public class AuthorityDao extends AbstractHibernateDao<Authority> implements Aut
   }
 
   @Override
+  @Transactional
   public List<Authority> getAuthoritiesWithRole(String role) {
     Preconditions.checkArgument(role != null);
     Query query = getCurrentSession().createQuery("from Authority where authority = :authority");
@@ -26,6 +28,7 @@ public class AuthorityDao extends AbstractHibernateDao<Authority> implements Aut
   }
 
   @Override
+  @Transactional
   public List<Authority> getAuthoritiesForUser(Integer userId) {
     Preconditions.checkArgument(userId != null);
     Query query = getCurrentSession().createQuery("from Authority where userId = :userId");

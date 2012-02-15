@@ -9,6 +9,7 @@ import javax.jms.Session;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
+@Deprecated
 public abstract class Listener implements MessageListener {
   private int maxAttempts = 5;
   private JmsTemplate jmsTemplate;

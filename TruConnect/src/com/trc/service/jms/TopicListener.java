@@ -3,9 +3,9 @@ package com.trc.service.jms;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 
+@Deprecated
 public class TopicListener extends Listener implements MessageListener {
   // private static final Logger logger =
   // LoggerFactory.getLogger(KenanQueueListener.class);

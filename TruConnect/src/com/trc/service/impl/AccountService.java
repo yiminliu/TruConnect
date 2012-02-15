@@ -14,10 +14,17 @@ import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
 import com.trc.util.Formatter;
 import com.tscp.mvne.Account;
+import com.tscp.mvne.AccountRequest;
+import com.tscp.mvne.AccountRequestException;
+import com.tscp.mvne.AccountRequestException_Exception;
+import com.tscp.mvne.AccountRequestType;
+import com.tscp.mvne.Contact;
+import com.tscp.mvne.ContactInfo;
 import com.tscp.mvne.CustAcctMapDAO;
 import com.tscp.mvne.CustInfo;
 import com.tscp.mvne.CustTopUp;
 import com.tscp.mvne.Customer;
+import com.tscp.mvne.CustomerAddress;
 import com.tscp.mvne.PaymentRecord;
 import com.tscp.mvne.TruConnect;
 import com.tscp.mvne.UsageDetail;
@@ -54,10 +61,42 @@ public class AccountService implements AccountServiceModel {
     }
   }
 
+  // TODO classes are not unified and there are similar objects such as
+  // Address and ContactInfo.
+  // These should be unified to one object across all the projects.
+  // Temporarily we can convert the classes here.
+  // This request should also be done by creating a JMS Sender and sending
+  // it to MVNEAccountService
   @Override
   public Account createShellAccount(User user) throws AccountServiceException {
     Account account = makeAccount(user);
     try {
+      // EXAMPLE CONVERSION
+      // ContactInfo contactInfo = new ContactInfo();
+      //
+      // CustomerAddress address = contactInfo.getAddress();
+      // address.setAddress1(user.getContactInfo().getAddress().getAddress1());
+      // address.setAddress2(user.getContactInfo().getAddress().getAddress2());
+      // address.setAddress3(user.getContactInfo().getAddress().getAddress3());
+      // address.setCity(user.getContactInfo().getAddress().getCity());
+      // address.setCustId(user.getUserId());
+      // address.setState(user.getContactInfo().getAddress().getState());
+      // address.setZip(user.getContactInfo().getAddress().getZip());
+      //
+      // Contact contact = contactInfo.getContact();
+      // contact.setCustId(user.getUserId());
+      // contact.setEmail(user.getContactInfo().getEmail());
+      // contact.setFirstName(user.getContactInfo().getFirstName());
+      // contact.setLastName(user.getContactInfo().getLastName());
+      // contact.setPhoneNumber(user.getContactInfo().getPhoneNumber());
+      //
+      // AccountRequest request = new AccountRequest();
+      // request.setRequestType(AccountRequestType.SHELL);
+      // request.setCustomerId(user.getUserId());
+      // request.setContactInfo(contactInfo);
+      //
+      // account = truConnect.submitAccountRequest(request);
+
       account = truConnect.createBillingAccount(TruConnectUtil.toCustomer(user), account);
       setTopUp(user, 10.00, account);
       return account;

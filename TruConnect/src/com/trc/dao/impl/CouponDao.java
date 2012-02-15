@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.trc.coupon.Coupon;
 
@@ -21,6 +22,7 @@ public class CouponDao extends AbstractHibernateDao<Coupon> {
     setClazz(Coupon.class);
   }
 
+  @Transactional
   public Coupon getCouponByCode(String couponCode) {
     Query query = getCurrentSession().createQuery("from Coupon where couponCode = :couponCode");
     query.setString("couponCode", couponCode);

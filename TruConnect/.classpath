@@ -5,7 +5,6 @@
 	<classpathentry kind="src" path="src_report"/>
 	<classpathentry kind="src" path="src_logging"/>
 	<classpathentry kind="src" path="src_admin"/>
-	<classpathentry kind="src" path="src_jms"/>
 	<classpathentry kind="src" path="WebContent/WEB-INF/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
