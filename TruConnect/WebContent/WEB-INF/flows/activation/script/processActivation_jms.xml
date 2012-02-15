@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="registration" type="com.trc.user.activation.Registration" />
+  <input name="account" type="com.tscp.mvne.Account" />
+  <input name="activationMessage" type="com.trc.user.activation.ActivationMessage" />
+  <input name="deviceInfo" type="com.tscp.mvne.DeviceInfo" />
+  <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
+  <input name="creditCardPayment" type="com.trc.user.activation.CreditCardPayment" />
+
+  <!-- 
+  1. send shell account request
+  2. check if coupons are used and apply as needed
+    2a. send payment request
+  3. send network request
+  4. activate and email user
+  
+  
+  Things to consider:
+  * if you send out all reqeusts at once, what do you do if one fails? you can rollback activation, but not payment
+  * you may want to wait for payment to succeed/fail before sending out a network request
+  * you may need to create listeners to the JMS topic's (*PostProcessor is an example) that can see the results of the request
+  * you may have to properly report success and failures for all JMS requests
+  * you may want to make a new wrapper class like "ActivationRequest" that contains the information for all JMS requests
+    and from there you can send out the individual requests and keep track of which ones failed
+  -->
+
+  <!-- END STATES -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+
+  <end-state id="success" view="activation/registration/success">
+    <on-entry>
+      <evaluate expression="activationLogger.finishLogging()" />
+    </on-entry>
+  </end-state>
+
+  <end-state id="cancel" view="externalRedirect:contextRelative:/">
+    <on-entry>
+      <evaluate expression="registrationManager.cancelRegistration(registration)" />
+    </on-entry>
+  </end-state>
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+    <transition on="generalError" to="generalError" validate="false" />
+  </global-transitions>
+
+</flow> 
