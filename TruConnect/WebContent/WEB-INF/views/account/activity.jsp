@@ -19,7 +19,7 @@
     <div id="main-content">
 
       <div style="line-height: 30px; font-size: 20px; font-weight: normal; margin-bottom: 20px; color: #0067B2;">Account
-        Activity</div>
+        Activity</div>       
 
       <div class="span-18 colborder">
 

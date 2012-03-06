@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.trc.service.gateway.TSCPMVNE;
-import com.trc.util.logger.DevLogger;
 
 @Component
 public final class Config {

@@ -40,7 +40,7 @@ public interface UserModel {
 
   public void setRoles(Collection<Authority> roles);
 
-  public ContactInfo getContactInfo();
+  public com.trc.user.contact.ContactInfo getContactInfo();
 
   public void setContactInfo(ContactInfo contactInfo);
 }

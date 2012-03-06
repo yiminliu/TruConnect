@@ -3,6 +3,7 @@ package com.trc.web.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -191,7 +192,14 @@ public class AdminController {
     if (!Config.admin) {
       return model.getAccessDenied();
     }
-    List<User> searchResults = userManager.searchByEmail(request.getParameter("email"));
+    List<User> searchResults = new Vector<User>();
+    try {
+      int userId = Integer.parseInt(request.getParameter("email"));
+      User user = userManager.getUserById(userId);
+      searchResults.add(user);
+    } catch (NumberFormatException e) {
+      searchResults = userManager.searchByEmail(request.getParameter("email"));
+    }
     model.addObject("searchResults", searchResults);
     return model.getSuccess();
   }

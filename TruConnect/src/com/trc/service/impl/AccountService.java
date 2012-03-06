@@ -15,16 +15,10 @@ import com.trc.user.User;
 import com.trc.util.Formatter;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.AccountRequest;
-import com.tscp.mvne.AccountRequestException;
-import com.tscp.mvne.AccountRequestException_Exception;
-import com.tscp.mvne.AccountRequestType;
-import com.tscp.mvne.Contact;
-import com.tscp.mvne.ContactInfo;
 import com.tscp.mvne.CustAcctMapDAO;
 import com.tscp.mvne.CustInfo;
 import com.tscp.mvne.CustTopUp;
 import com.tscp.mvne.Customer;
-import com.tscp.mvne.CustomerAddress;
 import com.tscp.mvne.PaymentRecord;
 import com.tscp.mvne.TruConnect;
 import com.tscp.mvne.UsageDetail;
@@ -103,6 +97,13 @@ public class AccountService implements AccountServiceModel {
     } catch (WebServiceException e) {
       throw new AccountServiceException(e.getMessage(), e.getCause());
     }
+  }
+
+  public int doShellAccountRequest(AccountRequest request) {
+    // TODO
+    // accountRequestSender.send(request);
+    // accountTopicSubscriber();
+    return 0;
   }
 
   @Override
