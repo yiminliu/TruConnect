@@ -22,9 +22,9 @@
 
   <action-state id="addCreditCard">
     <on-entry>
-      <evaluate expression="creditCardPayment.creditCard.setPaymentid(0)" />
+      <evaluate expression="creditCard.setPaymentid(0)" />
     </on-entry>
-    <evaluate expression="paymentFlowManager.addPaymentMethod(registration.user, creditCardPayment.creditCard)" />
+    <evaluate expression="paymentFlowManager.addPaymentMethod(user, creditCard)" />
     <transition on="success" to="success" />
     <transition on-exception="com.trc.exception.WebFlowException" to="re-requestCreditCardInfo" />
   </action-state>
