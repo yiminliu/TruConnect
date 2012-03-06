@@ -54,7 +54,9 @@ $(function() {
 
 var ajaxBufferTime;
 var currentAjaxRequest;
-var searchEmailUrl = "/TruConnect/admin/search/email";
+//var searchEmailUrl = "/TruConnect/admin/search/email";
+//var searchEmailUrl = "/TruConnect-Production/admin/search";
+var searchEmailUrl = "/TruConnect/admin/search";
 var params;
 
 $(function() {

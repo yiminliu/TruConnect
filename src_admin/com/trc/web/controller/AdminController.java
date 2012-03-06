@@ -3,6 +3,7 @@ package com.trc.web.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -181,6 +182,33 @@ public class AdminController {
       return model.getAccessDenied();
     }
     setUserToView(userManager.getUserById(Integer.parseInt(userId)));
+    return model.getSuccess();
+  }
+
+  /**
+   * This method is meant to allow the user to search by User ID and email. The
+   * request parameter needs to be changed from "email" to a broader scoped name
+   * (in controlBar.js and control_bar.jsp)
+   * 
+   * @param request
+   * @return
+   */
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+  @RequestMapping(value = "/search", method = RequestMethod.GET)
+  public ModelAndView search(HttpServletRequest request) {
+    ResultModel model = new ResultModel("admin/search/jquery_username");
+    if (!Config.admin) {
+      return model.getAccessDenied();
+    }
+    List<User> searchResults = userManager.searchByEmail(request.getParameter("email"));
+    try {
+      int userId = Integer.parseInt(request.getParameter("email"));
+      User user = userManager.getUserById(userId);
+      searchResults.add(0, user);
+    } catch (NumberFormatException e) {
+      // do nothing - no user was found with the given ID
+    }
+    model.addObject("searchResults", searchResults);
     return model.getSuccess();
   }
 
