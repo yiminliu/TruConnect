@@ -103,8 +103,7 @@ public class DeviceController extends EncryptedController {
   }
 
   @RequestMapping(value = "/swap/{encodedDeviceId}", method = RequestMethod.POST)
-  public ModelAndView postSwapDevice(@PathVariable String encodedDeviceId, @ModelAttribute DeviceInfo deviceInfo,
-      Errors errors) {
+  public ModelAndView postSwapDevice(@PathVariable String encodedDeviceId, @ModelAttribute DeviceInfo deviceInfo, Errors errors) {
     ResultModel model = new ResultModel("devices/swapEsnSuccess", "devices/swapEsn");
     User user = userManager.getCurrentUser();
     int deviceId = super.decryptId(encodedDeviceId);
@@ -246,8 +245,8 @@ public class DeviceController extends EncryptedController {
   }
 
   @RequestMapping(value = "/topUp/{encodedDeviceId}", method = RequestMethod.POST)
-  public ModelAndView postChangeTopUp(@PathVariable String encodedDeviceId,
-      @ModelAttribute AccountDetail accountDetail, Errors errors) {
+  public ModelAndView postChangeTopUp(@PathVariable String encodedDeviceId, @ModelAttribute AccountDetail accountDetail,
+      Errors errors) {
     ResultModel model = new ResultModel("devices/changeTopUpSuccess", "devices/changeTopUp");
     User user = userManager.getCurrentUser();
     int deviceId = super.decryptId(encodedDeviceId);
