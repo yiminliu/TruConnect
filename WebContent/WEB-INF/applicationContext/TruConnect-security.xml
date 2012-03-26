@@ -12,22 +12,25 @@
     <custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
     <custom-filter position="FORM_LOGIN_FILTER" ref="myAuthFilter" />
     <session-management session-authentication-strategy-ref="sas" />
-    <!-- 
-    <intercept-url pattern="/coupons/validate" filters="none" />
-    <intercept-url pattern="/flowDev/**" filters="none" /> 
-    <intercept-url pattern="/test/**" filters="none" /> 
-    -->
+
+    <port-mappings>
+      <port-mapping http="80" https="443" />
+    </port-mappings>
+
+    <!-- <intercept-url pattern="/coupons/validate" filters="none" /> <intercept-url pattern="/flowDev/**" filters="none" /> <intercept-url pattern="/test/**" 
+      filters="none" /> -->
+
     <intercept-url pattern="/static/**" filters="none" />
     <intercept-url pattern="/favicon.ico" filters="none" />
-    <intercept-url pattern="/" access="permitAll" />
     <intercept-url pattern="/home" access="permitAll" />
-    <intercept-url pattern="/login" access="permitAll" />
+    <intercept-url pattern="/login/**" access="permitAll" />
     <intercept-url pattern="/accessDenied" access="permitAll" />
     <intercept-url pattern="/registration/**" access="permitAll" />
     <intercept-url pattern="/activation" access="permitAll" />
     <intercept-url pattern="/manage" access="permitAll" />
     <intercept-url pattern="/retrieve/**" access="permitAll" />
     <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')" />
+    <intercept-url pattern="/" access="permitAll" />
     <intercept-url pattern="/**" access="isAuthenticated()" />
     <access-denied-handler error-page="/exception/accessDenied.jsp" />
     <logout invalidate-session="true" logout-success-url="http://www.truconnect.com/" />

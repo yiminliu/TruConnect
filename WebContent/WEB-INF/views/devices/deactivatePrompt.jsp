@@ -25,7 +25,7 @@
             <div class="row">
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
-                <form:errors path="deviceId" />
+                <form:errors path="id" />
                 <form:errors path="value" />
                 <form:errors path="label" />
                 <spring:bind path="deviceInfo">
@@ -46,8 +46,8 @@
           <h3>Deactivate Device</h3>
           <p>After you click "Deactivate Device" at the bottom of this page:
           <ul>
-            <li>Your device (ESN: ${deviceInfo.value}) and the account "${deviceInfo.label}" will be
-              deactivated immediately.</li>
+            <li>Your device (ESN: ${deviceInfo.value}) and the account "${deviceInfo.label}" will be deactivated
+              immediately.</li>
             <li>If the device is currently connected, the service will stop after the current session.</li>
             <li>You will no longer be charged the monthly access fee for this account, the monthly access fee paid
               for this period expires on ${accessFeeDate.month}/${accessFeeDate.day}/${accessFeeDate.year}.</li>
@@ -62,14 +62,14 @@
           <p>Are you sure you want to deactivate device ${deviceInfo.label}?</p>
 
           <div class="row" style="display: none;">
-            <form:input path="deviceId" />
+            <form:input path="id" />
             <form:input path="label" />
             <form:input path="value" />
           </div>
 
           <div class="buttons">
-            <a class="button action-m" href="#" onclick="$('#deactivateDeviceSubmit').click()"><span>Deactivate</span>
-            </a> <a class="button escape-m multi" href="<spring:url value="/devices" />"><span>Cancel</span> </a><input
+            <a class="button action-m" href="#" id="deactivateDeviceButton"><span>Deactivate</span> </a> <a
+              class="button escape-m multi" href="<spring:url value="/devices" />"><span>Cancel</span> </a><input
               id="deactivateDeviceSubmit" type="submit" value="Deactivate" style="display: none;" />
           </div>
         </form:form>

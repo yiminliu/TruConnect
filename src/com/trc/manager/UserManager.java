@@ -27,14 +27,13 @@ public class UserManager implements UserManagerModel {
   public static final String USER_KEY = "user";
   public static final String ADMIN_KEY = "admin";
   public static final String MANAGER_KEY = "manager";
-  private static SecurityContextFacade securityContext;
+  public static SecurityContextFacade securityContext;
   private UserDao userDao;
   private SecurityQuestionManager securityQuestionManager;
   private AccountManager accountManager;
 
   @Autowired
-  public void init(UserDao userDao, SecurityQuestionManager securityQuestionManager, AccountManager accountManager,
-      SecurityContextFacade securityContextFacade) {
+  public void init(UserDao userDao, SecurityQuestionManager securityQuestionManager, AccountManager accountManager, SecurityContextFacade securityContextFacade) {
     this.userDao = userDao;
     this.securityQuestionManager = securityQuestionManager;
     this.accountManager = accountManager;

@@ -20,13 +20,13 @@
       <div class="span-18 colborder">
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Confirm</h3>
 
-        <form:form id="deactivateDevice" cssClass="validatedForm" method="POST" commandName="deviceInfo">
+        <form:form id="reactivateDevice" cssClass="validatedForm" method="POST" commandName="deviceInfo">
 
           <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.deviceInfo'].allErrors}">
             <div class="row">
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
-                <form:errors path="deviceId" />
+                <form:errors path="id" />
                 <form:errors path="value" />
                 <form:errors path="label" />
                 <spring:bind path="deviceInfo">
@@ -42,15 +42,15 @@
           <p>Are you sure you want to reactivate device ${deviceInfo.label}?</p>
 
           <div class="row" style="display: none;">
-            <form:input path="deviceId" />
+            <form:input path="id" />
             <form:input path="label" />
             <form:input path="value" />
           </div>
 
           <div class="buttons">
-            <a class="button action-m" href="#" onclick="$('#deactivateDeviceSubmit').click()"><span>Reactivate</span>
-            </a> <a class="button escape-m multi" href="<spring:url value="/devices" />"><span>Cancel</span> </a><input
-              id="deactivateDeviceSubmit" type="submit" value="Deactivate" style="display: none;" />
+            <a class="button action-m" href="#" id="reactivateDeviceButton"><span>Reactivate</span> </a> <a
+              class="button escape-m multi" href="<spring:url value="/devices" />"><span>Cancel</span> </a><input
+              id="reactivateDeviceSubmit" type="submit" value="Deactivate" style="display: none;" />
           </div>
         </form:form>
       </div>

@@ -22,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.trc.manager.UserManager;
 import com.trc.user.authority.Authority;
 import com.trc.user.contact.ContactInfo;
 
@@ -222,7 +223,7 @@ public class User implements UserModel, UserDetails {
   @Transient
   public boolean isAuthenticated() {
     GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_ANONYMOUS");
-    return !getAuthorities().contains(ga);
+    return !UserManager.securityContext.getContext().getAuthentication().getAuthorities().contains(ga) && !getAuthorities().contains(ga);
   }
 
   @Override
