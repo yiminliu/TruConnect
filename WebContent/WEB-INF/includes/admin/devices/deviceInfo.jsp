@@ -2,20 +2,20 @@
   <div>
   <li class="header">Device Information</li>
   <li>Account Number: ${device.deviceInfo.accountNo}</li>
-  <li>Device ID: ${device.deviceInfo.deviceId}</li>
-  <li>Status: ${device.deviceInfo.deviceStatus}</li>
-  <li>Status ID: ${device.deviceInfo.deviceStatusId}</li>
+  <li>Device ID: ${device.deviceInfo.id}</li>
+  <li>Status: ${device.deviceInfo.status}</li>
+  <li>Status ID: ${device.deviceInfo.statusId}</li>
   </div>
   <div>
     <c:forEach var="package" items="${device.account.packageList}">
       <li class="header">Package Information</li>
-      <li>Package ID: ${package.packageid}</li>
-      <li>Package Name: ${package.packageName}</li>
-      <c:if test="${!empty package.componentlist}">
+      <li>Package ID: ${package.id}</li>
+      <li>Package Name: ${package.name}</li>
+      <c:if test="${!empty package.componentList}">
         <li class="header">Component Information</li>
-        <c:forEach var="component" items="${package.componentlist}">
-          <li>Component ID: ${component.componentId}</li>
-          <li>Component Name: ${component.componentName}</li>
+        <c:forEach var="component" items="${package.componentList}">
+          <li>Component ID: ${component.id}</li>
+          <li>Component Name: ${component.name}</li>
         </c:forEach>
       </c:if>
     </c:forEach>
@@ -23,11 +23,11 @@
   <div>
   <li class="header">Service Information</li>
   <c:forEach var="service" items="${device.account.serviceinstancelist}">
-    <li>Subscriber Number: ${service.subscrno}</li>
-    <li>External ID: ${service.externalid}</li>
-    <li>External ID Type: ${service.externalidtype}</li>
-    <li>Active Date: ${service.activedate}</li>
-    <li>Inactive Date: ${service.inactivedate}</li>
+    <li>Subscriber Number: ${service.subscriberNumber}</li>
+    <li>External ID: ${service.externalId}</li>
+    <li>External ID Type: ${service.externalIdType}</li>
+    <li>Active Date: ${service.activeDate}</li>
+    <li>Inactive Date: ${service.inactiveDate}</li>
   </c:forEach>
   </div>
 </div>

@@ -26,8 +26,8 @@
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
                 <form:errors path="deviceId" />
-                <form:errors path="deviceValue" />
-                <form:errors path="deviceLabel" />
+                <form:errors path="value" />
+                <form:errors path="label" />
                 <spring:bind path="deviceInfo">
                   <c:forEach items="${status.errorMessages}" var="error" varStatus="status">
                     <span id="global.${status.index}.errors"><c:out value="${error}" /> </span>
@@ -46,7 +46,7 @@
           <h3>Deactivate Device</h3>
           <p>After you click "Deactivate Device" at the bottom of this page:
           <ul>
-            <li>Your device (ESN: ${deviceInfo.deviceValue}) and the account "${deviceInfo.deviceLabel}" will be
+            <li>Your device (ESN: ${deviceInfo.value}) and the account "${deviceInfo.label}" will be
               deactivated immediately.</li>
             <li>If the device is currently connected, the service will stop after the current session.</li>
             <li>You will no longer be charged the monthly access fee for this account, the monthly access fee paid
@@ -59,12 +59,12 @@
           </ul>
           </p>
 
-          <p>Are you sure you want to deactivate device ${deviceInfo.deviceLabel}?</p>
+          <p>Are you sure you want to deactivate device ${deviceInfo.label}?</p>
 
           <div class="row" style="display: none;">
             <form:input path="deviceId" />
-            <form:input path="deviceLabel" />
-            <form:input path="deviceValue" />
+            <form:input path="label" />
+            <form:input path="value" />
           </div>
 
           <div class="buttons">

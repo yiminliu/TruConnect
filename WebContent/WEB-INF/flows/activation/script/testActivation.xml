@@ -5,7 +5,7 @@
 
   <input name="user" type="com.trc.user.User" />
   <input name="account" type="com.tscp.mvne.Account" />
-  <input name="deviceInfo" type="com.tscp.mvne.DeviceInfo" />
+  <input name="deviceInfo" type="com.tscp.mvne.Device" />
   <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
 
   <subflow-state id="testActivation" subflow="activateService">

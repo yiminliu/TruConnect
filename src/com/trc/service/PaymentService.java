@@ -55,8 +55,7 @@ public class PaymentService implements PaymentServiceModel {
   @Override
   public List<CustPmtMap> removeCreditCard(User user, int paymentId) throws PaymentServiceException {
     try {
-      List<CustPmtMap> paymentMapList = truConnect.deleteCreditCardPaymentMethod(TruConnectUtil.toCustomer(user),
-          paymentId);
+      List<CustPmtMap> paymentMapList = truConnect.deleteCreditCardPaymentMethod(TruConnectUtil.toCustomer(user), paymentId);
       if (!paymentMapList.isEmpty()) {
         boolean updateDefault = true;
         CustPmtMap newDefault = paymentMapList.get(0);
@@ -85,8 +84,7 @@ public class PaymentService implements PaymentServiceModel {
       if (creditCard.getCreditCardNumber().toLowerCase().contains("x")) {
         creditCard.setCreditCardNumber(null);
       }
-      List<CustPmtMap> paymentMapList = truConnect.updateCreditCardPaymentMethod(TruConnectUtil.toCustomer(user),
-          creditCard);
+      List<CustPmtMap> paymentMapList = truConnect.updateCreditCardPaymentMethod(TruConnectUtil.toCustomer(user), creditCard);
       CustPmtMap paymentMap = getPaymentMap(paymentMapList, creditCard.getPaymentid());
       paymentMap.setPaymentalias(creditCard.getAlias());
       if (creditCard.getIsDefault() == null) {
@@ -137,21 +135,18 @@ public class PaymentService implements PaymentServiceModel {
   }
 
   @Override
-  public PaymentUnitResponse makePayment(User user, Account account, CreditCard creditCard, String amount)
-      throws PaymentServiceException {
+  public PaymentUnitResponse makePayment(User user, Account account, CreditCard creditCard, String amount) throws PaymentServiceException {
     try {
-      return truConnect.makeCreditCardPayment(SessionManager.getCurrentSessionId(), account, creditCard, amount);
+      return truConnect.submitPaymentByCreditCard(SessionManager.getCurrentSessionId(), account, creditCard, amount);
     } catch (WebServiceException e) {
       throw new PaymentServiceException(e.getMessage(), e.getCause());
     }
   }
 
   @Override
-  public PaymentUnitResponse makePayment(User user, Account account, int paymentId, String amount)
-      throws PaymentServiceException {
+  public PaymentUnitResponse makePayment(User user, Account account, int paymentId, String amount) throws PaymentServiceException {
     try {
-      return truConnect.submitPaymentByPaymentId(SessionManager.getCurrentSessionId(), TruConnectUtil.toCustomer(user),
-          paymentId, account, amount);
+      return truConnect.submitPaymentByPaymentId(SessionManager.getCurrentSessionId(), TruConnectUtil.toCustomer(user), paymentId, account, amount);
     } catch (WebServiceException e) {
       throw new PaymentServiceException(e.getMessage(), e.getCause());
     }

@@ -25,7 +25,7 @@
             <div class="row">
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
-                <form:errors path="deviceLabel" />
+                <form:errors path="label" />
                 <spring:bind path="deviceInfo">
                   <c:forEach items="${status.errorMessages}" var="error" varStatus="status">
                     <span id="global.${status.index}.errors"><c:out value="${error}" /> </span>
@@ -38,8 +38,8 @@
           <p>Enter the new name of your device.</p>
 
           <div class="row">
-            <form:label cssClass="required" path="deviceLabel">Descriptive Name</form:label>
-            <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="deviceLabel" />
+            <form:label cssClass="required" path="label">Descriptive Name</form:label>
+            <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="label" />
           </div>
 
           <!-- Buttons -->

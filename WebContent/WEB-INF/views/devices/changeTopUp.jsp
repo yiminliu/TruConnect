@@ -22,8 +22,8 @@
         <h3 style="margin-bottom: 20px; padding-bottom: 0px;">Change Top-Up Amount</h3>
         <p>When the balance for this device runs low, it will be topped up with the amount selected below.</p>
 
-        <h4 style="float: left; display: inline-block">${accountDetail.deviceInfo.deviceLabel}
-          (${accountDetail.deviceInfo.deviceStatus})</h4>
+        <h4 style="float: left; display: inline-block">${accountDetail.deviceInfo.label}
+          (${accountDetail.deviceInfo.status})</h4>
         <h4 style="float: right; display: inline-block">Current Balance: $${accountDetail.account.balance}</h4>
         <div class="clear"></div>
         <form:form id="topUp" commandName="accountDetail" method="POST" cssClass="validatedForm">

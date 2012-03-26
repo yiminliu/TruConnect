@@ -17,6 +17,7 @@ import com.trc.util.logger.DevLogger;
 
 @Component
 public final class Config {
+
   private static ClassLoader classLoader;
   private static final String configFile = "config/config.properties";
   private static final String monthsFile = "config/dates/months.properties";
@@ -58,7 +59,7 @@ public final class Config {
       admin = props.getProperty("admin").equals("0") ? false : true;
       TSCPMVNE.serviceName = props.getProperty("serviceName");
       TSCPMVNE.namespace = props.getProperty("namespace");
-      TSCPMVNE.location = production ? props.getProperty("wsdl_production_ip") : props.getProperty("wsdl");
+      TSCPMVNE.location = production ? props.getProperty("wsdl_production_ip") : props.getProperty("wsdl_development_ip");
       TSCPMVNE.initialized = true;
       DevLogger.debug("TSCPMVNE location set to " + TSCPMVNE.location);
     }
@@ -96,6 +97,46 @@ public final class Config {
     for (Entry<Object, Object> entry : properties.entrySet()) {
       states.put((String) entry.getKey(), (String) entry.getValue());
     }
+  }
+
+  public static int getYearRange() {
+    return yearRange;
+  }
+
+  public static void setYearRange(int yearRange) {
+    Config.yearRange = yearRange;
+  }
+
+  public static SortedMap<Integer, String> getYearsFuture() {
+    return yearsFuture;
+  }
+
+  public static void setYearsFuture(SortedMap<Integer, String> yearsFuture) {
+    Config.yearsFuture = yearsFuture;
+  }
+
+  public static SortedMap<Integer, String> getYearsPast() {
+    return yearsPast;
+  }
+
+  public static void setYearsPast(SortedMap<Integer, String> yearsPast) {
+    Config.yearsPast = yearsPast;
+  }
+
+  public static SortedMap<String, String> getStates() {
+    return states;
+  }
+
+  public static void setStates(SortedMap<String, String> states) {
+    Config.states = states;
+  }
+
+  public static SortedMap<String, String> getMonths() {
+    return months;
+  }
+
+  public static void setMonths(SortedMap<String, String> months) {
+    Config.months = months;
   }
 
 }

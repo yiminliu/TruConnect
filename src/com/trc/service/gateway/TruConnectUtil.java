@@ -9,7 +9,7 @@ import com.tscp.mvne.Account;
 import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.CustAddress;
 import com.tscp.mvne.Customer;
-import com.tscp.mvne.DeviceInfo;
+import com.tscp.mvne.Device;
 import com.tscp.mvne.NetworkInfo;
 import com.tscp.mvne.ServiceInstance;
 
@@ -35,22 +35,22 @@ public final class TruConnectUtil {
     outCreditCard.setZip(inCreditCard.getZip());
   }
 
-  public static final void copyDeviceInfo(DeviceInfo outDeviceInfo, DeviceInfo inDeviceInfo) {
+  public static final void copyDeviceInfo(Device outDeviceInfo, Device inDeviceInfo) {
     outDeviceInfo.setAccountNo(inDeviceInfo.getAccountNo());
     outDeviceInfo.setCustId(inDeviceInfo.getCustId());
-    outDeviceInfo.setDeviceAssociation(inDeviceInfo.getDeviceAssociation());
-    outDeviceInfo.setDeviceId(inDeviceInfo.getDeviceId());
-    outDeviceInfo.setDeviceLabel(inDeviceInfo.getDeviceLabel());
-    outDeviceInfo.setDeviceStatus(inDeviceInfo.getDeviceStatus());
-    outDeviceInfo.setDeviceStatusId(inDeviceInfo.getDeviceStatusId());
-    outDeviceInfo.setDeviceValue(inDeviceInfo.getDeviceValue());
+    outDeviceInfo.setAssociation(inDeviceInfo.getAssociation());
+    outDeviceInfo.setId(inDeviceInfo.getId());
+    outDeviceInfo.setLabel(inDeviceInfo.getLabel());
+    outDeviceInfo.setStatus(inDeviceInfo.getStatus());
+    outDeviceInfo.setStatusId(inDeviceInfo.getStatusId());
+    outDeviceInfo.setValue(inDeviceInfo.getValue());
     outDeviceInfo.setEffectiveDate(inDeviceInfo.getEffectiveDate());
     outDeviceInfo.setExpirationDate(inDeviceInfo.getExpirationDate());
     outDeviceInfo.setModDate(inDeviceInfo.getModDate());
   }
 
-  public static final DeviceInfo clone(DeviceInfo inDeviceInfo) {
-    DeviceInfo outDeviceInfo = new DeviceInfo();
+  public static final Device clone(Device inDeviceInfo) {
+    Device outDeviceInfo = new Device();
     copyDeviceInfo(outDeviceInfo, inDeviceInfo);
     return outDeviceInfo;
   }
@@ -149,7 +149,7 @@ public final class TruConnectUtil {
 
   public static final ServiceInstance toServiceInstance(NetworkInfo networkInfo) {
     ServiceInstance serviceInstance = new ServiceInstance();
-    serviceInstance.setExternalid(networkInfo.getMdn());
+    serviceInstance.setExternalId(networkInfo.getMdn());
     return serviceInstance;
   }
 }

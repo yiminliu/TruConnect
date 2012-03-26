@@ -7,7 +7,7 @@ import com.trc.exception.management.AccountManagementException;
 import com.trc.manager.AccountManager;
 import com.trc.user.User;
 import com.tscp.mvne.Account;
-import com.tscp.mvne.DeviceInfo;
+import com.tscp.mvne.Device;
 
 /**
  * Overview contains all accountDetails and the paymentHistory for the given
@@ -20,7 +20,7 @@ public class Overview {
   private List<AccountDetail> accountDetails;
   private PaymentHistory paymentHistory;
 
-  public Overview(AccountManager accountManager, List<DeviceInfo> devices, User user) {
+  public Overview(AccountManager accountManager, List<Device> devices, User user) {
     this.accountDetails = new ArrayList<AccountDetail>();
 
     AccountDetail accountDetail;
@@ -29,14 +29,13 @@ public class Overview {
     try {
       // devices = accountManager.getDeviceList(user);
       this.paymentHistory = new PaymentHistory(accountManager.getPaymentRecords(user), user);
-      for (DeviceInfo deviceInfo : devices) {
+      for (Device deviceInfo : devices) {
         account = accountManager.getAccount(deviceInfo.getAccountNo());
         accountDetail = new AccountDetail();
         accountDetail.setAccount(account);
         accountDetail.setDeviceInfo(deviceInfo);
         accountDetail.setTopUp(accountManager.getTopUp(user, account).getTopupAmount());
-        accountDetail.setUsageHistory(new UsageHistory(accountManager.getChargeHistory(user, account.getAccountno()),
-            user, account.getAccountno()));
+        accountDetail.setUsageHistory(new UsageHistory(accountManager.getChargeHistory(user, account.getAccountno()), user, account.getAccountno()));
         this.accountDetails.add(accountDetail);
       }
     } catch (AccountManagementException e) {

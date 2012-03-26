@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://www.springframework.org/schema/webflow  
     http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-  <var name="deviceInfo" class="com.tscp.mvne.DeviceInfo" />
+  <var name="deviceInfo" class="com.tscp.mvne.Device" />
   <var name="creditCard" class="com.tscp.mvne.CreditCard" />
   <var name="termsAndConditions" class="com.trc.user.activation.TermsAndConditions" />
   <var name="account" class="com.tscp.mvne.Account" />

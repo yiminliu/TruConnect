@@ -76,10 +76,9 @@ public class TestController {
       List<Coupon> allCoupons = couponManager.getAllCoupons();
       List<UserCoupon> userCoupons = couponManager.getUserCoupons(user.getUserId());
       for (Coupon coupon : allCoupons) {
-        DevLogger.log("\n\nChecking coupon:" + coupon.getCouponId() + " detail:"
-            + coupon.getCouponDetail().getCouponDetailId() + " " + " contract:"
-            + coupon.getCouponDetail().getContract().getDescription() + " duration:"
-            + coupon.getCouponDetail().getDuration() + " amount:" + coupon.getCouponDetail().getAmount());
+        DevLogger.log("\n\nChecking coupon:" + coupon.getCouponId() + " detail:" + coupon.getCouponDetail().getCouponDetailId() + " " + " contract:"
+            + coupon.getCouponDetail().getContract().getDescription() + " duration:" + coupon.getCouponDetail().getDuration() + " amount:"
+            + coupon.getCouponDetail().getAmount());
         isAvailable = couponValidator.isQuantityAvailable(coupon);
         isApplied = couponValidator.isApplied(coupon, user, account);
         isAtAccountLimit = couponValidator.isAtAccountLimit(coupon, user, account);
@@ -91,8 +90,7 @@ public class TestController {
         DevLogger.log("....isRecurring=" + isRecurring);
         for (UserCoupon uc : userCoupons) {
           isStackable = couponValidator.isStackable(coupon, uc.getId().getCoupon());
-          DevLogger.log("....isStackable=" + isStackable + " [" + uc.getId().getCoupon().getCouponId() + ", "
-              + coupon.getCouponId() + "]");
+          DevLogger.log("....isStackable=" + isStackable + " [" + uc.getId().getCoupon().getCouponId() + ", " + coupon.getCouponId() + "]");
         }
         DevLogger.log("....isEligible=" + isEligible);
       }
@@ -176,7 +174,7 @@ public class TestController {
       DevLogger.log(ClassUtils.toString(serviceInstance));
       List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
       DevLogger.log("found " + contracts.size() + " contracts");
-      DevLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalid());
+      DevLogger.log("fetching contracts with " + account.getAccountno() + " " + serviceInstance.getExternalId());
 
       for (KenanContract kc : contracts) {
         DevLogger.log("contract: " + kc.getContractId() + " " + kc.getContractType() + " " + kc.getDuration());

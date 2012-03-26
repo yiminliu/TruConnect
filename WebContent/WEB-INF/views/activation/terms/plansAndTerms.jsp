@@ -42,7 +42,7 @@
 
           <!-- Display Device Info -->
           <p>
-            <span class="span-6">Serial Number (ESN):</span>${deviceInfo.deviceValue} (${deviceInfo.deviceLabel})
+            <span class="span-6">Serial Number (ESN):</span>${deviceInfo.value} (${deviceInfo.label})
           </p>
 
           <!-- Display Plans -->

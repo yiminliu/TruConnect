@@ -6,7 +6,7 @@
   <input name="registration" type="com.trc.user.activation.Registration" />
   <input name="account" type="com.tscp.mvne.Account" />
   <input name="activationMessage" type="com.trc.user.activation.ActivationMessage" />
-  <input name="deviceInfo" type="com.tscp.mvne.DeviceInfo" />
+  <input name="deviceInfo" type="com.tscp.mvne.Device" />
   <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
   <input name="creditCardPayment" type="com.trc.user.activation.CreditCardPayment" />
 

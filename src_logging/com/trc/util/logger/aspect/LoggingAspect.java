@@ -25,7 +25,7 @@ import com.trc.util.logger.Slf4jLogger;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.Customer;
-import com.tscp.mvne.DeviceInfo;
+import com.tscp.mvne.Device;
 import com.tscp.mvne.NetworkInfo;
 import com.tscp.mvne.ServiceInstance;
 
@@ -189,11 +189,11 @@ public class LoggingAspect {
       clazz = customer.getClass().getSimpleName();
       id = Integer.toString(customer.getId());
       descriptor = null;
-    } else if (arg instanceof com.tscp.mvne.DeviceInfo) {
-      DeviceInfo deviceInfo = (DeviceInfo) arg;
+    } else if (arg instanceof com.tscp.mvne.Device) {
+      Device deviceInfo = (Device) arg;
       clazz = deviceInfo.getClass().getSimpleName();
-      id = Integer.toString(deviceInfo.getDeviceId());
-      descriptor = deviceInfo.getDeviceLabel();
+      id = Integer.toString(deviceInfo.getId());
+      descriptor = deviceInfo.getLabel();
     } else if (arg instanceof com.tscp.mvne.CreditCard) {
       CreditCard creditCard = (CreditCard) arg;
       clazz = creditCard.getClass().getSimpleName();
@@ -213,7 +213,7 @@ public class LoggingAspect {
       AccountDetail accountDetail = (AccountDetail) arg;
       clazz = accountDetail.getClass().getSimpleName();
       id = Integer.toString(accountDetail.getAccount().getAccountno());
-      descriptor = accountDetail.getDeviceInfo().getDeviceLabel();
+      descriptor = accountDetail.getDeviceInfo().getLabel();
     } else if (arg instanceof com.trc.user.contact.Address) {
       Address address = (Address) arg;
       clazz = address.getClass().getSimpleName();
@@ -227,8 +227,8 @@ public class LoggingAspect {
     } else if (arg instanceof com.tscp.mvne.ServiceInstance) {
       ServiceInstance serviceInstance = (ServiceInstance) arg;
       clazz = serviceInstance.getClass().getSimpleName();
-      id = serviceInstance.getExternalid();
-      descriptor = serviceInstance.getSubscrno();
+      id = serviceInstance.getExternalId();
+      descriptor = serviceInstance.getSubscriberNumber();
     } else {
       clazz = arg.getClass().getSimpleName();
       id = "unknown";

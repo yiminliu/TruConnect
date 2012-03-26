@@ -27,8 +27,8 @@
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
                 <form:errors path="deviceId" />
-                <form:errors path="deviceValue" />
-                <form:errors path="deviceLabel" />
+                <form:errors path="value" />
+                <form:errors path="label" />
                 <spring:bind path="deviceInfo">
                   <c:forEach items="${status.errorMessages}" var="error" varStatus="status">
                     <span id="global.${status.index}.errors"><c:out value="${error}" /> </span>
@@ -39,12 +39,12 @@
             </div>
           </c:if>
 
-          <p>Are you sure you want to reactivate device ${deviceInfo.deviceLabel}?</p>
+          <p>Are you sure you want to reactivate device ${deviceInfo.label}?</p>
 
           <div class="row" style="display: none;">
             <form:input path="deviceId" />
-            <form:input path="deviceLabel" />
-            <form:input path="deviceValue" />
+            <form:input path="label" />
+            <form:input path="value" />
           </div>
 
           <div class="buttons">

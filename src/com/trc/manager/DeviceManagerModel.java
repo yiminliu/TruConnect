@@ -6,7 +6,7 @@ import java.util.List;
 import com.trc.exception.management.DeviceManagementException;
 import com.trc.user.User;
 import com.tscp.mvne.Account;
-import com.tscp.mvne.DeviceInfo;
+import com.tscp.mvne.Device;
 import com.tscp.mvne.NetworkInfo;
 import com.tscp.mvne.ServiceInstance;
 
@@ -16,23 +16,21 @@ public interface DeviceManagerModel {
 
   public NetworkInfo getNetworkInfo(String esn, String msid) throws DeviceManagementException;
 
-  public Collection<DeviceInfo> getDeviceInfoList(User user) throws DeviceManagementException;
+  public Collection<Device> getDeviceInfoList(User user) throws DeviceManagementException;
 
-  public DeviceInfo addDeviceInfo(DeviceInfo deviceInfo, Account account, User user) throws DeviceManagementException;
+  public Device addDeviceInfo(Device deviceInfo, Account account, User user) throws DeviceManagementException;
 
-  public List<DeviceInfo> removeDeviceInfo(DeviceInfo deviceInfo, Account account, User user)
-      throws DeviceManagementException;
+  public List<Device> removeDeviceInfo(Device deviceInfo, Account account, User user) throws DeviceManagementException;
 
-  public void updateDeviceInfo(User user, DeviceInfo deviceInfo) throws DeviceManagementException;
+  public void updateDeviceInfo(User user, Device deviceInfo) throws DeviceManagementException;
 
-  public NetworkInfo swapDevice(User user, DeviceInfo oldDeviceInfo, DeviceInfo newDeviceInfo)
-      throws DeviceManagementException;
+  public NetworkInfo swapDevice(User user, Device oldDeviceInfo, Device newDeviceInfo) throws DeviceManagementException;
 
   public NetworkInfo activateService(NetworkInfo networkInfo, User user) throws DeviceManagementException;
 
-  public void suspendService(NetworkInfo networkInfo) throws DeviceManagementException;
+  public void suspendService(int userId, int accountNo, int deviceId) throws DeviceManagementException;
 
-  public void restoreService(NetworkInfo networkInfo) throws DeviceManagementException;
+  public void restoreService(int userId, int accountNo, int deviceId) throws DeviceManagementException;
 
   public Account createServiceInstance(Account account, NetworkInfo networkInfo) throws DeviceManagementException;
 
@@ -42,5 +40,5 @@ public interface DeviceManagerModel {
 
   public void disconnectFromKenan(Account account, ServiceInstance serviceInstance) throws DeviceManagementException;
 
-  public NetworkInfo reinstallCustomerDevice(User user, DeviceInfo deviceInfo) throws DeviceManagementException;
+  public NetworkInfo reinstallCustomerDevice(User user, Device deviceInfo) throws DeviceManagementException;
 }
