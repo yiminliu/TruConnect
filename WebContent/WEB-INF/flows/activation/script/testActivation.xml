@@ -13,14 +13,28 @@
     <input name="account" value="account" />
     <input name="deviceInfo" value="deviceInfo" />
     <input name="networkInfo" value="networkInfo" />
-    <transition on="success" to="deactivateService" />
+    <transition on="success" to="testEmail" />
     <transition on="generalError" to="generalError" />
   </subflow-state>
 
   <action-state id="deactivateService">
     <evaluate expression="deviceFlowManager.disconnectService(networkInfo)" />
     <transition on="success" to="removeDeviceInfo" />
-    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="deactivateService_secondAttempt" />
+  </action-state>
+
+  <action-state id="deactivateService_secondAttempt">
+    <evaluate expression="deviceFlowManager.disconnectService(networkInfo)" />
+    <transition on="success" to="removeDeviceInfo" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="deactivateService_thirdAttempt" />
+  </action-state>
+
+  <action-state id="deactivateService_thirdAttempt">
+    <evaluate expression="deviceFlowManager.disconnectService(networkInfo)" />
+    <transition on="success" to="removeDeviceInfo" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError">
+      <evaluate expression="deviceFlowManager.sendDisconnectErrorNotice(user, deviceInfo, account, networkInfo)" />
+    </transition>
   </action-state>
 
   <action-state id="removeDeviceInfo">

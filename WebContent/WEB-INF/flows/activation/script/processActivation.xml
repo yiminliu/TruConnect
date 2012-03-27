@@ -73,7 +73,25 @@
     <transition on="success" to="applyCouponContract">
       <evaluate expression="activationLogger.logCreateService()" />
     </transition>
-    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="createService_secondAttempt" />
+  </action-state>
+
+  <action-state id="createService_secondAttempt">
+    <evaluate expression="deviceFlowManager.createServiceInstance(account, networkInfo)" />
+    <transition on="success" to="applyCouponContract">
+      <evaluate expression="activationLogger.logCreateService()" />
+    </transition>
+    <transition on-exception="com.trc.exception.WebFlowException" to="createService_thirdAttempt" />
+  </action-state>
+
+  <action-state id="createService_thirdAttempt">
+    <evaluate expression="deviceFlowManager.createServiceInstance(account, networkInfo)" />
+    <transition on="success" to="applyCouponContract">
+      <evaluate expression="activationLogger.logCreateService()" />
+    </transition>
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError">
+      <evaluate expression="deviceFlowManager.sendServiceErrorNotice(user, deviceInfo, account, networkInfo)" />
+    </transition>
   </action-state>
 
   <subflow-state id="applyCouponContract" subflow="applyCouponContract">
