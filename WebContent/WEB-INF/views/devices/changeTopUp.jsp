@@ -24,7 +24,7 @@
 
         <h4 style="float: left; display: inline-block">${accountDetail.deviceInfo.label}
           (${accountDetail.deviceInfo.status})</h4>
-        <h4 style="float: right; display: inline-block">Current Balance: $${accountDetail.account.balance}</h4>
+        <h4 style="float: right; display: inline-block">Current Balance: $<fmt:formatNumber value="${accountDetail.account.balance}" pattern="0.00" /></h4>
         <div class="clear"></div>
         <form:form id="topUp" commandName="accountDetail" method="POST" cssClass="validatedForm">
 

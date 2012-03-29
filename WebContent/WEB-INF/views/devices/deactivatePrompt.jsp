@@ -53,7 +53,7 @@
               for this period expires on ${accessFeeDate.month}/${accessFeeDate.day}/${accessFeeDate.year}.</li>
             <li>If you reactivate this account before the current monthly access fee expires, you will be charged
               the next monthly access fee on ${accessFeeDate.month}/${accessFeeDate.day}/${accessFeeDate.year}.</li>
-            <li>Your balance of $${account.balance} will remain in your account for 60 days after deactivation. If
+            <li>Your balance of $<fmt:formatNumber value="${account.balance}" pattern="0.00" /> will remain in your account for 60 days after deactivation. If
               you reactivate a device within 60 days, you can continue using your balance. After this period your
               balance will expire.</li>
           </ul>

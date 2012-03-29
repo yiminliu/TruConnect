@@ -48,7 +48,7 @@
             </c:choose>
             <a href="<spring:url value="/devices/rename/${device.encodedDeviceId}" />">rename</a>
           </h4>
-          <h4 style="float: right; display: inline-block">Current Balance: $${device.account.balance}</h4>
+          <h4 style="float: right; display: inline-block">Current Balance: $<fmt:formatNumber value="${device.account.balance}" pattern="0.00" /></h4>
           <div class="clear"></div>
 
 
