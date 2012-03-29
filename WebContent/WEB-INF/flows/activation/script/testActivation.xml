@@ -13,7 +13,7 @@
     <input name="account" value="account" />
     <input name="deviceInfo" value="deviceInfo" />
     <input name="networkInfo" value="networkInfo" />
-    <transition on="success" to="testEmail" />
+    <transition on="success" to="deactivateService" />
     <transition on="generalError" to="generalError" />
   </subflow-state>
 
