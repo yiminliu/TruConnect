@@ -23,6 +23,7 @@ import com.trc.manager.AccountManager;
 import com.trc.manager.AddressManager;
 import com.trc.manager.PaymentManager;
 import com.trc.manager.UserManager;
+import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
 import com.trc.user.account.PaymentHistory;
 import com.trc.util.logger.DevLogger;
@@ -34,7 +35,7 @@ import com.tscp.mvne.CreditCard;
 
 @Controller
 @RequestMapping("/account/payment")
-public class PaymentController extends EncryptedController {
+public class PaymentController {
   @Autowired
   private UserManager userManager;
   @Autowired
@@ -88,7 +89,7 @@ public class PaymentController extends EncryptedController {
       List<CreditCard> paymentMethods = paymentManager.getCreditCards(user);
       List<String> encodedPaymentIds = new ArrayList<String>();
       for (CreditCard creditCard : paymentMethods) {
-        encodedPaymentIds.add(super.encryptId(creditCard.getPaymentid()));
+        encodedPaymentIds.add(SessionEncrypter.encryptId(creditCard.getPaymentid()));
       }
       model.addObject("encodedPaymentIds", encodedPaymentIds);
       model.addObject("paymentMethods", paymentMethods);
@@ -102,7 +103,7 @@ public class PaymentController extends EncryptedController {
   public ModelAndView editPaymentMethod(@PathVariable("encodedPaymentId") String encodedPaymentId) {
     ResultModel model = new ResultModel("payment/editCreditCard");
     try {
-      int decodedPaymentId = super.decryptId(encodedPaymentId);
+      int decodedPaymentId = SessionEncrypter.decryptId(encodedPaymentId);
       CreditCard cardToUpdate = paymentManager.getCreditCard(decodedPaymentId);
       SessionManager.set(SessionKey.CREDITCARD_UPDATE, cardToUpdate);
       model.addObject("creditCard", cardToUpdate);
@@ -113,8 +114,8 @@ public class PaymentController extends EncryptedController {
   }
 
   @RequestMapping(value = "/methods/edit/{encodedPaymentId}", method = RequestMethod.POST)
-  public ModelAndView postEditPaymentMethod(@PathVariable("encodedPaymentId") String encodedPaymentId,
-      @ModelAttribute CreditCard creditCard, BindingResult result) {
+  public ModelAndView postEditPaymentMethod(@PathVariable("encodedPaymentId") String encodedPaymentId, @ModelAttribute CreditCard creditCard,
+      BindingResult result) {
     ResultModel model = new ResultModel("redirect:/account/payment/methods", "payment/editCreditCard");
     creditCardValidator.validate(creditCard, result);
     if (result.hasErrors()) {
@@ -122,7 +123,7 @@ public class PaymentController extends EncryptedController {
     } else {
       try {
         User user = userManager.getCurrentUser();
-        int decodedPaymentId = super.decryptId(encodedPaymentId);
+        int decodedPaymentId = SessionEncrypter.decryptId(encodedPaymentId);
         creditCard.setPaymentid(decodedPaymentId);
         paymentManager.updateCreditCard(user, creditCard);
         return model.getSuccess();
@@ -136,7 +137,7 @@ public class PaymentController extends EncryptedController {
   public ModelAndView deletePaymentMethod(@PathVariable("encodedPaymentId") String encodedPaymentId) {
     ResultModel model = new ResultModel("payment/deleteCreditCard");
     try {
-      int decodedPaymentId = super.decryptId(encodedPaymentId);
+      int decodedPaymentId = SessionEncrypter.decryptId(encodedPaymentId);
       CreditCard creditCard = paymentManager.getCreditCard(decodedPaymentId);
       model.addObject("creditCard", creditCard);
       return model.getSuccess();
@@ -150,7 +151,7 @@ public class PaymentController extends EncryptedController {
     ResultModel model = new ResultModel("redirect:/account/payment/methods");
     User user = userManager.getCurrentUser();
     try {
-      int decodedPaymentId = super.decryptId(encodedPaymentId);
+      int decodedPaymentId = SessionEncrypter.decryptId(encodedPaymentId);
       paymentManager.removeCreditCard(user, decodedPaymentId);
       return model.getSuccess();
     } catch (PaymentManagementException e) {

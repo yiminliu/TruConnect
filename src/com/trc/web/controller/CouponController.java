@@ -22,6 +22,7 @@ import com.trc.exception.management.CouponManagementException;
 import com.trc.manager.AccountManager;
 import com.trc.manager.CouponManager;
 import com.trc.manager.UserManager;
+import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
 import com.trc.user.account.Overview;
@@ -33,7 +34,7 @@ import com.tscp.mvne.ServiceInstance;
 
 @Controller
 @RequestMapping("/coupons")
-public class CouponController extends EncryptedController {
+public class CouponController {
   @Autowired
   private CouponManager couponManager;
   @Autowired
@@ -43,12 +44,6 @@ public class CouponController extends EncryptedController {
   @Autowired
   private CouponValidator couponValidator;
 
-  private void encodeAccountNums(List<AccountDetail> accountDetailList) {
-    for (AccountDetail accountDetail : accountDetailList) {
-      accountDetail.setEncodedAccountNum(super.encryptId(accountDetail.getAccount().getAccountno()));
-    }
-  }
-
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
   @RequestMapping(value = "/validate", method = RequestMethod.GET)
   public @ResponseBody
@@ -57,8 +52,8 @@ public class CouponController extends EncryptedController {
       Coupon coupon = couponManager.getCouponByCode(couponCode);
       if (coupon != null) {
         if (coupon.getCouponDetail().getContract().getContractType() > 0) {
-          return new CouponResponse(true, coupon.getCouponDetail().getContract().getDescription() + " for "
-              + coupon.getCouponDetail().getDuration() + " months");
+          return new CouponResponse(true, coupon.getCouponDetail().getContract().getDescription() + " for " + coupon.getCouponDetail().getDuration()
+              + " months");
         } else {
           return new CouponResponse(true, "Credit value of $" + coupon.getCouponDetail().getAmount());
         }
@@ -74,8 +69,7 @@ public class CouponController extends EncryptedController {
   public ModelAndView showRedeemCoupon() {
     ResultModel model = new ResultModel("coupon/addCoupon");
     User user = userManager.getCurrentUser();
-    Overview overview = accountManager.getOverview(user);
-    encodeAccountNums(overview.getAccountDetails());
+    Overview overview = accountManager.getOverview(user).encodeAccountNo();
     List<AccountDetail> accountList = overview.getAccountDetails();
     model.addObject("coupon", new Coupon());
     model.addObject("accountList", accountList);
@@ -83,8 +77,7 @@ public class CouponController extends EncryptedController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public ModelAndView postRedeemCoupon(HttpServletRequest request, @ModelAttribute("coupon") Coupon coupon,
-      BindingResult result) {
+  public ModelAndView postRedeemCoupon(HttpServletRequest request, @ModelAttribute("coupon") Coupon coupon, BindingResult result) {
     DevLogger.log("form submission caught, fetching coupon with code: " + coupon.getCouponCode());
     ResultModel model = new ResultModel("coupon/addCouponSuccess", "coupon/addCoupon");
     User user = userManager.getCurrentUser();
@@ -92,7 +85,7 @@ public class CouponController extends EncryptedController {
     DevLogger.log("selected radio button has value of: " + encodedAccountNumber);
     int accountNumber = 0;
     if (encodedAccountNumber != null) {
-      accountNumber = super.decryptId(encodedAccountNumber);
+      accountNumber = SessionEncrypter.decryptId(encodedAccountNumber);
       DevLogger.log("decoded radio button value is: " + accountNumber);
     }
     try {
@@ -103,16 +96,14 @@ public class CouponController extends EncryptedController {
       }
       couponValidator.validate(coupon, accountNumber, result);
       if (result.hasErrors()) {
-        List<AccountDetail> accountList = accountManager.getOverview(user).getAccountDetails();
-        encodeAccountNums(accountList);
+        List<AccountDetail> accountList = accountManager.getOverview(user).encodeAccountNo().getAccountDetails();
         model.addObject("accountList", accountList);
         return model.getError();
       } else {
         try {
           Account account = accountManager.getAccount(accountNumber);
           ServiceInstance serviceInstance = null;
-          if (account != null && account.getServiceinstancelist() != null
-              && account.getServiceinstancelist().size() > 0) {
+          if (account != null && account.getServiceinstancelist() != null && account.getServiceinstancelist().size() > 0) {
             serviceInstance = account.getServiceinstancelist().get(0);
           }
           if (serviceInstance != null) {

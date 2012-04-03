@@ -42,38 +42,6 @@ public class User implements UserModel, UserDetails {
   private Collection<Authority> authorities = new HashSet<Authority>();
   private ContactInfo contactInfo = new ContactInfo();
 
-  @Override
-  @Transient
-  public String toString() {
-    StringBuffer sb = new StringBuffer();
-    sb.append("userId=").append(userId).append(", ");
-    sb.append("username=").append(username).append(", ");
-    sb.append("password=").append(password).append(", ");
-    sb.append("email=").append(email).append(", ");
-    sb.append("dateEnabled=").append(dateEnabled).append(", ");
-    sb.append("dateDisabled=").append(dateDisabled).append(", ");
-    sb.append("enabled=").append(enabled).append(", ");
-    sb.append("userHint={").append(userHint.toString()).append("}, ");
-    sb.append("authorities={").append(authorities.toString()).append("}, ");
-    return sb.toString();
-  }
-
-  @Transient
-  public String toFormattedString() {
-    StringBuffer sb = new StringBuffer();
-    sb.append("--User--").append("\n");
-    sb.append("  User ID=").append(userId).append("\n");
-    sb.append("  Username=").append(username).append("\n");
-    sb.append("  Password=").append(password).append("\n");
-    sb.append("  Email=").append(email).append("\n");
-    sb.append("  Date Enabled=").append(dateEnabled).append("\n");
-    sb.append("  Date Disabled=").append(dateDisabled).append("\n");
-    sb.append("  Enabled=").append(enabled).append("\n");
-    sb.append("  User Hint={").append(userHint.toString()).append("\n");
-    sb.append("  Authorities={").append(authorities.toString());
-    return sb.toString();
-  }
-
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "user_id")
@@ -215,6 +183,12 @@ public class User implements UserModel, UserDetails {
   }
 
   @Transient
+  public boolean isServiceRep() {
+    GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_SERVICEREP");
+    return getAuthorities().contains(ga);
+  }
+
+  @Transient
   public boolean isUser() {
     GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_USER");
     return getAuthorities().contains(ga);
@@ -255,6 +229,14 @@ public class User implements UserModel, UserDetails {
     } else if (!username.equals(other.username))
       return false;
     return true;
+  }
+
+  @Override
+  @Transient
+  public String toString() {
+    return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email + ", dateEnabled=" + dateEnabled
+        + ", dateDisabled=" + dateDisabled + ", enabled=" + enabled + ", userHint=" + userHint + ", authorities=" + authorities + ", contactInfo="
+        + contactInfo + "]";
   }
 
 }

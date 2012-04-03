@@ -19,6 +19,7 @@ import com.trc.config.Config;
 import com.trc.exception.management.AddressManagementException;
 import com.trc.manager.AddressManager;
 import com.trc.manager.UserManager;
+import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
 import com.trc.user.contact.Address;
 import com.trc.web.model.ResultModel;
@@ -26,7 +27,7 @@ import com.trc.web.validation.AddressValidator;
 
 @Controller
 @RequestMapping("/profile")
-public class ProfileController extends EncryptedController {
+public class ProfileController {
   @Autowired
   private UserManager userManager;
   @Autowired
@@ -100,7 +101,7 @@ public class ProfileController extends EncryptedController {
     ResultModel model = new ResultModel("profile/address/editAddress");
     User user = userManager.getCurrentUser();
     try {
-      Address address = addressManager.getAddress(user, super.decryptId(encodedAddressId));
+      Address address = addressManager.getAddress(user, SessionEncrypter.decryptId(encodedAddressId));
       model.addObject("states", Config.states.entrySet());
       model.addObject("months", Config.months.entrySet());
       model.addObject("years", Config.yearsFuture.entrySet());
@@ -138,7 +139,7 @@ public class ProfileController extends EncryptedController {
     ResultModel model = new ResultModel("profile/address/removeAddress");
     User user = userManager.getCurrentUser();
     try {
-      Address address = addressManager.getAddress(user, super.decryptId(encodedAddressId));
+      Address address = addressManager.getAddress(user, SessionEncrypter.decryptId(encodedAddressId));
       model.addObject("address", address);
       model.addObject("states", Config.states.entrySet());
       model.addObject("months", Config.months.entrySet());
@@ -164,7 +165,7 @@ public class ProfileController extends EncryptedController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
   @RequestMapping(value = "/user/enable", method = RequestMethod.GET)
   public String enableUser() {
-    if (Config.admin) {
+    if (Config.ADMIN) {
       User user = userManager.getCurrentUser();
       user.setEnabled(true);
       userManager.updateUser(user);
@@ -175,7 +176,7 @@ public class ProfileController extends EncryptedController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
   @RequestMapping(value = "/user/disable", method = RequestMethod.GET)
   public String disableUser() {
-    if (Config.admin) {
+    if (Config.ADMIN) {
       User user = userManager.getCurrentUser();
       user.setEnabled(false);
       user.setDateDisabled(new Date());
@@ -186,7 +187,7 @@ public class ProfileController extends EncryptedController {
 
   private void encodeAddressIds(List<Address> addressList) {
     for (Address address : addressList) {
-      address.setEncodedAddressId(super.encryptId(address.getAddressId()));
+      address.setEncodedAddressId(SessionEncrypter.encryptId(address.getAddressId()));
     }
   }
 
@@ -196,8 +197,7 @@ public class ProfileController extends EncryptedController {
 
   private void showNotification(HttpSession session, ResultModel model) {
     model.addObject(ProfileUpdateController.UPDATE_EMAIL_NTF, true);
-    model.addObject(ProfileUpdateController.UPDATE_EMAIL_VAL, (String) session
-        .getAttribute(ProfileUpdateController.UPDATE_EMAIL_VAL));
+    model.addObject(ProfileUpdateController.UPDATE_EMAIL_VAL, (String) session.getAttribute(ProfileUpdateController.UPDATE_EMAIL_VAL));
   }
 
   private void hideNotification(ResultModel model) {

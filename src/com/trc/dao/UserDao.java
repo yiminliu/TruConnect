@@ -83,8 +83,7 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
 
   @Override
   public List<User> search(String param) {
-    List<User> results = getHibernateTemplate().find("from User user where username like ? or email like ?",
-        wildcard(param), wildcard(param));
+    List<User> results = getHibernateTemplate().find("from User user where username like ? or email like ?", wildcard(param), wildcard(param));
     return results;
   }
 
@@ -94,12 +93,17 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
     return results;
   }
 
+  public List<User> searchById(String id) {
+    List<User> results = getHibernateTemplate().find("from User user where userId like ?", wildcard(id));
+    return results;
+  }
+
   public List<User> searchByEmailAndDate(String email, DateTime startDate, DateTime endDate) {
     endDate.plusDays(1);
     Date sqlStartDate = new Date(startDate.getMillis());
     Date sqlEndDate = new Date(endDate.getMillis());
-    List<User> results = getHibernateTemplate().find(
-        "from User user where email like ? and dateEnabled between ? and ?", wildcard(email), sqlStartDate, sqlEndDate);
+    List<User> results = getHibernateTemplate().find("from User user where email like ? and dateEnabled between ? and ?", wildcard(email), sqlStartDate,
+      sqlEndDate);
     return results;
   }
 
@@ -107,17 +111,15 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
     endDate.plusDays(1);
     Date sqlStartDate = new Date(startDate.getMillis());
     Date sqlEndDate = new Date(endDate.getMillis());
-    List<User> results = getHibernateTemplate().find(
-        "from User user where email not like ? and dateEnabled between ? and ?", wildcard(email), sqlStartDate,
-        sqlEndDate);
+    List<User> results = getHibernateTemplate().find("from User user where email not like ? and dateEnabled between ? and ?", wildcard(email), sqlStartDate,
+      sqlEndDate);
     return results;
   }
 
   public List<User> getUsersByDate(Date startDate, Date endDate) {
     java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
     java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
-    List<User> results = getHibernateTemplate().find("from User user where dateEnabled between ? and ?", sqlStartDate,
-        sqlEndDate);
+    List<User> results = getHibernateTemplate().find("from User user where dateEnabled between ? and ?", sqlStartDate, sqlEndDate);
     return results;
   }
 
@@ -171,9 +173,9 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
     }
 
     String columns = "user_id, username, password, email, hint_id, hint_answer, enabled, date_enabled, date_disabled";
-    String values = user.getUserId() + ", '" + user.getUsername() + "', '" + user.getPassword() + "', '"
-        + user.getEmail() + "', " + user.getUserHint().getHintId() + ", '" + user.getUserHint().getHintAnswer() + "', "
-        + (user.isEnabled() ? 1 : 0) + ", '" + sDateEnabled + "', " + sDateDisabled;
+    String values = user.getUserId() + ", '" + user.getUsername() + "', '" + user.getPassword() + "', '" + user.getEmail() + "', "
+        + user.getUserHint().getHintId() + ", '" + user.getUserHint().getHintAnswer() + "', " + (user.isEnabled() ? 1 : 0) + ", '" + sDateEnabled + "', "
+        + sDateDisabled;
 
     final String sql = "insert into users (" + columns + ") values (" + values + ")";
 

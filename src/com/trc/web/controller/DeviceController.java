@@ -18,6 +18,7 @@ import com.trc.exception.management.DeviceManagementException;
 import com.trc.manager.AccountManager;
 import com.trc.manager.DeviceManager;
 import com.trc.manager.UserManager;
+import com.trc.security.encryption.SessionEncrypter;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
@@ -30,7 +31,7 @@ import com.tscp.mvne.NetworkInfo;
 
 @Controller
 @RequestMapping("/devices")
-public class DeviceController extends EncryptedController {
+public class DeviceController {
   @Autowired
   private UserManager userManager;
   @Autowired
@@ -57,7 +58,7 @@ public class DeviceController extends EncryptedController {
     ResultModel model = new ResultModel("devices/rename");
     User user = userManager.getCurrentUser();
     try {
-      Device deviceToRename = deviceManager.getDeviceInfo(user, super.decryptId(encodedDeviceId));
+      Device deviceToRename = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       SessionManager.set(SessionKey.DEVICE_RENAME, deviceToRename);
       model.addObject("deviceInfo", deviceToRename);
       return model.getSuccess();
@@ -74,7 +75,7 @@ public class DeviceController extends EncryptedController {
     try {
       deviceInfo = (Device) SessionManager.get(SessionKey.DEVICE_RENAME);
       if (deviceInfo == null) {
-        deviceInfo = deviceManager.getDeviceInfo(user, super.decryptId(encodedDeviceId));
+        deviceInfo = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       }
       model.addObject("oldDeviceLabel", deviceInfo.getLabel());
       deviceInfo.setLabel(newDeviceLabel);
@@ -92,7 +93,7 @@ public class DeviceController extends EncryptedController {
     ResultModel model = new ResultModel("devices/swapEsn");
     User user = userManager.getCurrentUser();
     try {
-      Device deviceToSwap = deviceManager.getDeviceInfo(user, super.decryptId(encodedDeviceId));
+      Device deviceToSwap = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       SessionManager.set(SessionKey.DEVICE_SWAP, deviceToSwap);
       model.addObject("deviceInfo", deviceToSwap);
       return model.getSuccess();
@@ -105,7 +106,7 @@ public class DeviceController extends EncryptedController {
   public ModelAndView postSwapDevice(@PathVariable String encodedDeviceId, @ModelAttribute Device deviceInfo, Errors errors) {
     ResultModel model = new ResultModel("devices/swapEsnSuccess", "devices/swapEsn");
     User user = userManager.getCurrentUser();
-    int deviceId = super.decryptId(encodedDeviceId);
+    int deviceId = SessionEncrypter.decryptId(encodedDeviceId);
     String newEsn = deviceInfo.getValue();
     String newDeviceLabel = deviceInfo.getLabel();
     try {
@@ -133,7 +134,7 @@ public class DeviceController extends EncryptedController {
     ResultModel model = new ResultModel("devices/deactivatePrompt");
     User user = userManager.getCurrentUser();
     try {
-      Device deviceInfo = deviceManager.getDeviceInfo(user, super.decryptId(encodedDeviceId));
+      Device deviceInfo = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       Account account = accountManager.getAccount(deviceInfo.getAccountNo());
       XMLGregorianCalendar accessFeeDate = accountManager.getLastAccessFeeDate(user, account);
       SessionManager.set(SessionKey.DEVICE_DEACTIVATE, deviceInfo);
@@ -159,7 +160,7 @@ public class DeviceController extends EncryptedController {
     XMLGregorianCalendar accessFeeDate = (XMLGregorianCalendar) SessionManager.get(SessionKey.DEVICE_ACCESSFEEDATE);
     try {
       if (deviceInfoLookup == null) {
-        deviceInfoLookup = deviceManager.getDeviceInfo(user, super.decryptId(encodedDeviceId));
+        deviceInfoLookup = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       }
       if (account == null) {
         account = accountManager.getAccount(deviceInfoLookup.getAccountNo());
@@ -200,7 +201,7 @@ public class DeviceController extends EncryptedController {
     ResultModel model = new ResultModel("devices/reinstallPrompt");
     User user = userManager.getCurrentUser();
     try {
-      Device deviceToReactivate = deviceManager.getDeviceInfo(user, super.decryptId(encodedDeviceId));
+      Device deviceToReactivate = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       SessionManager.set(SessionKey.DEVICE_REACTIVATE, deviceToReactivate);
       model.addObject("deviceInfo", deviceToReactivate);
       return model.getSuccess();
@@ -216,7 +217,7 @@ public class DeviceController extends EncryptedController {
     try {
       Device deviceToReactivate = (Device) SessionManager.get(SessionKey.DEVICE_REACTIVATE);
       if (deviceToReactivate == null) {
-        deviceToReactivate = deviceManager.getDeviceInfo(user, super.decryptId(encodedDeviceId));
+        deviceToReactivate = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       }
       deviceManager.reinstallCustomerDevice(user, deviceToReactivate);
       return model.getSuccess();
@@ -231,7 +232,7 @@ public class DeviceController extends EncryptedController {
     ResultModel model = new ResultModel("devices/changeTopUp");
     User user = userManager.getCurrentUser();
     try {
-      int deviceId = super.decryptId(encodedDeviceId);
+      int deviceId = SessionEncrypter.decryptId(encodedDeviceId);
       AccountDetail accountDetail = accountManager.getAccountDetail(user, deviceId);
       // SessionManager.set(SessionKey.DEVICE_ACCOUNTDETAIL, accountDetail);
       model.addObject("accountDetail", accountDetail);
@@ -245,7 +246,7 @@ public class DeviceController extends EncryptedController {
   public ModelAndView postChangeTopUp(@PathVariable String encodedDeviceId, @ModelAttribute AccountDetail accountDetail, Errors errors) {
     ResultModel model = new ResultModel("devices/changeTopUpSuccess", "devices/changeTopUp");
     User user = userManager.getCurrentUser();
-    int deviceId = super.decryptId(encodedDeviceId);
+    int deviceId = SessionEncrypter.decryptId(encodedDeviceId);
     String newTopUp = accountDetail.getTopUp();
     accountDetail = (AccountDetail) SessionManager.get(SessionKey.DEVICE_ACCOUNTDETAIL);
     try {
@@ -265,7 +266,7 @@ public class DeviceController extends EncryptedController {
 
   private void encodeDeviceIds(List<AccountDetail> accountDetailList) {
     for (AccountDetail accountDetail : accountDetailList) {
-      accountDetail.setEncodedDeviceId(super.encryptId(accountDetail.getDeviceInfo().getId()));
+      accountDetail.setEncodedDeviceId(SessionEncrypter.encryptId(accountDetail.getDeviceInfo().getId()));
     }
   }
 

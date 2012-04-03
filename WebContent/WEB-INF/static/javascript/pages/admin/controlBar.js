@@ -1,3 +1,9 @@
+/**
+ * Enables the search results box to slide up/down when the user enters search
+ * criteria.
+ * 
+ * @returns
+ */
 $.fn.enableResultsBox = function() {
 	var resultsBox = $(this).next(".search_results_box");
 	$(this).keyup(function(e) {
@@ -11,11 +17,19 @@ $.fn.enableResultsBox = function() {
 	return $(this);
 };
 
+/**
+ * Loads the results of the given url (from the Spring Controller) into the
+ * results box.
+ * 
+ * @param url
+ * @param params
+ * @returns
+ */
 $.fn.loadAjax = function(url, params) {
 	var numRand = Math.floor(Math.random() * 101);
 	url = url + "?refresh=" + numRand;
 	$(this).load(url, params, function() {
-		$("#admin_search_email_results_list li.result").mouseover(function() {
+		$("#admin_search_results_list li.result").mouseover(function() {
 			$(this).css("background", "#71C0F5");
 		}).mouseout(function() {
 			$(this).css("background", "");
@@ -23,7 +37,7 @@ $.fn.loadAjax = function(url, params) {
 			var userId = $(this).children("span.id").html();
 			var email = $(this).children("span.value").html();
 			$("#admin_search_id").val(userId);
-			$("#admin_search_email").val(email);
+			$("#admin_search_param").val(email);
 			$("#adminControlButton").click();
 		});
 		currentAjaxRequest = null;
@@ -49,18 +63,16 @@ function loadUsers(email) {
 }
 
 $(function() {
-	$("#admin_search_email").enableCaption().enableResultsBox();
+	$("#admin_search_param").enableCaption().enableResultsBox();
 });
 
 var ajaxBufferTime;
 var currentAjaxRequest;
-//var searchEmailUrl = "/TruConnect/admin/search/email";
-//var searchEmailUrl = "/TruConnect-Production/admin/search";
-var searchEmailUrl = "/TruConnect/admin/search";
+var searchEmailUrl = "/TruConnect/search";
 var params;
 
 $(function() {
-	$("#admin_search_email").keyup(function(e) {
+	$("#admin_search_param").keyup(function(e) {
 		ajaxBufferTime = 2;
 		if (currentAjaxRequest == null) {
 			currentAjaxRequest = "pending";
@@ -71,15 +83,14 @@ $(function() {
 
 function makeBufferedAjaxCall(url) {
 	if (currentAjaxRequest == null) {
-		params = "email=" + $("#admin_search_email").val();
-		//loadUsers($("#admin_search_email").val());
+		params = "param=" + $("#admin_search_param").val();
+		// loadUsers($("#admin_search_param").val());
 		$("#admin_search_results").loadAjax(url, params);
 		currentAjaxRequest = "complete";
 	} else {
 		$("#admin_search_results")
 				.html(
 						"<div style='width:100%; text-align:center; margin-top:50px;'>Searching...<br/><img src='/TruConnect/static/images/util/ajax_working_bar.gif' /></div>");
-
 		setTimeout(function() {
 			makeBufferedAjaxCall_recurse(url);
 		}, 1000);

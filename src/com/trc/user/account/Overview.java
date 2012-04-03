@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.trc.exception.management.AccountManagementException;
 import com.trc.manager.AccountManager;
+import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.Device;
@@ -22,12 +23,9 @@ public class Overview {
 
   public Overview(AccountManager accountManager, List<Device> devices, User user) {
     this.accountDetails = new ArrayList<AccountDetail>();
-
     AccountDetail accountDetail;
     Account account;
-
     try {
-      // devices = accountManager.getDeviceList(user);
       this.paymentHistory = new PaymentHistory(accountManager.getPaymentRecords(user), user);
       for (Device deviceInfo : devices) {
         account = accountManager.getAccount(deviceInfo.getAccountNo());
@@ -66,6 +64,28 @@ public class Overview {
 
   public void setAccountDetails(List<AccountDetail> accountDetails) {
     this.accountDetails = accountDetails;
+  }
+
+  public Overview encodeAll() {
+    for (AccountDetail accountDetail : accountDetails) {
+      accountDetail.setEncodedAccountNum(SessionEncrypter.encryptId(accountDetail.getAccount().getAccountno()));
+      accountDetail.setEncodedDeviceId(SessionEncrypter.encryptId(accountDetail.getDeviceInfo().getId()));
+    }
+    return this;
+  }
+
+  public Overview encodeDeviceId() {
+    for (AccountDetail accountDetail : accountDetails) {
+      accountDetail.setEncodedDeviceId(SessionEncrypter.encryptId(accountDetail.getDeviceInfo().getId()));
+    }
+    return this;
+  }
+
+  public Overview encodeAccountNo() {
+    for (AccountDetail accountDetail : accountDetails) {
+      accountDetail.setEncodedAccountNum(SessionEncrypter.encryptId(accountDetail.getAccount().getAccountno()));
+    }
+    return this;
   }
 
 }

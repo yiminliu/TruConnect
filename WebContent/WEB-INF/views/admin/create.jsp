@@ -11,15 +11,12 @@
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
-  <div class="blueTruConnectGradient">
-    <div class="container">Manager Control</div>
-  </div>
+  <div class="blueTruConnectGradient"></div>
 
   <div class="container">
     <div id="main-content">
       <div class="span-18 colborder">
-        <h3 style="margin-bottom: 10px; padding-bottom: 0px; border-bottom: 1px #ccc dotted;">Service
-          Representatives</h3>
+        <h4>Create Administrative User</h4>
         <form:form id="createRep" cssClass="validatedForm" commandName="user" method="post">
 
           <!-- Errors -->
@@ -45,8 +42,9 @@
           </div>
           <div class="row">
             <label class="required">Role</label> <select name="user_role" class="span-8" style="width: 312px;">
-              <option value="ROLE_MANAGER">Service Agent</option>
+              <option value="ROLE_SERVICEREP">Service Agent</option>
               <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                <option value="ROLE_MANAGER">Manager</option>
                 <option value="ROLE_ADMIN">Administrator</option>
               </sec:authorize>
             </select>

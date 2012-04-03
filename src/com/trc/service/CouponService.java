@@ -45,8 +45,7 @@ public class CouponService {
    */
 
   @Autowired
-  public void init(TruConnectGateway truConnectGateway, CouponDao couponDao, CouponDetailDao couponDetailDao,
-      UserCouponDao userCouponDao) {
+  public void init(TruConnectGateway truConnectGateway, CouponDao couponDao, CouponDetailDao couponDetailDao, UserCouponDao userCouponDao) {
     this.truConnect = truConnectGateway.getPort();
     this.couponDao = couponDao;
     this.couponDetailDao = couponDetailDao;
@@ -193,8 +192,7 @@ public class CouponService {
   }
 
   @Deprecated
-  public List<KenanContract> getContracts(Account account, ServiceInstance serviceInstance)
-      throws CouponServiceException {
+  public List<KenanContract> getContracts(Account account, ServiceInstance serviceInstance) throws CouponServiceException {
     // TODO there needs to be a way for individual contracts to map back to
     // individual coupons
     try {
@@ -228,6 +226,8 @@ public class CouponService {
    * *****************************************************************
    */
 
+  // 20120403 put the call to truConnect.applyCouponPayment within the try/catch
+  // so it is called only if the hibernate operation succeeds
   @Transactional
   public int applyCouponPayment(Coupon coupon, User user, Account account, Date date) throws CouponServiceException {
     try {
@@ -235,13 +235,13 @@ public class CouponService {
       calendar.setTime(date);
       XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
       String stringAmount = Formatter.formatDollarAmountQuery(coupon.getCouponDetail().getAmount());
-      int trackingId = truConnect.applyCouponPayment(account, stringAmount, xmlCal);
       try {
         UserCoupon userCoupon = new UserCoupon(coupon, user, account);
         userCoupon.setKenanContractId(-1);
         userCoupon.setActive(true);
         insertUserCoupon(userCoupon);
         incCouponUsedCount(coupon);
+        int trackingId = truConnect.applyCouponPayment(account, stringAmount, xmlCal);
         return trackingId;
       } catch (DataAccessException e) {
         // TODO rollback the credit that was given
@@ -255,8 +255,7 @@ public class CouponService {
   }
 
   @Transactional
-  public int applyCoupon(User user, Coupon coupon, Account account, ServiceInstance serviceInstance)
-      throws CouponServiceException {
+  public int applyCoupon(User user, Coupon coupon, Account account, ServiceInstance serviceInstance) throws CouponServiceException {
     try {
       KenanContract kenanContract = new KenanContract();
       kenanContract.setAccount(account);
@@ -294,12 +293,10 @@ public class CouponService {
   }
 
   @Transactional
-  public void cancelCoupon(User user, Coupon coupon, Account account, ServiceInstance serviceInstance)
-      throws CouponServiceException {
+  public void cancelCoupon(User user, Coupon coupon, Account account, ServiceInstance serviceInstance) throws CouponServiceException {
     try {
       List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
-      KenanContract kenanContract = findContractInList(contracts, coupon.getCouponDetail().getContract()
-          .getContractType());
+      KenanContract kenanContract = findContractInList(contracts, coupon.getCouponDetail().getContract().getContractType());
       if (kenanContract != null) {
         int originalDuration = kenanContract.getDuration();
         kenanContract.setAccount(account);

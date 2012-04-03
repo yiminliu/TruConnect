@@ -23,8 +23,9 @@ public final class Config {
   private static final String monthsFile = "config/dates/months.properties";
   private static final String yearsFile = "config/dates/years.properties";
   private static final String statesFile = "config/geo/states.properties";
-  public static boolean production;
-  public static boolean admin;
+  public static boolean PRODUCTION;
+  public static boolean ADMIN;
+  public static boolean LOCAL;
   private static int yearRange;
   public static SortedMap<String, String> states = new TreeMap<String, String>();
   public static SortedMap<String, String> months = new TreeMap<String, String>();
@@ -55,11 +56,13 @@ public final class Config {
     if (!TSCPMVNE.initialized) {
       Properties props = new Properties();
       props.load(classLoader.getResourceAsStream(configFile));
-      production = props.getProperty("production").equals("0") ? false : true;
-      admin = props.getProperty("admin").equals("0") ? false : true;
+      PRODUCTION = props.getProperty("production").equals("0") ? false : true;
+      LOCAL = props.getProperty("local").equals("0") ? false : true;
+      ADMIN = props.getProperty("admin").equals("0") ? false : true;
       TSCPMVNE.serviceName = props.getProperty("serviceName");
       TSCPMVNE.namespace = props.getProperty("namespace");
-      TSCPMVNE.location = production ? props.getProperty("wsdl_production_ip") : props.getProperty("wsdl_development_ip");
+      TSCPMVNE.location = PRODUCTION ? props.getProperty("wsdl_production_ip") : LOCAL ? props.getProperty("wsdl_localhost") : props
+          .getProperty("wsdl_development_ip");
       TSCPMVNE.initialized = true;
       DevLogger.debug("TSCPMVNE location set to " + TSCPMVNE.location);
     }

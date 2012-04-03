@@ -1,4 +1,4 @@
-package com.trc.web.controller;
+package com.trc.security.encryption;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -6,11 +6,10 @@ import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trc.security.encryption.Encrypter;
 import com.trc.web.session.SessionManager;
 
-public abstract class EncryptedController {
-  private static Logger logger = LoggerFactory.getLogger(EncryptedController.class);
+public class SessionEncrypter {
+  private static Logger logger = LoggerFactory.getLogger(SessionEncrypter.class);
 
   public static Encrypter getEncrypter() {
     return SessionManager.getEncrypter();
