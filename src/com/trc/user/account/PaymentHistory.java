@@ -14,7 +14,7 @@ import com.tscp.mvne.PaymentRecord;
  * @author Tachikoma
  * 
  */
-public class PaymentHistory extends Paginator {
+public class PaymentHistory extends Paginator<PaymentRecord> {
 
   public PaymentHistory(List<PaymentRecord> paymentRecords, User user) {
     super.setRecords(paymentRecords);

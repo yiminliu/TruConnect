@@ -45,6 +45,12 @@
   box-shadow: 0px 5px 5px #ccc;
 }
 
+#admin_control_bar .searchGraphic {
+  width: 100%;
+  text-align: center;
+  margin-top: 50px;
+}
+
 #admin_control_bar #adminControl {
   position: absolute;
   top: 20px;
@@ -58,16 +64,15 @@
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
-  background: white;
   display: none;
-  border: #666 solid;
+  border: #ccc solid;
   border-width: 0px 1px 1px 1px;
   margin-top: 0px;
-  width: 300px;
+  width: 303px;
   -moz-box-shadow: 5px 5px 5px #ccc;
   -webkit-box-shadow: 5px 5px 5px #ccc;
   box-shadow: 0px 5px 5px #ccc;
-  padding-left: 3px;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 #admin_control_bar #adminControl #admin_search_param {
@@ -86,7 +91,7 @@
 
 #admin_control_bar #admin_search_results_list {
   list-style: none;
-  margin: 3px;
+  margin: 0px;
   padding: 0px;
   width: 150%;
   list-style: none;

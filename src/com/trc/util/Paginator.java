@@ -3,9 +3,8 @@ package com.trc.util;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("rawtypes")
-public class Paginator {
-  private List records;
+public class Paginator<T> {
+  private List<T> records;
   private int currentPageNum = 1;
   private int pageSize = 20;
   private int summarySize;
@@ -22,15 +21,15 @@ public class Paginator {
     return this.summarySize;
   }
 
-  public List getRecordsSummary() {
+  public List<T> getRecordsSummary() {
     return getRecords(0, summarySize);
   }
 
-  public List getNewestRecord() {
+  public List<T> getNewestRecord() {
     return getRecords(0, 1);
   }
 
-  public List getRecords(int from, int to) {
+  public List<T> getRecords(int from, int to) {
     if (from < records.size()) {
       if (to < records.size()) {
         return records.subList(from, to);
@@ -38,11 +37,11 @@ public class Paginator {
         return records.subList(from, records.size());
       }
     } else {
-      return new ArrayList();
+      return new ArrayList<T>();
     }
   }
 
-  public List getPage(int page) {
+  public List<T> getPage(int page) {
     if (page == 0) {
       return records;
     } else {
@@ -52,7 +51,7 @@ public class Paginator {
     }
   }
 
-  public List getCurrentPage() {
+  public List<T> getCurrentPage() {
     return getPage(getCurrentPageNum());
   }
 
@@ -66,11 +65,11 @@ public class Paginator {
     }
   }
 
-  public List getRecords() {
+  public List<T> getRecords() {
     return records;
   }
 
-  public void setRecords(List records) {
+  public void setRecords(List<T> records) {
     this.records = records;
   }
 

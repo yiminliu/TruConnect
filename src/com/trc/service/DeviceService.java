@@ -12,12 +12,8 @@ import com.trc.service.gateway.TruConnectGateway;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
 import com.tscp.mvne.Account;
-import com.tscp.mvne.BillingException_Exception;
 import com.tscp.mvne.Device;
-import com.tscp.mvne.DeviceException_Exception;
-import com.tscp.mvne.NetworkException_Exception;
 import com.tscp.mvne.NetworkInfo;
-import com.tscp.mvne.ProvisionException_Exception;
 import com.tscp.mvne.ServiceInstance;
 import com.tscp.mvne.TruConnect;
 
@@ -35,8 +31,6 @@ public class DeviceService implements DeviceServiceModel {
     try {
       return truConnect.getNetworkInfo(esn, msid);
     } catch (WebServiceException e) {
-      throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (NetworkException_Exception e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
     }
   }
@@ -101,14 +95,6 @@ public class DeviceService implements DeviceServiceModel {
       truConnect.suspendAccount(userId, accountNo, deviceId);
     } catch (WebServiceException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (ProvisionException_Exception e) {
-      throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (NetworkException_Exception e) {
-      throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (DeviceException_Exception e) {
-      throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (BillingException_Exception e) {
-      throw new DeviceServiceException(e.getMessage(), e.getCause());
     }
   }
 
@@ -117,14 +103,6 @@ public class DeviceService implements DeviceServiceModel {
     try {
       truConnect.restoreAccount(userId, accountNo, deviceId);
     } catch (WebServiceException e) {
-      throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (ProvisionException_Exception e) {
-      throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (NetworkException_Exception e) {
-      throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (DeviceException_Exception e) {
-      throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (BillingException_Exception e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
     }
   }

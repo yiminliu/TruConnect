@@ -75,7 +75,7 @@ public class SearchController {
    * @param email
    * @return
    */
-  @RequestMapping(value = "/search/email/ajax", method = RequestMethod.GET)
+  @RequestMapping(value = "getjson/email/ajax", method = RequestMethod.GET)
   public @ResponseBody
   SearchResponse searchByEmailAjax(@RequestParam String email) {
     if (!Config.ADMIN) {

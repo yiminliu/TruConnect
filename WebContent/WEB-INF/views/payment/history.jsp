@@ -27,9 +27,10 @@
             <th>Account</th>
             <th style="text-align: right;">Amount</th>
             <th style="text-align: right;">Invoice</th>
+            <th>Status</th>
           </tr>
           <c:forEach var="paymentRecord" items="${paymentHistory.currentPage}">
-            <%@ include file="/WEB-INF/includes/display/paymentRecord.jsp"%>
+            <%@ include file="/WEB-INF/includes/display/paymentRecord_admin.jsp"%>
           </c:forEach>
         </table>
         <c:set var="prevPageNum" value="${paymentHistory.currentPageNum - 1}" />
