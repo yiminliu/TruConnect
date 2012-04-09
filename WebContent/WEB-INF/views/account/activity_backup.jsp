@@ -24,11 +24,11 @@
         <div id="accountList" style="border:1px blue dashed; height:100px; width:700px;">
           <c:forEach var="accountDetail" items="${accountList}">
             <div style="height:20px; width:233px; float:left;">
-              <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" /><span>${accountDetail.deviceInfo.deviceLabel}</span>
+              <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" /><span>${accountDetail.deviceInfo.label}</span>
             </div>
 
             <div class="span-6 hidden">
-              <div style="font-weight: bold; margin-bottom: 10px;">${accountDetail.deviceInfo.deviceLabel}</div>
+              <div style="font-weight: bold; margin-bottom: 10px;">${accountDetail.deviceInfo.label}</div>
               <div class="clear"></div>
               <a href="<spring:url value="/account/activity/${accountDetail.encodedAccountNum}"/>" class="button semi-s"><span>View
                   Activity</span> </a>
@@ -40,7 +40,7 @@
 
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">History</h3>
         <c:forEach var="accountDetail" items="${accountDetails}">
-          <h4 style="float: left; display: inline-block;">${accountDetail.deviceInfo.deviceLabel}</h4>
+          <h4 style="float: left; display: inline-block;">${accountDetail.deviceInfo.label}</h4>
           <h4 style="float: right; display: inline-block;">Current Balance: $${accountDetail.account.balance}</h4>
           <c:set var="currentBalance" value="${accountDetail.account.balance}" />
           <table>

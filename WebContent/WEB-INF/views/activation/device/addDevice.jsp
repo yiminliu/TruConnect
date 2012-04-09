@@ -26,8 +26,8 @@
             <div class="row">
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
-                <form:errors path="deviceValue" />
-                <form:errors path="deviceLabel" />
+                <form:errors path="value" />
+                <form:errors path="label" />
                 <spring:bind path="deviceInfo">
                   <c:forEach items="${status.errorMessages}" var="error" varStatus="status">
                     <span id="global.${status.index}.errors"><c:out value="${error}" /> </span>
@@ -45,14 +45,14 @@
 
           <!-- Device Esn -->
           <div class="row">
-            <form:label cssClass="required" path="deviceValue">Serial Number (ESN)</form:label>
-            <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="deviceValue" />
+            <form:label cssClass="required" path="value">Serial Number (ESN)</form:label>
+            <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="value" />
           </div>
 
           <!-- Device Label -->
           <div class="row">
-            <form:label cssClass="required" path="deviceLabel">Descriptive Name</form:label>
-            <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="deviceLabel" />
+            <form:label cssClass="required" path="label">Descriptive Name</form:label>
+            <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="label" />
           </div>
 
           <!-- Buttons -->

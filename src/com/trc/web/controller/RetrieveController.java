@@ -117,10 +117,8 @@ public class RetrieveController {
   }
 
   @RequestMapping(value = "/password/verify/{key}", method = RequestMethod.POST)
-  public ModelAndView verifySecurityQuestion(HttpSession session, @PathVariable("key") String key,
-      @ModelAttribute VerifyIdentity verifyIdentity, Errors errors) {
-    ResultModel model = new ResultModel("redirect:/retrieve/password/update/" + key,
-        "retrievePassword/requestSecurityQuestion");
+  public ModelAndView verifySecurityQuestion(HttpSession session, @PathVariable("key") String key, @ModelAttribute VerifyIdentity verifyIdentity, Errors errors) {
+    ResultModel model = new ResultModel("redirect:/retrieve/password/update/" + key, "retrievePassword/requestSecurityQuestion");
     if (isValidKey(session, key)) {
       String email = (String) session.getAttribute(getEmailKey(session));
       User user = userManager.getUserByEmail(email);
@@ -153,8 +151,8 @@ public class RetrieveController {
   }
 
   @RequestMapping(value = "/password/update/{key}", method = RequestMethod.POST)
-  public ModelAndView postNewPassword(HttpSession session, @PathVariable("key") String key,
-      @ModelAttribute("updatePassword") UpdatePassword updatePassword, BindingResult result) {
+  public ModelAndView postNewPassword(HttpSession session, @PathVariable("key") String key, @ModelAttribute("updatePassword") UpdatePassword updatePassword,
+      BindingResult result) {
     ResultModel model = new ResultModel("retrievePassword/passwordResetSuccess", "retrievePassword/updatePassword");
     if (key.equals(session.getId())) {
       String email = retrieveEmail(session);

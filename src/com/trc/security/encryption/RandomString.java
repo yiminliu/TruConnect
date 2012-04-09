@@ -35,5 +35,5 @@ public class RandomString {
       buf[idx] = symbols[random.nextInt(symbols.length)];
     return new String(buf);
   }
-
+  
 }

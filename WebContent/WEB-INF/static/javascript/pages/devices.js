@@ -1,3 +1,3 @@
 $(function() {
-	$("span.deviceLabel").mousePopup();
+	$("span.label").mousePopup();
 });

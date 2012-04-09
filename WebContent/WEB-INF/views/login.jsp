@@ -34,17 +34,14 @@
                 value="<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}" escapeXml="false" /></c:if>" />
               </li>
               <li><input class="span-10" style="line-height: 22px; float: none; display: none;" id="j_password"
-                type="password" name="j_password" />
-              </li>
+                type="password" name="j_password" /></li>
               <li><input class="span-10" style="line-height: 22px; float: none;" id="j_password_holder" type="text"
-                name="j_password_holder" title="Password" value="Password" />
-              </li>
+                name="j_password_holder" title="Password" value="Password" /></li>
               <li><div class="span-10" style="float: none;">
                   <a id="loginFormButton" href="#" class="button action-m" style="float: right;"><span>Sign
                       In</span> </a> <input id="loginFormSubmit" type="submit" class="hidden" /><a
                     href="<spring:url value='/retrieve/password' />" style="float: left;">Lost password</a>
-                </div>
-              </li>
+                </div></li>
             </ul>
           </div>
         </form>
@@ -56,8 +53,7 @@
         <div class="centerFloats">
           <ul>
             <li><a href="<spring:url value="/activation" />" class="button action-m" style="float: left;"><span>Create
-                  an Account</span> </a>
-            </li>
+                  an Account</span> </a></li>
           </ul>
 
         </div>

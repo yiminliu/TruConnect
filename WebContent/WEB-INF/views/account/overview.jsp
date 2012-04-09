@@ -21,8 +21,8 @@
       <div class="span-18 colborder">
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Account Activity</h3>
         <c:forEach var="accountDetail" items="${accountDetails}">
-          <h4 style="float: left; display: inline-block">${accountDetail.deviceInfo.deviceLabel}</h4>
-          <h4 style="float: right; display: inline-block">Current Balance: $${accountDetail.account.balance}</h4>
+          <h4 style="float: left; display: inline-block">${accountDetail.deviceInfo.label}</h4>
+          <h4 style="float: right; display: inline-block">Current Balance: $<fmt:formatNumber value="${accountDetail.account.balance}" pattern="0.00" /></h4>
           <c:set var="currentBalance" value="${accountDetail.account.balance}" />
           <table>
             <tr>

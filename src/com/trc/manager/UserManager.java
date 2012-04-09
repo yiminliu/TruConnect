@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.trc.dao.UserDao;
 import com.trc.exception.management.AccountManagementException;
+import com.trc.service.gateway.TruConnectGateway;
 import com.trc.user.Admin;
 import com.trc.user.AnonymousUser;
 import com.trc.user.User;
@@ -20,24 +21,28 @@ import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.context.SecurityContextFacade;
 import com.trc.web.session.SessionManager;
+import com.tscp.mvne.Account;
 import com.tscp.mvne.CustInfo;
+import com.tscp.mvne.TruConnect;
 
 @Service
 public class UserManager implements UserManagerModel {
   public static final String USER_KEY = "user";
   public static final String ADMIN_KEY = "admin";
   public static final String MANAGER_KEY = "manager";
-  private static SecurityContextFacade securityContext;
+  public static SecurityContextFacade securityContext;
   private UserDao userDao;
   private SecurityQuestionManager securityQuestionManager;
   private AccountManager accountManager;
+  private TruConnect port;
 
   @Autowired
   public void init(UserDao userDao, SecurityQuestionManager securityQuestionManager, AccountManager accountManager,
-      SecurityContextFacade securityContextFacade) {
+      SecurityContextFacade securityContextFacade, TruConnectGateway truConnectGateway) {
     this.userDao = userDao;
     this.securityQuestionManager = securityQuestionManager;
     this.accountManager = accountManager;
+    this.port = truConnectGateway.getPort();
     securityContext = securityContextFacade;
   }
 
@@ -57,6 +62,10 @@ public class UserManager implements UserManagerModel {
   @Transactional(readOnly = true)
   public List<User> getAllManagers() {
     return userDao.getAllUsersWithRole("ROLE_MANAGER");
+  }
+
+  public List<User> getAllServiceReps() {
+    return userDao.getAllUsersWithRole("ROLE_SERVICEREP");
   }
 
   @Override
@@ -80,6 +89,15 @@ public class UserManager implements UserManagerModel {
   @Transactional(readOnly = true)
   public List<User> searchByEmail(String email) {
     return userDao.searchByEmail(email);
+  }
+
+  public List<User> searchById(String id) {
+    return userDao.searchById(id);
+  }
+
+  public List<User> searchByAccountNo(int accountNo) {
+    Account account = port.getAccountInfo(accountNo);
+    return searchByEmail(account.getContactEmail());
   }
 
   @Transactional(readOnly = true)

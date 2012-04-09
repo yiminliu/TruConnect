@@ -12,8 +12,12 @@ import com.trc.service.gateway.TruConnectGateway;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
 import com.tscp.mvne.Account;
-import com.tscp.mvne.DeviceInfo;
+import com.tscp.mvne.BillingException_Exception;
+import com.tscp.mvne.Device;
+import com.tscp.mvne.DeviceException_Exception;
+import com.tscp.mvne.NetworkException_Exception;
 import com.tscp.mvne.NetworkInfo;
+import com.tscp.mvne.ProvisionException_Exception;
 import com.tscp.mvne.ServiceInstance;
 import com.tscp.mvne.TruConnect;
 
@@ -32,11 +36,13 @@ public class DeviceService implements DeviceServiceModel {
       return truConnect.getNetworkInfo(esn, msid);
     } catch (WebServiceException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
+    } catch (NetworkException_Exception e) {
+      throw new DeviceServiceException(e.getMessage(), e.getCause());
     }
   }
 
   @Override
-  public void updateDeviceInfo(User user, DeviceInfo deviceInfo) throws DeviceServiceException {
+  public void updateDeviceInfo(User user, Device deviceInfo) throws DeviceServiceException {
     try {
       truConnect.updateDeviceInfoObject(TruConnectUtil.toCustomer(user), deviceInfo);
     } catch (WebServiceException e) {
@@ -45,7 +51,7 @@ public class DeviceService implements DeviceServiceModel {
   }
 
   @Override
-  public List<DeviceInfo> getDeviceInfoList(User user) throws DeviceServiceException {
+  public List<Device> getDeviceInfoList(User user) throws DeviceServiceException {
     try {
       return truConnect.getDeviceList(TruConnectUtil.toCustomer(user));
     } catch (WebServiceException e) {
@@ -54,8 +60,7 @@ public class DeviceService implements DeviceServiceModel {
   }
 
   @Override
-  public NetworkInfo swapDevice(User user, NetworkInfo oldNetworkInfo, DeviceInfo deviceInfo)
-      throws DeviceServiceException {
+  public NetworkInfo swapDevice(User user, NetworkInfo oldNetworkInfo, Device deviceInfo) throws DeviceServiceException {
     try {
       return truConnect.swapDevice(TruConnectUtil.toCustomer(user), oldNetworkInfo, deviceInfo);
     } catch (WebServiceException e) {
@@ -73,7 +78,7 @@ public class DeviceService implements DeviceServiceModel {
   }
 
   @Override
-  public DeviceInfo addDeviceInfo(User user, DeviceInfo deviceInfo) throws DeviceServiceException {
+  public Device addDeviceInfo(User user, Device deviceInfo) throws DeviceServiceException {
     try {
       return truConnect.addDeviceInfoObject(TruConnectUtil.toCustomer(user), deviceInfo);
     } catch (WebServiceException e) {
@@ -82,7 +87,7 @@ public class DeviceService implements DeviceServiceModel {
   }
 
   @Override
-  public List<DeviceInfo> deleteDeviceInfo(User user, DeviceInfo deviceInfo) throws DeviceServiceException {
+  public List<Device> deleteDeviceInfo(User user, Device deviceInfo) throws DeviceServiceException {
     try {
       return truConnect.deleteDeviceInfoObject(TruConnectUtil.toCustomer(user), deviceInfo);
     } catch (WebServiceException e) {
@@ -91,19 +96,35 @@ public class DeviceService implements DeviceServiceModel {
   }
 
   @Override
-  public void suspendService(ServiceInstance serviceInstance) throws DeviceServiceException {
+  public void suspendService(int userId, int accountNo, int deviceId) throws DeviceServiceException {
     try {
-      truConnect.suspendService(serviceInstance);
+      truConnect.suspendAccount(userId, accountNo, deviceId);
     } catch (WebServiceException e) {
+      throw new DeviceServiceException(e.getMessage(), e.getCause());
+    } catch (ProvisionException_Exception e) {
+      throw new DeviceServiceException(e.getMessage(), e.getCause());
+    } catch (NetworkException_Exception e) {
+      throw new DeviceServiceException(e.getMessage(), e.getCause());
+    } catch (DeviceException_Exception e) {
+      throw new DeviceServiceException(e.getMessage(), e.getCause());
+    } catch (BillingException_Exception e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
     }
   }
 
   @Override
-  public void restoreService(ServiceInstance serviceInstance) throws DeviceServiceException {
+  public void restoreService(int userId, int accountNo, int deviceId) throws DeviceServiceException {
     try {
-      truConnect.restoreService(serviceInstance);
+      truConnect.restoreAccount(userId, accountNo, deviceId);
     } catch (WebServiceException e) {
+      throw new DeviceServiceException(e.getMessage(), e.getCause());
+    } catch (ProvisionException_Exception e) {
+      throw new DeviceServiceException(e.getMessage(), e.getCause());
+    } catch (NetworkException_Exception e) {
+      throw new DeviceServiceException(e.getMessage(), e.getCause());
+    } catch (DeviceException_Exception e) {
+      throw new DeviceServiceException(e.getMessage(), e.getCause());
+    } catch (BillingException_Exception e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
     }
   }
@@ -154,7 +175,7 @@ public class DeviceService implements DeviceServiceModel {
   }
 
   @Override
-  public NetworkInfo reinstallCustomerDevice(User user, DeviceInfo deviceInfo) throws DeviceServiceException {
+  public NetworkInfo reinstallCustomerDevice(User user, Device deviceInfo) throws DeviceServiceException {
     try {
       return truConnect.reinstallCustomerDevice(TruConnectUtil.toCustomer(user), deviceInfo);
     } catch (WebServiceException e) {

@@ -57,8 +57,7 @@ public class ProfileUpdateController {
   }
 
   @RequestMapping(value = "/email", method = RequestMethod.POST)
-  public ModelAndView requestUpdateEmail(HttpSession session, @ModelAttribute UpdateEmail updateEmail,
-      BindingResult result) {
+  public ModelAndView requestUpdateEmail(HttpSession session, @ModelAttribute UpdateEmail updateEmail, BindingResult result) {
     ResultModel model = new ResultModel("redirect:/profile", "profile/update/email");
     User user = userManager.getCurrentUser();
     userUpdateValidator.validateEmailChange(updateEmail, result, user);
@@ -117,8 +116,7 @@ public class ProfileUpdateController {
   }
 
   @RequestMapping(value = "/password", method = RequestMethod.POST)
-  public ModelAndView postUpdatePassword(HttpSession session, @ModelAttribute UpdatePassword updatePassword,
-      BindingResult result) {
+  public ModelAndView postUpdatePassword(HttpSession session, @ModelAttribute UpdatePassword updatePassword, BindingResult result) {
     ResultModel model = new ResultModel("redirect:/profile", "profile/update/password");
     User user = userManager.getCurrentUser();
     userUpdateValidator.validatePasswordChange(updatePassword, result, user);

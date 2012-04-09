@@ -75,23 +75,23 @@
               <div style="white-space: nowrap; position: absolute; bottom: 40%; overflow:hidden; height: 30px; width: 2200px;">
                 <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
                   <div class="device">
-                    <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.deviceLabel}</span>
+                    <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.label}</span>
                     </a>
                   </div>
                   <div class="device">
-                    <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.deviceLabel}</span>
+                    <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.label}</span>
                     </a>
                   </div>
                   <div class="device">
-                    <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.deviceLabel}</span>
+                    <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.label}</span>
                     </a>
                   </div>
                   <div class="device">
-                    <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.deviceLabel}</span>
+                    <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.label}</span>
                     </a>
                   </div>
                   <div class="device">
-                    <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.deviceLabel}</span>
+                    <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.label}</span>
                     </a>
                   </div>
                 </c:forEach>

@@ -2,6 +2,9 @@ $(function() {
 	var $forms = $("form");
 	$.each($forms, function() {
 		$(this).setupForm();
+		$(this).submit(function() {
+			$("input[type=submit]", this).attr("disabled", "disabled");
+		});
 	});
 });
 

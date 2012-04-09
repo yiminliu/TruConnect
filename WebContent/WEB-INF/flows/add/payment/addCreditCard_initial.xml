@@ -8,17 +8,19 @@
 
   <on-start>
     <evaluate expression="addressFlowManager.getAddresses(user)" result="flowScope.addresses" />
+    <evaluate expression="T(com.trc.config.Config).getMonths()" result="flowScope.months" />
+    <evaluate expression="T(com.trc.config.Config).getYearsFuture()" result="flowScope.years" />
   </on-start>
 
   <view-state id="requestCreditCard" view="activation/payment/addCreditCard" model="creditCardPayment">
     <transition on="submit" to="fetchCoupon" />
   </view-state>
-  
+
   <action-state id="fetchCoupon">
     <evaluate expression="couponFlowManager.getCouponByCode(creditCardPayment.coupon)" result="flowScope.fetchedCoupon" />
     <transition on="success" to="setCoupon" />
   </action-state>
-  
+
   <action-state id="setCoupon">
     <evaluate expression="couponFlowManager.setCoupon(creditCardPayment.coupon, fetchedCoupon)" />
     <transition on="success" to="success" />

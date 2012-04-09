@@ -1061,7 +1061,7 @@ div.address div:first-child {
 #jsCheckCurtain {
   background-color: #111;
   opacity: 0.45;
-  filter: alpha(opacity =                     0.45);
+  filter: alpha(opacity = 0.45);
   position: fixed;
   top: 0px;
   left: 0px;
@@ -1072,4 +1072,14 @@ div.address div:first-child {
 
 .hidden {
   display: none;
+}
+
+#main-content h6 {
+  font-size: 18px;
+  color: #0067B2;
+  font-weight: normal;
+  font-family: "myriad-pro-1", "myriad-pro-2", sans-serif;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px #ccc dotted;
 }

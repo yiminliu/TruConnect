@@ -24,24 +24,29 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
   private UserManager userManager;
 
   @Override
-  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-      Authentication authentication) throws IOException, ServletException {
+  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException,
+      ServletException {
     User user = userManager.getLoggedInUser();
     userManager.getUserRealName(user);
     MDC.put("sessionId", SessionManager.getCurrentSessionId());
-
-    if (Config.admin && user.isAdmin()) {
+    if (Config.ADMIN && user.isAdmin()) {
       MDC.put("internalUser", user.getUsername());
       userManager.setSessionAdmin(user);
       userManager.setSessionUser(new AnonymousUser());
       setAlwaysUseDefaultTargetUrl(true);
-      setDefaultTargetUrl("/admin");
-    } else if (Config.admin && user.isManager()) {
+      setDefaultTargetUrl("/admin/home");
+    } else if (Config.ADMIN && user.isManager()) {
       MDC.put("internalUser", user.getUsername());
       userManager.setSessionManager(user);
       userManager.setSessionUser(new AnonymousUser());
       setAlwaysUseDefaultTargetUrl(true);
-      setDefaultTargetUrl("/admin");
+      setDefaultTargetUrl("/manager/home");
+    } else if (Config.ADMIN && user.isServiceRep()) {
+      MDC.put("internalUser", user.getUsername());
+      userManager.setSessionManager(user);
+      userManager.setSessionUser(new AnonymousUser());
+      setAlwaysUseDefaultTargetUrl(true);
+      setDefaultTargetUrl("/servicerep/home");
     } else {
       MDC.put("username", user.getUsername());
       userManager.setSessionUser(user);

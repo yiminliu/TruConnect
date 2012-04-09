@@ -28,7 +28,7 @@
               <c:when test="${coupon.couponDetail.contract.contractType > 0}">${coupon.couponDetail.duration} months</c:when>
               <c:when test="${coupon.couponDetail.contract.contractType < 0}">${coupon.couponDetail.amount} dollars</c:when>
               <c:otherwise>your account</c:otherwise>
-            </c:choose> </b><br /> Device: ${accountDetail.deviceInfo.deviceLabel}
+            </c:choose> </b><br /> Device: ${accountDetail.deviceInfo.label}
         </div>
 
         <div class="buttons">

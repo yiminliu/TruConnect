@@ -65,7 +65,7 @@
             <div class="row deviceList" style="margin-top: 30px; position: relative; height: 50px;">
               <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
                 <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />
-                <span>${accountDetail.deviceInfo.deviceLabel}</span>
+                <span>${accountDetail.deviceInfo.label}</span>
                 <br />
               </c:forEach>
             </div>

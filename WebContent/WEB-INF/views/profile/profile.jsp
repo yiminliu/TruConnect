@@ -60,8 +60,7 @@
             <span class="span-6" style="line-height: 36px;">Status:</span>
             <span class="span-8" style="line-height: 36px;"> <c:choose>
                 <c:when test="${user.enabled}">
-                Enabled     
-            
+                Enabled                 
             </span>
             <a href="<spring:url value="/profile/user/disable"/>" class="button escape-s"
               onclick="return confirm('Do you want to disable ${user.email}?')"><span>Disable</span> </a>

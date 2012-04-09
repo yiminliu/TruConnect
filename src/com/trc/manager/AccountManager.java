@@ -28,7 +28,7 @@ import com.tscp.mvne.Account;
 import com.tscp.mvne.CustAcctMapDAO;
 import com.tscp.mvne.CustInfo;
 import com.tscp.mvne.CustTopUp;
-import com.tscp.mvne.DeviceInfo;
+import com.tscp.mvne.Device;
 import com.tscp.mvne.PaymentRecord;
 import com.tscp.mvne.UsageDetail;
 
@@ -64,7 +64,7 @@ public class AccountManager implements AccountManagerModel {
   }
 
   @Loggable(value = LogLevel.TRACE)
-  public AccountDetail getAccountDetail(User user, DeviceInfo deviceInfo) throws AccountManagementException {
+  public AccountDetail getAccountDetail(User user, Device deviceInfo) throws AccountManagementException {
     int accountNumber = deviceInfo.getAccountNo();
     try {
       Account account = getAccount(accountNumber);
@@ -72,8 +72,7 @@ public class AccountManager implements AccountManagerModel {
       accountDetail.setDeviceInfo(deviceInfo);
       accountDetail.setAccount(account);
       accountDetail.setTopUp(getTopUp(user, account).getTopupAmount());
-      accountDetail.setUsageHistory(new UsageHistory(getChargeHistory(user, account.getAccountno()), user, account
-          .getAccountno()));
+      accountDetail.setUsageHistory(new UsageHistory(getChargeHistory(user, account.getAccountno()), user, account.getAccountno()));
       return accountDetail;
     } catch (AccountManagementException e) {
       throw e;
@@ -90,18 +89,18 @@ public class AccountManager implements AccountManagerModel {
 
   @Loggable(value = LogLevel.TRACE)
   public List<AccountDetail> getAccountDetailList(User user) throws AccountManagementException {
-    List<DeviceInfo> deviceList;
+    List<Device> deviceList;
 
     try {
       deviceList = deviceManager.getDeviceInfoList(user);
     } catch (DeviceManagementException e) {
-      deviceList = new ArrayList<DeviceInfo>();
+      deviceList = new ArrayList<Device>();
     }
 
     List<AccountDetail> accountDetailList = new ArrayList<AccountDetail>();
     AccountDetail accountDetail;
     try {
-      for (DeviceInfo deviceInfo : deviceList) {
+      for (Device deviceInfo : deviceList) {
         accountDetail = getAccountDetail(user, deviceInfo);
         accountDetailList.add(accountDetail);
       }
@@ -231,11 +230,11 @@ public class AccountManager implements AccountManagerModel {
 
   @Loggable(value = LogLevel.TRACE)
   public Overview getOverview(User user) {
-    List<DeviceInfo> deviceInfoList;
+    List<Device> deviceInfoList;
     try {
       deviceInfoList = deviceManager.getDeviceInfoList(user);
     } catch (DeviceManagementException e) {
-      deviceInfoList = new ArrayList<DeviceInfo>();
+      deviceInfoList = new ArrayList<Device>();
     }
     return new Overview(this, deviceInfoList, user);
   }

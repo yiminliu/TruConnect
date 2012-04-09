@@ -37,9 +37,9 @@
           </sec:authorize>
 
           <h4 style="float: left; display: inline-block">
-            <span class="deviceLabel" style="display: inline-block;">${device.deviceInfo.deviceLabel}</span>
+            <span class="label" style="display: inline-block;">${device.deviceInfo.label}</span>
             <c:choose>
-              <c:when test="${device.deviceInfo.deviceStatus == 'Active'}">
+              <c:when test="${device.deviceInfo.status == 'Active'}">
                 (Active)
               </c:when>
               <c:otherwise>
@@ -48,7 +48,7 @@
             </c:choose>
             <a href="<spring:url value="/devices/rename/${device.encodedDeviceId}" />">rename</a>
           </h4>
-          <h4 style="float: right; display: inline-block">Current Balance: $${device.account.balance}</h4>
+          <h4 style="float: right; display: inline-block">Current Balance: $<fmt:formatNumber value="${device.account.balance}" pattern="0.00" /></h4>
           <div class="clear"></div>
 
 
@@ -57,20 +57,20 @@
             <div>
               <li class="header">Device Information</li>
               <li>Account Number: ${device.deviceInfo.accountNo}</li>
-              <li>Device ID: ${device.deviceInfo.deviceId}</li>
-              <li>Status: ${device.deviceInfo.deviceStatus}</li>
-              <li>Status ID: ${device.deviceInfo.deviceStatusId}</li>
+              <li>Device ID: ${device.deviceInfo.id}</li>
+              <li>Status: ${device.deviceInfo.status}</li>
+              <li>Status ID: ${device.deviceInfo.statusId}</li>
             </div>
             <div>
               <c:forEach var="package" items="${device.account.packageList}">
                 <li class="header">Package Information</li>
-                <li>Package ID: ${package.packageid}</li>
-                <li>Package Name: ${package.packageName}</li>
-                <c:if test="${!empty package.componentlist}">
+                <li>Package ID: ${package.id}</li>
+                <li>Package Name: ${package.name}</li>
+                <c:if test="${!empty package.componentList}">
                   <li class="header">Component Information</li>
-                  <c:forEach var="component" items="${package.componentlist}">
-                    <li>Component ID: ${component.componentId}</li>
-                    <li>Component Name: ${component.componentName}</li>
+                  <c:forEach var="component" items="${package.componentList}">
+                    <li>Component ID: ${component.id}</li>
+                    <li>Component Name: ${component.name}</li>
                   </c:forEach>
                 </c:if>
               </c:forEach>
@@ -78,18 +78,18 @@
             <div>
               <li class="header">Service Information</li>
               <c:forEach var="service" items="${device.account.serviceinstancelist}">
-                <li>Subscriber Number: ${service.subscrno}</li>
-                <li>External ID: ${service.externalid}</li>
-                <li>External ID Type: ${service.externalidtype}</li>
-                <li>Active Date: ${service.activedate}</li>
-                <li>Inactive Date: ${service.inactivedate}</li>
+                <li>Subscriber Number: ${service.subscriberNumber}</li>
+                <li>External ID: ${service.externalId}</li>
+                <li>External ID Type: ${service.externalIdType}</li>
+                <li>Active Date: ${service.activeDate}</li>
+                <li>Inactive Date: ${service.inactiveDate}</li>
               </c:forEach>
             </div>
           </div>
 
           <div class="clear"></div>
 
-          <span style="line-height: 36px; float: left;">Device ESN: ${device.deviceInfo.deviceValue}</span>
+          <span style="line-height: 36px; float: left;">Device ESN: ${device.deviceInfo.value}</span>
           <span style="line-height: 36px; float: right;">Top-Up Amount: $${device.topUp}</span>
           <div class="clear"></div>
 
@@ -97,11 +97,11 @@
             <a href="<spring:url value="/devices/swap/${device.encodedDeviceId}" />" class="button semi-s multi"
               style="float: left;"><span>Swap Device</span> </a>
             <c:choose>
-              <c:when test="${device.deviceInfo.deviceStatus == 'Active' }">
+              <c:when test="${device.deviceInfo.status == 'Active' }">
                 <a href="<spring:url value="/devices/deactivate/${device.encodedDeviceId}" />" class="button semi-s"
                   style="float: left;"><span>Deactivate</span> </a>
               </c:when>
-              <c:when test="${device.deviceInfo.deviceStatus == 'Released / Reactivate-able'}">
+              <c:when test="${device.deviceInfo.status == 'Released / Reactivate-able'}">
                 <a href="<spring:url value="/devices/reinstall/${device.encodedDeviceId}" />" class="button semi-s"
                   style="float: left;"><span>Reactivate</span> </a>
               </c:when>

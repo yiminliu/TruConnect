@@ -1,7 +1,7 @@
 package com.trc.user.account;
 
 import com.tscp.mvne.Account;
-import com.tscp.mvne.DeviceInfo;
+import com.tscp.mvne.Device;
 
 /**
  * AccountDetail contains all information for a given account.
@@ -12,7 +12,7 @@ import com.tscp.mvne.DeviceInfo;
 public class AccountDetail {
   private Account account;
   private UsageHistory usageHistory;
-  private DeviceInfo deviceInfo;
+  private Device deviceInfo;
   private String topUp;
   private String encodedDeviceId;
   private String encodedAccountNum;
@@ -57,11 +57,11 @@ public class AccountDetail {
     this.account = account;
   }
 
-  public DeviceInfo getDeviceInfo() {
+  public Device getDeviceInfo() {
     return deviceInfo;
   }
 
-  public void setDeviceInfo(DeviceInfo deviceInfo) {
+  public void setDeviceInfo(Device deviceInfo) {
     this.deviceInfo = deviceInfo;
   }
 }

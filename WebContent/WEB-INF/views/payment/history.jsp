@@ -27,24 +27,21 @@
             <th>Account</th>
             <th style="text-align: right;">Amount</th>
             <th style="text-align: right;">Invoice</th>
+            <th>Status</th>
           </tr>
           <c:forEach var="paymentRecord" items="${paymentHistory.currentPage}">
-            <%@ include file="/WEB-INF/includes/display/paymentRecord.jsp"%>
+            <%@ include file="/WEB-INF/includes/display/paymentRecord_admin.jsp"%>
           </c:forEach>
         </table>
         <c:set var="prevPageNum" value="${paymentHistory.currentPageNum - 1}" />
         <c:set var="nextPageNum" value="${paymentHistory.currentPageNum + 1}" />
         <c:if test="${prevPageNum > 0}">
-          <span style="float: left"><a
-            href="<spring:url value="/account/payment/history/${prevPageNum}" />">&laquo;
-              Previous Page</a>
-          </span>
+          <span style="float: left"><a href="<spring:url value="/account/payment/history/${prevPageNum}" />">&laquo;
+              Previous Page</a> </span>
         </c:if>
         <c:if test="${paymentHistory.currentPageNum < paymentHistory.pageCount}">
-          <span style="float: right"><a
-            href="<spring:url value="/account/payment/history/${nextPageNum}" />">Next
-              Page &raquo;</a>
-          </span>
+          <span style="float: right"><a href="<spring:url value="/account/payment/history/${nextPageNum}" />">Next
+              Page &raquo;</a> </span>
         </c:if>
       </div>
 

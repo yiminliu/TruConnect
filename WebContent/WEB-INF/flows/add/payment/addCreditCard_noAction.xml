@@ -8,6 +8,8 @@
 
   <on-start>
     <evaluate expression="addressFlowManager.getAddresses(user)" result="flowScope.addresses" />
+    <evaluate expression="T(com.trc.config.Config).getMonths()" result="flowScope.months" />
+    <evaluate expression="T(com.trc.config.Config).getYearsFuture()" result="flowScope.years" />
   </on-start>
 
   <view-state id="requestCreditCard" view="payment/addCreditCard" model="creditCard">

@@ -14,7 +14,7 @@ import com.tscp.mvne.UsageDetail;
  * @author Tachikoma
  * 
  */
-public class UsageHistory extends Paginator {
+public class UsageHistory extends Paginator<UsageDetail> {
 
   public UsageHistory(List<UsageDetail> usageDetails, User user, int accountNumber) {
     super.setRecords(usageDetails);

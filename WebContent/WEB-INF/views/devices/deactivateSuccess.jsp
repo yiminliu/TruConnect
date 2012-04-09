@@ -18,7 +18,7 @@
     <div id="main-content">
       <div class="span-18 colborder">
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Success</h3>
-        <p>You have successfully deactivated "${deviceLabel}".</p>
+        <p>You have successfully deactivated "${label}".</p>
         <a class="button action-m" href="<spring:url value="/devices" />"><span>Continue</span> </a>
       </div>
 

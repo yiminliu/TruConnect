@@ -12,11 +12,9 @@ import com.tscp.mvne.PaymentUnitResponse;
 
 public interface PaymentServiceModel {
 
-  public PaymentUnitResponse makePayment(User user, Account account, CreditCard creditCard, String amount)
-      throws PaymentServiceException;
+  public PaymentUnitResponse makePayment(User user, Account account, CreditCard creditCard, String amount) throws PaymentServiceException;
 
-  public PaymentUnitResponse makePayment(User user, Account account, int paymentId, String amount)
-      throws PaymentServiceException;
+  public PaymentUnitResponse makePayment(User user, Account account, int paymentId, String amount) throws PaymentServiceException;
 
   public PaymentInformation getCreditCard(int paymentId) throws PaymentServiceException;
 

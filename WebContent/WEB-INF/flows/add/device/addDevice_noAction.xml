@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://www.springframework.org/schema/webflow  
     http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-  <input name="deviceInfo" type="com.tscp.mvne.DeviceInfo" />
+  <input name="deviceInfo" type="com.tscp.mvne.Device" />
   <input name="contactInfo" type="com.trc.user.contact.ContactInfo" />
 
   <view-state id="requestDeviceInfo" view="activation/device/addDevice" model="deviceInfo">

@@ -7,7 +7,7 @@
   <var name="registration" class="com.trc.user.activation.Registration" />
   <var name="termsAndConditions" class="com.trc.user.activation.TermsAndConditions" />
   <var name="activationMessage" class="com.trc.user.activation.ActivationMessage" />
-  <var name="deviceInfo" class="com.tscp.mvne.DeviceInfo" />
+  <var name="deviceInfo" class="com.tscp.mvne.Device" />
   <var name="networkInfo" class="com.tscp.mvne.NetworkInfo" />
   <var name="account" class="com.tscp.mvne.Account" />
 
