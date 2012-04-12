@@ -1,5 +1,5 @@
-<c:if test="${!(empty sessionScope.admin) || !(empty sessionScope.manager)}">
-  <sec:authorize ifAnyGranted="ROLE_ADMIN, ROLE_MANAGER">
+<c:if test="${!empty sessionScope.controlling_user}">
+  <sec:authorize ifAnyGranted="ROLE_ADMIN, ROLE_MANAGER, ROLE_SERVICEREP, ROLE_SUPERUSER">
     <%@ include file="/WEB-INF/includes/admin/control_bar.jsp"%>
   </sec:authorize>
 </c:if>
@@ -11,7 +11,8 @@
       <div class="logo">
         <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
           <a href="http://www.truconnect.com/"> <img src="<spring:url value='/static/images/logo_s1.jpg' />"
-            alt="TruConnect Logo" /> </a>
+            alt="TruConnect Logo" />
+          </a>
         </sec:authorize>
         <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
           <img src="<spring:url value='/static/images/logo_s1.jpg'/>" alt="TruConnect Logo" />
@@ -24,7 +25,7 @@
       <!-- Begin Secondary Navigation -->
       <div class="secondary-navigation">
         <ul>
-          <c:if test="${(empty sessionScope.admin) && (empty sessionScope.manager)}">
+          <c:if test="${empty sessionScope.controlling_user}">
             <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
               <li>Welcome ${user.contactInfo.firstName} ${user.contactInfo.lastName}</li>
             </sec:authorize>

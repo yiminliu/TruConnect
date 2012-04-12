@@ -29,24 +29,43 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
     User user = userManager.getLoggedInUser();
     userManager.getUserRealName(user);
     MDC.put("sessionId", SessionManager.getCurrentSessionId());
-    if (Config.ADMIN && user.isAdmin()) {
+    // if (Config.ADMIN && user.isSuperUser()) {
+    // MDC.put("internalUser", user.getUsername());
+    // userManager.setSessionAdmin(user);
+    // userManager.setSessionUser(new AnonymousUser());
+    // setAlwaysUseDefaultTargetUrl(true);
+    // setDefaultTargetUrl("/admin/home");
+    // } else if (Config.ADMIN && user.isAdmin()) {
+    // MDC.put("internalUser", user.getUsername());
+    // userManager.setSessionAdmin(user);
+    // userManager.setSessionUser(new AnonymousUser());
+    // setAlwaysUseDefaultTargetUrl(true);
+    // setDefaultTargetUrl("/admin/home");
+    // } else if (Config.ADMIN && user.isManager()) {
+    // MDC.put("internalUser", user.getUsername());
+    // userManager.setSessionManager(user);
+    // userManager.setSessionUser(new AnonymousUser());
+    // setAlwaysUseDefaultTargetUrl(true);
+    // setDefaultTargetUrl("/manager/home");
+    // } else if (Config.ADMIN && user.isServiceRep()) {
+    // MDC.put("internalUser", user.getUsername());
+    // userManager.setSessionManager(user);
+    // userManager.setSessionUser(new AnonymousUser());
+    // setAlwaysUseDefaultTargetUrl(true);
+    // setDefaultTargetUrl("/servicerep/home");
+    if (Config.ADMIN && user.isInternalUser()) {
       MDC.put("internalUser", user.getUsername());
-      userManager.setSessionAdmin(user);
+      userManager.setSessionControllingUser(user);
       userManager.setSessionUser(new AnonymousUser());
-      setAlwaysUseDefaultTargetUrl(true);
-      setDefaultTargetUrl("/admin/home");
-    } else if (Config.ADMIN && user.isManager()) {
-      MDC.put("internalUser", user.getUsername());
-      userManager.setSessionManager(user);
-      userManager.setSessionUser(new AnonymousUser());
-      setAlwaysUseDefaultTargetUrl(true);
-      setDefaultTargetUrl("/manager/home");
-    } else if (Config.ADMIN && user.isServiceRep()) {
-      MDC.put("internalUser", user.getUsername());
-      userManager.setSessionManager(user);
-      userManager.setSessionUser(new AnonymousUser());
-      setAlwaysUseDefaultTargetUrl(true);
-      setDefaultTargetUrl("/servicerep/home");
+      if (user.isAdmin()) {
+        setDefaultTargetUrl("/admin/home");
+      } else if (user.isManager()) {
+        setDefaultTargetUrl("/manager/home");
+      } else if (user.isServiceRep()) {
+        setDefaultTargetUrl("/servicerep/hom");
+      } else if (user.isSuperUser()) {
+        setDefaultTargetUrl("/it/home");
+      }
     } else {
       MDC.put("username", user.getUsername());
       userManager.setSessionUser(user);

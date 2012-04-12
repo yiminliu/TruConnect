@@ -20,7 +20,7 @@ import com.trc.web.model.ResultModel;
 import com.trc.web.session.cache.CacheManager;
 
 @Controller
-@PreAuthorize("hasAnyRole('ROLE_SERVICEREP','ROLE_MANAGER','ROLE_ADMIN')")
+@PreAuthorize("hasAnyRole('ROLE_SERVICEREP','ROLE_MANAGER','ROLE_ADMIN', 'ROLE_SUPERUSER')")
 @RequestMapping("/search")
 public class SearchController {
   @Autowired
@@ -40,11 +40,12 @@ public class SearchController {
     }
     List<User> searchResults = new Vector<User>();
     try {
-      searchResults.add(userManager.getUserById(Integer.parseInt(param)));
+      int numericSearch = Integer.parseInt(param);
+      searchResults.add(userManager.getUserById(numericSearch));
+      searchResults.add(userManager.searchByAccountNo(numericSearch));
     } catch (NumberFormatException e) {
-      // do nothing
+      searchResults.addAll(userManager.searchByEmail(param));
     }
-    searchResults.addAll(userManager.searchByEmail(param));
     model.addObject("searchResults", searchResults);
     return model.getSuccess();
   }

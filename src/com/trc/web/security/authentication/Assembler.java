@@ -1,7 +1,7 @@
 package com.trc.web.security.authentication;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -22,13 +22,12 @@ public class Assembler {
     boolean credentialsNonExpired = enabled;
     boolean accountNonLocked = enabled;
 
-    Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+    Collection<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
     for (Authority auth : myUser.getRoles()) {
-      authorities.add(new GrantedAuthorityImpl(auth.getAuthority()));
+      authorities.add(new GrantedAuthorityImpl(auth.getRole().toString()));
     }
 
-    User springUser = new User(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
-        authorities);
+    User springUser = new User(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     return springUser;
   }
 }

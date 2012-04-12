@@ -12,17 +12,9 @@
   <!-- LOGOUT/ID -->
   <div class="logout">
     <c:choose>
-      <c:when test="${!empty sessionScope.admin}">
-        <b>Administrator:</b>
-        <c:out value="${sessionScope.admin.username}" />
-      </c:when>
-      <c:when test="${!empty sessionScope.manager}">
-        <b>Manager:</b>
-        <c:out value="${sessionScope.manager.username}" />
-      </c:when>
-      <c:when test="${!empty sessionScope.serviceRep}">
-        <b>Service Rep:</b>
-        <c:out value="${sessionScope.serviceRep.username}" />
+      <c:when test="${!empty sessionScope.controlling_user}">
+        <b>Internal:</b>
+        <c:out value="${sessionScope.controlling_user.username}" />
       </c:when>
       <c:otherwise>
         <sec:authentication property="principal.authorities" />

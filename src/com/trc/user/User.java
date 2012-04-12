@@ -18,12 +18,16 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.trc.manager.UserManager;
 import com.trc.user.authority.Authority;
+import com.trc.user.authority.ROLE;
 import com.trc.user.contact.ContactInfo;
 
 @Entity
@@ -137,17 +141,21 @@ public class User implements UserModel, UserDetails {
   }
 
   /*****************************************************************************
-   * Begins Spring UserDetails implementation methods
+   * Begins Spring UserDetails implementation methods // TODO User class should
+   * not implement UserDetails, instead we should create another class that uses
+   * Assembler to keep our design separate from Spring.
    *****************************************************************************/
-  // TODO User class should not implement UserDetails, instead we should create
-  // another class that uses Assembler to keep our design separate from Spring
+
+  private Collection<GrantedAuthority> grantedAuthorities;
 
   @Transient
   @Override
   public Collection<GrantedAuthority> getAuthorities() {
-    Collection<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
-    for (Authority auth : getRoles()) {
-      grantedAuthorities.add(new GrantedAuthorityImpl(auth.getAuthority()));
+    if (grantedAuthorities == null) {
+      grantedAuthorities = new HashSet<GrantedAuthority>();
+      for (Authority authority : getRoles()) {
+        grantedAuthorities.add(new GrantedAuthorityImpl(authority.getRole().toString()));
+      }
     }
     return grantedAuthorities;
   }
@@ -171,33 +179,53 @@ public class User implements UserModel, UserDetails {
   }
 
   @Transient
+  public boolean isInternalUser() {
+    return isSuperUser() || isAdmin() || isManager() || isServiceRep();
+  }
+
+  @Transient
+  public boolean isSuperUser() {
+    return getRoles().contains(new Authority(ROLE.ROLE_SUPERUSER));
+  }
+
+  @Transient
   public boolean isAdmin() {
-    GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_ADMIN");
-    return getAuthorities().contains(ga);
+    // GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_ADMIN");
+    // return getAuthorities().contains(ga);
+    return getRoles().contains(new Authority(ROLE.ROLE_ADMIN));
   }
 
   @Transient
   public boolean isManager() {
-    GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_MANAGER");
-    return getAuthorities().contains(ga);
+    // GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_MANAGER");
+    // return getAuthorities().contains(ga);
+    return getRoles().contains(new Authority(ROLE.ROLE_MANAGER));
   }
 
   @Transient
   public boolean isServiceRep() {
-    GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_SERVICEREP");
-    return getAuthorities().contains(ga);
+    // GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_SERVICEREP");
+    // return getAuthorities().contains(ga);
+    return getRoles().contains(new Authority(ROLE.ROLE_SERVICEREP));
   }
 
   @Transient
   public boolean isUser() {
-    GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_USER");
-    return getAuthorities().contains(ga);
+    // GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_USER");
+    // return getAuthorities().contains(ga);
+    return getRoles().contains(new Authority(ROLE.ROLE_USER));
   }
+
+  private static final Logger logger = LoggerFactory.getLogger("devLogger");
 
   @Transient
   public boolean isAuthenticated() {
     GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_ANONYMOUS");
-    return !UserManager.securityContext.getContext().getAuthentication().getAuthorities().contains(ga) && !getAuthorities().contains(ga);
+    boolean origCheck = !UserManager.securityContext.getContext().getAuthentication().getAuthorities().contains(ga) && !getAuthorities().contains(ga);
+    Authentication authentication = UserManager.securityContext.getContext().getAuthentication();
+    boolean newCheck = authentication != null && authentication.getPrincipal() instanceof UserDetails;
+    logger.debug("origCheck: {} newCheck: {}", origCheck, newCheck);
+    return origCheck;
   }
 
   @Override

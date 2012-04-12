@@ -7,6 +7,6 @@ public class AnonymousAuthority extends Authority {
 
   public AnonymousAuthority(User user) {
     setUser(user);
-    setAuthority("ROLE_ANONYMOUS");
+    setRole(ROLE.ROLE_ANONYMOUS);
   }
 }

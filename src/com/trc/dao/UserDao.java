@@ -22,7 +22,6 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.trc.user.Admin;
 import com.trc.user.User;
 import com.trc.user.authority.Authority;
 
@@ -43,7 +42,7 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
     return results.get(0);
   }
 
-  private String wildcard(String param) {
+  private String wildcard(Object param) {
     return "%" + param + "%";
   }
 
@@ -93,7 +92,7 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
     return results;
   }
 
-  public List<User> searchById(String id) {
+  public List<User> searchById(int id) {
     List<User> results = getHibernateTemplate().find("from User user where userId like ?", wildcard(id));
     return results;
   }
@@ -162,6 +161,12 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
     return getHibernateTemplate().save(user);
   }
 
+  @Deprecated
+  /**
+   * This method uses plain sql to insert a user. It was created to insert users with negative values that do not use
+   * the auto-increment of MySQL for a userID. Code is left here as an example
+   * @param user
+   */
   public void saveAdminSql(User user) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     String sDateEnabled = dateFormat.format(user.getDateEnabled());
@@ -171,14 +176,11 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
     } else {
       sDateDisabled = "null";
     }
-
     String columns = "user_id, username, password, email, hint_id, hint_answer, enabled, date_enabled, date_disabled";
     String values = user.getUserId() + ", '" + user.getUsername() + "', '" + user.getPassword() + "', '" + user.getEmail() + "', "
         + user.getUserHint().getHintId() + ", '" + user.getUserHint().getHintAnswer() + "', " + (user.isEnabled() ? 1 : 0) + ", '" + sDateEnabled + "', "
         + sDateDisabled;
-
     final String sql = "insert into users (" + columns + ") values (" + values + ")";
-
     Long count = (Long) getHibernateTemplate().execute(new HibernateCallback<Object>() {
       public Object doInHibernate(Session session) throws HibernateException {
         SQLQuery query = session.createSQLQuery(sql);
@@ -186,10 +188,6 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
         return Long.valueOf(value);
       }
     });
-  }
-
-  public void saveAdminHql(Admin admin) {
-    getHibernateTemplate().save(admin);
   }
 
   @Override

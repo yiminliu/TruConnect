@@ -44,6 +44,8 @@ public class HomeController {
         return redirect("manager/home");
       } else if (user.isServiceRep()) {
         return redirect("servicerep/home");
+      } else if (user.isSuperUser()) {
+        return redirect("it/home");
       } else {
         return "admin_login";
       }

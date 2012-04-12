@@ -13,35 +13,8 @@ public class LoggingHelper {
   private UserManager userManager;
 
   private User getControllingUser() {
-    return getAdmin() == null ? getManager() : getAdmin();
-  }
-
-  private User getAdmin() {
-    User admin = userManager.getSessionAdmin();
-    if (admin == null) {
-      admin = userManager.getLoggedInUser();
-      if (admin.isAdmin()) {
-        return admin;
-      } else {
-        return null;
-      }
-    } else {
-      return admin;
-    }
-  }
-
-  private User getManager() {
-    User manager = userManager.getSessionManager();
-    if (manager == null) {
-      manager = userManager.getLoggedInUser();
-      if (manager.isAdmin()) {
-        return manager;
-      } else {
-        return null;
-      }
-    } else {
-      return manager;
-    }
+    User user = userManager.getSessionControllingUser() == null ? userManager.getLoggedInUser() : userManager.getSessionControllingUser();
+    return user.isInternalUser() ? user : null;
   }
 
   private User getCurrentUser() {
@@ -49,21 +22,23 @@ public class LoggingHelper {
   }
 
   private String getUserStamp(User user) {
+    StringBuilder userStamp = new StringBuilder();
     if (user != null) {
-      StringBuilder userStamp = new StringBuilder();
-      if (user.isAdmin()) {
+      if (user.isSuperUser()) {
+        userStamp.append("IT:");
+      } else if (user.isAdmin()) {
         userStamp.append("Admin:");
       } else if (user.isManager()) {
         userStamp.append("Manager:");
+      } else if (user.isServiceRep()) {
+        userStamp.append("ServiceRep:");
       } else if (!user.isEnabled()) {
         userStamp.append("Reserve:");
       }
       userStamp.append(user.getUserId());
       userStamp.append("(").append(user.getUsername()).append(") -");
-      return userStamp.toString();
-    } else {
-      return "";
     }
+    return userStamp.toString();
   }
 
   public String getUserStamp() {

@@ -26,14 +26,11 @@ public class TraceInterceptor extends CustomizableTraceInterceptor {
     StringBuilder stampedMessage = new StringBuilder();
     stampedMessage.append(SessionManager.getCurrentSessionId());
 
-    User controllingUser = userManager.getSessionAdmin();
-    controllingUser = controllingUser == null ? userManager.getSessionManager() : controllingUser;
-    String controllingUserStamp = controllingUser == null ? "" : " [" + controllingUser.getUserId() + "]"
-        + controllingUser.getUsername() + " ";
+    User controllingUser = userManager.getSessionControllingUser();
+    String controllingUserStamp = controllingUser == null ? "" : " [" + controllingUser.getUserId() + "]" + controllingUser.getUsername() + " ";
 
     User currentUser = userManager.getCurrentUser();
-    String currentUserStamp = currentUser == null ? " Anonymous " : " [" + currentUser.getUserId() + "]"
-        + currentUser.getUsername() + " - ";
+    String currentUserStamp = currentUser == null ? " Anonymous " : " [" + currentUser.getUserId() + "]" + currentUser.getUsername() + " - ";
 
     stampedMessage.append(controllingUserStamp);
     stampedMessage.append(currentUserStamp);

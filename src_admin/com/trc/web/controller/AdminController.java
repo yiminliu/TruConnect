@@ -22,6 +22,7 @@ import com.trc.security.encryption.Md5Encoder;
 import com.trc.user.SecurityQuestionAnswer;
 import com.trc.user.User;
 import com.trc.user.authority.Authority;
+import com.trc.user.authority.ROLE;
 import com.trc.util.logger.DevLogger;
 import com.trc.web.model.ResultModel;
 import com.trc.web.validation.AdminValidator;
@@ -73,6 +74,7 @@ public class AdminController extends ManagerController {
     if (!Config.ADMIN) {
       return model.getAccessDenied();
     }
+    String requestedRole = request.getParameter("user_role");
     SecurityQuestionAnswer userHint = new SecurityQuestionAnswer();
     userHint.setHintId(1);
     userHint.setHintAnswer("truconnect");
@@ -80,7 +82,7 @@ public class AdminController extends ManagerController {
     user.setUserHint(userHint);
     user.setEnabled(true);
     user.setDateEnabled(new Date());
-    user.getRoles().add(new Authority(user, request.getParameter("user_role")));
+    user.getRoles().add(new Authority(user, ROLE.valueOf(requestedRole)));
     adminValidator.validate(user, result);
     if (result.hasErrors()) {
       return model.getError();

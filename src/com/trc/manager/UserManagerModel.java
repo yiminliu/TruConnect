@@ -19,6 +19,12 @@ public interface UserManagerModel {
 
   public Collection<User> getAllManagers();
 
+  public Collection<User> getAllServiceReps();
+
+  public User searchByAccountNo(int accountNo);
+
+  public Collection<User> searchById(int id);
+
   public Collection<User> searchByEmail(String email);
 
   public Collection<User> searchByUsername(String username);

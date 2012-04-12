@@ -3,7 +3,6 @@ package com.trc.web.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,14 +15,13 @@ import com.trc.user.User;
 import com.trc.web.model.ResultModel;
 
 @Controller
-@PreAuthorize("hasAnyRole('ROLE_SERVICEREP','ROLE_MANAGER','ROLE_ADMIN')")
 public abstract class MemberController extends SearchController {
   @Autowired
   protected UserManager userManager;
   @Autowired
   protected SessionRegistry sessionRegistry;
 
-  @RequestMapping(value = "/home", method = RequestMethod.GET)
+  @RequestMapping(value = { "", "/", "home" }, method = RequestMethod.GET)
   public abstract ModelAndView showHome();
 
   @RequestMapping(value = "/all", method = RequestMethod.GET)

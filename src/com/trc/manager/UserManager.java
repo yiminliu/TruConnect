@@ -4,19 +4,22 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.trc.dao.UserDao;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.service.gateway.TruConnectGateway;
-import com.trc.user.Admin;
 import com.trc.user.AnonymousUser;
 import com.trc.user.User;
 import com.trc.user.authority.Authority;
-import com.trc.user.security.SecurityQuestion;
+import com.trc.user.authority.ROLE;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.context.SecurityContextFacade;
@@ -28,19 +31,15 @@ import com.tscp.mvne.TruConnect;
 @Service
 public class UserManager implements UserManagerModel {
   public static final String USER_KEY = "user";
-  public static final String ADMIN_KEY = "admin";
-  public static final String MANAGER_KEY = "manager";
+  public static final String CONTROLLING_USER_KEY = "controlling_user";
   public static SecurityContextFacade securityContext;
   private UserDao userDao;
-  private SecurityQuestionManager securityQuestionManager;
   private AccountManager accountManager;
   private TruConnect port;
 
   @Autowired
-  public void init(UserDao userDao, SecurityQuestionManager securityQuestionManager, AccountManager accountManager,
-      SecurityContextFacade securityContextFacade, TruConnectGateway truConnectGateway) {
+  public void init(UserDao userDao, AccountManager accountManager, SecurityContextFacade securityContextFacade, TruConnectGateway truConnectGateway) {
     this.userDao = userDao;
-    this.securityQuestionManager = securityQuestionManager;
     this.accountManager = accountManager;
     this.port = truConnectGateway.getPort();
     securityContext = securityContextFacade;
@@ -55,17 +54,19 @@ public class UserManager implements UserManagerModel {
   @Override
   @Transactional(readOnly = true)
   public List<User> getAllAdmins() {
-    return userDao.getAllUsersWithRole("ROLE_ADMIN");
+    return userDao.getAllUsersWithRole(ROLE.ROLE_ADMIN.toString());
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<User> getAllManagers() {
-    return userDao.getAllUsersWithRole("ROLE_MANAGER");
+    return userDao.getAllUsersWithRole(ROLE.ROLE_MANAGER.toString());
   }
 
+  @Override
+  @Transactional(readOnly = true)
   public List<User> getAllServiceReps() {
-    return userDao.getAllUsersWithRole("ROLE_SERVICEREP");
+    return userDao.getAllUsersWithRole(ROLE.ROLE_SERVICEREP.toString());
   }
 
   @Override
@@ -91,13 +92,18 @@ public class UserManager implements UserManagerModel {
     return userDao.searchByEmail(email);
   }
 
-  public List<User> searchById(String id) {
+  @Override
+  @Transactional(readOnly = true)
+  public List<User> searchById(int id) {
     return userDao.searchById(id);
   }
 
-  public List<User> searchByAccountNo(int accountNo) {
+  @Override
+  @Transactional(readOnly = true)
+  public User searchByAccountNo(int accountNo) {
     Account account = port.getAccountInfo(accountNo);
-    return searchByEmail(account.getContactEmail());
+    List<User> users = searchByEmail(account.getContactEmail());
+    return users != null && users.size() > 0 ? users.get(0) : new User();
   }
 
   @Transactional(readOnly = true)
@@ -122,10 +128,15 @@ public class UserManager implements UserManagerModel {
     return userDao.search(param);
   }
 
+  private static final Logger logger = LoggerFactory.getLogger("devLogger");
+
   @Override
   public User getLoggedInUser() {
-    Authentication authentication = getAuthentication();
-    if (authentication == null || isAnonymousUser(authentication)) {
+    Authentication authentication = securityContext.getContext().getAuthentication();
+    boolean isAnon1 = authentication == null || !(authentication.getPrincipal() instanceof UserDetails);
+    boolean isAnon2 = authentication == null || isAnonymousUser(authentication);
+    logger.debug("instance of anonymous check: {} anon username check: {}", isAnon1, isAnon2);
+    if (isAnon2) {
       return new AnonymousUser();
     } else {
       return (User) authentication.getPrincipal();
@@ -145,17 +156,9 @@ public class UserManager implements UserManagerModel {
   @Transactional(readOnly = false)
   public Serializable saveUser(User user) {
     if (user.getAuthorities().isEmpty()) {
-      user.getRoles().add(new Authority(user, "ROLE_USER"));
+      user.getRoles().add(new Authority(user, ROLE.ROLE_USER));
     }
     return userDao.saveUser(user);
-  }
-
-  public void saveAdminSql(User user) {
-    userDao.saveAdminSql(user);
-  }
-
-  public void saveAdminHql(Admin admin) {
-    userDao.saveAdminHql(admin);
   }
 
   @Override
@@ -178,6 +181,7 @@ public class UserManager implements UserManagerModel {
 
   @Override
   @Transactional(readOnly = false)
+  @PreAuthorize("isAuthenticated() and hasPermission(#user, 'canUpdate')")
   public void updateUser(User user) {
     userDao.updateUser(user);
   }
@@ -209,38 +213,16 @@ public class UserManager implements UserManagerModel {
     return user == null ? new AnonymousUser() : user;
   }
 
-  public User getSessionAdmin() {
-    return (User) SessionManager.get(ADMIN_KEY);
-  }
-
-  public User getSessionManager() {
-    return (User) SessionManager.get(MANAGER_KEY);
-  }
-
   public void setSessionUser(User user) {
     SessionManager.set(USER_KEY, user);
   }
 
-  public void setSessionAdmin(User user) {
-    SessionManager.set(ADMIN_KEY, user);
+  public void setSessionControllingUser(User user) {
+    SessionManager.set(CONTROLLING_USER_KEY, user);
   }
 
-  public void setSessionManager(User user) {
-    SessionManager.set(MANAGER_KEY, user);
-  }
-
-  private Authentication getAuthentication() {
-    return securityContext.getContext().getAuthentication();
-  }
-
-  @Deprecated
-  public List<SecurityQuestion> getSecurityQuestions() {
-    return securityQuestionManager.getSecurityQuestions();
-  }
-
-  @Deprecated
-  public SecurityQuestion getSecurityQuestion(int id) {
-    return securityQuestionManager.getSecurityQuestion(id);
+  public User getSessionControllingUser() {
+    return (User) SessionManager.get(CONTROLLING_USER_KEY);
   }
 
   @Loggable(value = LogLevel.TRACE)
@@ -259,14 +241,6 @@ public class UserManager implements UserManagerModel {
       } catch (AccountManagementException e) {
         user.getContactInfo().setFirstName(user.getUsername());
       }
-      // try {
-      // List<Account> accountList = accountManager.getAccounts(user);
-      // Account account = accountList.get(0);
-      // user.getContactInfo().setFirstName(account.getFirstname());
-      // user.getContactInfo().setLastName(account.getLastname());
-      // } catch (AccountManagementException e) {
-      // user.getContactInfo().setFirstName(user.getUsername());
-      // }
     } else {
       user.getContactInfo().setFirstName(user.getUsername());
     }

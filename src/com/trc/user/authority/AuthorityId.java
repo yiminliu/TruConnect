@@ -5,17 +5,17 @@ import java.io.Serializable;
 import com.trc.user.User;
 
 public class AuthorityId implements Serializable {
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 7740332242823859489L;
   private User user;
-  private String authority;
+  private ROLE role;
 
-  public AuthorityId() {
+  protected AuthorityId() {
     // do nothing
   }
 
-  public AuthorityId(User user, String authority) {
-    setUser(user);
-    setAuthority(authority);
+  public AuthorityId(User user, ROLE role) {
+    this.user = user;
+    this.role = role;
   }
 
   public User getUser() {
@@ -26,19 +26,19 @@ public class AuthorityId implements Serializable {
     this.user = user;
   }
 
-  public String getAuthority() {
-    return this.authority;
+  public ROLE getRole() {
+    return this.role;
   }
 
-  public void setAuthority(String authority) {
-    this.authority = authority;
+  public void setRole(ROLE role) {
+    this.role = role;
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((authority == null) ? 0 : authority.hashCode());
+    result = prime * result + ((role == null) ? 0 : role.hashCode());
     result = prime * result + ((user == null) ? 0 : user.hashCode());
     return result;
   }
@@ -52,10 +52,10 @@ public class AuthorityId implements Serializable {
     if (getClass() != obj.getClass())
       return false;
     AuthorityId other = (AuthorityId) obj;
-    if (authority == null) {
-      if (other.authority != null)
+    if (role == null) {
+      if (other.role != null)
         return false;
-    } else if (!authority.equals(other.authority))
+    } else if (!role.equals(other.role))
       return false;
     if (user == null) {
       if (other.user != null)
