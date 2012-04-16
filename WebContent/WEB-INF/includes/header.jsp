@@ -41,14 +41,16 @@
 
       <!-- Begin Navigation -->
       <div class="navigation">
-        <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-          <ul>
-            <li><a href="http://www.truconnect.com/">Home</a></li>
-            <li><a href="http://www.truconnect.com/plans/">Plans</a></li>
-            <li><a href="https://store.truconnect.com/">Devices</a></li>
-            <li><a href="http://www.truconnect.com/support/">Support</a></li>
-          </ul>
-        </sec:authorize>
+        <c:if test="${empty sessionScope.controlling_user}">
+          <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+            <ul>
+              <li><a href="http://www.truconnect.com/">Home</a></li>
+              <li><a href="http://www.truconnect.com/plans/">Plans</a></li>
+              <li><a href="https://store.truconnect.com/">Devices</a></li>
+              <li><a href="http://www.truconnect.com/support/">Support</a></li>
+            </ul>
+          </sec:authorize>
+        </c:if>
       </div>
     </div>
     <!-- End Navigation -->

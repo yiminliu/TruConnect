@@ -187,8 +187,7 @@ public class CouponValidator implements Validator {
   }
 
   public boolean isAtAccountLimit(Coupon coupon, User user, Account account) {
-    int limit = coupon.getCouponDetail().getAccountLimit() == null ? UNLIMITED_ACCOUNT : coupon.getCouponDetail()
-        .getAccountLimit();
+    int limit = coupon.getCouponDetail().getAccountLimit() == null ? UNLIMITED_ACCOUNT : coupon.getCouponDetail().getAccountLimit();
     if (isUnlmited(limit)) {
       return false;
     }

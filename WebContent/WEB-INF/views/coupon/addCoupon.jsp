@@ -5,6 +5,7 @@
 <title>TruConnect Account Management</title>
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
 <script type="text/javascript" src="<spring:url value="/static/javascript/setupForms.js" />"></script>
+<script type="text/javascript" src="<spring:url value="/static/javascript/columnize.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/addCoupon.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/highlight/step/addPaymentMethod.js" />"></script>
 
@@ -22,7 +23,7 @@
       <div class="span-18 colborder">
 
         <form:form id="addCoupon" cssClass="validatedForm" method="post" commandName="coupon"
-          cssStyle="overflow:hidden; height:300px;">
+          cssStyle="overflow:hidden; height:350px;">
           <!-- Error Alert -->
           <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.coupon'].allErrors}">
             <div class="row">
@@ -41,14 +42,15 @@
             </div>
           </c:if>
 
-          <div class="slider" style="height: 140px;">
+          <div class="slider" style="height: 180px;">
             <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Enter a Coupon Code</h3>
             <p>If you have a coupon code, enter the code below, select your device, and click "Apply". The coupon
               will be applied to your account automatically. If the coupon you have received is a discount on the
               monthly access fee, the discount will be applied when the monthly access fee is charged.</p>
             <div class="row">
               <form:label cssClass="required" path="couponCode">Coupon Code</form:label>
-              <form:input cssClass="span-8 noSubmit" cssErrorClass="span-8 validationFailed noSubmit" path="couponCode" autocomplete="off" />
+              <form:input cssClass="span-8 noSubmit" cssErrorClass="span-8 validationFailed noSubmit" path="couponCode"
+                autocomplete="off" />
             </div>
             <div class="row pushed">
               <span id="couponMessage"></span>
@@ -58,15 +60,13 @@
             </div>
           </div>
 
-          <div class="slider hidden" style="height: 140px;">
+          <div class="slider hidden" style="height: 180px;">
             <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Select the Device you want to apply the offer to</h3>
 
-
-            <div class="row deviceList" style="margin-top: 30px; position: relative; height: 50px;">
+            <div class="row deviceList" style="margin-top: 30px; position: relative;">
               <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
-                <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />
-                <span>${accountDetail.deviceInfo.label}</span>
-                <br />
+                <label style="display:block; width:33%;"><input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />
+                  ${accountDetail.deviceInfo.label}</label>
               </c:forEach>
             </div>
 

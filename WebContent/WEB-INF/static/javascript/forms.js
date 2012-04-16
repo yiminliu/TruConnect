@@ -9,13 +9,13 @@ function highlightRadio(name, val) {
 }
 
 $.fn.fadeInRadio = function() {
-	var label = $(this).next("span");
+	var label = $(this).parent("label");
 	$(label).css("font-style", "italic").css("color", "#0067B2").fadeTo("slow",
 			1.0);
 };
 
 $.fn.fadeOutRadio = function() {
-	var label = $(this).next("span");
+	var label = $(this).parent("label");
 	$(label).css("font-style", "").css("color", "").fadeTo("slow", 0.5);
 };
 

@@ -4,6 +4,7 @@
 <head>
 <title>TruConnect Account Management</title>
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
+<script type="text/javascript" src="<spring:url value="/static/javascript/columnize.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/highlight/navigation/profile.js" />"></script>
 </head>
 <body>
@@ -83,9 +84,16 @@
         </div>
         <div class="clear"></div>
         <h3 style="margin-bottom: 10px; padding-bottom: 0px; padding-top: 10px; border-top: 1px #ccc solid;">Addresses</h3>
+        
+        <script type="text/javascript">
+        $(function() {
+        	$("#addressList").columnize({columns:3});
+        });
+        </script>
+        
+        <div id="addressList">
         <c:forEach var="address" items="${addresses}">
-
-          <div class="span-6 address">
+          <div class="address">
             <c:if test="${address.default}">
               <div>
                 <b>Default Address</b>
@@ -107,9 +115,9 @@
               </c:if>
             </div>
           </div>
-
-
         </c:forEach>
+        </div>
+        
         <div class="span-6 address" style="color: #ccc;">
           <div class=addressButtons>
             <a href="<spring:url value="/profile/address/add" />" class="button semi-s multi"><span>Add New

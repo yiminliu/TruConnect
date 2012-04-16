@@ -190,29 +190,21 @@ public class User implements UserModel, UserDetails {
 
   @Transient
   public boolean isAdmin() {
-    // GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_ADMIN");
-    // return getAuthorities().contains(ga);
     return getRoles().contains(new Authority(ROLE.ROLE_ADMIN));
   }
 
   @Transient
   public boolean isManager() {
-    // GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_MANAGER");
-    // return getAuthorities().contains(ga);
     return getRoles().contains(new Authority(ROLE.ROLE_MANAGER));
   }
 
   @Transient
   public boolean isServiceRep() {
-    // GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_SERVICEREP");
-    // return getAuthorities().contains(ga);
     return getRoles().contains(new Authority(ROLE.ROLE_SERVICEREP));
   }
 
   @Transient
   public boolean isUser() {
-    // GrantedAuthority ga = new GrantedAuthorityImpl("ROLE_USER");
-    // return getAuthorities().contains(ga);
     return getRoles().contains(new Authority(ROLE.ROLE_USER));
   }
 

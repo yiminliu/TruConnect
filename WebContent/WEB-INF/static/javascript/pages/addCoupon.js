@@ -118,7 +118,7 @@ $(function() {
 });
 
 $(function() {
-	var deviceButtons = $("div.deviceList input:radio");
+	var deviceButtons = $(".deviceList input:radio");
 	var numDevices = $(deviceButtons).length;
 	$(deviceButtons).click(function(e) {
 		$(deviceButtons).selectRadioFromList($(this));

@@ -6,8 +6,10 @@
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
 <script type="text/javascript" src="<spring:url value="/static/javascript/mousePositionPopup.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/infoIconPopup.js" />"></script>
+<script type="text/javascript" src="<spring:url value="/static/javascript/columnize.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/accountActivity.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/highlight/navigation/activity.js" />"></script>
+
 </head>
 <body class="app" onload="highlightRadio('account', '${encodedAccountNumber}')">
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
@@ -23,22 +25,19 @@
 
         <c:if test="${fn:length(accountDetails) > 0}">
           <p>Select the device that you would like to see the activity for.</p>
-          <div id="accountList" style="max-height: 100px; width: 700px;">
+          <div id="accountList" style="border-bottom:1px #ccc solid; padding-bottom:10px;">
             <c:forEach var="accountDetail" items="${accountList}">
-              <div style="height: 20px; width: 233px; float: left;">
-                <input type="radio" name="account" value="${accountDetail.encodedAccountNum}" /><span>${accountDetail.deviceInfo.label}</span>
-              </div>
+                <label style="display:block; font-weight:normal;"><input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />${accountDetail.deviceInfo.label}</label>
             </c:forEach>
-            <div class="clear"></div>
           </div>
-          <br/>
-          <hr/>
         </c:if>
 
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">History</h3>
         <c:forEach var="accountDetail" items="${accountDetails}">
           <h4 style="float: left; display: inline-block;">${accountDetail.deviceInfo.label}</h4>
-          <h4 style="float: right; display: inline-block;">Current Balance: $<fmt:formatNumber value="${accountDetail.account.balance}" pattern="0.00" />
+          <h4 style="float: right; display: inline-block;">
+            Current Balance: $
+            <fmt:formatNumber value="${accountDetail.account.balance}" pattern="0.00" />
           </h4>
           <c:set var="currentBalance" value="${accountDetail.account.balance}" />
           <table>
