@@ -35,7 +35,7 @@ public class RegistrationManager implements RegistrationManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public void reserveUserId(Registration registration) {
     int random = (new Random()).nextInt(99);
-    String sessionTag = SessionManager.getCurrentSessionId().substring(0, 5);
+    String sessionTag = SessionManager.getCurrentSession().getId().substring(0, 5);
     String registrationTag = "reserve_" + sessionTag + random + "_";
 
     // save the username/password/email/contactInfo
@@ -47,7 +47,7 @@ public class RegistrationManager implements RegistrationManagerModel {
     // get a user_id without reserving the username/password/email
     registration.getUser().setDateEnabled(new Date());
     registration.getUser().setUsername(registrationTag + username);
-    // registration.getUser().setPassword(SessionManager.getCurrentSessionId());
+    // registration.getUser().setPassword(SessionManager.getCurrentSession().getId());
     registration.getUser().setEmail(registrationTag + email);
     userManager.saveUser(registration.getUser());
     userManager.setSessionUser(registration.getUser());

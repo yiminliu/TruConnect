@@ -84,40 +84,35 @@
         </div>
         <div class="clear"></div>
         <h3 style="margin-bottom: 10px; padding-bottom: 0px; padding-top: 10px; border-top: 1px #ccc solid;">Addresses</h3>
-        
-        <script type="text/javascript">
-        $(function() {
-        	$("#addressList").columnize({columns:3});
-        });
-        </script>
-        
+
+
         <div id="addressList">
-        <c:forEach var="address" items="${addresses}">
-          <div class="address">
-            <c:if test="${address.default}">
-              <div>
-                <b>Default Address</b>
-              </div>
-            </c:if>
-            <c:if test="${!empty address.address1}">
-              <div>${address.address1}</div>
-            </c:if>
-            <c:if test="${!empty address.city}">
-              <div>${address.city}, ${address.state} ${address.zip}</div>
-            </c:if>
-            <div class=addressButtons>
-              <a href="<spring:url value="/profile/address/edit/${address.encodedAddressId}" />"
+          <c:forEach var="address" items="${addresses}">
+            <div class="address dontsplit">
+              <c:if test="${address.default}">
+                <div>
+                  <b>Default Address</b>
+                </div>
+              </c:if>
+              <c:if test="${!empty address.address1}">
+                <div>${address.address1}</div>
+              </c:if>
+              <c:if test="${!empty address.city}">
+                <div>${address.city}, ${address.state} ${address.zip}</div>
+              </c:if>
+
+              <div class=addressButtons><a href="<spring:url value="/profile/address/edit/${address.encodedAddressId}" />"
                 class="button semi-s multi"><span>Edit</span> </a>
               <c:if test="${fn:length(addresses) > 1}">
                 <a class="button semi-s"
                   href="<spring:url value="/profile/address/remove/${address.encodedAddressId}" />"><span>Remove</span>
                 </a>
               </c:if>
+              </div>
             </div>
-          </div>
-        </c:forEach>
+          </c:forEach>
         </div>
-        
+
         <div class="span-6 address" style="color: #ccc;">
           <div class=addressButtons>
             <a href="<spring:url value="/profile/address/add" />" class="button semi-s multi"><span>Add New

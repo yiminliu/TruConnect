@@ -48,7 +48,7 @@ public class LoggingHelper {
     if (controllingUser != null) {
       userStamp.append(getUserStamp(controllingUser));
     }
-    userStamp.append("[").append(SessionManager.getCurrentSessionId()).append("] ");
+    userStamp.append("[").append(SessionManager.getCurrentSession().getId()).append("] ");
     userStamp.append(getUserStamp(currentUser));
     return userStamp.toString();
   }

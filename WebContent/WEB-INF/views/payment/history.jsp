@@ -26,12 +26,25 @@
             <th>Type</th>
             <th>Account</th>
             <th style="text-align: right;">Amount</th>
-            <th style="text-align: right;">Invoice</th>
-            <th>Status</th>
+            <c:if test="${empty sessionScope.controlling_user}">
+              <th style="text-align: right;">Invoice</th>
+            </c:if>
+            <c:if test="${!empty sessionScope.controlling_user}">
+              <th style="text-align: right;">Status</th>
+            </c:if>
           </tr>
-          <c:forEach var="paymentRecord" items="${paymentHistory.currentPage}">
-            <%@ include file="/WEB-INF/includes/display/paymentRecord_admin.jsp"%>
-          </c:forEach>
+          <c:choose>
+            <c:when test="${!empty sessionScope.controlling_user}">
+              <c:forEach var="paymentRecord" items="${paymentHistory.currentPage}" varStatus="status">
+                <%@ include file="/WEB-INF/includes/display/paymentRecord_admin.jsp"%>
+              </c:forEach>
+            </c:when>
+            <c:otherwise>
+              <c:forEach var="paymentRecord" items="${paymentHistory.currentPage}" varStatus="status">
+                <%@ include file="/WEB-INF/includes/display/paymentRecord.jsp"%>
+              </c:forEach>
+            </c:otherwise>
+          </c:choose>
         </table>
         <c:set var="prevPageNum" value="${paymentHistory.currentPageNum - 1}" />
         <c:set var="nextPageNum" value="${paymentHistory.currentPageNum + 1}" />

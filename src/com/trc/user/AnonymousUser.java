@@ -9,6 +9,6 @@ public class AnonymousUser extends User {
   public AnonymousUser() {
     setUserId(0);
     getRoles().add(new AnonymousAuthority(this));
-    setUsername(SessionManager.getCurrentSessionId());
+    setUsername(SessionManager.getCurrentSession().getId());
   }
 }

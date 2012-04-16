@@ -24,7 +24,7 @@ public class TraceInterceptor extends CustomizableTraceInterceptor {
   protected void writeToLog(Log logger, String message, Throwable ex) {
     org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger("truconnect");
     StringBuilder stampedMessage = new StringBuilder();
-    stampedMessage.append(SessionManager.getCurrentSessionId());
+    stampedMessage.append(SessionManager.getCurrentSession().getId());
 
     User controllingUser = userManager.getSessionControllingUser();
     String controllingUserStamp = controllingUser == null ? "" : " [" + controllingUser.getUserId() + "]" + controllingUser.getUsername() + " ";

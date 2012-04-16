@@ -28,7 +28,7 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
       ServletException {
     User user = userManager.getLoggedInUser();
     userManager.getUserRealName(user);
-    MDC.put("sessionId", SessionManager.getCurrentSessionId());
+    MDC.put("sessionId", SessionManager.getCurrentSession().getId());
     // if (Config.ADMIN && user.isSuperUser()) {
     // MDC.put("internalUser", user.getUsername());
     // userManager.setSessionAdmin(user);
@@ -73,7 +73,7 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
       setDefaultTargetUrl("/manage");
     }
 
-    SessionManager.set(SessionKey.ENCRYPTER, new StringEncrypter(SessionManager.getCurrentSessionId()));
+    SessionManager.set(SessionKey.ENCRYPTER, new StringEncrypter(SessionManager.getCurrentSession().getId()));
     super.onAuthenticationSuccess(request, response, authentication);
   }
 

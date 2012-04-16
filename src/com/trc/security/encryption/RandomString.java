@@ -35,5 +35,14 @@ public class RandomString {
       buf[idx] = symbols[random.nextInt(symbols.length)];
     return new String(buf);
   }
-  
+
+  public static final String get() {
+    return get(8);
+  }
+
+  public static final String get(int length) {
+    RandomString randomString = new RandomString(length);
+    return randomString.nextString();
+  }
+
 }

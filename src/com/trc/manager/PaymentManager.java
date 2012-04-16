@@ -17,6 +17,7 @@ import com.trc.web.session.cache.CacheManager;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.CustPmtMap;
+import com.tscp.mvne.PaymentTransaction;
 import com.tscp.mvne.PaymentUnitResponse;
 
 @Component
@@ -24,10 +25,17 @@ public class PaymentManager implements PaymentManagerModel {
   @Autowired
   private PaymentService paymentService;
 
+  public PaymentTransaction getPaymentTransaction(int custId, int transId) throws PaymentManagementException {
+    try {
+      return paymentService.getPaymentTransaction(custId, transId);
+    } catch (PaymentServiceException e) {
+      throw new PaymentManagementException(e);
+    }
+  }
+
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public PaymentUnitResponse makePayment(User user, Account account, int paymentId, String amount)
-      throws PaymentManagementException {
+  public PaymentUnitResponse makePayment(User user, Account account, int paymentId, String amount) throws PaymentManagementException {
     try {
       return paymentService.makePayment(user, account, paymentId, amount);
     } catch (PaymentServiceException e) {
@@ -37,8 +45,7 @@ public class PaymentManager implements PaymentManagerModel {
 
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public PaymentUnitResponse makePayment(User user, Account account, CreditCard creditCard, String amount)
-      throws PaymentManagementException {
+  public PaymentUnitResponse makePayment(User user, Account account, CreditCard creditCard, String amount) throws PaymentManagementException {
     try {
       return paymentService.makePayment(user, account, creditCard, amount);
     } catch (PaymentServiceException e) {
@@ -47,8 +54,7 @@ public class PaymentManager implements PaymentManagerModel {
   }
 
   @Loggable(value = LogLevel.TRACE)
-  public PaymentUnitResponse makeActivationPayment(User user, Account account, CreditCard creditCard)
-      throws PaymentManagementException {
+  public PaymentUnitResponse makeActivationPayment(User user, Account account, CreditCard creditCard) throws PaymentManagementException {
     try {
       return makePayment(user, account, creditCard.getPaymentid(), "10.00");
     } catch (PaymentManagementException e) {
@@ -203,6 +209,15 @@ public class PaymentManager implements PaymentManagerModel {
       }
     } catch (PaymentManagementException e) {
       throw e;
+    }
+  }
+
+  @Loggable(value = LogLevel.TRACE)
+  public void refundPayment(int accountNo, String amount, String trackingId, User user) throws PaymentManagementException {
+    try {
+      paymentService.refundPayment(accountNo, amount, Integer.parseInt(trackingId), user);
+    } catch (PaymentServiceException e) {
+      throw new PaymentManagementException(e.getMessage(), e.getCause());
     }
   }
 

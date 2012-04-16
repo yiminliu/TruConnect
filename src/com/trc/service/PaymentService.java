@@ -13,8 +13,11 @@ import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
 import com.trc.web.session.SessionManager;
 import com.tscp.mvne.Account;
+import com.tscp.mvne.ContractException_Exception;
 import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.CustPmtMap;
+import com.tscp.mvne.PaymentException_Exception;
+import com.tscp.mvne.PaymentTransaction;
 import com.tscp.mvne.PaymentUnitResponse;
 import com.tscp.mvne.TruConnect;
 
@@ -25,6 +28,14 @@ public class PaymentService implements PaymentServiceModel {
   @Autowired
   public void init(TruConnectGateway truConnectGateway) {
     this.truConnect = truConnectGateway.getPort();
+  }
+
+  public PaymentTransaction getPaymentTransaction(int custId, int transId) throws PaymentServiceException {
+    try {
+      return truConnect.getPaymentTransaction(custId, transId);
+    } catch (PaymentException_Exception e) {
+      throw new PaymentServiceException(e);
+    }
   }
 
   @Override
@@ -137,7 +148,7 @@ public class PaymentService implements PaymentServiceModel {
   @Override
   public PaymentUnitResponse makePayment(User user, Account account, CreditCard creditCard, String amount) throws PaymentServiceException {
     try {
-      return truConnect.submitPaymentByCreditCard(SessionManager.getCurrentSessionId(), account, creditCard, amount);
+      return truConnect.submitPaymentByCreditCard(SessionManager.getCurrentSession().getId(), account, creditCard, amount);
     } catch (WebServiceException e) {
       throw new PaymentServiceException(e.getMessage(), e.getCause());
     }
@@ -146,8 +157,18 @@ public class PaymentService implements PaymentServiceModel {
   @Override
   public PaymentUnitResponse makePayment(User user, Account account, int paymentId, String amount) throws PaymentServiceException {
     try {
-      return truConnect.submitPaymentByPaymentId(SessionManager.getCurrentSessionId(), TruConnectUtil.toCustomer(user), paymentId, account, amount);
+      return truConnect.submitPaymentByPaymentId(SessionManager.getCurrentSession().getId(), TruConnectUtil.toCustomer(user), paymentId, account, amount);
     } catch (WebServiceException e) {
+      throw new PaymentServiceException(e.getMessage(), e.getCause());
+    }
+  }
+
+  public void refundPayment(int account_no, String amount, int trackingId, User user) throws PaymentServiceException {
+    try {
+      truConnect.refundPayment(account_no, amount, trackingId, user.getUsername());
+    } catch (WebServiceException e) {
+      throw new PaymentServiceException(e.getMessage(), e.getCause());
+    } catch (ContractException_Exception e) {
       throw new PaymentServiceException(e.getMessage(), e.getCause());
     }
   }

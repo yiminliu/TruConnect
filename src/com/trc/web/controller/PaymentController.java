@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,6 +33,7 @@ import com.trc.web.session.SessionKey;
 import com.trc.web.session.SessionManager;
 import com.trc.web.validation.CreditCardValidator;
 import com.tscp.mvne.CreditCard;
+import com.tscp.mvne.PaymentRecord;
 
 @Controller
 @RequestMapping("/account/payment")
@@ -47,13 +49,14 @@ public class PaymentController {
   @Autowired
   private CreditCardValidator creditCardValidator;
 
-  private static Logger logger = LoggerFactory.getLogger(PaymentController.class);
+  private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
   @ModelAttribute
   private void paymentReferenceData(ModelMap modelMap) {
     modelMap.addAttribute("states", Config.states.entrySet());
     modelMap.addAttribute("months", Config.months.entrySet());
     modelMap.addAttribute("years", Config.yearsFuture.entrySet());
+    modelMap.addAttribute("paymentRecord", new PaymentRecord());
     try {
       modelMap.addAttribute("addresses", addressManager.getAllAddresses(userManager.getCurrentUser()));
     } catch (AddressManagementException e) {
@@ -62,7 +65,7 @@ public class PaymentController {
   }
 
   @RequestMapping(value = "/history", method = RequestMethod.GET)
-  public String showPaymentHistory() {
+  public String showPaymentHistory(Model model) {
     return "redirect:/account/payment/history/1";
   }
 

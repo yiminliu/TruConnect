@@ -24,12 +24,10 @@ public class MdcFilter implements Filter {
   }
 
   @Override
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-      ServletException {
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
     HttpServletRequest httprequest = (HttpServletRequest) request;
-    SecurityContext context = (SecurityContext) httprequest.getSession().getAttribute(
-        HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+    SecurityContext context = (SecurityContext) httprequest.getSession().getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
 
     if (context != null) {
       Authentication authentication = context.getAuthentication();
@@ -40,7 +38,7 @@ public class MdcFilter implements Filter {
       MDC.put("sessionId", httprequest.getSession().getId());
     }
     chain.doFilter(request, response);
-    // MDC.put("sessionId", SessionManager.getCurrentSessionId());
+    // MDC.put("sessionId", SessionManager.getCurrentSession().getId());
     // MDC.put("username", userManager.getCurrentUser().getUsername());
     // User internalUser = userManager.getSessionAdmin() == null ?
     // userManager.getSessionManager() == null ? null
