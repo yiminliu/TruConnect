@@ -254,9 +254,7 @@ public class User implements UserModel, UserDetails {
   @Override
   @Transient
   public String toString() {
-    return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email + ", dateEnabled=" + dateEnabled
-        + ", dateDisabled=" + dateDisabled + ", enabled=" + enabled + ", userHint=" + userHint + ", authorities=" + authorities + ", contactInfo="
-        + contactInfo + "]";
+    return "User [userId=" + userId + ", email=" + email + "]";
   }
 
 }

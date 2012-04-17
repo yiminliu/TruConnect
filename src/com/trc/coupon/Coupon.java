@@ -133,8 +133,7 @@ public class Coupon implements Serializable {
 
   @Transient
   public boolean isRecurring() {
-    return getCouponDetail().getDuration() != 0 && getCouponDetail().getContract().getContractType() != -1
-        && getCouponDetail().getAmount() == 0;
+    return getCouponDetail().getDuration() != 0 && getCouponDetail().getContract().getContractType() != -1 && getCouponDetail().getAmount() == 0;
   }
 
   @Transient

@@ -24,8 +24,8 @@
     <div class="span-12 last">
       <!-- Begin Secondary Navigation -->
       <div class="secondary-navigation">
-        <ul>
-          <c:if test="${empty sessionScope.controlling_user}">
+        <c:if test="${empty sessionScope.controlling_user}">
+          <ul>
             <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
               <li>Welcome ${user.contactInfo.firstName} ${user.contactInfo.lastName}</li>
             </sec:authorize>
@@ -34,8 +34,8 @@
                 <li><a href="<spring:url value='/j_spring_security_logout' />">Logout</a></li>
               </sec:authorize>
             </c:if>
-          </c:if>
-        </ul>
+          </ul>
+        </c:if>
       </div>
       <!-- End Secondary Navigation -->
 

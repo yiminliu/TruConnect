@@ -64,7 +64,7 @@ public class SessionToken implements Serializable {
 
   @Override
   public String toString() {
-    return "SessionToken [id=" + id + ", description=" + description + ", valid=" + valid + "]";
+    return "SessionToken [sessionRequest=" + sessionRequest + ", id=" + id + ", description=" + description + ", valid=" + valid + "]";
   }
 
 }

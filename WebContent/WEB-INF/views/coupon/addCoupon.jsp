@@ -9,6 +9,32 @@
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/addCoupon.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/highlight/step/addPaymentMethod.js" />"></script>
 
+<style type="text/css">
+#addCoupon {
+  overflow: hidden;
+  height: 350px;
+}
+
+#addCoupon .slider {
+  height: 180px;
+}
+
+#addCoupon .slider h3 {
+  margin-bottom: 10px;
+  padding-bottom: 0px;
+}
+
+#addCoupon .slider .deviceList {
+  margin-top: 30px;
+  position: relative;
+}
+
+#addCoupon .slider .deviceList label {
+  display: block;
+  width: 33%;
+}
+</style>
+
 </head>
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
@@ -22,18 +48,17 @@
     <div id="main-content">
       <div class="span-18 colborder">
 
-        <form:form id="addCoupon" cssClass="validatedForm" method="post" commandName="coupon"
-          cssStyle="overflow:hidden; height:350px;">
+        <form:form id="addCoupon" cssClass="validatedForm" method="post" commandName="couponRequest">
           <!-- Error Alert -->
           <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.coupon'].allErrors}">
             <div class="row">
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
-                <form:errors path="couponCode" />
-                <form:errors path="startDate" />
-                <form:errors path="endDate" />
-                <form:errors path="quantity" />
-                <spring:bind path="coupon">
+                <form:errors path="coupon.couponCode" />
+                <form:errors path="coupon.startDate" />
+                <form:errors path="coupon.endDate" />
+                <form:errors path="coupon.quantity" />
+                <spring:bind path="couponRequest">
                   <c:forEach items="${status.errorMessages}" var="error" varStatus="status">
                     <span id="global.${status.index}.errors"><c:out value="${error}" /> </span>
                   </c:forEach>
@@ -42,15 +67,15 @@
             </div>
           </c:if>
 
-          <div class="slider" style="height: 180px;">
-            <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Enter a Coupon Code</h3>
+          <div class="slider">
+            <h3>Enter a Coupon Code</h3>
             <p>If you have a coupon code, enter the code below, select your device, and click "Apply". The coupon
               will be applied to your account automatically. If the coupon you have received is a discount on the
               monthly access fee, the discount will be applied when the monthly access fee is charged.</p>
             <div class="row">
-              <form:label cssClass="required" path="couponCode">Coupon Code</form:label>
-              <form:input cssClass="span-8 noSubmit" cssErrorClass="span-8 validationFailed noSubmit" path="couponCode"
-                autocomplete="off" />
+              <form:label cssClass="required" path="coupon.couponCode">Coupon Code</form:label>
+              <form:input cssClass="span-8 noSubmit" cssErrorClass="span-8 validationFailed noSubmit"
+                path="coupon.couponCode" autocomplete="off" />
             </div>
             <div class="row pushed">
               <span id="couponMessage"></span>
@@ -60,12 +85,11 @@
             </div>
           </div>
 
-          <div class="slider hidden" style="height: 180px;">
-            <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Select the Device you want to apply the offer to</h3>
-
-            <div class="row deviceList" style="margin-top: 30px; position: relative;">
+          <div class="slider hidden">
+            <h3>Select the Device you want to apply the offer to</h3>
+            <div class="row deviceList">
               <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
-                <label style="display:block; width:33%;"><input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />
+                <label><input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />
                   ${accountDetail.deviceInfo.label}</label>
               </c:forEach>
             </div>

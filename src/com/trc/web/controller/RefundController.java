@@ -15,7 +15,7 @@ import com.trc.exception.management.PaymentManagementException;
 import com.trc.manager.PaymentManager;
 import com.trc.manager.UserManager;
 import com.trc.user.User;
-import com.trc.user.payment.refund.PaymentRefund;
+import com.trc.user.payment.refund.RefundRequest;
 import com.trc.web.model.ResultModel;
 import com.trc.web.session.SessionManager;
 import com.trc.web.session.SessionRequest;
@@ -37,10 +37,10 @@ public class RefundController {
     User user = userManager.getCurrentUser();
     try {
       PaymentTransaction paymentTransaction = paymentManager.getPaymentTransaction(user.getUserId(), transId);
-      PaymentRefund paymentRefund = new PaymentRefund();
-      paymentRefund.setPaymentTransaction(paymentTransaction);
-      paymentRefund.setSessionToken(SessionManager.createToken(SessionRequest.REFUND, "refund transaction " + transId));
-      resultModel.addObject("paymentRefund", paymentRefund);
+      RefundRequest refundRequest = new RefundRequest();
+      refundRequest.setPaymentTransaction(paymentTransaction);
+      refundRequest.setSessionToken(SessionManager.createToken(SessionRequest.REFUND, "refund transaction " + transId));
+      resultModel.addObject("paymentRefund", refundRequest);
       return resultModel.getSuccess();
     } catch (PaymentManagementException e) {
       return resultModel.getAccessException();
@@ -48,18 +48,18 @@ public class RefundController {
   }
 
   @RequestMapping(value = "{transId}", method = RequestMethod.POST)
-  public ModelAndView processRefund(HttpServletRequest request, @ModelAttribute PaymentRefund paymentRefund, BindingResult result) {
+  public ModelAndView processRefund(HttpServletRequest request, @ModelAttribute RefundRequest refundRequest, BindingResult result) {
     ResultModel resultModel = new ResultModel("redirect:/account/payment/history", "payment/refund/confirm");
     User user = userManager.getCurrentUser();
-    SessionToken token = SessionManager.fetchToken(paymentRefund.getSessionToken().getRequest());
-    if (token != null && token.getId().equals(paymentRefund.getSessionToken().getId())) {
+    SessionToken token = SessionManager.fetchToken(refundRequest.getSessionToken().getRequest());
+    if (token != null && token.getId().equals(refundRequest.getSessionToken().getId())) {
       JcaptchaValidator.validate(request, result);
       if (result.hasErrors()) {
         return resultModel.getError();
       } else {
         token.consume();
         try {
-          paymentManager.refundPayment(user, paymentRefund);
+          paymentManager.refundPayment(user, refundRequest);
         } catch (PaymentManagementException e) {
           return resultModel.getAccessException();
         }

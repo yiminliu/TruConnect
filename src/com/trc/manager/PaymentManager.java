@@ -10,7 +10,7 @@ import com.trc.exception.management.PaymentManagementException;
 import com.trc.exception.service.PaymentServiceException;
 import com.trc.service.PaymentService;
 import com.trc.user.User;
-import com.trc.user.payment.refund.PaymentRefund;
+import com.trc.user.payment.refund.RefundRequest;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
 import com.trc.web.session.cache.CacheKey;
@@ -222,7 +222,7 @@ public class PaymentManager implements PaymentManagerModel {
     }
   }
 
-  public void refundPayment(User user, PaymentRefund paymentRefund) throws PaymentManagementException {
+  public void refundPayment(User user, RefundRequest paymentRefund) throws PaymentManagementException {
     refundPayment(paymentRefund.getPaymentTransaction().getAccountNo(), paymentRefund.getPaymentTransaction().getPaymentAmount(), String.valueOf(paymentRefund
         .getPaymentTransaction().getBillingTrackingId()), user);
   }

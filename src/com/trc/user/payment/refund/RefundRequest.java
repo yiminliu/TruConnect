@@ -3,7 +3,7 @@ package com.trc.user.payment.refund;
 import com.trc.web.session.SessionObject;
 import com.tscp.mvne.PaymentTransaction;
 
-public class PaymentRefund extends SessionObject {
+public class RefundRequest extends SessionObject {
   private static final long serialVersionUID = -904882266690809131L;
   private PaymentTransaction paymentTransaction;
   private String jcaptcha;
