@@ -6,11 +6,8 @@
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
 </head>
 <body>
-  <%@ include file="/WEB-INF/includes/popups.jsp"%>
-
-  <div class="container">
-    <%@ include file="/WEB-INF/includes/header_exception.jsp"%>
-  </div>
+  <%@ include file="/WEB-INF/includes/popups.jsp"%><%@ include
+    file="/WEB-INF/includes/header.jsp"%>
 
   <div class="blueTruConnectGradient">
     <div class="container">Information Currently Unavailable</div>
@@ -23,6 +20,9 @@
           handling your request</h3>
         <p style="font-size: 1.3em;">An error has occured while handling your request. No changes were made. Please
           try your request again.</p>
+        <c:if test="${!empty sessionScope.controlling_user}">
+          <p style="font-size: 1.3em;">You may not have a user set to manage, please search for and select a user.</p>
+        </c:if>
       </div>
 
       <div class="span-6 last sub-navigation">

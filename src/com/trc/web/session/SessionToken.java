@@ -2,19 +2,23 @@ package com.trc.web.session;
 
 import java.io.Serializable;
 
+import com.trc.security.encryption.RandomString;
+
 public class SessionToken implements Serializable {
   private static final long serialVersionUID = 2699326845796317792L;
-  private String id;
+  private SessionRequest sessionRequest;
+  private String id = RandomString.get(8);
   private String description;
-  private boolean valid = true;
+  private boolean valid;
 
   public SessionToken() {
     // do nothing
   }
 
-  public SessionToken(String id, String description) {
-    this.id = id;
+  public SessionToken(SessionRequest sessionRequest, String description) {
+    this.sessionRequest = sessionRequest;
     this.description = description;
+    this.valid = true;
   }
 
   public String getId() {
@@ -33,6 +37,14 @@ public class SessionToken implements Serializable {
     this.description = description;
   }
 
+  public SessionRequest getRequest() {
+    return sessionRequest;
+  }
+
+  public void setRequest(SessionRequest sessionRequest) {
+    this.sessionRequest = sessionRequest;
+  }
+
   public synchronized boolean isValid() {
     return valid;
   }
@@ -41,9 +53,13 @@ public class SessionToken implements Serializable {
     this.valid = valid;
   }
 
-  public synchronized void consume() {
-    this.valid = false;
-    SessionManager.consumeToken(this);
+  public synchronized void consume() throws SessionTokenInvalidException {
+    if (valid) {
+      this.valid = false;
+      SessionManager.consumeToken(this);
+    } else {
+      throw new SessionTokenInvalidException("REQUEST " + id + " is no longer valid or has already been consumed.");
+    }
   }
 
   @Override

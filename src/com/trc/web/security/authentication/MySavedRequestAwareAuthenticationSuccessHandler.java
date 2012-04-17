@@ -16,7 +16,7 @@ import com.trc.manager.UserManager;
 import com.trc.security.encryption.StringEncrypter;
 import com.trc.user.AnonymousUser;
 import com.trc.user.User;
-import com.trc.web.session.SessionKey;
+import com.trc.web.session.SessionRequest;
 import com.trc.web.session.SessionManager;
 
 public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -73,7 +73,7 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
       setDefaultTargetUrl("/manage");
     }
 
-    SessionManager.set(SessionKey.ENCRYPTER, new StringEncrypter(SessionManager.getCurrentSession().getId()));
+    SessionManager.set(SessionRequest.ENCRYPTER, new StringEncrypter(SessionManager.getCurrentSession().getId()));
     super.onAuthenticationSuccess(request, response, authentication);
   }
 

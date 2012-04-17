@@ -16,6 +16,10 @@
   <mvc:annotation-driven />
   <mvc:resources location="/WEB-INF/static/" mapping="/static/**" />
 
+  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <property name="synchronizeOnSession" value="true" />
+  </bean>
+
   <!-- Transaction Manager -->
   <tx:annotation-driven proxy-target-class="true" />
 

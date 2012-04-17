@@ -40,7 +40,7 @@
   <!-- SEARCH FORM -->
   <form id="adminControl" method="post" action="<spring:url value="/search" />">
     <div style="float: left; padding-right: 5px;">
-      <input name="admin_search_id" id="admin_search_id" type="text" class="hidden" /> <input autocomplete="off"
+      <input name="admin_search_id" id="admin_search_id" type="text" class="hidden" value="${sessionScope.user.userId}" /> <input autocomplete="off"
         name="admin_search_param" id="admin_search_param" type="text" title="${currentUser}" />
       <div id="admin_search_results" class="search_results_box"></div>
     </div>

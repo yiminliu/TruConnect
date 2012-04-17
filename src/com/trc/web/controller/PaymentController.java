@@ -29,7 +29,7 @@ import com.trc.user.User;
 import com.trc.user.account.PaymentHistory;
 import com.trc.util.logger.DevLogger;
 import com.trc.web.model.ResultModel;
-import com.trc.web.session.SessionKey;
+import com.trc.web.session.SessionRequest;
 import com.trc.web.session.SessionManager;
 import com.trc.web.validation.CreditCardValidator;
 import com.tscp.mvne.CreditCard;
@@ -108,7 +108,7 @@ public class PaymentController {
     try {
       int decodedPaymentId = SessionEncrypter.decryptId(encodedPaymentId);
       CreditCard cardToUpdate = paymentManager.getCreditCard(decodedPaymentId);
-      SessionManager.set(SessionKey.CREDITCARD_UPDATE, cardToUpdate);
+      SessionManager.set(SessionRequest.CREDITCARD_UPDATE, cardToUpdate);
       model.addObject("creditCard", cardToUpdate);
       return model.getSuccess();
     } catch (PaymentManagementException e) {

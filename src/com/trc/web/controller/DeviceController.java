@@ -23,7 +23,7 @@ import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
 import com.trc.web.model.ResultModel;
-import com.trc.web.session.SessionKey;
+import com.trc.web.session.SessionRequest;
 import com.trc.web.session.SessionManager;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.Device;
@@ -59,7 +59,7 @@ public class DeviceController {
     User user = userManager.getCurrentUser();
     try {
       Device deviceToRename = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
-      SessionManager.set(SessionKey.DEVICE_RENAME, deviceToRename);
+      SessionManager.set(SessionRequest.DEVICE_RENAME, deviceToRename);
       model.addObject("deviceInfo", deviceToRename);
       return model.getSuccess();
     } catch (DeviceManagementException e) {
@@ -73,7 +73,7 @@ public class DeviceController {
     User user = userManager.getCurrentUser();
     String newDeviceLabel = deviceInfo.getLabel();
     try {
-      deviceInfo = (Device) SessionManager.get(SessionKey.DEVICE_RENAME);
+      deviceInfo = (Device) SessionManager.get(SessionRequest.DEVICE_RENAME);
       if (deviceInfo == null) {
         deviceInfo = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       }
@@ -94,7 +94,7 @@ public class DeviceController {
     User user = userManager.getCurrentUser();
     try {
       Device deviceToSwap = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
-      SessionManager.set(SessionKey.DEVICE_SWAP, deviceToSwap);
+      SessionManager.set(SessionRequest.DEVICE_SWAP, deviceToSwap);
       model.addObject("deviceInfo", deviceToSwap);
       return model.getSuccess();
     } catch (DeviceManagementException e) {
@@ -110,7 +110,7 @@ public class DeviceController {
     String newEsn = deviceInfo.getValue();
     String newDeviceLabel = deviceInfo.getLabel();
     try {
-      Device oldDeviceInfo = (Device) SessionManager.get(SessionKey.DEVICE_SWAP);
+      Device oldDeviceInfo = (Device) SessionManager.get(SessionRequest.DEVICE_SWAP);
       Device newDeviceInfo = TruConnectUtil.clone(oldDeviceInfo);
       if (oldDeviceInfo == null) {
         oldDeviceInfo = deviceManager.getDeviceInfo(user, deviceId);
@@ -137,9 +137,9 @@ public class DeviceController {
       Device deviceInfo = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       Account account = accountManager.getAccount(deviceInfo.getAccountNo());
       XMLGregorianCalendar accessFeeDate = accountManager.getLastAccessFeeDate(user, account);
-      SessionManager.set(SessionKey.DEVICE_DEACTIVATE, deviceInfo);
-      SessionManager.set(SessionKey.DEVICE_ACCOUNT, account);
-      SessionManager.set(SessionKey.DEVICE_ACCESSFEEDATE, accessFeeDate);
+      SessionManager.set(SessionRequest.DEVICE_DEACTIVATE, deviceInfo);
+      SessionManager.set(SessionRequest.DEVICE_ACCOUNT, account);
+      SessionManager.set(SessionRequest.DEVICE_ACCESSFEEDATE, accessFeeDate);
       model.addObject("accessFeeDate", accessFeeDate);
       model.addObject("account", account);
       model.addObject("deviceInfo", deviceInfo);
@@ -155,9 +155,9 @@ public class DeviceController {
   public ModelAndView postDeactivateDevice(@PathVariable String encodedDeviceId, @ModelAttribute Device deviceInfo, Errors errors) {
     ResultModel model = new ResultModel("devices/deactivateSuccess", "devices/deactivatePrompt");
     User user = userManager.getCurrentUser();
-    Device deviceInfoLookup = (Device) SessionManager.get(SessionKey.DEVICE_DEACTIVATE);
-    Account account = (Account) SessionManager.get(SessionKey.DEVICE_ACCOUNT);
-    XMLGregorianCalendar accessFeeDate = (XMLGregorianCalendar) SessionManager.get(SessionKey.DEVICE_ACCESSFEEDATE);
+    Device deviceInfoLookup = (Device) SessionManager.get(SessionRequest.DEVICE_DEACTIVATE);
+    Account account = (Account) SessionManager.get(SessionRequest.DEVICE_ACCOUNT);
+    XMLGregorianCalendar accessFeeDate = (XMLGregorianCalendar) SessionManager.get(SessionRequest.DEVICE_ACCESSFEEDATE);
     try {
       if (deviceInfoLookup == null) {
         deviceInfoLookup = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
@@ -202,7 +202,7 @@ public class DeviceController {
     User user = userManager.getCurrentUser();
     try {
       Device deviceToReactivate = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
-      SessionManager.set(SessionKey.DEVICE_REACTIVATE, deviceToReactivate);
+      SessionManager.set(SessionRequest.DEVICE_REACTIVATE, deviceToReactivate);
       model.addObject("deviceInfo", deviceToReactivate);
       return model.getSuccess();
     } catch (DeviceManagementException e) {
@@ -215,7 +215,7 @@ public class DeviceController {
     ResultModel model = new ResultModel("redirect:/devices", "devices/reinstallPrompt");
     User user = userManager.getCurrentUser();
     try {
-      Device deviceToReactivate = (Device) SessionManager.get(SessionKey.DEVICE_REACTIVATE);
+      Device deviceToReactivate = (Device) SessionManager.get(SessionRequest.DEVICE_REACTIVATE);
       if (deviceToReactivate == null) {
         deviceToReactivate = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       }
@@ -248,7 +248,7 @@ public class DeviceController {
     User user = userManager.getCurrentUser();
     int deviceId = SessionEncrypter.decryptId(encodedDeviceId);
     String newTopUp = accountDetail.getTopUp();
-    accountDetail = (AccountDetail) SessionManager.get(SessionKey.DEVICE_ACCOUNTDETAIL);
+    accountDetail = (AccountDetail) SessionManager.get(SessionRequest.DEVICE_ACCOUNTDETAIL);
     try {
       if (accountDetail == null) {
         accountDetail = accountManager.getAccountDetail(user, deviceId);

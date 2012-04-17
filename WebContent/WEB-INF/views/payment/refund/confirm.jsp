@@ -43,15 +43,23 @@
             <form:input path="paymentTransaction.transId" cssClass="span-8" cssErrorClass="span-8 validationFailed"
               readonly="true" />
           </div>
+
           <div class="row">
-            <form:label path="paymentTransaction.sessionId" cssClass="required">Session ID </form:label>
-            <form:input path="paymentTransaction.sessionId" cssClass="span-8" cssErrorClass="span-8 validationFailed"
-              readonly="true" />
+            <form:label path="paymentTransaction.paymentAmount" cssClass="required">Amount </form:label>
+            <form:input path="paymentTransaction.paymentAmount" cssClass="span-8"
+              cssErrorClass="span-8 validationFailed" readonly="true" />
+          </div>
+
+
+          <div class="row">
+            <form:label path="paymentTransaction.paymentSource" cssClass="required">Payment Source </form:label>
+            <form:input path="paymentTransaction.paymentSource" cssClass="span-8"
+              cssErrorClass="span-8 validationFailed" readonly="true" />
           </div>
           <div class="row">
-            <form:label path="paymentTransaction.pmtId" cssClass="required">Payment ID</form:label>
-            <form:input path="paymentTransaction.pmtId" cssClass="span-8" cssErrorClass="span-8 validationFailed"
-              readonly="true" />
+            <form:label path="paymentTransaction.paymentMethod" cssClass="required">Payment Method </form:label>
+            <form:input path="paymentTransaction.paymentMethod" cssClass="span-8"
+              cssErrorClass="span-8 validationFailed" readonly="true" />
           </div>
 
           <div class="row">
@@ -71,16 +79,7 @@
               cssErrorClass="span-8 validationFailed" readonly="true" />
           </div>
 
-          <div class="row">
-            <form:label path="paymentTransaction.paymentSource" cssClass="required">Payment Source </form:label>
-            <form:input path="paymentTransaction.paymentSource" cssClass="span-8"
-              cssErrorClass="span-8 validationFailed" readonly="true" />
-          </div>
-          <div class="row">
-            <form:label path="paymentTransaction.paymentMethod" cssClass="required">Payment Method </form:label>
-            <form:input path="paymentTransaction.paymentMethod" cssClass="span-8"
-              cssErrorClass="span-8 validationFailed" readonly="true" />
-          </div>
+
           <div class="row">
             <form:label path="paymentTransaction.accountNo" cssClass="required">Account Number </form:label>
             <form:input path="paymentTransaction.accountNo" cssClass="span-8" cssErrorClass="span-8 validationFailed"
@@ -96,8 +95,11 @@
             <form:input path="sessionToken.description" cssClass="span-8" cssErrorClass="span-8 validationFailed"
               readonly="true" />
           </div>
-
-
+          <div class="row">
+            <form:label path="sessionToken.request" cssClass="required">Token Request </form:label>
+            <form:input path="sessionToken.request" cssClass="span-8" cssErrorClass="span-8 validationFailed"
+              readonly="true" />
+          </div>
 
           <!-- Jcaptcha -->
           <div class="row" style="margin-bottom: 0px; padding-bottom: 0px;">
