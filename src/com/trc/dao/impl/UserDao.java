@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.trc.dao.UserDaoModel;
 import com.trc.user.User;
 import com.trc.user.authority.Authority;
+import com.trc.user.authority.ROLE;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -53,9 +54,9 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
   }
 
   @Override
-  public List<User> getAllUsersWithRole(String role) {
+  public List<User> getAllUsersWithRole(ROLE role) {
     DetachedCriteria subCriteria = DetachedCriteria.forClass(Authority.class);
-    subCriteria.add(Property.forName("authority").eq(role));
+    subCriteria.add(Property.forName("role").eq(role));
     subCriteria.setProjection(Projections.property("user"));
     return getHibernateTemplate().findByCriteria(subCriteria);
   }
@@ -125,7 +126,7 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
 
   public List<User> searchByEmailCriteria(String email) {
     DetachedCriteria authCriteria = DetachedCriteria.forClass(Authority.class);
-    authCriteria.add(Restrictions.eq("authority", "ROLE_USER"));
+    authCriteria.add(Restrictions.eq("role", ROLE.ROLE_USER));
     authCriteria.setProjection(Projections.property("user.userId"));
 
     DetachedCriteria userCriteria = DetachedCriteria.forClass(User.class);

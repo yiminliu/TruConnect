@@ -28,7 +28,7 @@ import com.trc.web.model.ResultModel;
 import com.trc.web.validation.AdminValidator;
 
 @Controller
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERUSER')")
 @RequestMapping("/admin")
 public class AdminController extends ManagerController {
   @Autowired

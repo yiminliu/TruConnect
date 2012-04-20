@@ -55,19 +55,19 @@ public class UserManager implements UserManagerModel {
   @Override
   @Transactional(readOnly = true)
   public List<User> getAllAdmins() {
-    return userDao.getAllUsersWithRole(ROLE.ROLE_ADMIN.toString());
+    return userDao.getAllUsersWithRole(ROLE.ROLE_ADMIN);
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<User> getAllManagers() {
-    return userDao.getAllUsersWithRole(ROLE.ROLE_MANAGER.toString());
+    return userDao.getAllUsersWithRole(ROLE.ROLE_MANAGER);
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<User> getAllServiceReps() {
-    return userDao.getAllUsersWithRole(ROLE.ROLE_SERVICEREP.toString());
+    return userDao.getAllUsersWithRole(ROLE.ROLE_SERVICEREP);
   }
 
   @Override

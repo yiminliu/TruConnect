@@ -18,7 +18,7 @@ import com.trc.user.admin.UserControl;
 import com.trc.web.model.ResultModel;
 
 @Controller
-@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+@PreAuthorize("hasAnyRole('ROLE_MANAGER','ROLE_ADMIN', 'ROLE_SUPERUSER')")
 @RequestMapping("/manager")
 public class ManagerController extends ServiceRepController {
 

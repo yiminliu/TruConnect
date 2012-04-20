@@ -25,50 +25,75 @@
           later or contact TruConnect Customer Support at 855-878-2666 (Monday-Friday 7am-8pm PST, Saturday 8am - 5pm
           PST) or via <a href="http://support.truconnect.com/">http://support.truconect.com/</a>.
         </p>
-        <sec:authorize access="hasRole('ROLE_ADMIN')">
-          <hr />
-          <%
-            try {
-                // The Servlet spec guarantees this attribute will be available
-                Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
-                if (exception != null) {
-                  if (exception instanceof ServletException) {
-                    // It's a ServletException: we should extract the root cause
-                    ServletException sex = (ServletException) exception;
-                    Throwable rootCause = sex.getRootCause();
-                    if (rootCause == null)
-                      rootCause = sex;
-                    out.println("** Root cause is: " + rootCause.getMessage());
-                    rootCause.printStackTrace(new java.io.PrintWriter(out));
-                  } else {
-                    // It's not a ServletException, so we'll just show it
-                    exception.printStackTrace(new java.io.PrintWriter(out));
-                  }
-                } else {
-                  out.println("No error information available");
-                }
-                // Display cookies
-                out.println("\nCookies:\n");
-                Cookie[] cookies = request.getCookies();
-                if (cookies != null) {
-                  for (int i = 0; i < cookies.length; i++) {
-                    out.println(cookies[i].getName() + "=[" + cookies[i].getValue() + "]");
-                  }
-                }
-              } catch (Exception ex) {
-                ex.printStackTrace(new java.io.PrintWriter(out));
-              }
-          %>
-        </sec:authorize>
       </div>
 
-      <div class="span-6 last sub-navigation">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
-      </div>
-
+      <c:choose>
+        <c:when test="${!empty sessionScope.controlling_user}">
+          <div class="span-6 last sub-navigation">
+            <%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%>
+          </div>
+        </c:when>
+        <c:otherwise>
+          <div class="span-6 last sub-navigation">
+            <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+          </div>
+        </c:otherwise>
+      </c:choose>
     </div>
-    <!-- Close main-content -->
-    <%@ include file="/WEB-INF/includes/footer_links.jsp"%>
+
+    <c:if test="${!empty sessionScope.controlling_user}">
+
+      <div style="margin-bottom: 20px;">
+        <a href="#" class="button action-m" onclick="$('#exception').slideToggle()"><span> <img
+            style="margin-right: 5px; float: left;" src="<spring:url value="/static/images/buttons/icons/add.png" />" />
+            View Exception
+        </span> </a>
+      </div>
+      <div style="clear: both;"></div>
+
+      <div id="exception" style="display: none; margin-top: 10px;">
+        <%
+          try {
+              // The Servlet spec guarantees this attribute will be available
+              Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
+              if (exception != null) {
+                if (exception instanceof ServletException) {
+                  // It's a ServletException: we should extract the root cause
+                  ServletException sex = (ServletException) exception;
+                  Throwable rootCause = sex.getRootCause();
+                  if (rootCause == null)
+                    rootCause = sex;
+                  out.println("<p style='color:#4C81B0; font-size:1.3em;'>Root Cause:<br/>" + rootCause.getMessage() + "</p>");
+                  out.println("<p>");
+                  rootCause.printStackTrace(new java.io.PrintWriter(out));
+                  out.println("</p>");
+                } else {
+                  // It's not a ServletException, so we'll just show it
+                  exception.printStackTrace(new java.io.PrintWriter(out));
+                }
+              } else {
+                out.println("No error information available");
+              }
+              // Display cookies
+              out.println("<p>Cookies:<br/>");
+              Cookie[] cookies = request.getCookies();
+              if (cookies != null) {
+                for (int i = 0; i < cookies.length; i++) {
+                  out.println(cookies[i].getName() + "=[" + cookies[i].getValue() + "]");
+                }
+              }
+              out.println("</p>");
+            } catch (Exception ex) {
+              ex.printStackTrace(new java.io.PrintWriter(out));
+            }
+        %>
+      
+    </c:if>
+
+  </div>
+
+  <!-- Close main-content -->
+  <%@ include file="/WEB-INF/includes/footer_links.jsp"%>
   </div>
   <!-- Close container -->
 

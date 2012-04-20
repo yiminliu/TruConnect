@@ -10,19 +10,27 @@
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
   <div class="blueTruConnectGradient">
-    <div class="container">Whoops!</div>
+    <div class="container">Acess Denied</div>
   </div>
 
   <div class="container">
     <div id="main-content">
       <div class="span-18 colborder">
-        <h3 style="margin-bottom: 10px; padding-bottom: 0px; border-bottom: 1px #ccc dotted;">Forbidden</h3>
         <p>You are trying to access a protected page. If you found this page in error please try again.</p>
       </div>
 
-      <div class="span-6 last sub-navigation">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
-      </div>
+      <c:choose>
+        <c:when test="${!empty sessionScope.controlling_user}">
+          <div class="span-6 last sub-navigation">
+            <%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%>
+          </div>
+        </c:when>
+        <c:otherwise>
+          <div class="span-6 last sub-navigation">
+            <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+          </div>
+        </c:otherwise>
+      </c:choose>
 
     </div>
     <!-- Close main-content -->

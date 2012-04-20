@@ -47,12 +47,12 @@
     <intercept-url pattern="/activate" access="permitAll" />
     <intercept-url pattern="/manage" access="permitAll" />
     <intercept-url pattern="/retrieve/**" access="permitAll" />
-    <intercept-url pattern="/servicerep/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_SERVICEREP')" />
-    <intercept-url pattern="/manager/**" access="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')" />
-    <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN')" />
+    <intercept-url pattern="/servicerep/**" access="hasAnyRole('ROLE_SUPERUSER', 'ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_SERVICEREP')" />
+    <intercept-url pattern="/manager/**" access="hasAnyRole('ROLE_SUPERUSER', 'ROLE_ADMIN', 'ROLE_MANAGER')" />
+    <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_SUPERUSER', 'ROLE_ADMIN')" />
     <intercept-url pattern="/" access="permitAll" />
     <intercept-url pattern="/**" access="isAuthenticated()" />
-    <access-denied-handler error-page="/exception/accessDenied.jsp" />
+    <access-denied-handler error-page="/WEB-INF/views/exception/accessDenied.jsp" />
     <logout invalidate-session="true" logout-success-url="http://www.truconnect.com/" />
   </http>
 

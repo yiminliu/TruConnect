@@ -20,11 +20,10 @@
         </div>
       </div>
 
-      <sec:authorize ifAnyGranted="ROLE_ADMIN">
-        <div class="span-6 last sub-navigation">
-          <%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%>
-        </div>
-      </sec:authorize>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%>
+      </div>
+
     </div>
 
 

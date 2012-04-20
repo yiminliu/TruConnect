@@ -7,11 +7,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class does not have to implement Runnable. That is leftover from a
+ * previous implementation using Thread and daemon.
+ * 
+ * @author Tachikoma
+ * 
+ */
 @Component
 public class CacheCleaner implements Runnable {
   private static final Logger logger = LoggerFactory.getLogger(CacheCleaner.class);
 
-  @Scheduled(fixedDelay = 60000)
+  @Scheduled(fixedDelay = 300000)
   public void run() {
     if (CacheManager.cache != null && CacheManager.cache.size() > 0) {
       logger.trace("CacheCleaner running on Thread {}. Current size is {}.", Thread.currentThread().getName(), CacheManager.cache.size());

@@ -60,11 +60,11 @@
         </form:form>
       </div>
 
-      <sec:authorize ifAnyGranted="ROLE_ADMIN">
+      <c:if test="${!empty sessionScope.controlling_user}">
         <div class="span-6 last sub-navigation">
           <%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%>
         </div>
-      </sec:authorize>
+      </c:if>
     </div>
 
 

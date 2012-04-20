@@ -14,7 +14,7 @@ import com.trc.user.User;
 import com.trc.web.model.ResultModel;
 
 @Controller
-@PreAuthorize("hasAnyRole('ROLE_SERVICEREP','ROLE_MANAGER','ROLE_ADMIN')")
+@PreAuthorize("hasAnyRole('ROLE_SERVICEREP','ROLE_MANAGER','ROLE_ADMIN', 'ROLE_SUPERUSER')")
 @RequestMapping("/servicerep")
 public class ServiceRepController extends MemberController {
 
