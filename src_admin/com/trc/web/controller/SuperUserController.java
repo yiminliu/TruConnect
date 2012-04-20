@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.config.Config;
+import com.trc.config.CONFIG;
 import com.trc.user.User;
 import com.trc.web.model.ResultModel;
 
@@ -20,7 +20,7 @@ public class SuperUserController extends AdminController {
 
   public ModelAndView showHome() {
     ResultModel model = new ResultModel("admin/home");
-    if (!Config.ADMIN) {
+    if (!CONFIG.ADMIN) {
       return model.getAccessDenied();
     }
     List<Object> activePrincipals = sessionRegistry.getAllPrincipals();

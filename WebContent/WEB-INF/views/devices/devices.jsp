@@ -32,7 +32,7 @@
       </script>
       
         <c:forEach var="device" items="${devices}">
-          <sec:authorize ifAnyGranted="ROLE_ADMIN, ROLE_MANAGER">
+          <sec:authorize ifAnyGranted="ROLE_ADMIN, ROLE_MANAGER, ROLE_SUPERUSER, ROLE_SERVICEREP">
             <img class="expand_device_detail" style="margin-right:5px; float:left;" src="<spring:url value="/static/images/buttons/icons/add.png" />" />
           </sec:authorize>
 

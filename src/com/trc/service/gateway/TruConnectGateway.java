@@ -7,7 +7,7 @@ import javax.xml.namespace.QName;
 
 import org.springframework.stereotype.Service;
 
-import com.trc.config.Config;
+import com.trc.config.CONFIG;
 import com.tscp.mvne.TruConnect;
 import com.tscp.mvne.TruConnectService;
 
@@ -20,7 +20,7 @@ public class TruConnectGateway {
   public void init() {
     try {
       if (!TSCPMVNE.initialized) {
-        Config.loadProperties();
+        CONFIG.loadProperties();
       }
       String namespace = TSCPMVNE.namespace;
       String servicename = TSCPMVNE.serviceName;

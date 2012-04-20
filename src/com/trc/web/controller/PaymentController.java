@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.config.Config;
+import com.trc.config.CONFIG;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.AddressManagementException;
 import com.trc.exception.management.PaymentManagementException;
@@ -53,9 +53,9 @@ public class PaymentController {
 
   @ModelAttribute
   private void paymentReferenceData(ModelMap modelMap) {
-    modelMap.addAttribute("states", Config.states.entrySet());
-    modelMap.addAttribute("months", Config.months.entrySet());
-    modelMap.addAttribute("years", Config.yearsFuture.entrySet());
+    modelMap.addAttribute("states", CONFIG.states.entrySet());
+    modelMap.addAttribute("months", CONFIG.months.entrySet());
+    modelMap.addAttribute("years", CONFIG.years.entrySet());
     modelMap.addAttribute("paymentRecord", new PaymentRecord());
     try {
       modelMap.addAttribute("addresses", addressManager.getAllAddresses(userManager.getCurrentUser()));

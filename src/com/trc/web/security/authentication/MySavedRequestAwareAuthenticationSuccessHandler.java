@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
-import com.trc.config.Config;
+import com.trc.config.CONFIG;
 import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.StringEncrypter;
 import com.trc.user.AnonymousUser;
@@ -29,7 +29,7 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
     User user = userManager.getLoggedInUser();
     userManager.getUserRealName(user);
     MDC.put("sessionId", SessionManager.getCurrentSession().getId());
-    if (Config.ADMIN && user.isInternalUser()) {
+    if (CONFIG.ADMIN && user.isInternalUser()) {
       MDC.put("internalUser", user.getUsername());
       setAlwaysUseDefaultTargetUrl(true);
       userManager.setSessionControllingUser(user);
