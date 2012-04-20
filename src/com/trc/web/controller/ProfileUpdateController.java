@@ -18,8 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.exception.EmailException;
 import com.trc.exception.management.AccountManagementException;
-import com.trc.manager.AccountManager;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.AccountManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.Md5Encoder;
 import com.trc.service.email.VelocityEmailService;
 import com.trc.user.User;

@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -12,8 +12,9 @@ import org.springframework.stereotype.Component;
 import com.trc.exception.EmailException;
 import com.trc.exception.GatewayException;
 import com.trc.exception.management.UserManagementException;
-import com.trc.service.TruConnectEmailService;
+import com.trc.manager.RegistrationManagerModel;
 import com.trc.service.email.VelocityEmailService;
+import com.trc.service.impl.TruConnectEmailService;
 import com.trc.user.User;
 import com.trc.user.activation.Registration;
 import com.trc.user.contact.ContactInfo;

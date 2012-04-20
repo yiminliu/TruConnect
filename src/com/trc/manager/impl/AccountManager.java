@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,8 @@ import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.AddressManagementException;
 import com.trc.exception.management.DeviceManagementException;
 import com.trc.exception.service.AccountServiceException;
-import com.trc.service.AccountService;
+import com.trc.manager.AccountManagerModel;
+import com.trc.service.impl.AccountService;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
 import com.trc.user.account.Overview;
@@ -20,10 +21,10 @@ import com.trc.user.account.PaymentHistory;
 import com.trc.user.account.UsageHistory;
 import com.trc.user.contact.Address;
 import com.trc.user.contact.ContactInfo;
+import com.trc.util.cache.CacheKey;
+import com.trc.util.cache.CacheManager;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
-import com.trc.web.session.cache.CacheKey;
-import com.trc.web.session.cache.CacheManager;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.CustAcctMapDAO;
 import com.tscp.mvne.CustInfo;
@@ -41,6 +42,8 @@ public class AccountManager implements AccountManagerModel {
   private AddressManager addressManager;
   @Autowired
   private DeviceManager deviceManager;
+  @Autowired
+  private UserManager userManager;
 
   @Override
   @Loggable(value = LogLevel.TRACE)
@@ -110,13 +113,17 @@ public class AccountManager implements AccountManagerModel {
     return accountDetailList;
   }
 
-  private List<Account> getAccountListFromCache() {
-    return (List<Account>) CacheManager.get(CacheKey.ACCOUNTS);
+  private List<Account> getAccountListFromCache(User user) {
+    // return (List<Account>) CacheManager.get(CacheKey.ACCOUNTS);
+    return (List<Account>) CacheManager.get(user, CacheKey.ALL_ACCOUNTS);
   }
 
   private Account getAccountFromCache(int accountNumber) {
-    List<Account> accountList = getAccountListFromCache();
-    if (accountList != null) {
+    List<Account> accountList = getAccountListFromCache(userManager.getCurrentUser());
+    Account cachedAccount = (Account) CacheManager.get(userManager.getCurrentUser(), CacheKey.ACCOUNT, Integer.toString(accountNumber));
+    if (cachedAccount != null) {
+      return cachedAccount;
+    } else if (accountList != null) {
       for (Account account : accountList) {
         if (account.getAccountno() == accountNumber) {
           return account;
@@ -134,7 +141,9 @@ public class AccountManager implements AccountManagerModel {
       return account;
     } else {
       try {
-        return accountService.getAccount(accountNumber);
+        Account fetchedAccount = accountService.getAccount(accountNumber);
+        CacheManager.set(userManager.getCurrentUser(), CacheKey.ACCOUNT, fetchedAccount);
+        return fetchedAccount;
       } catch (AccountServiceException e) {
         throw new AccountManagementException(e.getMessage(), e.getCause());
       }
@@ -153,7 +162,7 @@ public class AccountManager implements AccountManagerModel {
 
   @Loggable(value = LogLevel.TRACE)
   public List<Account> getAccounts(User user) throws AccountManagementException {
-    List<Account> accountList = getAccountListFromCache();
+    List<Account> accountList = getAccountListFromCache(user);
     if (accountList != null) {
       return accountList;
     } else {
@@ -162,7 +171,8 @@ public class AccountManager implements AccountManagerModel {
         for (CustAcctMapDAO accountMap : getAccountMap(user)) {
           accountList.add(getAccount(accountMap.getAccountNo()));
         }
-        CacheManager.set(CacheKey.ACCOUNTS, accountList);
+        // CacheManager.set(CacheKey.ACCOUNTS, accountList);
+        CacheManager.set(user, CacheKey.ALL_ACCOUNTS, accountList);
         return accountList;
       } catch (AccountManagementException e) {
         throw e;
@@ -173,10 +183,18 @@ public class AccountManager implements AccountManagerModel {
   @Override
   @Loggable(value = LogLevel.TRACE)
   public List<UsageDetail> getChargeHistory(User user, int accountNumber) throws AccountManagementException {
-    try {
-      return accountService.getChargeHistory(user, accountNumber);
-    } catch (AccountServiceException e) {
-      throw new AccountManagementException(e.getMessage(), e.getCause());
+    List<UsageDetail> chargeHistory = (List<UsageDetail>) CacheManager.get(user, CacheKey.CHARGE_HISTORY, accountNumber);
+    if (chargeHistory != null) {
+      return chargeHistory;
+    } else {
+      try {
+        chargeHistory = accountService.getChargeHistory(user, accountNumber);
+        String key = CacheKey.makeKey(user, CacheKey.CHARGE_HISTORY, accountNumber);
+        CacheManager.set(key, chargeHistory);
+        return chargeHistory;
+      } catch (AccountServiceException e) {
+        throw new AccountManagementException(e.getMessage(), e.getCause());
+      }
     }
   }
 
@@ -261,10 +279,17 @@ public class AccountManager implements AccountManagerModel {
   @Override
   @Loggable(value = LogLevel.TRACE)
   public CustTopUp getTopUp(User user, Account account) throws AccountManagementException {
-    try {
-      return accountService.getTopUp(user, account);
-    } catch (AccountServiceException e) {
-      throw new AccountManagementException(e.getMessage(), e.getCause());
+    CustTopUp topup = (CustTopUp) CacheManager.get(user, CacheKey.TOPUP, account);
+    if (topup != null) {
+      return topup;
+    } else {
+      try {
+        topup = accountService.getTopUp(user, account);
+        CacheManager.set(user, CacheKey.TOPUP, topup);
+        return topup;
+      } catch (AccountServiceException e) {
+        throw new AccountManagementException(e.getMessage(), e.getCause());
+      }
     }
   }
 
@@ -272,7 +297,9 @@ public class AccountManager implements AccountManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public CustTopUp setTopUp(User user, double amount, Account account) throws AccountManagementException {
     try {
-      return accountService.setTopUp(user, amount, account);
+      CustTopUp topup = accountService.setTopUp(user, amount, account);
+      CacheManager.set(user, CacheKey.TOPUP, topup);
+      return topup;
     } catch (AccountServiceException e) {
       throw new AccountManagementException(e.getMessage(), e.getCause());
     }
@@ -283,7 +310,8 @@ public class AccountManager implements AccountManagerModel {
   public void updateEmail(Account account) throws AccountManagementException {
     try {
       accountService.updateEmail(account);
-      CacheManager.clear(CacheKey.ACCOUNTS);
+      // CacheManager.clear(CacheKey.ACCOUNTS);
+      CacheManager.clearCache(userManager.getCurrentUser(), CacheKey.ALL_ACCOUNTS);
     } catch (AccountServiceException e) {
       throw new AccountManagementException(e.getMessage(), e.getCause());
     }

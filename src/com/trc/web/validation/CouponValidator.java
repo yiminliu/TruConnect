@@ -10,15 +10,17 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.trc.coupon.Coupon;
+import com.trc.coupon.CouponRequest;
 import com.trc.coupon.CouponStackable;
 import com.trc.coupon.UserCoupon;
 import com.trc.exception.ValidationException;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.CouponManagementException;
-import com.trc.manager.AccountManager;
-import com.trc.manager.CouponManager;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.AccountManager;
+import com.trc.manager.impl.CouponManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
+import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
 
 @Component
@@ -50,6 +52,13 @@ public class CouponValidator implements Validator {
       checkEndDate(coupon.getEndDate(), errors);
       checkQuantity(coupon, errors);
     }
+  }
+
+  public void validate(CouponRequest couponRequest, int accountNo, Errors errors) {
+    errors.pushNestedPath("coupon");
+    DevLogger.log("nested path is " + errors.getNestedPath());
+    validate(couponRequest.getCoupon(), accountNo, errors);
+    errors.popNestedPath();
   }
 
   public void validate(Coupon coupon, int accountNumber, Errors errors) {

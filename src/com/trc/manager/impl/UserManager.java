@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,8 +13,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.trc.dao.UserDao;
+import com.trc.dao.impl.UserDao;
 import com.trc.exception.management.AccountManagementException;
+import com.trc.manager.UserManagerModel;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.user.AnonymousUser;
 import com.trc.user.User;
@@ -135,7 +136,7 @@ public class UserManager implements UserManagerModel {
     Authentication authentication = securityContext.getContext().getAuthentication();
     boolean isAnon1 = authentication == null || !(authentication.getPrincipal() instanceof UserDetails);
     boolean isAnon2 = authentication == null || isAnonymousUser(authentication);
-    logger.debug("instance of anonymous check: {} anon username check: {}", isAnon1, isAnon2);
+    logger.debug("UserManager Anonymous Check: {} {}", isAnon1, isAnon2);
     if (isAnon2) {
       return new AnonymousUser();
     } else {

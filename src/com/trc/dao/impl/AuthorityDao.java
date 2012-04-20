@@ -1,4 +1,4 @@
-package com.trc.dao;
+package com.trc.dao.impl;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
+import com.trc.dao.AuthorityDaoModel;
 import com.trc.user.authority.Authority;
 
 @Repository

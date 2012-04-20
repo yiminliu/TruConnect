@@ -18,11 +18,14 @@
     <beans:constructor-arg index="0">
       <beans:map key-type="java.lang.String" value-type="com.trc.security.permission.Permission">
         <beans:entry key="canUpdate" value-ref="updatePermission" />
+        <beans:entry key="canRefund" value-ref="refundPermission" />
       </beans:map>
     </beans:constructor-arg>
   </beans:bean>
 
   <beans:bean id="updatePermission" class="com.trc.security.permission.UpdatePermission" init-method="init" />
+
+  <beans:bean id="refundPermission" class="com.trc.security.permission.RefundPermission" init-method="init" />
 
   <http auto-config="false" use-expressions="true" entry-point-ref="authenticationProcessingFilterEntryPoint">
     <custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
@@ -44,9 +47,9 @@
     <intercept-url pattern="/activate" access="permitAll" />
     <intercept-url pattern="/manage" access="permitAll" />
     <intercept-url pattern="/retrieve/**" access="permitAll" />
-  <intercept-url pattern="/servicerep/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_SERVICEREP')" />
-  <intercept-url pattern="/manager/**" access="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')" />
-  <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN')" />
+    <intercept-url pattern="/servicerep/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_SERVICEREP')" />
+    <intercept-url pattern="/manager/**" access="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')" />
+    <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN')" />
     <intercept-url pattern="/" access="permitAll" />
     <intercept-url pattern="/**" access="isAuthenticated()" />
     <access-denied-handler error-page="/exception/accessDenied.jsp" />

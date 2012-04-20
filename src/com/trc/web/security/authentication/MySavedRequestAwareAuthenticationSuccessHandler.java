@@ -12,7 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import com.trc.config.Config;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.StringEncrypter;
 import com.trc.user.AnonymousUser;
 import com.trc.user.User;
@@ -29,32 +29,9 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
     User user = userManager.getLoggedInUser();
     userManager.getUserRealName(user);
     MDC.put("sessionId", SessionManager.getCurrentSession().getId());
-    // if (Config.ADMIN && user.isSuperUser()) {
-    // MDC.put("internalUser", user.getUsername());
-    // userManager.setSessionAdmin(user);
-    // userManager.setSessionUser(new AnonymousUser());
-    // setAlwaysUseDefaultTargetUrl(true);
-    // setDefaultTargetUrl("/admin/home");
-    // } else if (Config.ADMIN && user.isAdmin()) {
-    // MDC.put("internalUser", user.getUsername());
-    // userManager.setSessionAdmin(user);
-    // userManager.setSessionUser(new AnonymousUser());
-    // setAlwaysUseDefaultTargetUrl(true);
-    // setDefaultTargetUrl("/admin/home");
-    // } else if (Config.ADMIN && user.isManager()) {
-    // MDC.put("internalUser", user.getUsername());
-    // userManager.setSessionManager(user);
-    // userManager.setSessionUser(new AnonymousUser());
-    // setAlwaysUseDefaultTargetUrl(true);
-    // setDefaultTargetUrl("/manager/home");
-    // } else if (Config.ADMIN && user.isServiceRep()) {
-    // MDC.put("internalUser", user.getUsername());
-    // userManager.setSessionManager(user);
-    // userManager.setSessionUser(new AnonymousUser());
-    // setAlwaysUseDefaultTargetUrl(true);
-    // setDefaultTargetUrl("/servicerep/home");
     if (Config.ADMIN && user.isInternalUser()) {
       MDC.put("internalUser", user.getUsername());
+      setAlwaysUseDefaultTargetUrl(true);
       userManager.setSessionControllingUser(user);
       userManager.setSessionUser(new AnonymousUser());
       if (user.isAdmin()) {

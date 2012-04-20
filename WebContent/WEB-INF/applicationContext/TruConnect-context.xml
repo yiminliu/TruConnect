@@ -51,5 +51,4 @@
     /> <property name="loggerName" value="truconnect" /> <property name="enterMessage" value="Entering $[methodName]($[arguments])" /> <property name="exitMessage" 
     value="Leaving $[methodName](): $[returnValue]" /> </bean> -->
 
-
 </beans>

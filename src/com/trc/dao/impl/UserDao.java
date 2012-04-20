@@ -1,4 +1,4 @@
-package com.trc.dao;
+package com.trc.dao.impl;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -22,6 +22,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.trc.dao.UserDaoModel;
 import com.trc.user.User;
 import com.trc.user.authority.Authority;
 

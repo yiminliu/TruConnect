@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.trc.config.Config;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 
 @Controller

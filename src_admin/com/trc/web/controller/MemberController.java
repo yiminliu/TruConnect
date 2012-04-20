@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.config.Config;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 import com.trc.web.model.ResultModel;
 

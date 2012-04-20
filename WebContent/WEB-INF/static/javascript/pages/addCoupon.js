@@ -2,7 +2,7 @@ var couponAjaxBufferTime = 1;
 var currentCouponAjaxRequest = null;
 
 $(function() {
-	$("#couponCode").keypress(function(e) {
+	$("#coupon\\.couponCode").keypress(function(e) {
 		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
 			$("#next_1").click();
 			return false;

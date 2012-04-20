@@ -17,8 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.config.Config;
 import com.trc.exception.management.AddressManagementException;
-import com.trc.manager.AddressManager;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.AddressManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
 import com.trc.user.contact.Address;

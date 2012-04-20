@@ -22,9 +22,9 @@ import com.trc.coupon.CouponRequest;
 import com.trc.coupon.ajax.CouponResponse;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.CouponManagementException;
-import com.trc.manager.AccountManager;
-import com.trc.manager.CouponManager;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.AccountManager;
+import com.trc.manager.impl.CouponManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
@@ -111,8 +111,9 @@ public class CouponController {
     if (token != null && token.getId().equals(couponRequest.getSessionToken().getId())) {
       try {
         couponRequest.setCoupon(couponManager.getCouponByCode(couponRequest.getCoupon().getCouponCode()));
-        couponValidator.validate(couponRequest.getCoupon(), accountNumber, result);
+        couponValidator.validate(couponRequest, accountNumber, result);
         if (result.hasErrors()) {
+          devLogger.debug("Errors during validation {}", result.getAllErrors().toString());
           model.addObject("accountList", accountManager.getOverview(user).encodeAccountNo().getAccountDetails());
           return model.getError();
         } else {
@@ -138,7 +139,7 @@ public class CouponController {
             }
           }
           model.addObject("accountDetail", accountDetail);
-          model.addObject("coupon", couponRequest);
+          model.addObject("couponRequest", couponRequest);
           return model.getSuccess();
         }
       } catch (CouponManagementException e) {

@@ -204,7 +204,6 @@ th,td,caption {
 tbody tr:nth-child(even) td,tbody tr.even td {
   background: #e5ecf9;
 }*/
-
 tfoot {
   font-style: italic;
 }

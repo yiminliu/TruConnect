@@ -1,11 +1,12 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.trc.dao.AuthorityDao;
+import com.trc.dao.impl.AuthorityDao;
+import com.trc.manager.AuthorityManagerModel;
 import com.trc.user.authority.Authority;
 
 @Service

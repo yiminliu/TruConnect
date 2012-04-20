@@ -50,12 +50,29 @@
     </encoder>
   </appender>
 
+  <appender name="CACHE_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>../logs/truconnect_cache.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>../logs/truconnect/truconnect_cache.%d{yyyy-MM-dd}.log.zip</FileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>5MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{16}: %msg%n</pattern>
+    </encoder>
+  </appender>
+
   <logger name="truconnect" level="ALL">
     <appender-ref ref="ROLLINGFILE" />
   </logger>
 
   <logger name="devLogger" level="ALL">
     <appender-ref ref="DEV_ROLLINGFILE" />
+  </logger>
+
+  <logger name="com.trc.util.cache" level="ALL">
+    <appender-ref ref="CACHE_ROLLINGFILE" />
   </logger>
 
   <logger name="com.trc" level="ERROR">

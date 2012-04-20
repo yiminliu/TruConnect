@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.trc.exception.EmailException;
 import com.trc.exception.WebFlowException;
 import com.trc.exception.management.DeviceManagementException;
-import com.trc.manager.DeviceManager;
+import com.trc.manager.impl.DeviceManager;
 import com.trc.service.email.VelocityEmailService;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;

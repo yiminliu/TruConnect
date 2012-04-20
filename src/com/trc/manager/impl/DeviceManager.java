@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.List;
 
@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.trc.exception.management.DeviceManagementException;
 import com.trc.exception.service.DeviceServiceException;
-import com.trc.service.DeviceService;
+import com.trc.manager.DeviceManagerModel;
+import com.trc.service.impl.DeviceService;
 import com.trc.user.User;
+import com.trc.util.cache.CacheKey;
+import com.trc.util.cache.CacheManager;
 import com.trc.util.logger.DevLogger;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
-import com.trc.web.session.cache.CacheKey;
-import com.trc.web.session.cache.CacheManager;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.Device;
 import com.tscp.mvne.NetworkInfo;
@@ -23,6 +24,8 @@ import com.tscp.mvne.ServiceInstance;
 public class DeviceManager implements DeviceManagerModel {
   @Autowired
   private DeviceService deviceService;
+  @Autowired
+  private UserManager userManager;
 
   @Loggable(value = LogLevel.TRACE)
   public void setDefaultDeviceLabel(Device deviceInfo, String firstName) {
@@ -52,13 +55,13 @@ public class DeviceManager implements DeviceManagerModel {
   @Override
   @Loggable(value = LogLevel.TRACE)
   public List<Device> getDeviceInfoList(User user) throws DeviceManagementException {
-    List<Device> deviceInfoList = getDevicesFromCache();
+    List<Device> deviceInfoList = getDevicesFromCache(user);
     if (deviceInfoList != null) {
       return deviceInfoList;
     } else {
       try {
         deviceInfoList = deviceService.getDeviceInfoList(user);
-        saveDevicesToCache(deviceInfoList);
+        saveDevicesToCache(user, deviceInfoList);
         return deviceInfoList;
       } catch (DeviceServiceException e) {
         throw new DeviceManagementException(e.getMessage(), e.getCause());
@@ -87,7 +90,7 @@ public class DeviceManager implements DeviceManagerModel {
       deviceInfo.setId(0);
       deviceInfo.setCustId(user.getUserId());
       deviceInfo.setAccountNo(account.getAccountno());
-      clearDevicesFromCache();
+      clearDevicesFromCache(user);
       return deviceService.addDeviceInfo(user, deviceInfo);
     } catch (DeviceServiceException e) {
       throw new DeviceManagementException(e.getMessage(), e.getCause());
@@ -98,7 +101,7 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public List<Device> removeDeviceInfo(Device deviceInfo, Account account, User user) throws DeviceManagementException {
     try {
-      clearDevicesFromCache();
+      clearDevicesFromCache(user);
       return deviceService.deleteDeviceInfo(user, deviceInfo);
     } catch (DeviceServiceException e) {
       e.printStackTrace();
@@ -110,7 +113,7 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public void updateDeviceInfo(User user, Device deviceInfo) throws DeviceManagementException {
     try {
-      clearDevicesFromCache();
+      clearDevicesFromCache(user);
       deviceService.updateDeviceInfo(user, deviceInfo);
     } catch (DeviceServiceException e) {
       throw new DeviceManagementException(e.getMessage(), e.getCause());
@@ -121,7 +124,7 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public NetworkInfo swapDevice(User user, Device oldDeviceInfo, Device newDeviceInfo) throws DeviceManagementException {
     try {
-      clearDevicesFromCache();
+      clearDevicesFromCache(user);
       NetworkInfo oldNetworkInfo = deviceService.getNetworkInfo(oldDeviceInfo.getValue(), null);
       NetworkInfo newNetworkInfo = deviceService.swapDevice(user, oldNetworkInfo, newDeviceInfo);
       return newNetworkInfo;
@@ -144,7 +147,7 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public void suspendService(int userId, int accountNo, int deviceId) throws DeviceManagementException {
     try {
-      clearDevicesFromCache();
+      clearDevicesFromCache(userManager.getCurrentUser());
       deviceService.suspendService(userId, accountNo, deviceId);
     } catch (DeviceServiceException e) {
       throw new DeviceManagementException(e.getMessage(), e.getCause());
@@ -155,7 +158,7 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public void restoreService(int userId, int accountNo, int deviceId) throws DeviceManagementException {
     try {
-      clearDevicesFromCache();
+      clearDevicesFromCache(userManager.getCurrentUser());
       deviceService.restoreService(userId, accountNo, deviceId);
     } catch (DeviceServiceException e) {
       throw new DeviceManagementException(e.getMessage(), e.getCause());
@@ -178,7 +181,7 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public void disconnectService(ServiceInstance serviceInstance) throws DeviceManagementException {
     try {
-      clearDevicesFromCache();
+      clearDevicesFromCache(userManager.getCurrentUser());
       deviceService.disconnectService(serviceInstance);
     } catch (DeviceServiceException e) {
       throw new DeviceManagementException(e.getMessage(), e.getCause());
@@ -198,7 +201,7 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public void disconnectFromNetwork(NetworkInfo networkInfo) throws DeviceManagementException {
     try {
-      clearDevicesFromCache();
+      clearDevicesFromCache(userManager.getCurrentUser());
       deviceService.disconnectFromNetwork(networkInfo);
     } catch (DeviceServiceException e) {
       throw new DeviceManagementException(e.getMessage(), e.getCause());
@@ -219,7 +222,7 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public NetworkInfo reinstallCustomerDevice(User user, Device deviceInfo) throws DeviceManagementException {
     try {
-      clearDevicesFromCache();
+      clearDevicesFromCache(user);
       return deviceService.reinstallCustomerDevice(user, deviceInfo);
     } catch (DeviceServiceException e) {
       throw new DeviceManagementException(e.getMessage(), e.getCause());
@@ -282,16 +285,16 @@ public class DeviceManager implements DeviceManagerModel {
    */
 
   @SuppressWarnings("unchecked")
-  private List<Device> getDevicesFromCache() {
-    return (List<Device>) CacheManager.get(CacheKey.DEVICES);
+  private List<Device> getDevicesFromCache(User user) {
+    return (List<Device>) CacheManager.get(user, CacheKey.DEVICES);
   }
 
-  private void clearDevicesFromCache() {
-    CacheManager.clear(CacheKey.DEVICES);
+  private void clearDevicesFromCache(User user) {
+    CacheManager.clearCache(user, CacheKey.DEVICES);
   }
 
-  private void saveDevicesToCache(List<Device> deviceInfoList) {
-    CacheManager.set(CacheKey.DEVICES, deviceInfoList);
+  private void saveDevicesToCache(User user, List<Device> deviceInfoList) {
+    CacheManager.set(user, CacheKey.DEVICES, deviceInfoList);
   }
 
 }

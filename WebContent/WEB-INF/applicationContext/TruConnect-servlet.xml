@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
   xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+  xmlns:task="http://www.springframework.org/schema/task"
   xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context
@@ -10,22 +11,20 @@
 	http://www.springframework.org/schema/mvc 
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd
     http://www.springframework.org/schema/tx
-    http://www.springframework.org/schema/tx/spring-tx.xsd">
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/task
+    http://www.springframework.org/schema/task/spring-task.xsd">
+    
+  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <property name="synchronizeOnSession" value="true" />
+  </bean>
 
   <!-- MVC -->
   <mvc:annotation-driven />
   <mvc:resources location="/WEB-INF/static/" mapping="/static/**" />
 
-  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-    <property name="synchronizeOnSession" value="true" />
-  </bean>
-
   <!-- Transaction Manager -->
   <tx:annotation-driven proxy-target-class="true" />
-
-  <!-- AOP Auto Proxy -->
-  <aop:aspectj-autoproxy />
-  <!--<aop:config> <aop:advisor advice-ref="customizableTraceInterceptor" pointcut="execution(public * com.trc.manager..*(..))" /> </aop:config> -->
 
   <!-- Begin Component Scan -->
   <context:component-scan base-package="com.trc.config.**" />
@@ -38,4 +37,19 @@
   <context:component-scan base-package="com.trc.web.validation.**" />
   <context:component-scan base-package="com.trc.util.logger.**" scoped-proxy="targetClass" />
   <context:component-scan base-package="com.trc.web.session.**" />
+  <context:component-scan base-package="com.trc.util.cache.**" />
+
+  <!-- Task Scheduler -->
+  <task:executor id="executor" pool-size="2" />
+  <task:scheduler id="scheduler" pool-size="2" />
+  <task:annotation-driven scheduler="scheduler" executor="executor" />
+  
+  <!-- AOP Auto Proxy -->
+  <aop:aspectj-autoproxy />
+  <!-- uses springs native trace interceptor 
+    <aop:config>
+      <aop:advisor advice-ref="customizableTraceInterceptor" pointcut="execution(public * com.trc.manager..*(..))" /> 
+    </aop:config> 
+  -->
+
 </beans>

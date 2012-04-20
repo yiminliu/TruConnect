@@ -1,4 +1,4 @@
-package com.trc.service;
+package com.trc.service.impl;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trc.exception.service.DeviceServiceException;
+import com.trc.service.DeviceServiceModel;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;

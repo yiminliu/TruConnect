@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.exception.management.PaymentManagementException;
-import com.trc.manager.PaymentManager;
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.PaymentManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 import com.trc.user.payment.refund.RefundRequest;
 import com.trc.web.model.ResultModel;

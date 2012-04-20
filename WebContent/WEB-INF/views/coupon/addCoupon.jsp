@@ -50,7 +50,7 @@
 
         <form:form id="addCoupon" cssClass="validatedForm" method="post" commandName="couponRequest">
           <!-- Error Alert -->
-          <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.coupon'].allErrors}">
+          <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.couponRequest'].allErrors}">
             <div class="row">
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
@@ -66,6 +66,12 @@
               </div>
             </div>
           </c:if>
+
+          <div class="row hidden">
+            <form:input path="sessionToken.id" cssClass="span-8" cssErrorClass="span-8 validationFailed" readonly="true" />
+            <form:input path="sessionToken.description" cssClass="span-8" cssErrorClass="span-8 validationFailed" readonly="true" />
+            <form:input path="sessionToken.request" cssClass="span-8" cssErrorClass="span-8 validationFailed" readonly="true" />
+          </div>
 
           <div class="slider">
             <h3>Enter a Coupon Code</h3>

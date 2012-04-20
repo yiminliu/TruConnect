@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.trc.web.session.SessionManager;
 
-@Component
+//@Component
 public final class CacheManager {
 
   public static final String getKey(CacheKey cacheKey) {

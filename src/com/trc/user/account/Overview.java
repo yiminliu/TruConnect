@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.trc.exception.management.AccountManagementException;
-import com.trc.manager.AccountManager;
+import com.trc.manager.impl.AccountManager;
 import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
 import com.tscp.mvne.Account;

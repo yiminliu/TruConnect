@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import com.trc.exception.GatewayException;
 import com.trc.exception.WebFlowException;
 import com.trc.exception.management.PaymentManagementException;
-import com.trc.manager.PaymentManager;
+import com.trc.manager.impl.PaymentManager;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
 import com.trc.web.flow.util.WebFlowUtil;

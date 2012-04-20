@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +11,7 @@ import com.trc.coupon.CouponDetail;
 import com.trc.coupon.UserCoupon;
 import com.trc.exception.management.CouponManagementException;
 import com.trc.exception.service.CouponServiceException;
+import com.trc.manager.CouponManagerModel;
 import com.trc.service.CouponService;
 import com.trc.user.User;
 import com.trc.util.logger.LogLevel;

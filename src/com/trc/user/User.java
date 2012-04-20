@@ -25,7 +25,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.trc.manager.UserManager;
+import com.trc.manager.impl.UserManager;
 import com.trc.user.authority.Authority;
 import com.trc.user.authority.ROLE;
 import com.trc.user.contact.ContactInfo;
@@ -216,7 +216,7 @@ public class User implements UserModel, UserDetails {
     boolean origCheck = !UserManager.securityContext.getContext().getAuthentication().getAuthorities().contains(ga) && !getAuthorities().contains(ga);
     Authentication authentication = UserManager.securityContext.getContext().getAuthentication();
     boolean newCheck = authentication != null && authentication.getPrincipal() instanceof UserDetails;
-    logger.debug("origCheck: {} newCheck: {}", origCheck, newCheck);
+    logger.debug("User Anonymous Check: {} {}", origCheck, newCheck);
     return origCheck;
   }
 

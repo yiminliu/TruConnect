@@ -1,20 +1,22 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import com.trc.exception.management.PaymentManagementException;
 import com.trc.exception.service.PaymentServiceException;
-import com.trc.service.PaymentService;
+import com.trc.manager.PaymentManagerModel;
+import com.trc.service.impl.PaymentService;
 import com.trc.user.User;
 import com.trc.user.payment.refund.RefundRequest;
+import com.trc.util.cache.CacheKey;
+import com.trc.util.cache.CacheManager;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
-import com.trc.web.session.cache.CacheKey;
-import com.trc.web.session.cache.CacheManager;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.CustPmtMap;
@@ -25,6 +27,8 @@ import com.tscp.mvne.PaymentUnitResponse;
 public class PaymentManager implements PaymentManagerModel {
   @Autowired
   private PaymentService paymentService;
+  @Autowired
+  private UserManager userManager;
 
   public PaymentTransaction getPaymentTransaction(int custId, int transId) throws PaymentManagementException {
     try {
@@ -64,12 +68,12 @@ public class PaymentManager implements PaymentManagerModel {
   }
 
   @SuppressWarnings("unchecked")
-  private List<CreditCard> getCreditCardListFromCache() {
-    return (List<CreditCard>) CacheManager.get(CacheKey.CREDIT_CARDS);
+  private List<CreditCard> getCreditCardListFromCache(User user) {
+    return (List<CreditCard>) CacheManager.get(user, CacheKey.CREDIT_CARDS);
   }
 
-  private CreditCard getCreditCardFromCache(int paymentId) {
-    List<CreditCard> creditCards = getCreditCardListFromCache();
+  private CreditCard getCreditCardFromCache(User user, int paymentId) {
+    List<CreditCard> creditCards = getCreditCardListFromCache(user);
     if (creditCards != null) {
       for (CreditCard cc : creditCards) {
         if (cc.getPaymentid() == paymentId) {
@@ -83,7 +87,7 @@ public class PaymentManager implements PaymentManagerModel {
   @Override
   @Loggable(value = LogLevel.TRACE)
   public CreditCard getCreditCard(int paymentId) throws PaymentManagementException {
-    CreditCard creditCard = getCreditCardFromCache(paymentId);
+    CreditCard creditCard = getCreditCardFromCache(userManager.getCurrentUser(), paymentId);
     if (creditCard != null) {
       return creditCard;
     } else {
@@ -99,7 +103,7 @@ public class PaymentManager implements PaymentManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public CreditCard addCreditCard(User user, CreditCard creditCard) throws PaymentManagementException {
     try {
-      CacheManager.clear(CacheKey.CREDIT_CARDS);
+      CacheManager.clearCache(user, CacheKey.CREDIT_CARDS);
       return paymentService.addCreditCard(user, creditCard);
     } catch (PaymentServiceException e) {
       throw new PaymentManagementException(e.getMessage(), e.getCause());
@@ -120,7 +124,7 @@ public class PaymentManager implements PaymentManagerModel {
     try {
       List<CustPmtMap> paymentMethods = paymentService.getPaymentMap(user);
       if (paymentMethods.size() > 1) {
-        CacheManager.clear(CacheKey.CREDIT_CARDS);
+        CacheManager.clearCache(user, CacheKey.CREDIT_CARDS);
         return paymentService.removeCreditCard(user, paymentId);
       } else {
         return paymentMethods;
@@ -134,7 +138,7 @@ public class PaymentManager implements PaymentManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public List<CustPmtMap> updateCreditCard(User user, CreditCard creditCard) throws PaymentManagementException {
     try {
-      CacheManager.clear(CacheKey.CREDIT_CARDS);
+      CacheManager.clearCache(user, CacheKey.CREDIT_CARDS);
       return paymentService.updateCreditCard(user, creditCard);
     } catch (PaymentServiceException e) {
       throw new PaymentManagementException(e.getMessage(), e.getCause());
@@ -181,7 +185,7 @@ public class PaymentManager implements PaymentManagerModel {
 
   @Loggable(value = LogLevel.TRACE)
   public List<CreditCard> getCreditCards(User user) throws PaymentManagementException {
-    List<CreditCard> creditCardList = getCreditCardListFromCache();
+    List<CreditCard> creditCardList = getCreditCardListFromCache(user);
     if (creditCardList != null) {
       return creditCardList;
     } else {
@@ -191,7 +195,7 @@ public class PaymentManager implements PaymentManagerModel {
         for (CustPmtMap paymentMethod : paymentMap) {
           creditCardList.add(getCreditCard(paymentMethod.getPaymentid()));
         }
-        CacheManager.set(CacheKey.CREDIT_CARDS, creditCardList);
+        CacheManager.set(user, CacheKey.CREDIT_CARDS, creditCardList);
         return creditCardList;
       } catch (PaymentManagementException e) {
         throw e;
@@ -214,6 +218,7 @@ public class PaymentManager implements PaymentManagerModel {
   }
 
   @Loggable(value = LogLevel.TRACE)
+  @PreAuthorize("isAuthenticated() and hasPermission(#user, 'canRefund')")
   public void refundPayment(int accountNo, String amount, String trackingId, User user) throws PaymentManagementException {
     try {
       paymentService.refundPayment(accountNo, amount, Integer.parseInt(trackingId), user);

@@ -1,4 +1,4 @@
-package com.trc.manager;
+package com.trc.manager.impl;
 
 import java.util.List;
 
@@ -7,13 +7,14 @@ import org.springframework.stereotype.Component;
 
 import com.trc.exception.management.AddressManagementException;
 import com.trc.exception.service.AddressServiceException;
-import com.trc.service.AddressService;
+import com.trc.manager.AddressManagerModel;
+import com.trc.service.impl.AddressService;
 import com.trc.user.User;
 import com.trc.user.contact.Address;
+import com.trc.util.cache.CacheKey;
+import com.trc.util.cache.CacheManager;
 import com.trc.util.logger.LogLevel;
 import com.trc.util.logger.aspect.Loggable;
-import com.trc.web.session.cache.CacheKey;
-import com.trc.web.session.cache.CacheManager;
 
 @Component
 public class AddressManager implements AddressManagerModel {
@@ -36,11 +37,11 @@ public class AddressManager implements AddressManagerModel {
   @Override
   @Loggable(value = LogLevel.TRACE)
   public List<Address> getAllAddresses(User user) throws AddressManagementException {
-    List<Address> addressList = getAllAddressesFromCache();
+    List<Address> addressList = getAllAddressesFromCache(user);
     if (addressList == null) {
       try {
         addressList = addressService.getAllAddresses(user);
-        CacheManager.set(CacheKey.ADDRESSES, addressList);
+        CacheManager.set(user, CacheKey.ADDRESSES, addressList);
       } catch (AddressServiceException e) {
         throw new AddressManagementException(e.getMessage(), e.getCause());
       }
@@ -50,7 +51,7 @@ public class AddressManager implements AddressManagerModel {
 
   @Override
   public Address getAddress(User user, int addressId) throws AddressManagementException {
-    Address address = getAddressFromCache(addressId);
+    Address address = getAddressFromCache(user, addressId);
     try {
       return address == null ? addressService.getAddress(user, addressId) : address;
     } catch (AddressServiceException e) {
@@ -59,12 +60,13 @@ public class AddressManager implements AddressManagerModel {
   }
 
   @SuppressWarnings("unchecked")
-  private List<Address> getAllAddressesFromCache() {
-    return (List<Address>) CacheManager.get(CacheKey.ADDRESSES);
+  private List<Address> getAllAddressesFromCache(User user) {
+    // return (List<Address>) CacheManager.get(CacheKey.ADDRESSES);
+    return (List<Address>) CacheManager.get(user, CacheKey.ADDRESSES);
   }
 
-  private Address getAddressFromCache(int addressId) {
-    List<Address> addressList = getAllAddressesFromCache();
+  private Address getAddressFromCache(User user, int addressId) {
+    List<Address> addressList = getAllAddressesFromCache(user);
     if (addressList != null) {
       for (Address address : addressList) {
         if (address.getAddressId() == addressId)
@@ -78,7 +80,8 @@ public class AddressManager implements AddressManagerModel {
   public void addAddress(User user, Address address) throws AddressManagementException {
     try {
       addressService.addAddress(user, address);
-      CacheManager.clear(CacheKey.ADDRESSES);
+      // CacheManager.clear(CacheKey.ADDRESSES);
+      CacheManager.clearCache(user, CacheKey.ADDRESSES);
     } catch (AddressServiceException e) {
       throw new AddressManagementException(e.getMessage(), e.getCause());
     }
@@ -91,7 +94,8 @@ public class AddressManager implements AddressManagerModel {
       if (addressList.size() > 1) {
         addressList = addressService.removeAddress(user, address);
       }
-      CacheManager.clear(CacheKey.ADDRESSES);
+      // CacheManager.clear(CacheKey.ADDRESSES);
+      CacheManager.clearCache(user, CacheKey.ADDRESSES);
       return addressList;
     } catch (AddressServiceException e) {
       throw new AddressManagementException(e.getMessage(), e.getCause());
@@ -102,7 +106,8 @@ public class AddressManager implements AddressManagerModel {
   public List<Address> updateAddress(User user, Address address) throws AddressManagementException {
     try {
       List<Address> addressList = addressService.updateAddress(user, address);
-      CacheManager.clear(CacheKey.ADDRESSES);
+      // CacheManager.clear(CacheKey.ADDRESSES);
+      CacheManager.clearCache(user, CacheKey.ADDRESSES);
       return addressList;
     } catch (AddressServiceException e) {
       throw new AddressManagementException(e.getMessage(), e.getCause());

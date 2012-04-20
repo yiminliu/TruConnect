@@ -1,4 +1,4 @@
-package com.trc.dao;
+package com.trc.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
