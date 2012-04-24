@@ -60,11 +60,9 @@
         </form:form>
       </div>
 
-      <c:if test="${!empty sessionScope.controlling_user}">
-        <div class="span-6 last sub-navigation">
-          <%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%>
-        </div>
-      </c:if>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
+      </div>
     </div>
 
 

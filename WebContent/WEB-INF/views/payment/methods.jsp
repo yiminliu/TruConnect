@@ -44,8 +44,8 @@
         </c:forEach>
       </div>
 
-      <div class="span-6 last sub-navigation formProgress">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
 
     </div>

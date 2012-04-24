@@ -10,6 +10,9 @@
   </on-start>
 
   <view-state id="requestContactInfo" view="activation/registration/addContactInfo" model="contactInfo">
+    <on-entry>
+      <evaluate expression="CONFIG.webflowStates" result="viewScope.states" />
+    </on-entry>
     <transition on="submit" to="success" />
   </view-state>
 

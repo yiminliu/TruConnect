@@ -1,4 +1,4 @@
-package com.trc.coupon.contract;
+package com.trc.payment.coupon.contract;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;

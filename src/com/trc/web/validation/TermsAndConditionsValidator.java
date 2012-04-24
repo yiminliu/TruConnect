@@ -20,7 +20,7 @@ public class TermsAndConditionsValidator implements Validator {
     checkAcceptTerms(termsAndConditions, errors);
   }
 
-  private void checkAcceptTerms(TermsAndConditions termsAndConditions, Errors errors) {
+  protected void checkAcceptTerms(TermsAndConditions termsAndConditions, Errors errors) {
     if (!termsAndConditions.isAccept()) {
       errors.rejectValue("accept", "terms.required", "You must accept the terms");
     }

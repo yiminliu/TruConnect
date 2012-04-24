@@ -35,15 +35,11 @@ public class EmailTestClient {
     msg.setContent(message, "text/html");
     try {
       Transport.send(msg);
-    } catch (SendFailedException send_ex) {
-      send_ex.printStackTrace();
-      Address[] validAddressList = send_ex.getValidSentAddresses();
-      Address[] invalidAddressList = send_ex.getInvalidAddresses();
-      String invalidEmailString = "";
-      for (Address address : invalidAddressList) {
-        invalidEmailString += address.toString() + "; ";
-      }
-      AddressException address_ex = new AddressException("The Following Email Address is invalid :: " + invalidEmailString);
+    } catch (SendFailedException e) {
+      e.printStackTrace();
+      Address[] validAddressList = e.getValidSentAddresses();
+      Address[] invalidAddressList = e.getInvalidAddresses();
+      AddressException address_ex = new AddressException("The Following Email Address is invalid :: " + invalidAddressList.toString());
       throw address_ex;
     }
   }

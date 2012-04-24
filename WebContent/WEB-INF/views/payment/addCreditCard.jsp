@@ -152,9 +152,7 @@
                 <form:option value="0">
                   <spring:message code="label.selectOne" />
                 </form:option>
-                <c:forEach var="state" items="${states}">
-                  <form:option value="${state.value}">${state.key}</form:option>
-                </c:forEach>
+                <form:options items="${states}" itemValue="value" itemLabel="key" />
               </form:select>
             </div>
 

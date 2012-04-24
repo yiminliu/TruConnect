@@ -1,4 +1,4 @@
-package com.trc.coupon.ajax;
+package com.trc.payment.coupon.ajax;
 
 public class CouponResponse {
   private boolean valid;

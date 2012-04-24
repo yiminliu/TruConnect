@@ -6,7 +6,7 @@
   <input name="user" type="com.trc.user.User" />
   <input name="account" type="com.tscp.mvne.Account" />
   <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
-  <input name="coupon" type="com.trc.coupon.Coupon" />
+  <input name="coupon" type="com.trc.payment.coupon.Coupon" />
 
   <decision-state id="checkCouponContract">
     <on-entry>

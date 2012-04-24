@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://www.springframework.org/schema/webflow  
     http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-  <input name="coupon" type="com.trc.coupon.Coupon" />
+  <input name="coupon" type="com.trc.payment.coupon.Coupon" />
 
   <action-state id="fetchCoupon">
     <evaluate expression="couponFlowManager.getCouponByCode(coupon)" result="flowScope.fetchedCoupon" />

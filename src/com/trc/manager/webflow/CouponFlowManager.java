@@ -3,10 +3,10 @@ package com.trc.manager.webflow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.trc.coupon.Coupon;
 import com.trc.exception.WebFlowException;
 import com.trc.exception.management.CouponManagementException;
 import com.trc.manager.impl.CouponManager;
+import com.trc.payment.coupon.Coupon;
 import com.trc.user.User;
 import com.trc.web.flow.util.WebFlowUtil;
 import com.tscp.mvne.Account;

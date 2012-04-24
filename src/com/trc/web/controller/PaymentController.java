@@ -27,10 +27,9 @@ import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
 import com.trc.user.account.PaymentHistory;
-import com.trc.util.logger.DevLogger;
 import com.trc.web.model.ResultModel;
-import com.trc.web.session.SessionRequest;
 import com.trc.web.session.SessionManager;
+import com.trc.web.session.SessionRequest;
 import com.trc.web.validation.CreditCardValidator;
 import com.tscp.mvne.CreditCard;
 import com.tscp.mvne.PaymentRecord;
@@ -85,7 +84,6 @@ public class PaymentController {
 
   @RequestMapping(value = "/methods", method = RequestMethod.GET)
   public ModelAndView showPaymentMethods() {
-    DevLogger.debug("showPaymentMethods");
     User user = userManager.getCurrentUser();
     ResultModel model = new ResultModel("payment/methods");
     try {

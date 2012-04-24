@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.coupon.Coupon;
-import com.trc.coupon.UserCoupon;
 import com.trc.exception.ValidationException;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.CouponManagementException;
@@ -22,6 +20,8 @@ import com.trc.manager.impl.DeviceManager;
 import com.trc.manager.impl.PaymentManager;
 import com.trc.manager.impl.UserManager;
 import com.trc.manager.webflow.PaymentFlowManager;
+import com.trc.payment.coupon.Coupon;
+import com.trc.payment.coupon.UserCoupon;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.user.User;
 import com.trc.util.ClassUtils;
@@ -88,10 +88,10 @@ public class TestController {
         DevLogger.log("....isApplied=" + isApplied);
         DevLogger.log("....isAtAccountLimit=" + isAtAccountLimit);
         DevLogger.log("....isRecurring=" + isRecurring);
-        for (UserCoupon uc : userCoupons) {
-          isStackable = couponValidator.isStackable(coupon, uc.getId().getCoupon());
-          DevLogger.log("....isStackable=" + isStackable + " [" + uc.getId().getCoupon().getCouponId() + ", " + coupon.getCouponId() + "]");
-        }
+//        for (UserCoupon uc : userCoupons) {
+//          isStackable = couponValidator.isStackable(coupon, uc.getId().getCoupon());
+//          DevLogger.log("....isStackable=" + isStackable + " [" + uc.getId().getCoupon().getCouponId() + ", " + coupon.getCouponId() + "]");
+//        }
         DevLogger.log("....isEligible=" + isEligible);
       }
 

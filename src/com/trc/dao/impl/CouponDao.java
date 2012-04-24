@@ -7,7 +7,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import com.trc.coupon.Coupon;
+import com.trc.payment.coupon.Coupon;
 
 /**
  * This DAO handles transactions for Coupon.class, CouponDetail.class and
@@ -52,5 +52,4 @@ public class CouponDao extends HibernateDaoSupport {
       return coupons.get(0);
     }
   }
-
 }

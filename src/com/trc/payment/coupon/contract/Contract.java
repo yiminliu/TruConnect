@@ -1,4 +1,4 @@
-package com.trc.coupon.contract;
+package com.trc.payment.coupon.contract;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -15,7 +15,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import com.trc.coupon.CouponDetail;
+import com.trc.payment.coupon.CouponDetail;
 
 /**
  * This object is the representation of a Contract in Kenan.

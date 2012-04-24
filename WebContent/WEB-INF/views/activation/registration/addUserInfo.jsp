@@ -104,11 +104,7 @@
               <form:option value="0">
                 <spring:message code="label.selectOne" />
               </form:option>
-              <c:forEach var="hint" items="${hints}">
-                <form:option value="${hint.hintId}">
-                  <c:out value="${hint.hintQuestion}" />
-                </form:option>
-              </c:forEach>
+              <form:options items="${hints}" itemValue="hintId" itemLabel="hintQuestion" />
             </form:select>
           </div>
           <div class="row">
@@ -129,8 +125,9 @@
           </div>
           <div class="row pushed" style="margin-top: -5px; padding-top: 0px;">
             <div style="width: 300px; text-align: right;">
-              <a href="#" onclick="reloadJCaptchaImage('<spring:url value="/static/images/jcaptcha.jpg" />')"
-                tabindex="-1">request another image</a>
+              <a style="cursor: pointer;" href="#"
+                onclick="reloadJCaptchaImage('<spring:url value="/static/images/jcaptcha.jpg" />')" tabindex="-1">request
+                another image</a>
             </div>
           </div>
           <div class="row pushed">

@@ -25,7 +25,8 @@
         <form:form id="plansAndTerms" cssClass="validatedForm" method="post" commandName="termsAndConditions">
 
           <!-- Begin Errors -->
-          <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.termsAndConditions'].allErrors}">
+          <c:if
+            test="${not empty requestScope['org.springframework.validation.BindingResult.termsAndConditions'].allErrors}">
             <div class="row">
               <div class="alert error">
                 <h1>Please correct the following problems</h1>

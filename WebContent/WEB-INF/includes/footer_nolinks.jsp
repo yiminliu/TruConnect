@@ -20,7 +20,8 @@
             </div> 
             <script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script> 
             <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4dc9a70a0f724cbc"></script> 
-            --> <!-- AddThis Button END --> </span>
+            --> <!-- AddThis Button END -->
+        </span>
       </p>
     </div>
 
@@ -31,3 +32,4 @@
 <!-- End Footer -->
 
 <%@ include file="/WEB-INF/includes/jsCheck.jsp"%>
+<%@ include file="/WEB-INF/includes/googleAds.jsp"%>

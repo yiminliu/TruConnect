@@ -1,4 +1,4 @@
-package com.trc.coupon;
+package com.trc.payment.coupon;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -102,7 +102,7 @@ public class Coupon implements Serializable {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @Cascade(CascadeType.SAVE_UPDATE)
-  @JoinColumn(name = "coupon_Detail_id", nullable = false, insertable = false, updatable = false)
+  @JoinColumn(name = "coupon_Detail_id", nullable = false, insertable = true, updatable = false)
   public CouponDetail getCouponDetail() {
     return couponDetail;
   }

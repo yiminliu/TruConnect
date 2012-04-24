@@ -37,7 +37,7 @@ public class UserValidator implements Validator {
     checkSecurityQuestion(user.getUserHint(), errors);
   }
 
-  public void checkUsername(User user, Errors errors) {
+  protected void checkUsername(User user, Errors errors) {
     if (ValidationUtil.isEmpty(user.getUsername())) {
       errors.rejectValue("username", "username.required", "You must enter a username");
     } else if (!userManager.isUsernameAvailable(user.getUsername())) {
@@ -50,7 +50,7 @@ public class UserValidator implements Validator {
     }
   }
 
-  public void checkEmail(String email, Errors errors) {
+  protected void checkEmail(String email, Errors errors) {
     if (ValidationUtil.isEmpty(email)) {
       errors.rejectValue("email", "email.required", "You must enter an e-mail address");
     } else if (!EmailValidator.checkEmail(email)) {
@@ -61,18 +61,17 @@ public class UserValidator implements Validator {
     }
   }
 
-  public static void checkPassword(String password, Errors errors) {
+  protected static void checkPassword(String password, Errors errors) {
     if (ValidationUtil.isEmpty(password)) {
       errors.rejectValue("password", "password.required", "You must enter a password");
     } else if (!ValidationUtil.isBetween(password, MIN_PASS_SIZE, MAX_PASS_SIZE)) {
-      errors.rejectValue("password", "password.size", "Your password must be " + MIN_PASS_SIZE + " to " + MAX_PASS_SIZE
-          + " characters");
+      errors.rejectValue("password", "password.size", "Your password must be " + MIN_PASS_SIZE + " to " + MAX_PASS_SIZE + " characters");
     } else if (!ValidationUtil.isAlphaNumeric(password)) {
       errors.rejectValue("password", "password.invalid", "Your password must be alphanumeric");
     }
   }
 
-  public static void checkSecurityQuestion(SecurityQuestionAnswer securityQuestionAnswer, Errors errors) {
+  protected static void checkSecurityQuestion(SecurityQuestionAnswer securityQuestionAnswer, Errors errors) {
     int questionId = securityQuestionAnswer.getHintId();
     String questionAnswer = securityQuestionAnswer.getHintAnswer();
     if (questionId == 0) {
@@ -80,12 +79,11 @@ public class UserValidator implements Validator {
     } else if (ValidationUtil.isEmpty(questionAnswer)) {
       errors.rejectValue("userHint.hintAnswer", "securityQuestion.answer.required", "You must provide an answer");
     } else if (!ValidationUtil.isBetween(questionAnswer, MIN_ANS_SIZE, MAX_ANS_SIZE)) {
-      errors.rejectValue("userHint.hintAnswer", "securityQuestion.answer.size",
-          "Your answer must be at least 3 characters");
+      errors.rejectValue("userHint.hintAnswer", "securityQuestion.answer.size", "Your answer must be at least 3 characters");
     }
   }
 
-  public static void checkAuthorities(User user, Errors errors) {
+  protected static void checkAuthorities(User user, Errors errors) {
     // TODO there are currently no rules on checking authorities. User's are
     // given default ROLE_USER when saved in UserManager.
   }

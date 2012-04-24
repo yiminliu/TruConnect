@@ -1,4 +1,4 @@
-package com.trc.coupon;
+package com.trc.payment.coupon;
 
 import com.trc.web.session.SessionObject;
 

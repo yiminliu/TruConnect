@@ -54,37 +54,44 @@
             ${fn:length(report.activatedUsers)}</h3>
           <c:if test="${fn:length(report.activatedUsers) < 1}">None</c:if>
           <c:forEach var="user" items="${report.activatedUsers}">
-          <a style="color:black;" style="text-decoration:none;" href="<spring:url value="/admin/report/activation/user/${user.userId}" />">${user.userId}: ${user.username}</a><br />
+            <a style="color: black;" style="text-decoration:none;"
+              href="<spring:url value="/admin/report/activation/user/${user.userId}" />">${user.userId}:
+              ${user.username}</a>
+            <br />
           </c:forEach>
 
           <h3 style="margin-bottom: 10px; padding-bottom: 0px; border-bottom: 1px #ccc dotted;">Unique
             Reservations: ${fn:length(report.uniqueReservations)}</h3>
           <c:if test="${fn:length(report.uniqueReservations) < 1}">None</c:if>
           <c:forEach var="user" items="${report.uniqueReservations}">
-          <a style="color:black;" href="<spring:url value="/admin/report/activation/user/${user.userId}" />">${user.userId}: ${user.username}</a><br />
+            <a style="color: black;" href="<spring:url value="/admin/report/activation/user/${user.userId}" />">${user.userId}:
+              ${user.username}</a>
+            <br />
           </c:forEach>
 
           <h3 style="margin-bottom: 10px; padding-bottom: 0px; border-bottom: 1px #ccc dotted;">Failed
             Reservations: ${fn:length(report.failedReservations)}</h3>
           <c:if test="${fn:length(report.failedReservations) < 1}">None</c:if>
           <c:forEach var="user" items="${report.failedReservations}">
-          <a style="color:black;" href="<spring:url value="/admin/report/activation/user/${user.userId}" />">${user.userId}: ${user.username}</a><br />
+            <a style="color: black;" href="<spring:url value="/admin/report/activation/user/${user.userId}" />">${user.userId}:
+              ${user.username}</a>
+            <br />
           </c:forEach>
 
           <h3 style="margin-bottom: 10px; padding-bottom: 0px; border-bottom: 1px #ccc dotted;">Successful
             Reservations: ${fn:length(report.successfulReservations)}</h3>
           <c:if test="${fn:length(report.successfulReservations) < 1}">None</c:if>
           <c:forEach var="user" items="${report.successfulReservations}">
-          <a style="color:black;" href="<spring:url value="/admin/report/activation/user/${user.userId}" />">${user.userId}: ${user.username}</a><br />
+            <a style="color: black;" href="<spring:url value="/admin/report/activation/user/${user.userId}" />">${user.userId}:
+              ${user.username}</a>
+            <br />
           </c:forEach>
         </div>
       </div>
 
-      <sec:authorize ifAnyGranted="ROLE_ADMIN">
-        <div class="span-6 last sub-navigation">
-          <%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%>
-        </div>
-      </sec:authorize>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
+      </div>
     </div>
 
     <!-- Close main-content -->

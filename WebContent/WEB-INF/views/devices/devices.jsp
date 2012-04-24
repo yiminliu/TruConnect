@@ -21,8 +21,8 @@
         <a href="<spring:url value="/activateAdditionalDevice" />" style="float: right;" class="button action-m"><span>Add
             New Device</span> </a>
         <h3 style="margin-bottom: 40px; padding-bottom: 0px;">Devices</h3>
-        
-      <script type="text/javascript">
+
+        <script type="text/javascript">
         $(function() {
           $("img.expand_device_detail").click(function() {
             var divDetail = $(this).next().next().next().next("div.device_detail");
@@ -30,10 +30,11 @@
           });
         });
       </script>
-      
+
         <c:forEach var="device" items="${devices}">
           <sec:authorize ifAnyGranted="ROLE_ADMIN, ROLE_MANAGER, ROLE_SUPERUSER, ROLE_SERVICEREP">
-            <img class="expand_device_detail" style="margin-right:5px; float:left;" src="<spring:url value="/static/images/buttons/icons/add.png" />" />
+            <img class="expand_device_detail" style="margin-right: 5px; float: left;"
+              src="<spring:url value="/static/images/buttons/icons/add.png" />" />
           </sec:authorize>
 
           <h4 style="float: left; display: inline-block">
@@ -48,7 +49,10 @@
             </c:choose>
             <a href="<spring:url value="/devices/rename/${device.encodedDeviceId}" />">rename</a>
           </h4>
-          <h4 style="float: right; display: inline-block">Current Balance: $<fmt:formatNumber value="${device.account.balance}" pattern="0.00" /></h4>
+          <h4 style="float: right; display: inline-block">
+            Current Balance: $
+            <fmt:formatNumber value="${device.account.balance}" pattern="0.00" />
+          </h4>
           <div class="clear"></div>
 
 
@@ -116,8 +120,8 @@
 
       </div>
 
-      <div class="span-6 last sub-navigation formProgress">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
 
     </div>

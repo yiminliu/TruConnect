@@ -1,11 +1,13 @@
 package com.trc.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import com.trc.coupon.contract.Contract;
+import com.trc.payment.coupon.contract.Contract;
 
 @Repository
 public class ContractDao extends HibernateDaoSupport {
@@ -29,5 +31,9 @@ public class ContractDao extends HibernateDaoSupport {
 
   public Contract getContract(int contractId) {
     return getHibernateTemplate().get(Contract.class, contractId);
+  }
+
+  public List<Contract> getAllContracts() {
+    return getHibernateTemplate().find("from Contract c order by c.description asc");
   }
 }

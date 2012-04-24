@@ -22,12 +22,13 @@
         <form id="activationReport" class="validatedForm" method="POST">
 
           <div class="row">
-          <a href="<spring:url value="/admin/report/activation/lastMonth" />" >Last Month</a> | 
-          <a href="<spring:url value="/admin/report/activation/thisMonth" />" >This Month</a> | 
-          <a href="<spring:url value="/admin/report/activation/lastWeek" />" >Last Week</a> | 
-          <a href="<spring:url value="/admin/report/activation/thisWeek" />" >This Week</a> | 
-          <a href="<spring:url value="/admin/report/activation/yesterday" />" >Yesterday</a> | 
-          <a href="<spring:url value="/admin/report/activation/today" />" >Today</a></div>
+            <a href="<spring:url value="/admin/report/activation/lastMonth" />">Last Month</a> | <a
+              href="<spring:url value="/admin/report/activation/thisMonth" />">This Month</a> | <a
+              href="<spring:url value="/admin/report/activation/lastWeek" />">Last Week</a> | <a
+              href="<spring:url value="/admin/report/activation/thisWeek" />">This Week</a> | <a
+              href="<spring:url value="/admin/report/activation/yesterday" />">Yesterday</a> | <a
+              href="<spring:url value="/admin/report/activation/today" />">Today</a>
+          </div>
 
           <div class="row">
             <label for="startDate" class="required">Start Date</label> <select name="month_start"
@@ -72,11 +73,9 @@
 
       </div>
 
-      <sec:authorize ifAnyGranted="ROLE_ADMIN">
-        <div class="span-6 last sub-navigation">
-          <%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%>
-        </div>
-      </sec:authorize>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
+      </div>
     </div>
 
     <!-- Close main-content -->

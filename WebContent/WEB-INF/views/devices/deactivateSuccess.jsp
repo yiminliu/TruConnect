@@ -22,8 +22,8 @@
         <a class="button action-m" href="<spring:url value="/devices" />"><span>Continue</span> </a>
       </div>
 
-      <div class="span-6 last sub-navigation formProgress">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
 
     </div>

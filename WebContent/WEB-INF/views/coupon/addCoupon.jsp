@@ -69,8 +69,10 @@
 
           <div class="row hidden">
             <form:input path="sessionToken.id" cssClass="span-8" cssErrorClass="span-8 validationFailed" readonly="true" />
-            <form:input path="sessionToken.description" cssClass="span-8" cssErrorClass="span-8 validationFailed" readonly="true" />
-            <form:input path="sessionToken.request" cssClass="span-8" cssErrorClass="span-8 validationFailed" readonly="true" />
+            <form:input path="sessionToken.description" cssClass="span-8" cssErrorClass="span-8 validationFailed"
+              readonly="true" />
+            <form:input path="sessionToken.request" cssClass="span-8" cssErrorClass="span-8 validationFailed"
+              readonly="true" />
           </div>
 
           <div class="slider">
@@ -110,8 +112,8 @@
         </form:form>
       </div>
 
-      <div class="span-6 last sub-navigation formProgress">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
 
     </div>

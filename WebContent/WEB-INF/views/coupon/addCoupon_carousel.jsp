@@ -72,7 +72,8 @@
                 class="screenshot-carousel-left-fade"
                 style="height: 186px; visibility: visible; width: 50px; position: absolute; left: 0; top: 0; z-index: 10;">
 
-              <div style="white-space: nowrap; position: absolute; bottom: 40%; overflow:hidden; height: 30px; width: 2200px;">
+              <div
+                style="white-space: nowrap; position: absolute; bottom: 40%; overflow: hidden; height: 30px; width: 2200px;">
                 <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
                   <div class="device">
                     <a href="#" class="button semi-s" title="${accountDetail.encodedAccountNum}"><span>${accountDetail.deviceInfo.label}</span>
@@ -119,8 +120,8 @@
         </form:form>
       </div>
 
-      <div class="span-6 last sub-navigation formProgress">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
 
     </div>

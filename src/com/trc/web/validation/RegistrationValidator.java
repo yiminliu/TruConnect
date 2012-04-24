@@ -14,6 +14,8 @@ import com.trc.user.contact.ContactInfo;
 public class RegistrationValidator extends UserValidator {
   @Autowired
   private HttpServletRequest request;
+  @Autowired
+  private ContactInfoValidator contactInfoValidator;
 
   @Override
   public boolean supports(Class<?> myClass) {
@@ -39,11 +41,6 @@ public class RegistrationValidator extends UserValidator {
     checkJCaptcha(registration, errors);
   }
 
-  // public void validateShowPlansAndTerms(Registration registration, Errors
-  // errors) {
-  // checkAcceptTerms(registration, errors);
-  // }
-
   /* ****************************************************************
    * Property validations
    * ****************************************************************
@@ -52,7 +49,7 @@ public class RegistrationValidator extends UserValidator {
   private void checkName(ContactInfo contactInfo, Errors errors) {
     errors.pushNestedPath("user");
     errors.pushNestedPath("contactInfo");
-    ContactInfoValidator.checkName(contactInfo, errors);
+    contactInfoValidator.checkName(contactInfo, errors);
     errors.popNestedPath();
     errors.popNestedPath();
   }
@@ -74,15 +71,6 @@ public class RegistrationValidator extends UserValidator {
       errors.rejectValue("confirmPassword", "password.mismatch", "Your passwords do not match");
     }
   }
-
-  // private void checkAcceptTerms(Registration registration, Errors errors) {
-  // errors.pushNestedPath("termsAndConditions");
-  // if (!registration.getTermsAndConditions().isAccept()) {
-  // errors.rejectValue("accept", "terms.required",
-  // "You must accept the terms");
-  // }
-  // errors.popNestedPath();
-  // }
 
   private void checkJCaptcha(Registration registration, Errors errors) {
     JcaptchaValidator.validate(request, errors);

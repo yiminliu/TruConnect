@@ -7,7 +7,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import com.trc.coupon.UserCoupon;
+import com.trc.payment.coupon.UserCoupon;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -44,6 +44,11 @@ public class UserCouponDao extends HibernateDaoSupport {
 
   public List<UserCoupon> getUserCoupons(int userId) {
     List<UserCoupon> userCoupons = getHibernateTemplate().find("from UserCoupon uc where uc.id.userId = ?", userId);
+    return userCoupons;
+  }
+
+  public List<UserCoupon> getUserCoupons(int userId, int couponId) {
+    List<UserCoupon> userCoupons = getHibernateTemplate().find("from UserCoupon uc where uc.userId = ? and uc", userId);
     return userCoupons;
   }
 }

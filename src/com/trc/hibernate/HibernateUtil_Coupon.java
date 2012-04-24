@@ -5,9 +5,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import com.trc.coupon.Coupon;
-import com.trc.coupon.CouponDetail;
-import com.trc.coupon.contract.Contract;
+import com.trc.payment.coupon.Coupon;
+import com.trc.payment.coupon.CouponDetail;
+import com.trc.payment.coupon.contract.Contract;
 
 /**
  * Used for Coupon testing.

@@ -14,10 +14,9 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import com.trc.config.CONFIG;
 import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.StringEncrypter;
-import com.trc.user.AnonymousUser;
 import com.trc.user.User;
-import com.trc.web.session.SessionRequest;
 import com.trc.web.session.SessionManager;
+import com.trc.web.session.SessionRequest;
 
 public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
   @Autowired
@@ -33,7 +32,7 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
       MDC.put("internalUser", user.getUsername());
       setAlwaysUseDefaultTargetUrl(true);
       userManager.setSessionControllingUser(user);
-      userManager.setSessionUser(new AnonymousUser());
+      // userManager.setSessionUser(new AnonymousUser());
       if (user.isAdmin()) {
         setDefaultTargetUrl("/admin/home");
       } else if (user.isManager()) {

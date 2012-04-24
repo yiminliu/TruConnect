@@ -21,15 +21,16 @@
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Are you sure you want to refund the following
           payment?</h3>
 
-        <form:form id="refund" cssClass="validatedForm" method="POST" commandName="paymentRefund">
+        <form:form id="refund" cssClass="validatedForm" method="POST" commandName="refundRequest">
           <!-- Errors -->
-          <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.paymentRefund'].allErrors}">
+          <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.refundRequest'].allErrors}">
             <div class="row">
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
                 <form:errors path="jcaptcha" />
+                <form:errors path="refundCode" />
                 <!-- Global Errors -->
-                <spring:bind path="paymentRefund">
+                <spring:bind path="refundRequest">
                   <c:forEach items="${status.errorMessages}" var="error" varStatus="status">
                     <span id="global.${status.index}.errors"><c:out value="${error}" /> </span>
                   </c:forEach>
@@ -39,63 +40,60 @@
           </c:if>
 
           <div class="row">
-            <form:label path="paymentTransaction.transId" cssClass="required">Transaction ID </form:label>
-            <form:input path="paymentTransaction.transId" cssClass="span-8" cssErrorClass="span-8 validationFailed"
-              readonly="true" />
+            <b>User:</b> ${sessionScope.user.username}<br /> <b>Amount:</b> $
+            <fmt:formatNumber value="${refundRequest.paymentTransaction.paymentAmount}" pattern="0.00" />
+            <br /> <b>Account:</b> ${refundRequest.paymentTransaction.accountNo}<br /> <b>Method:</b>
+            ${refundRequest.paymentTransaction.paymentMethod} ${refundRequest.paymentTransaction.paymentSource}
           </div>
 
           <div class="row">
+            <form:label path="notes" cssClass="required">Notes </form:label>
+            <form:input path="notes" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+          </div>
+
+          <div class="row">
+            <form:label path="refundCode" cssClass="required">Refund Reason</form:label>
+            <form:select path="refundCode" cssClass="span-8" cssStyle="width:312px;"
+              cssErrorClass="span-8 validationFailed">
+              <form:options items="${refundCodes}" itemLabel="description" />
+            </form:select>
+          </div>
+
+          <!-- Hidden Required Fields -->
+          <div class="row hidden">
             <form:label path="paymentTransaction.paymentAmount" cssClass="required">Amount </form:label>
             <form:input path="paymentTransaction.paymentAmount" cssClass="span-8"
               cssErrorClass="span-8 validationFailed" readonly="true" />
-          </div>
-
-
-          <div class="row">
+            <form:label path="paymentTransaction.accountNo" cssClass="required">Account Number </form:label>
+            <form:input path="paymentTransaction.accountNo" cssClass="span-8" cssErrorClass="span-8 validationFailed"
+              readonly="true" />
             <form:label path="paymentTransaction.paymentSource" cssClass="required">Payment Source </form:label>
             <form:input path="paymentTransaction.paymentSource" cssClass="span-8"
               cssErrorClass="span-8 validationFailed" readonly="true" />
-          </div>
-          <div class="row">
             <form:label path="paymentTransaction.paymentMethod" cssClass="required">Payment Method </form:label>
             <form:input path="paymentTransaction.paymentMethod" cssClass="span-8"
               cssErrorClass="span-8 validationFailed" readonly="true" />
           </div>
 
-          <div class="row">
+          <!-- Hidden Extra Fields -->
+          <div class="row hidden">
+            <form:label path="paymentTransaction.transId" cssClass="required">Transaction ID </form:label>
+            <form:input path="paymentTransaction.transId" cssClass="span-8" cssErrorClass="span-8 validationFailed"
+              readonly="true" />
             <form:label path="paymentTransaction.paymentUnitConfirmation" cssClass="required">Confirmation </form:label>
             <form:input path="paymentTransaction.paymentUnitConfirmation" cssClass="span-8"
               cssErrorClass="span-8 validationFailed" readonly="true" />
-          </div>
-
-          <div class="row">
             <form:label path="paymentTransaction.paymentUnitMessage" cssClass="required">Confirmation Message </form:label>
             <form:input path="paymentTransaction.paymentUnitMessage" cssClass="span-8"
               cssErrorClass="span-8 validationFailed" readonly="true" />
-          </div>
-          <div class="row">
             <form:label path="paymentTransaction.billingTrackingId" cssClass="required">Tracking ID </form:label>
             <form:input path="paymentTransaction.billingTrackingId" cssClass="span-8"
               cssErrorClass="span-8 validationFailed" readonly="true" />
-          </div>
-
-
-          <div class="row">
-            <form:label path="paymentTransaction.accountNo" cssClass="required">Account Number </form:label>
-            <form:input path="paymentTransaction.accountNo" cssClass="span-8" cssErrorClass="span-8 validationFailed"
-              readonly="true" />
-          </div>
-
-          <div class="row">
             <form:label path="sessionToken.id" cssClass="required">Session Token </form:label>
             <form:input path="sessionToken.id" cssClass="span-8" cssErrorClass="span-8 validationFailed" readonly="true" />
-          </div>
-          <div class="row">
             <form:label path="sessionToken.description" cssClass="required">Token Description </form:label>
             <form:input path="sessionToken.description" cssClass="span-8" cssErrorClass="span-8 validationFailed"
               readonly="true" />
-          </div>
-          <div class="row">
             <form:label path="sessionToken.request" cssClass="required">Token Request </form:label>
             <form:input path="sessionToken.request" cssClass="span-8" cssErrorClass="span-8 validationFailed"
               readonly="true" />
@@ -130,7 +128,7 @@
       </div>
 
       <div class="span-6 last sub-navigation">
-        <%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%>
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
 
     </div>

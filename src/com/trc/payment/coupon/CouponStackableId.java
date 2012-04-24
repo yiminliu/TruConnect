@@ -1,4 +1,4 @@
-package com.trc.coupon;
+package com.trc.payment.coupon;
 
 import java.io.Serializable;
 
@@ -8,14 +8,15 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+
 @Embeddable
 public class CouponStackableId implements Serializable {
   private static final long serialVersionUID = 3695295907821624120L;
-  private CouponDetail couponDetail;
+  private CouponDetail couponDetail = new CouponDetail();
   private int stackableCouponDetailId;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "coupon_Detail_id", nullable = false, insertable = false, updatable = false)
+  @JoinColumn(name = "coupon_Detail_id", nullable = false, insertable = true, updatable = false)
   public CouponDetail getCouponDetail() {
     return couponDetail;
   }

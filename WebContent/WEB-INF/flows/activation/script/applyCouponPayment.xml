@@ -6,7 +6,7 @@
   <input name="user" type="com.trc.user.User" />
   <input name="account" type="com.tscp.mvne.Account" />
   <input name="creditCard" type="com.tscp.mvne.CreditCard" />
-  <input name="coupon" type="com.trc.coupon.Coupon" />
+  <input name="coupon" type="com.trc.payment.coupon.Coupon" />
 
   <action-state id="applyCouponPayment">
     <on-entry>

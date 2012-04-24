@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.trc.coupon.Coupon;
+import com.trc.payment.coupon.Coupon;
 import com.trc.user.activation.CreditCardPayment;
 import com.tscp.mvne.CreditCard;
 
@@ -28,13 +28,13 @@ public class CreditCardPaymentValidator implements Validator {
     checkCreditCard(creditCardPayment.getCreditCard(), errors);
   }
 
-  private void checkCreditCard(CreditCard creditCard, Errors errors) {
+  protected void checkCreditCard(CreditCard creditCard, Errors errors) {
     errors.pushNestedPath("creditCard");
     creditCardValidtor.validate(creditCard, errors);
     errors.popNestedPath();
   }
 
-  private void checkCoupon(Coupon coupon, Errors errors) {
+  protected void checkCoupon(Coupon coupon, Errors errors) {
     if (coupon != null && !coupon.isEmpty()) {
       errors.pushNestedPath("coupon");
       couponValidator.validate(coupon, errors);

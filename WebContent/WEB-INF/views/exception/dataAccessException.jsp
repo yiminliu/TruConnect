@@ -26,7 +26,7 @@
       </div>
 
       <div class="span-6 last sub-navigation">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
 
     </div>

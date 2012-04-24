@@ -17,14 +17,14 @@
         <value>com.trc.user.User</value>
         <value>com.trc.user.authority.Authority</value>
         <value>com.trc.user.security.SecurityQuestion</value>
-        <value>com.trc.coupon.Coupon</value>
-        <value>com.trc.coupon.CouponDetail</value>
-        <value>com.trc.coupon.contract.Contract</value>
-        <value>com.trc.coupon.UserCoupon</value>
-        <value>com.trc.coupon.UserCouponId</value>
-        <value>com.trc.coupon.CouponStackable</value>
-        <value>com.trc.coupon.CouponStackableId</value>
-        <value>com.trc.coupon.CouponDetailType</value>
+        <value>com.trc.payment.coupon.Coupon</value>
+        <value>com.trc.payment.coupon.CouponDetail</value>
+        <value>com.trc.payment.coupon.contract.Contract</value>
+        <value>com.trc.payment.coupon.UserCoupon</value>
+        <value>com.trc.payment.coupon.UserCouponId</value>
+        <value>com.trc.payment.coupon.CouponStackable</value>
+        <value>com.trc.payment.coupon.CouponStackableId</value>
+        <value>com.trc.payment.coupon.CouponDetailType</value>
       </list>
     </property>
     <property name="hibernateProperties">

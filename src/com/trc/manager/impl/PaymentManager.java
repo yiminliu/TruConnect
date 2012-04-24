@@ -10,9 +10,10 @@ import org.springframework.stereotype.Component;
 import com.trc.exception.management.PaymentManagementException;
 import com.trc.exception.service.PaymentServiceException;
 import com.trc.manager.PaymentManagerModel;
+import com.trc.payment.refund.RefundCode;
+import com.trc.payment.refund.RefundRequest;
 import com.trc.service.impl.PaymentService;
 import com.trc.user.User;
-import com.trc.user.payment.refund.RefundRequest;
 import com.trc.util.cache.CacheKey;
 import com.trc.util.cache.CacheManager;
 import com.trc.util.logger.LogLevel;
@@ -219,9 +220,9 @@ public class PaymentManager implements PaymentManagerModel {
 
   @Loggable(value = LogLevel.TRACE)
   @PreAuthorize("isAuthenticated() and hasPermission(#user, 'canRefund')")
-  public void refundPayment(int accountNo, String amount, String trackingId, User user) throws PaymentManagementException {
+  public void refundPayment(int accountNo, String amount, String trackingId, User user, RefundCode refundCode, String notes) throws PaymentManagementException {
     try {
-      paymentService.refundPayment(accountNo, amount, Integer.parseInt(trackingId), user);
+      paymentService.refundPayment(accountNo, amount, Integer.parseInt(trackingId), user, refundCode, notes);
     } catch (PaymentServiceException e) {
       throw new PaymentManagementException(e.getMessage(), e.getCause());
     }
@@ -229,7 +230,7 @@ public class PaymentManager implements PaymentManagerModel {
 
   public void refundPayment(User user, RefundRequest paymentRefund) throws PaymentManagementException {
     refundPayment(paymentRefund.getPaymentTransaction().getAccountNo(), paymentRefund.getPaymentTransaction().getPaymentAmount(), String.valueOf(paymentRefund
-        .getPaymentTransaction().getBillingTrackingId()), user);
+        .getPaymentTransaction().getBillingTrackingId()), user, paymentRefund.getRefundCode(), paymentRefund.getNotes());
   }
 
 }

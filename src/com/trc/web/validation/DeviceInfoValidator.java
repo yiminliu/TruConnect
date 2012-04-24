@@ -28,7 +28,7 @@ public class DeviceInfoValidator implements Validator {
     checkDeviceAvailability(deviceInfo.getValue(), errors);
   }
 
-  public void checkDeviceEsn(String esn, Errors errors) {
+  protected void checkDeviceEsn(String esn, Errors errors) {
     if (ValidationUtil.isEmpty(esn)) {
       errors.rejectValue("value", "device.esn.required", "You must enter an ESN");
     } else if (!isDec(esn) && !isHex(esn)) {
@@ -36,7 +36,7 @@ public class DeviceInfoValidator implements Validator {
     }
   }
 
-  public void checkDeviceLabel(String label, Errors errors) {
+  protected void checkDeviceLabel(String label, Errors errors) {
     if (ValidationUtil.isEmpty(label)) {
       errors.rejectValue("label", "device.label.required", "You must name your device");
     } else if (!ValidationUtil.isBetween(label, MIN_LABEL_SIZE, 100)) {
@@ -44,18 +44,18 @@ public class DeviceInfoValidator implements Validator {
     }
   }
 
-  public void checkDeviceAvailability(String esn, Errors errors) {
+  protected void checkDeviceAvailability(String esn, Errors errors) {
     if (!errors.hasErrors() && !ValidationUtil.isEmpty(esn) && !deviceManager.isDeviceAvailable(esn)) {
       String[] args = { esn };
       errors.rejectValue("value", "device.esn.unavailable", args, "The ESN you entered is already in use");
     }
   }
 
-  private boolean isDec(String esn) {
+  protected boolean isDec(String esn) {
     return ValidationUtil.isNumeric(esn) && (esn.length() == 11 || esn.length() == 18);
   }
 
-  private boolean isHex(String esn) {
+  protected boolean isHex(String esn) {
     return ValidationUtil.isAlphaNumeric(esn) && (esn.length() == 8 || esn.length() == 14);
   }
 

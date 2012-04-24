@@ -1,4 +1,4 @@
-package com.trc.coupon;
+package com.trc.payment.coupon;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -41,8 +41,9 @@ public class CouponDetailType implements Serializable {
     this.description = description;
   }
 
-  @OneToMany(fetch = FetchType.LAZY)
-  @JoinColumn(name = "detail_type", nullable = false)
+  // @OneToMany(fetch = FetchType.LAZY)
+  // @JoinColumn(name = "detail_type", nullable = false)
+  @OneToMany(mappedBy = "detailType", fetch = FetchType.LAZY)
   public Collection<CouponDetail> getCouponDetails() {
     return couponDetails;
   }

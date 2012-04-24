@@ -13,6 +13,14 @@ import com.tscp.mvne.Device;
 import com.tscp.mvne.NetworkInfo;
 import com.tscp.mvne.ServiceInstance;
 
+/**
+ * Used to handle copying and converting classes from TSCPMVNE. These classes
+ * should implement cloneable if possible, but may not be able to with the jaxb
+ * translation of wsimport.
+ * 
+ * @author Tachikoma
+ * 
+ */
 public final class TruConnectUtil {
 
   /* ***********************************************************************

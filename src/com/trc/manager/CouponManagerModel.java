@@ -2,9 +2,9 @@ package com.trc.manager;
 
 import java.util.Collection;
 
-import com.trc.coupon.Coupon;
-import com.trc.coupon.UserCoupon;
 import com.trc.exception.management.CouponManagementException;
+import com.trc.payment.coupon.Coupon;
+import com.trc.payment.coupon.UserCoupon;
 import com.trc.user.User;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.ServiceInstance;

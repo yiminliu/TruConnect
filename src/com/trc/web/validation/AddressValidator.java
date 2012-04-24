@@ -26,17 +26,17 @@ public class AddressValidator implements Validator {
     checkZip(address.getZip(), errors);
   }
 
-  public static void checkAddress1(String address1, Errors errors) {
+  protected void checkAddress1(String address1, Errors errors) {
     if (ValidationUtil.isEmpty(address1) || !ValidationUtil.isBetween(address1, MIN_ADD_SIZE, 100)) {
       errors.rejectValue("address1", "address.address1.required", "You must enter an address");
     }
   }
 
-  public static void checkAddress2(String address2, Errors errors) {
+  protected void checkAddress2(String address2, Errors errors) {
     // TODO there are currently no rules for address 2
   }
 
-  public static void checkCity(String city, Errors errors) {
+  protected void checkCity(String city, Errors errors) {
     if (ValidationUtil.isEmpty(city) || !ValidationUtil.isBetween(city, MIN_CITY_SIZE, 100)) {
       errors.rejectValue("city", "address.city.required", "You must enter a city");
     } else if (!ValidationUtil.isAlpha(city)) {
@@ -44,13 +44,13 @@ public class AddressValidator implements Validator {
     }
   }
 
-  public static void checkState(String state, Errors errors) {
+  protected void checkState(String state, Errors errors) {
     if (state.trim().equals("0")) {
       errors.rejectValue("state", "address.state.required", "You must specify a state");
     }
   }
 
-  public static void checkZip(String zipCode, Errors errors) {
+  protected void checkZip(String zipCode, Errors errors) {
     if (ValidationUtil.isEmpty(zipCode)) {
       errors.rejectValue("zip", "address.zip.required", "You must enter a zip code");
     } else if (zipCode.trim().length() != ZIP_SIZE || !ValidationUtil.isNumeric(zipCode)) {

@@ -9,16 +9,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.trc.coupon.Coupon;
-import com.trc.coupon.CouponRequest;
-import com.trc.coupon.CouponStackable;
-import com.trc.coupon.UserCoupon;
 import com.trc.exception.ValidationException;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.CouponManagementException;
 import com.trc.manager.impl.AccountManager;
 import com.trc.manager.impl.CouponManager;
 import com.trc.manager.impl.UserManager;
+import com.trc.payment.coupon.Coupon;
+import com.trc.payment.coupon.CouponDetail;
+import com.trc.payment.coupon.CouponRequest;
+import com.trc.payment.coupon.CouponStackable;
+import com.trc.payment.coupon.UserCoupon;
 import com.trc.user.User;
 import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
@@ -54,13 +55,6 @@ public class CouponValidator implements Validator {
     }
   }
 
-  public void validate(CouponRequest couponRequest, int accountNo, Errors errors) {
-    errors.pushNestedPath("coupon");
-    DevLogger.log("nested path is " + errors.getNestedPath());
-    validate(couponRequest.getCoupon(), accountNo, errors);
-    errors.popNestedPath();
-  }
-
   public void validate(Coupon coupon, int accountNumber, Errors errors) {
     checkExists(coupon, errors);
     if (!errors.hasErrors()) {
@@ -77,13 +71,37 @@ public class CouponValidator implements Validator {
     }
   }
 
+  public void validate(CouponRequest couponRequest, int accountNo, Errors errors) {
+    errors.pushNestedPath("coupon");
+    DevLogger.log("nested path is " + errors.getNestedPath());
+    validate(couponRequest.getCoupon(), accountNo, errors);
+    errors.popNestedPath();
+  }
+
+  public void validateForCreateCoupon(Object target, Errors errors) {
+    Coupon coupon = (Coupon) target;
+    if (!errors.hasErrors()) {
+      checkCouponCode(coupon.getCouponCode(), errors);
+      checkStartDateForCreateCoupon(coupon.getStartDate(), errors);
+      if (coupon.getEndDate() != null)
+        checkEndDateForCreateCoupon(coupon.getEndDate(), coupon.getStartDate(), errors);
+      checkQuantity(coupon, errors);
+    }
+  }
+
+  public void validateCouponDetail(Object target, Errors errors) {
+    CouponDetail couponDetail = (CouponDetail) target;
+    if (!errors.hasErrors()) {
+    }
+  }
+
   private void checkAccount(int accountNumber, Errors errors) {
     if (accountNumber == 0) {
       errors.reject("coupon.device.required", "You must choose a device to apply the coupon to");
     }
   }
 
-  private void checkCouponCode(String couponCode, Errors errors) {
+  public void checkCouponCode(String couponCode, Errors errors) {
     if (couponCode == null || couponCode.length() < 3) {
       errors.rejectValue("couponCode", "coupon.code.invalid", "Not a valid coupon code");
     }
@@ -98,6 +116,18 @@ public class CouponValidator implements Validator {
   private void checkStartDate(Date startDate, Errors errors) {
     if (startDate != null && startDate.compareTo(new Date()) >= 0) {
       errors.rejectValue("startDate", "coupon.date.notActive", "Coupon has not started");
+    }
+  }
+
+  private void checkStartDateForCreateCoupon(Date startDate, Errors errors) {
+    if (startDate != null && startDate.compareTo(new Date()) < 0) {
+      errors.rejectValue("startDate", "coupon.date.invalidStartDate", "Not a valid coupon start date.");
+    }
+  }
+
+  private void checkEndDateForCreateCoupon(Date endDate, Date startDate, Errors errors) {
+    if (endDate != null && (endDate.compareTo(new Date()) <= 0 || endDate.compareTo(startDate) <= 0)) {
+      errors.rejectValue("endDate", "coupon.date.invalidEndDate", "Not a valid coupon end date.");
     }
   }
 
@@ -189,7 +219,9 @@ public class CouponValidator implements Validator {
   public boolean isApplied(Coupon coupon, User user, Account account) throws ValidationException {
     try {
       UserCoupon userCoupon = couponManager.getUserCoupon(new UserCoupon(coupon, user, account));
+
       return userCoupon != null;
+
     } catch (CouponManagementException e) {
       throw new ValidationException(e.getMessage(), e.getCause());
     }

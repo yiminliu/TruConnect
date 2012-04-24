@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trc.exception.service.PaymentServiceException;
+import com.trc.payment.refund.RefundCode;
 import com.trc.service.PaymentServiceModel;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.service.gateway.TruConnectUtil;
@@ -164,9 +165,9 @@ public class PaymentService implements PaymentServiceModel {
     }
   }
 
-  public void refundPayment(int account_no, String amount, int trackingId, User user) throws PaymentServiceException {
+  public void refundPayment(int account_no, String amount, int trackingId, User user, RefundCode refundCode, String notes) throws PaymentServiceException {
     try {
-      truConnect.refundPayment(account_no, amount, trackingId, user.getUsername());
+      truConnect.refundPayment(account_no, amount, trackingId, user.getUsername(), refundCode.getValue(), notes);
     } catch (WebServiceException e) {
       throw new PaymentServiceException(e.getMessage(), e.getCause());
     } catch (ContractException_Exception e) {

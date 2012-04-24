@@ -7,7 +7,7 @@
 
   <view-state id="requestUserInfo" view="activation/registration/addUserInfo" model="registration">
     <on-entry>
-      <evaluate expression="userManager.getSecurityQuestions()" result="viewScope.hints" />
+      <evaluate expression="securityQuestionManager.getSecurityQuestions()" result="viewScope.hints" />
     </on-entry>
     <transition on="submit" to="reserveUser">
       <evaluate expression="registration.encodePassword()" />

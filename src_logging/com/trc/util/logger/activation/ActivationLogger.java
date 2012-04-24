@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.trc.coupon.Coupon;
 import com.trc.dao.impl.ActivationStateDao;
+import com.trc.payment.coupon.Coupon;
 import com.trc.user.User;
 
 @Service

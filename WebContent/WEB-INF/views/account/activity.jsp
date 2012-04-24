@@ -25,9 +25,10 @@
 
         <c:if test="${fn:length(accountDetails) > 0}">
           <p>Select the device that you would like to see the activity for.</p>
-          <div id="accountList" style="border-bottom:1px #ccc solid; padding-bottom:10px;">
+          <div id="accountList" style="border-bottom: 1px #ccc solid; padding-bottom: 10px;">
             <c:forEach var="accountDetail" items="${accountList}">
-                <label style="display:block; font-weight:normal;"><input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />${accountDetail.deviceInfo.label}</label>
+              <label style="display: block; font-weight: normal;"><input type="radio" name="account"
+                value="${accountDetail.encodedAccountNum}" />${accountDetail.deviceInfo.label}</label>
             </c:forEach>
           </div>
         </c:if>
@@ -69,7 +70,7 @@
       </div>
 
       <div class="span-6 last sub-navigation">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
 
     </div>

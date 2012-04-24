@@ -1,4 +1,4 @@
-package com.trc.coupon;
+package com.trc.payment.coupon;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.trc.coupon.contract.Contract;
+import com.trc.payment.coupon.contract.Contract;
 
 /**
  * This object contains the duration of a Coupon and the Contract that it maps
@@ -30,9 +30,9 @@ public class CouponDetail implements Serializable {
   private static final long serialVersionUID = -237740560474759272L;
   private int couponDetailId;
   private CouponDetailType detailType;
-  private int duration;
+  private int duration = 0;
   private String durationUnit;
-  private Double amount;
+  private Double amount = 0.0;
   private Integer accountLimit;
   private Contract contract = new Contract();
   private Collection<Coupon> coupons = new HashSet<Coupon>();
@@ -50,7 +50,7 @@ public class CouponDetail implements Serializable {
   }
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "detail_type", nullable = false, insertable = false, updatable = false)
+  @JoinColumn(name = "detail_type", nullable = false, insertable = true, updatable = false)
   public CouponDetailType getDetailType() {
     return detailType;
   }
@@ -60,7 +60,7 @@ public class CouponDetail implements Serializable {
   }
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "contract_type", nullable = false, insertable = false)
+  @JoinColumn(name = "contract_type", nullable = false, insertable = true)
   public Contract getContract() {
     return contract;
   }
@@ -69,8 +69,8 @@ public class CouponDetail implements Serializable {
     this.contract = contract;
   }
 
-  @OneToMany(fetch = FetchType.LAZY)
-  @JoinColumn(name = "coupon_detail_id", nullable = false)
+  @OneToMany(mappedBy = "couponDetail", fetch = FetchType.LAZY)
+  // @JoinColumn(name = "coupon_detail_id", nullable = false)
   public Collection<Coupon> getCoupons() {
     return coupons;
   }
@@ -115,8 +115,8 @@ public class CouponDetail implements Serializable {
     this.accountLimit = accountLimit;
   }
 
-  @OneToMany(fetch = FetchType.EAGER)
-  @JoinColumn(name = "coupon_detail_id", nullable = false)
+  @OneToMany(mappedBy = "id.couponDetail", fetch = FetchType.EAGER)
+  // @JoinColumn(name = "coupon_detail_id", nullable = false)
   public Collection<CouponStackable> getStackable() {
     return stackable;
   }

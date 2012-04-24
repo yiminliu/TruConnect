@@ -23,8 +23,8 @@
           questions, please visit our <a href="support.truconnect.com">support page</a> or click on your device below.
         </p>
         <p class="sub-navigation">
-          <a href="http://www.truconnect.com/Knowledgebase/support/truconnect-usb-card/">TruConnect USB Card &raquo;</a><br /> <a
-            href="http://www.truconnect.com/Knowledgebase/support/truconnect-mifi/">TruConnect MiFi &raquo;</a>
+          <a href="http://www.truconnect.com/Knowledgebase/support/truconnect-usb-card/">TruConnect USB Card &raquo;</a><br />
+          <a href="http://www.truconnect.com/Knowledgebase/support/truconnect-mifi/">TruConnect MiFi &raquo;</a>
         </p>
       </div>
       <!-- Begin Right Column -->

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 import com.trc.user.User;
-import com.trc.util.ClassUtils;
 
 @Component
 public class AdminValidator extends UserValidator {

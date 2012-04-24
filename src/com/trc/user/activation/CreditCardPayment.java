@@ -2,7 +2,7 @@ package com.trc.user.activation;
 
 import java.io.Serializable;
 
-import com.trc.coupon.Coupon;
+import com.trc.payment.coupon.Coupon;
 import com.tscp.mvne.CreditCard;
 
 //TODO move this class to the payment package

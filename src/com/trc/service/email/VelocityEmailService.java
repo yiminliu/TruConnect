@@ -17,23 +17,13 @@ import com.trc.exception.EmailException;
 
 @Service
 public class VelocityEmailService {
-  private static final String templatePath = "templates/email/";
-  @Autowired
-  private VelocityEngine velocityEngine;
+  protected static final String templatePath = "templates/email/";
   @Autowired
   private JavaMailSender mailSender;
+  @Autowired
+  private VelocityEngine velocityEngine;
 
-  public void setVelocityEngine(VelocityEngine velocityEngine) {
-    this.velocityEngine = velocityEngine;
-  }
-
-  public void setMailSender(JavaMailSender mailSender) {
-    this.mailSender = mailSender;
-  }
-
-  public void send(String template, final SimpleMailMessage message, final Map<Object, Object> model)
-      throws EmailException {
-    // final String vmTemplate = "/" + template + ".vm";
+  public void send(String template, final SimpleMailMessage message, final Map<Object, Object> model) throws EmailException {
     final String vmTemplate = templatePath + template + ".vm";
     MimeMessagePreparator preparator = new MimeMessagePreparator() {
       public void prepare(MimeMessage mimeMessage) throws Exception {
@@ -47,6 +37,14 @@ public class VelocityEmailService {
     };
     mailSender.send(preparator);
     preparator = null;
+  }
+
+  public void setMailSender(JavaMailSender mailSender) {
+    this.mailSender = mailSender;
+  }
+
+  public void setVelocityEngine(VelocityEngine velocityEngine) {
+    this.velocityEngine = velocityEngine;
   }
 
 }

@@ -30,22 +30,18 @@
               <th style="text-align: right;">Invoice</th>
             </c:if>
             <c:if test="${!empty sessionScope.controlling_user}">
-              <th style="text-align: right;">Status</th>
+              <th style="text-align: right;">Reverse</th>
             </c:if>
           </tr>
-          <c:choose>
-            <c:when test="${!empty sessionScope.controlling_user}">
-              <c:forEach var="paymentRecord" items="${paymentHistory.currentPage}" varStatus="status">
-                <%@ include file="/WEB-INF/includes/display/paymentRecord_admin.jsp"%>
-              </c:forEach>
-            </c:when>
-            <c:otherwise>
-              <c:forEach var="paymentRecord" items="${paymentHistory.currentPage}" varStatus="status">
-                <%@ include file="/WEB-INF/includes/display/paymentRecord.jsp"%>
-              </c:forEach>
-            </c:otherwise>
-          </c:choose>
+          <c:forEach var="paymentRecord" items="${paymentHistory.currentPage}" varStatus="status">
+            <c:choose>
+              <c:when test="${!empty sessionScope.controlling_user}"><%@ include
+                  file="/WEB-INF/includes/display/paymentRecord_admin.jsp"%></c:when>
+              <c:otherwise><%@ include file="/WEB-INF/includes/display/paymentRecord.jsp"%></c:otherwise>
+            </c:choose>
+          </c:forEach>
         </table>
+
         <c:set var="prevPageNum" value="${paymentHistory.currentPageNum - 1}" />
         <c:set var="nextPageNum" value="${paymentHistory.currentPageNum + 1}" />
         <c:if test="${prevPageNum > 0}">
@@ -59,9 +55,8 @@
       </div>
 
       <div class="span-6 last sub-navigation">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
-
     </div>
     <!-- Close main-content -->
     <%@ include file="/WEB-INF/includes/footer_links.jsp"%>

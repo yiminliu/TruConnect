@@ -22,24 +22,24 @@ public class ContactInfoValidator extends AddressValidator {
     checkAddress(contactInfo.getAddress(), errors);
   }
 
-  public static void checkName(ContactInfo contactInfo, Errors errors) {
+  public void checkName(ContactInfo contactInfo, Errors errors) {
     checkFirstName(contactInfo.getFirstName(), errors);
     checkLastName(contactInfo.getLastName(), errors);
   }
 
-  public static void checkFirstName(String firstName, Errors errors) {
+  protected void checkFirstName(String firstName, Errors errors) {
     if (ValidationUtil.isEmpty(firstName)) {
       errors.rejectValue("firstName", "contact.firstName.required", "You must enter a first name");
     }
   }
 
-  public static void checkLastName(String lastName, Errors errors) {
+  protected void checkLastName(String lastName, Errors errors) {
     if (ValidationUtil.isEmpty(lastName)) {
       errors.rejectValue("lastName", "contact.lastName.required", "You must enter a last name");
     }
   }
 
-  public static void checkPhoneNumber(String phoneNumber, Errors errors) {
+  protected void checkPhoneNumber(String phoneNumber, Errors errors) {
     if (ValidationUtil.isEmpty(phoneNumber)) {
       errors.rejectValue("phoneNumber", "contact.phoneNumber.required", "You must enter a phone number");
     } else if (phoneNumber.trim().length() != 10) {
@@ -49,7 +49,7 @@ public class ContactInfoValidator extends AddressValidator {
     }
   }
 
-  public void checkAddress(Address address, Errors errors) {
+  protected void checkAddress(Address address, Errors errors) {
     errors.pushNestedPath("address");
     super.validate(address, errors);
     errors.popNestedPath();

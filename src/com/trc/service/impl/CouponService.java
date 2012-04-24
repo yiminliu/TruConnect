@@ -1,10 +1,9 @@
-package com.trc.service;
+package com.trc.service.impl;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -15,18 +14,20 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.trc.coupon.Coupon;
-import com.trc.coupon.CouponDetail;
-import com.trc.coupon.UserCoupon;
-import com.trc.coupon.contract.ProrationCalculator;
+import com.trc.dao.impl.ContractDao;
 import com.trc.dao.impl.CouponDao;
 import com.trc.dao.impl.CouponDetailDao;
+import com.trc.dao.impl.CouponDetailTypeDao;
 import com.trc.dao.impl.UserCouponDao;
 import com.trc.exception.service.CouponServiceException;
+import com.trc.payment.coupon.Coupon;
+import com.trc.payment.coupon.CouponDetail;
+import com.trc.payment.coupon.CouponDetailType;
+import com.trc.payment.coupon.UserCoupon;
+import com.trc.payment.coupon.contract.Contract;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.user.User;
 import com.trc.util.Formatter;
-import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.KenanContract;
 import com.tscp.mvne.ServiceInstance;
@@ -37,7 +38,9 @@ public class CouponService {
   private TruConnect truConnect;
   private CouponDao couponDao;
   private CouponDetailDao couponDetailDao;
+  private CouponDetailTypeDao couponDetailTypeDao;
   private UserCouponDao userCouponDao;
+  private ContractDao contractDao;
 
   /* *****************************************************************
    * Initialization
@@ -45,11 +48,14 @@ public class CouponService {
    */
 
   @Autowired
-  public void init(TruConnectGateway truConnectGateway, CouponDao couponDao, CouponDetailDao couponDetailDao, UserCouponDao userCouponDao) {
+  public void init(TruConnectGateway truConnectGateway, CouponDao couponDao, CouponDetailDao couponDetailDao, CouponDetailTypeDao couponDetailTypeDao,
+      UserCouponDao userCouponDao, ContractDao contractDao) {
     this.truConnect = truConnectGateway.getPort();
     this.couponDao = couponDao;
     this.couponDetailDao = couponDetailDao;
+    this.couponDetailTypeDao = couponDetailTypeDao;
     this.userCouponDao = userCouponDao;
+    this.contractDao = contractDao;
   }
 
   /* *****************************************************************
@@ -222,12 +228,79 @@ public class CouponService {
   }
 
   /* *****************************************************************
+   * CouponDetailType DAO layer interaction
+   * *****************************************************************
+   */
+
+  @Transactional
+  public List<CouponDetailType> getAllCouponDetailTypes() throws CouponServiceException {
+    try {
+      return couponDetailTypeDao.getAllCouponDetailTypes();
+    } catch (DataAccessException e) {
+      throw new CouponServiceException("Error fetching all coupon detail types from DAO layer: " + e.getMessage());
+    }
+  }
+
+  @Transactional
+  public int insertCouponDetailType(CouponDetailType couponDetailType) throws CouponServiceException {
+    try {
+      return (Integer) couponDetailTypeDao.insertCouponDetailType(couponDetailType);
+    } catch (DataAccessException e) {
+      throw new CouponServiceException("Error inserting CouponDetail from DAO layer: " + e.getMessage());
+    }
+  }
+
+  /* *****************************************************************
+   * CouponContract DAO layer interaction
+   * *****************************************************************
+   */
+
+  @Transactional
+  public List<Contract> getAllContracts() throws CouponServiceException {
+    try {
+      return contractDao.getAllContracts();
+    } catch (DataAccessException e) {
+      throw new CouponServiceException("Error fetching all contracts from DAO layer: " + e.getMessage());
+    }
+  }
+
+  @Transactional
+  public List<CouponDetail> getAllCouponDetails() throws CouponServiceException {
+    try {
+      return couponDetailDao.getAllCouponDetails();
+    } catch (DataAccessException e) {
+      throw new CouponServiceException("Error fetching all coupon details from DAO layer: " + e.getMessage());
+    }
+  }
+
+  @Transactional
+  public int insertCouponContract(Contract contract) throws CouponServiceException {
+    try {
+      return (Integer) contractDao.insertContract(contract);
+    } catch (DataAccessException e) {
+      throw new CouponServiceException("Error inserting CouponDetail from DAO layer: " + e.getMessage());
+    }
+  }
+
+  /* *****************************************************************
+   * CouponStackable DAO layer interaction
+   * *****************************************************************
+   */
+
+  @Transactional
+  public void insertCouponStackable(CouponDetail couponDetail) throws CouponServiceException {
+    try {
+      couponDetailDao.insertCouponStackable(couponDetail);
+    } catch (DataAccessException e) {
+      throw new CouponServiceException("Error inserting CouponDetail from DAO layer: " + e.getMessage());
+    }
+  }
+
+  /* *****************************************************************
    * Application of Coupons in Kenan using TSCPMVNE
    * *****************************************************************
    */
 
-  // 20120403 put the call to truConnect.applyCouponPayment within the try/catch
-  // so it is called only if the hibernate operation succeeds
   @Transactional
   public int applyCouponPayment(Coupon coupon, User user, Account account, Date date) throws CouponServiceException {
     try {
@@ -235,13 +308,13 @@ public class CouponService {
       calendar.setTime(date);
       XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
       String stringAmount = Formatter.formatDollarAmountQuery(coupon.getCouponDetail().getAmount());
+      int trackingId = truConnect.applyCouponPayment(account, stringAmount, xmlCal);
       try {
         UserCoupon userCoupon = new UserCoupon(coupon, user, account);
         userCoupon.setKenanContractId(-1);
         userCoupon.setActive(true);
         insertUserCoupon(userCoupon);
         incCouponUsedCount(coupon);
-        int trackingId = truConnect.applyCouponPayment(account, stringAmount, xmlCal);
         return trackingId;
       } catch (DataAccessException e) {
         // TODO rollback the credit that was given
@@ -329,4 +402,5 @@ public class CouponService {
     }
     return null;
   }
+
 }

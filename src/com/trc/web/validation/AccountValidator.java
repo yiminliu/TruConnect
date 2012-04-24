@@ -20,12 +20,12 @@ public class AccountValidator implements Validator {
     checkAccountNumber(account.getAccountno(), errors);
   }
 
-  public void checkAccountNumber(int accountNumber, Errors errors) {
+  protected void checkAccountNumber(int accountNumber, Errors errors) {
     if (accountNumber < 1) {
       errors.rejectValue("accountno", "account.number.requred", "You must choose an account");
     }
   }
-  //
+
   // @Deprecated
   // public void validateChooseAccount(Account account, ValidationContext
   // context) {

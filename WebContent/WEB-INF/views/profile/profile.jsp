@@ -101,13 +101,14 @@
                 <div>${address.city}, ${address.state} ${address.zip}</div>
               </c:if>
 
-              <div class=addressButtons><a href="<spring:url value="/profile/address/edit/${address.encodedAddressId}" />"
-                class="button semi-s multi"><span>Edit</span> </a>
-              <c:if test="${fn:length(addresses) > 1}">
-                <a class="button semi-s"
-                  href="<spring:url value="/profile/address/remove/${address.encodedAddressId}" />"><span>Remove</span>
-                </a>
-              </c:if>
+              <div class=addressButtons>
+                <a href="<spring:url value="/profile/address/edit/${address.encodedAddressId}" />"
+                  class="button semi-s multi"><span>Edit</span> </a>
+                <c:if test="${fn:length(addresses) > 1}">
+                  <a class="button semi-s"
+                    href="<spring:url value="/profile/address/remove/${address.encodedAddressId}" />"><span>Remove</span>
+                  </a>
+                </c:if>
               </div>
             </div>
           </c:forEach>
@@ -140,7 +141,7 @@
       </div>
 
       <div class="span-6 last sub-navigation">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
 
     </div>

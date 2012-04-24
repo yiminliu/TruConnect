@@ -2,6 +2,7 @@ package com.trc.config;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
@@ -27,11 +28,12 @@ public final class CONFIG {
   private static final String monthsFile = "config/dates/months.properties";
   private static final String yearsFile = "config/dates/years.properties";
   private static final String statesFile = "config/geo/states.properties";
-  public static SortedMap<String, String> states = new TreeMap<String, String>();
-  public static SortedMap<String, String> months = new TreeMap<String, String>();
-  public static SortedMap<Integer, String> yearsFuture = new TreeMap<Integer, String>();
-  public static SortedMap<Integer, String> yearsPast = new TreeMap<Integer, String>();
-  public static SortedMap<Integer, String> years = new TreeMap<Integer, String>();
+  public static final SortedMap<String, String> states = new TreeMap<String, String>();
+  public static final SortedMap<String, String> webflowStates = new TreeMap<String, String>();
+  public static final SortedMap<String, String> months = new TreeMap<String, String>();
+  public static final SortedMap<Integer, String> yearsFuture = new TreeMap<Integer, String>();
+  public static final SortedMap<Integer, String> yearsPast = new TreeMap<Integer, String>();
+  public static final SortedMap<Integer, String> years = new TreeMap<Integer, String>();
 
   public static Set<String> validEnvironments = new HashSet<String>();
   static {
@@ -88,7 +90,7 @@ public final class CONFIG {
         throw new InitializationException(ENVIRONMENT + " is not a valid setting in config.properties");
       }
       TSCPMVNE.initialized = true;
-      DevLogger.debug("TSCPMVNE location set to " + TSCPMVNE.location);
+      DevLogger.log("TSCPMVNE location set to {}", TSCPMVNE.location);
     }
   }
 
@@ -121,39 +123,8 @@ public final class CONFIG {
     properties.load(classLoader.getResourceAsStream(statesFile));
     for (Entry<Object, Object> entry : properties.entrySet()) {
       states.put((String) entry.getKey(), (String) entry.getValue());
+      webflowStates.put((String) entry.getValue(), (String) entry.getKey());
     }
   }
-
-  // public static SortedMap<Integer, String> getYearsFuture() {
-  // return yearsFuture;
-  // }
-  //
-  // public static void setYearsFuture(SortedMap<Integer, String> yearsFuture) {
-  // CONFIG.yearsFuture = yearsFuture;
-  // }
-  //
-  // public static SortedMap<Integer, String> getYearsPast() {
-  // return yearsPast;
-  // }
-  //
-  // public static void setYearsPast(SortedMap<Integer, String> yearsPast) {
-  // CONFIG.yearsPast = yearsPast;
-  // }
-  //
-  // public static SortedMap<String, String> getStates() {
-  // return states;
-  // }
-  //
-  // public static void setStates(SortedMap<String, String> states) {
-  // CONFIG.states = states;
-  // }
-  //
-  // public static SortedMap<String, String> getMonths() {
-  // return months;
-  // }
-  //
-  // public static void setMonths(SortedMap<String, String> months) {
-  // CONFIG.months = months;
-  // }
 
 }

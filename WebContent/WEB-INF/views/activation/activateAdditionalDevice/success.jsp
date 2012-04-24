@@ -26,13 +26,14 @@
           <a class="button action-m" href="<spring:url value="/devices" />"><span>Continue</span> </a>
         </p>
         <p class="sub-navigation">
-          <a href="http://www.truconnect.com/Knowledgebase/support/truconnect-usb-card/">TruConnect USB Card &raquo;</a><br /> <a
-            href="http://www.truconnect.com/Knowledgebase/support/truconnect-mifi/">TruConnect MiFi &raquo;</a>
+          <a href="http://www.truconnect.com/Knowledgebase/support/truconnect-usb-card/">TruConnect USB Card &raquo;</a><br />
+          <a href="http://www.truconnect.com/Knowledgebase/support/truconnect-mifi/">TruConnect MiFi &raquo;</a>
         </p>
       </div>
+
       <!-- Begin Right Column -->
-      <div class="span-6 last sub-navigation formProgress">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
 
     </div>

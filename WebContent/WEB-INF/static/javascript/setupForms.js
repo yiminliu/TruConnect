@@ -2,9 +2,6 @@ $(function() {
 	var $forms = $("form");
 	$.each($forms, function() {
 		$(this).setupForm();
-		$(this).submit(function() {
-			$("input[type=submit]", this).attr("disabled", "disabled");
-		});
 	});
 });
 
@@ -25,9 +22,11 @@ $.fn.setupForm = function() {
 	});
 	$(formButton).click(function(e) {
 		e.preventDefault();
-		$(formSubmit).click();
 		$("#curtain").fadeIn("fast").center().height($(document).height());
 		$("#centerPopup").fadeIn("fast").center();
+		$(formSubmit).click();
+		$(formSubmit).attr("disabled", "disabled");
+		$(formButton).attr("disabled", "disabled");
 	});
 	$(formResetButton).click(function(e) {
 		e.preventDefault();
