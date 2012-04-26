@@ -1,4 +1,4 @@
-package com.trc.util.logger.activation;
+package com.trc.user.activation.logger;
 
 import java.util.Collection;
 import java.util.Date;
@@ -27,8 +27,8 @@ public class ActivationState {
   private ActivationState parent;
   private ActState parentState;
   private Collection<ActivationState> children = new HashSet<ActivationState>();
-
   private ActivationStateId parentStateId = new ActivationStateId();
+  private String error;
 
   public ActivationState() {
     // do nothing
@@ -115,6 +115,15 @@ public class ActivationState {
     this.children = children;
   }
 
+  @Column(name = "error")
+  public String getError() {
+    return error;
+  }
+
+  public void setError(String error) {
+    this.error = error;
+  }
+
   /* **************************************************************
    * Helper Methods
    * ***************************************************************
@@ -146,6 +155,12 @@ public class ActivationState {
       }
     }
     return timespent;
+  }
+
+  @Override
+  public String toString() {
+    return "ActivationState [activationStateId=" + activationStateId + ", dateIn=" + dateIn + ", dateOut=" + dateOut + ", parent=" + parent + ", parentState="
+        + parentState + ", children=" + children + ", parentStateId=" + parentStateId + ", errors=" + error + "]";
   }
 
   @Override

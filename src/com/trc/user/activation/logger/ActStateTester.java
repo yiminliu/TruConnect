@@ -1,4 +1,4 @@
-package com.trc.util.logger.activation;
+package com.trc.user.activation.logger;
 
 import java.util.Date;
 

@@ -11,7 +11,7 @@
 
   <view-state id="requestContactInfo" view="activation/registration/addContactInfo" model="contactInfo">
     <on-entry>
-      <evaluate expression="CONFIG.webflowStates" result="viewScope.states" />
+      <evaluate expression="config.webflowStates" result="viewScope.states" />
     </on-entry>
     <transition on="submit" to="success" />
   </view-state>
@@ -24,5 +24,7 @@
   <!-- Global Transitions -->
   <global-transitions>
     <transition on="cancel" to="cancel" validate="false" />
+    <!-- <transition on-exception="com.trc.exception.WebFlowException" to="generalError" /> -->
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </global-transitions>
 </flow>

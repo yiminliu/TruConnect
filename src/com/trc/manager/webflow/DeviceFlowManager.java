@@ -34,6 +34,7 @@ public class DeviceFlowManager {
   @Autowired
   private VelocityEmailService velocityEmailService;
 
+  private static final int sleepTime = 750;
   private static final String ERROR_RESERVE_MDN = "An error occured while reserving your Mobile Data card. Please try entering your ESN again.";
   private static final String ERROR_ACTIVATE = "An error occured while activating your card. Please enter your ESN again.";
   private static final String ERROR_REMOVE_DEVICE = "An error occurred while clearing your device information. No changes were made. Please try again.";
@@ -48,13 +49,11 @@ public class DeviceFlowManager {
     try {
       NetworkInfo reservedNetworkInfo = deviceManager.reserveMdn();
       TruConnectUtil.copyNetworkInfo(networkInfo, reservedNetworkInfo);
-      Thread.sleep(500);
+      Thread.sleep(sleepTime);
     } catch (DeviceManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_RESERVE_MDN);
       throw new WebFlowException(e.getMessage(), e.getCause());
     } catch (InterruptedException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_RESERVE_MDN);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }
@@ -69,7 +68,6 @@ public class DeviceFlowManager {
       Device newDeviceInfo = deviceManager.addDeviceInfo(deviceInfo, account, user);
       TruConnectUtil.copyDeviceInfo(deviceInfo, newDeviceInfo);
     } catch (DeviceManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_ACTIVATE);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }
@@ -79,7 +77,6 @@ public class DeviceFlowManager {
     try {
       deviceManager.removeDeviceInfo(deviceInfo, account, user);
     } catch (DeviceManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_REMOVE_DEVICE);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }
@@ -89,13 +86,11 @@ public class DeviceFlowManager {
     try {
       NetworkInfo newNetworkInfo = deviceManager.activateService(networkInfo, user);
       TruConnectUtil.copyNetworkInfo(networkInfo, newNetworkInfo);
-      Thread.sleep(500);
+      Thread.sleep(sleepTime);
     } catch (DeviceManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_ACTIVATE);
       throw new WebFlowException(e.getMessage(), e.getCause());
     } catch (InterruptedException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_ACTIVATE);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }
@@ -105,7 +100,6 @@ public class DeviceFlowManager {
     try {
       deviceManager.disconnectService(account);
     } catch (DeviceManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_ACTIVATE);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }
@@ -115,7 +109,6 @@ public class DeviceFlowManager {
     try {
       deviceManager.disconnectFromKenan(account, account.getServiceinstancelist().get(0));
     } catch (DeviceManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_DISCONNECT);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }
@@ -123,14 +116,12 @@ public class DeviceFlowManager {
 
   public void disconnectService(NetworkInfo networkInfo) throws WebFlowException {
     try {
-      Thread.sleep(500);
+      Thread.sleep(sleepTime);
       deviceManager.disconnectFromNetwork(networkInfo);
     } catch (DeviceManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_DISCONNECT);
       throw new WebFlowException(e.getMessage(), e.getCause());
     } catch (InterruptedException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_ACTIVATE);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }
@@ -140,13 +131,11 @@ public class DeviceFlowManager {
     try {
       Account result = deviceManager.createServiceInstance(account, networkInfo);
       TruConnectUtil.copyAccount(account, result);
-      Thread.sleep(500);
+      Thread.sleep(sleepTime);
     } catch (DeviceManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_CREATE_SERVICE);
       throw new WebFlowException(e.getMessage(), e.getCause());
     } catch (InterruptedException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_CREATE_SERVICE);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }

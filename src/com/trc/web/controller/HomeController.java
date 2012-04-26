@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.trc.config.CONFIG;
+import com.trc.config.Config;
 import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 
@@ -37,7 +37,7 @@ public class HomeController {
 
   private String getUserHomepage() {
     User user = userManager.getLoggedInUser();
-    if (CONFIG.ADMIN) {
+    if (Config.ADMIN) {
       if (user.isAdmin()) {
         return redirect("admin/home");
       } else if (user.isManager()) {
@@ -59,7 +59,7 @@ public class HomeController {
   }
 
   private String getLoginpage() {
-    return CONFIG.ADMIN ? "admin_login" : "login";
+    return Config.ADMIN ? "admin_login" : "login";
   }
 
   private String injectContextPath(HttpServletRequest request, String target) {

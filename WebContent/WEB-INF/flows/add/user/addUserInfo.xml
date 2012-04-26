@@ -30,5 +30,7 @@
   <global-transitions>
     <transition on="cancel" to="cancel" validate="false" />
     <transition on="generalError" to="generalError" validate="false" />
+    <!-- <transition on-exception="com.trc.exception.WebFlowException" to="generalError" /> -->
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </global-transitions>
 </flow>

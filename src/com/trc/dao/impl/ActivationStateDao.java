@@ -8,10 +8,10 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.trc.dao.ActivationStateDaoModel;
-import com.trc.util.logger.activation.ActState;
-import com.trc.util.logger.activation.ActivationMap;
-import com.trc.util.logger.activation.ActivationState;
-import com.trc.util.logger.activation.ActivationStateId;
+import com.trc.user.activation.logger.ActState;
+import com.trc.user.activation.logger.ActivationMap;
+import com.trc.user.activation.logger.ActivationState;
+import com.trc.user.activation.logger.ActivationStateId;
 
 @Repository
 public class ActivationStateDao extends HibernateDaoSupport implements ActivationStateDaoModel {
@@ -22,32 +22,32 @@ public class ActivationStateDao extends HibernateDaoSupport implements Activatio
   }
 
   @Override
-  public int saveRegistrationMap(ActivationMap activationMap) {
+  public int saveActivationMap(ActivationMap activationMap) {
     return (Integer) getHibernateTemplate().save(activationMap);
   }
 
   @Override
-  public void updateRegistrationMap(ActivationMap activationMap) {
+  public void updateActivationMap(ActivationMap activationMap) {
     getHibernateTemplate().update(activationMap);
   }
 
   @Override
-  public void saveRegistrationState(ActivationState activationState) {
+  public void saveActivationState(ActivationState activationState) {
     getHibernateTemplate().save(activationState);
   }
 
   @Override
-  public void updateRegistratonState(ActivationState activationState) {
+  public void updateActivationState(ActivationState activationState) {
     getHibernateTemplate().update(activationState);
   }
 
   @Override
-  public ActivationState getRegistrationState(ActivationStateId activationStateId) {
+  public ActivationState getActivationState(ActivationStateId activationStateId) {
     return getHibernateTemplate().get(ActivationState.class, activationStateId);
   }
 
   @Override
-  public ActivationMap getRegistrationMap(int activationId) {
+  public ActivationMap getActivationMap(int activationId) {
     return getHibernateTemplate().get(ActivationMap.class, activationId);
   }
 

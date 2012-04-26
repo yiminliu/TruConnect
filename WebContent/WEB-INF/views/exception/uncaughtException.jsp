@@ -33,15 +33,14 @@
     </div>
 
     <c:if test="${!empty sessionScope.controlling_user}">
-    <div class="clear"></div>
-
+      <div class="clear"></div>
       <div style="margin-bottom: 20px;">
         <a href="#" class="button action-m" onclick="$('#exception').slideToggle()"><span> <img
             style="margin-right: 5px; float: left;" src="<spring:url value="/static/images/buttons/icons/add.png" />" />
             View Exception
         </span> </a>
       </div>
-      <div style="clear: both;"></div>
+      <div class="clear"></div>
 
       <div id="exception" style="display: none; margin-top: 10px;">
         <%
@@ -79,13 +78,11 @@
               ex.printStackTrace(new java.io.PrintWriter(out));
             }
         %>
-      
+      </div>
     </c:if>
 
-  </div>
-
-  <!-- Close main-content -->
-  <%@ include file="/WEB-INF/includes/footer_links.jsp"%>
+    <!-- Close main-content -->
+    <%@ include file="/WEB-INF/includes/footer_links.jsp"%>
   </div>
   <!-- Close container -->
 

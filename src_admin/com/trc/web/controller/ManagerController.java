@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.config.CONFIG;
+import com.trc.config.Config;
 import com.trc.user.User;
 import com.trc.user.admin.UserControl;
 import com.trc.web.model.ResultModel;
@@ -25,7 +25,7 @@ public class ManagerController extends ServiceRepController {
   @Override
   public ModelAndView showHome() {
     ResultModel model = new ResultModel("admin/home");
-    if (!CONFIG.ADMIN) {
+    if (!Config.ADMIN) {
       return model.getAccessDenied();
     }
     List<Object> activePrincipals = sessionRegistry.getAllPrincipals();
@@ -49,7 +49,7 @@ public class ManagerController extends ServiceRepController {
 
   @RequestMapping(value = "/toggle/{userId}", method = RequestMethod.GET)
   public String toggleManager(@PathVariable("userId") int userId, @RequestParam("cmd") UserControl cmd) {
-    if (CONFIG.ADMIN) {
+    if (Config.ADMIN) {
       User user = userManager.getUserById(userId);
       switch (cmd) {
       case ENABLE:

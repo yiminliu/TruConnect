@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.config.CONFIG;
+import com.trc.config.Config;
 import com.trc.exception.management.AddressManagementException;
 import com.trc.manager.impl.AddressManager;
 import com.trc.manager.impl.UserManager;
@@ -67,9 +67,9 @@ public class ProfileController {
   @RequestMapping(value = "/address/add", method = RequestMethod.GET)
   public ModelAndView addAddress(HttpSession session) {
     ResultModel model = new ResultModel("profile/address/addAddress");
-    model.addObject("states", CONFIG.states.entrySet());
-    model.addObject("months", CONFIG.months.entrySet());
-    model.addObject("years", CONFIG.years.entrySet());
+    model.addObject("states", Config.states.entrySet());
+    model.addObject("months", Config.months.entrySet());
+    model.addObject("years", Config.years.entrySet());
     model.addObject("address", new Address());
     return model.getSuccess();
   }
@@ -81,9 +81,9 @@ public class ProfileController {
     AddressValidator addressValidator = new AddressValidator();
     addressValidator.validate(address, result);
     if (result.hasErrors()) {
-      model.addObject("states", CONFIG.states.entrySet());
-      model.addObject("months", CONFIG.months.entrySet());
-      model.addObject("years", CONFIG.years.entrySet());
+      model.addObject("states", Config.states.entrySet());
+      model.addObject("months", Config.months.entrySet());
+      model.addObject("years", Config.years.entrySet());
       model.addObject("address", address);
       return model.getError();
     } else {
@@ -102,9 +102,9 @@ public class ProfileController {
     User user = userManager.getCurrentUser();
     try {
       Address address = addressManager.getAddress(user, SessionEncrypter.decryptId(encodedAddressId));
-      model.addObject("states", CONFIG.states.entrySet());
-      model.addObject("months", CONFIG.months.entrySet());
-      model.addObject("years", CONFIG.years.entrySet());
+      model.addObject("states", Config.states.entrySet());
+      model.addObject("months", Config.months.entrySet());
+      model.addObject("years", Config.years.entrySet());
       model.addObject("address", address);
       return model.getSuccess();
     } catch (AddressManagementException e) {
@@ -119,9 +119,9 @@ public class ProfileController {
     AddressValidator addressValidator = new AddressValidator();
     addressValidator.validate(address, result);
     if (result.hasErrors()) {
-      model.addObject("states", CONFIG.states.entrySet());
-      model.addObject("months", CONFIG.months.entrySet());
-      model.addObject("years", CONFIG.years.entrySet());
+      model.addObject("states", Config.states.entrySet());
+      model.addObject("months", Config.months.entrySet());
+      model.addObject("years", Config.years.entrySet());
       model.addObject("address", address);
       return model.getError();
     } else {
@@ -141,9 +141,9 @@ public class ProfileController {
     try {
       Address address = addressManager.getAddress(user, SessionEncrypter.decryptId(encodedAddressId));
       model.addObject("address", address);
-      model.addObject("states", CONFIG.states.entrySet());
-      model.addObject("months", CONFIG.months.entrySet());
-      model.addObject("years", CONFIG.years.entrySet());
+      model.addObject("states", Config.states.entrySet());
+      model.addObject("months", Config.months.entrySet());
+      model.addObject("years", Config.years.entrySet());
       return model.getSuccess();
     } catch (AddressManagementException e) {
       return model.getException();
@@ -165,7 +165,7 @@ public class ProfileController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
   @RequestMapping(value = "/user/enable", method = RequestMethod.GET)
   public String enableUser() {
-    if (CONFIG.ADMIN) {
+    if (Config.ADMIN) {
       User user = userManager.getCurrentUser();
       user.setEnabled(true);
       userManager.updateUser(user);
@@ -176,7 +176,7 @@ public class ProfileController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
   @RequestMapping(value = "/user/disable", method = RequestMethod.GET)
   public String disableUser() {
-    if (CONFIG.ADMIN) {
+    if (Config.ADMIN) {
       User user = userManager.getCurrentUser();
       user.setEnabled(false);
       user.setDateDisabled(new Date());

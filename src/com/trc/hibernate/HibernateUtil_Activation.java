@@ -6,11 +6,11 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import com.trc.user.User;
+import com.trc.user.activation.logger.ActivationMap;
+import com.trc.user.activation.logger.ActivationState;
+import com.trc.user.activation.logger.ActivationStateId;
 import com.trc.user.authority.Authority;
 import com.trc.user.security.SecurityQuestion;
-import com.trc.util.logger.activation.ActivationMap;
-import com.trc.util.logger.activation.ActivationState;
-import com.trc.util.logger.activation.ActivationStateId;
 
 /**
  * Used for Activation logging testing

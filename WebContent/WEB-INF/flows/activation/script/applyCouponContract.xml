@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
-    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
   <input name="user" type="com.trc.user.User" />
   <input name="account" type="com.tscp.mvne.Account" />
@@ -9,21 +8,22 @@
   <input name="coupon" type="com.trc.payment.coupon.Coupon" />
 
   <decision-state id="checkCouponContract">
-    <on-entry>
-      <evaluate expression="activationLogger.logCheckCouponContract()" />
-    </on-entry>
     <if test="coupon.isContract()" then="applyContract" else="noContract" />
   </decision-state>
 
   <action-state id="applyContract">
-    <on-entry>
-      <evaluate expression="activationLogger.logApplyContract()" />
-    </on-entry>
     <evaluate expression="couponFlowManager.applyCoupon(coupon, user, account, networkInfo.mdn)" />
     <transition on="success" to="contractApplied" />
   </action-state>
 
+  <!-- End States -->
+  <end-state id="generalError" view="exception/uncaughtException" />
   <end-state id="contractApplied" />
   <end-state id="noContract" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on-exception="java.lang.Exception" to="generalError" />
+  </global-transitions>
 
 </flow>

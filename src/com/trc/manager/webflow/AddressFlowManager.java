@@ -24,7 +24,6 @@ public class AddressFlowManager {
     try {
       return addressManager.getAllAddresses(user);
     } catch (AddressManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_GET_ADDRESS);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }
@@ -39,7 +38,6 @@ public class AddressFlowManager {
       try {
         addressManager.addAddress(user, address);
       } catch (AddressManagementException e) {
-        e.printStackTrace();
         WebFlowUtil.addError(ERROR_ADD_ADDRESS);
         throw new WebFlowException(e.getMessage(), e.getCause());
       }

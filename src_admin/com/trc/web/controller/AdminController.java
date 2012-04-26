@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.config.CONFIG;
+import com.trc.config.Config;
 import com.trc.security.encryption.Md5Encoder;
 import com.trc.user.SecurityQuestionAnswer;
 import com.trc.user.User;
@@ -37,7 +37,7 @@ public class AdminController extends ManagerController {
   @RequestMapping(value = "/create", method = RequestMethod.GET)
   public ModelAndView createServiceRep() {
     ResultModel model = new ResultModel("admin/create");
-    if (!CONFIG.ADMIN) {
+    if (!Config.ADMIN) {
       return model.getAccessDenied();
     }
     model.addObject("user", new User());
@@ -46,7 +46,7 @@ public class AdminController extends ManagerController {
 
   @RequestMapping(value = "/logout/{userId}", method = RequestMethod.GET)
   public String forceLogout(@PathVariable("userId") int userId) {
-    if (!CONFIG.ADMIN) {
+    if (!Config.ADMIN) {
       return "exception/accessDenied";
     }
     List<Object> activePrincipals = sessionRegistry.getAllPrincipals();
@@ -71,7 +71,7 @@ public class AdminController extends ManagerController {
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   public ModelAndView postCreateServiceRep(HttpServletRequest request, @ModelAttribute User user, BindingResult result) {
     ResultModel model = new ResultModel("redirect:/admin/managers", "admin/create");
-    if (!CONFIG.ADMIN) {
+    if (!Config.ADMIN) {
       return model.getAccessDenied();
     }
     String requestedRole = request.getParameter("user_role");
@@ -96,7 +96,7 @@ public class AdminController extends ManagerController {
   @Override
   public ModelAndView showHome() {
     ResultModel model = new ResultModel("admin/home");
-    if (!CONFIG.ADMIN) {
+    if (!Config.ADMIN) {
       return model.getAccessDenied();
     }
     List<Object> activePrincipals = sessionRegistry.getAllPrincipals();

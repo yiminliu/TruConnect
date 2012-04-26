@@ -25,11 +25,9 @@ public class AccountFlowManager {
     try {
       return accountManager.getDefaultContactInfo(user);
     } catch (AccountManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_CONTACT_INFO);
       throw new WebFlowException(e.getMessage(), e.getCause());
     } catch (AddressManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_CONTACT_INFO);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }
@@ -40,11 +38,9 @@ public class AccountFlowManager {
       Account createdAccount = accountManager.createShellAccount(user);
       TruConnectUtil.copyAccount(account, createdAccount);
     } catch (AccountManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_CREATE_SHELL);
       throw new WebFlowException(e.getMessage(), e.getCause());
     } catch (AddressManagementException e) {
-      e.printStackTrace();
       WebFlowUtil.addError(ERROR_CREATE_SHELL);
       throw new WebFlowException(e.getMessage(), e.getCause());
     }

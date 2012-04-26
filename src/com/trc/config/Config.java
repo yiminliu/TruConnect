@@ -2,7 +2,6 @@ package com.trc.config;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
@@ -20,7 +19,7 @@ import com.trc.service.gateway.TSCPMVNE;
 import com.trc.util.logger.DevLogger;
 
 @Component
-public final class CONFIG {
+public final class Config {
   private static ClassLoader classLoader;
   public static String ENVIRONMENT;
   public static boolean ADMIN;
@@ -45,12 +44,12 @@ public final class CONFIG {
 
   public static boolean initialized = false;
 
-  private static org.slf4j.Logger logger = LoggerFactory.getLogger(CONFIG.class);
+  private static org.slf4j.Logger logger = LoggerFactory.getLogger(Config.class);
 
   @PostConstruct
   public static void loadProperties() {
     if (!initialized) {
-      classLoader = CONFIG.class.getClassLoader();
+      classLoader = Config.class.getClassLoader();
       try {
         loadConfig();
         loadMonths();

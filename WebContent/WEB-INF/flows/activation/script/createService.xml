@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="user" type="com.trc.user.User" />
+  <input name="account" type="com.tscp.mvne.Account" />
+  <input name="device" type="com.tscp.mvne.Device" />
+  <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
+
+  <action-state id="createService">
+    <evaluate expression="deviceFlowManager.createServiceInstance(account, networkInfo)" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="createService_secondAttempt" />
+  </action-state>
+
+  <action-state id="createService_secondAttempt">
+    <evaluate expression="deviceFlowManager.createServiceInstance(account, networkInfo)" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="createService_thirdAttempt" />
+  </action-state>
+
+  <action-state id="createService_thirdAttempt">
+    <evaluate expression="deviceFlowManager.createServiceInstance(account, networkInfo)" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError">
+      <evaluate expression="deviceFlowManager.sendServiceErrorNotice(user, device, account, networkInfo)" />
+    </transition>
+  </action-state>
+
+  <!-- End States -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+  <end-state id="success" view="externalRedirect:contextRelative:/" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on-exception="java.lang.Exception" to="generalError" />
+  </global-transitions>
+
+</flow>

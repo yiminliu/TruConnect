@@ -27,7 +27,9 @@ import com.trc.payment.coupon.UserCoupon;
 import com.trc.payment.coupon.contract.Contract;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.user.User;
+import com.trc.util.DateUtil;
 import com.trc.util.Formatter;
+import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.KenanContract;
 import com.tscp.mvne.ServiceInstance;
@@ -304,9 +306,7 @@ public class CouponService {
   @Transactional
   public int applyCouponPayment(Coupon coupon, User user, Account account, Date date) throws CouponServiceException {
     try {
-      GregorianCalendar calendar = new GregorianCalendar();
-      calendar.setTime(date);
-      XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+      XMLGregorianCalendar xmlCal = DateUtil.toXMLCal(date);
       String stringAmount = Formatter.formatDollarAmountQuery(coupon.getCouponDetail().getAmount());
       int trackingId = truConnect.applyCouponPayment(account, stringAmount, xmlCal);
       try {
@@ -318,6 +318,7 @@ public class CouponService {
         return trackingId;
       } catch (DataAccessException e) {
         // TODO rollback the credit that was given
+        DevLogger.log("Error inserting UserCoupon. Check for double application.", e);
         throw new CouponServiceException("Error inserting UserCoupon: " + e.getMessage(), e.getCause());
       }
     } catch (DatatypeConfigurationException dce) {

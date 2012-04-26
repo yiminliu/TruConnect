@@ -20,15 +20,15 @@
     <div id="main-content">
       <div class="span-18 colborder">
 
-        <form:form id="addDevice" cssClass="validatedForm" method="post" commandName="deviceInfo">
+        <form:form id="addDevice" cssClass="validatedForm" method="post" commandName="device">
           <!-- Error Alert -->
-          <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.deviceInfo'].allErrors}">
+          <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.device'].allErrors}">
             <div class="row">
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
                 <form:errors path="value" />
                 <form:errors path="label" />
-                <spring:bind path="deviceInfo">
+                <spring:bind path="device">
                   <c:forEach items="${status.errorMessages}" var="error" varStatus="status">
                     <span id="global.${status.index}.errors"><c:out value="${error}" /> </span>
                   </c:forEach>

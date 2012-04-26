@@ -8,12 +8,16 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
 @Embeddable
 public class UserCouponId implements Serializable {
   private static final long serialVersionUID = 8178840371647916866L;
   private int userId;
-  private Coupon coupon = new Coupon();
   private int accountNumber;
+  private DateTime dateApplied = new DateTime();
+  private Coupon coupon = new Coupon();
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "coupon_id", nullable = false, insertable = false)
@@ -43,12 +47,23 @@ public class UserCouponId implements Serializable {
     this.accountNumber = accountNumber;
   }
 
+  @Column(name = "date_applied")
+  @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+  public DateTime getDateApplied() {
+    return dateApplied;
+  }
+
+  public void setDateApplied(DateTime dateApplied) {
+    this.dateApplied = dateApplied;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + accountNumber;
     result = prime * result + ((coupon == null) ? 0 : coupon.hashCode());
+    result = prime * result + ((dateApplied == null) ? 0 : dateApplied.hashCode());
     result = prime * result + userId;
     return result;
   }
@@ -68,6 +83,11 @@ public class UserCouponId implements Serializable {
       if (other.coupon != null)
         return false;
     } else if (!coupon.equals(other.coupon))
+      return false;
+    if (dateApplied == null) {
+      if (other.dateApplied != null)
+        return false;
+    } else if (!dateApplied.equals(other.dateApplied))
       return false;
     if (userId != other.userId)
       return false;

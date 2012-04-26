@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.trc.config.CONFIG;
+import com.trc.config.Config;
 import com.tscp.mvne.TruConnect;
 import com.tscp.mvne.TruConnectService;
 
@@ -27,7 +27,7 @@ public class TruConnectGateway {
   public void init() {
     try {
       if (!TSCPMVNE.initialized)
-        CONFIG.loadProperties();
+        Config.loadProperties();
       service = new TruConnectService(new URL(TSCPMVNE.location), new QName(TSCPMVNE.namespace, TSCPMVNE.serviceName));
     } catch (Exception e) {
       e.printStackTrace();

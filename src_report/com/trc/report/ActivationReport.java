@@ -5,7 +5,7 @@ import java.util.EnumMap;
 import java.util.HashSet;
 
 import com.trc.user.User;
-import com.trc.util.logger.activation.ActState;
+import com.trc.user.activation.logger.ActState;
 
 public class ActivationReport {
   private Collection<User> activatedUsers;

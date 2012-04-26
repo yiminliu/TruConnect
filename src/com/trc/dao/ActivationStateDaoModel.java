@@ -1,21 +1,21 @@
 package com.trc.dao;
 
-import com.trc.util.logger.activation.ActivationMap;
-import com.trc.util.logger.activation.ActivationState;
-import com.trc.util.logger.activation.ActivationStateId;
+import com.trc.user.activation.logger.ActivationMap;
+import com.trc.user.activation.logger.ActivationState;
+import com.trc.user.activation.logger.ActivationStateId;
 
 public interface ActivationStateDaoModel {
 
-  public int saveRegistrationMap(ActivationMap registrationMap);
+  public int saveActivationMap(ActivationMap activationMap);
 
-  public void updateRegistrationMap(ActivationMap registrationMap);
+  public void updateActivationMap(ActivationMap activationMap);
 
-  public ActivationMap getRegistrationMap(int registrationId);
+  public ActivationMap getActivationMap(int activationId);
 
-  public void saveRegistrationState(ActivationState registrationState);
+  public void saveActivationState(ActivationState activationState);
 
-  public void updateRegistratonState(ActivationState registrationState);
+  public void updateActivationState(ActivationState activationState);
 
-  public ActivationState getRegistrationState(ActivationStateId registrationStateId);
+  public ActivationState getActivationState(ActivationStateId activationStateId);
 
 }

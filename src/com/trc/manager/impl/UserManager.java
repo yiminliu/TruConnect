@@ -4,10 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -129,23 +126,15 @@ public class UserManager implements UserManagerModel {
     return userDao.search(param);
   }
 
-  private static final Logger logger = LoggerFactory.getLogger("devLogger");
-
   @Override
   public User getLoggedInUser() {
     Authentication authentication = securityContext.getContext().getAuthentication();
-    boolean isAnon1 = authentication == null || !(authentication.getPrincipal() instanceof UserDetails);
-    boolean isAnon2 = authentication == null || isAnonymousUser(authentication);
-    logger.debug("UserManager Anonymous Check: {} {}", isAnon1, isAnon2);
-    if (isAnon2) {
-      return new AnonymousUser();
-    } else {
-      return (User) authentication.getPrincipal();
-    }
+    return isAnonymousUser(authentication) ? new AnonymousUser() : (User) authentication.getPrincipal();
   }
 
   private boolean isAnonymousUser(Authentication authentication) {
-    return authentication.getName().equals("anonymousUser");
+    return authentication == null || !(authentication.getPrincipal() instanceof UserDetails);
+    // return authentication.getName().equals("anonymousUser");
   }
 
   @Override

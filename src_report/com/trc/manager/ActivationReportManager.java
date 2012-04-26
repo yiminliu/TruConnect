@@ -14,10 +14,10 @@ import com.trc.manager.impl.UserManager;
 import com.trc.report.ActivationReport;
 import com.trc.report.UserActivationReport;
 import com.trc.user.User;
+import com.trc.user.activation.logger.ActState;
+import com.trc.user.activation.logger.ActivationMap;
+import com.trc.user.activation.logger.ActivationState;
 import com.trc.util.logger.DevLogger;
-import com.trc.util.logger.activation.ActState;
-import com.trc.util.logger.activation.ActivationMap;
-import com.trc.util.logger.activation.ActivationState;
 
 @Component
 public class ActivationReportManager {

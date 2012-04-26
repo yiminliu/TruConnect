@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
-    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
+  <!-- INPUT PARAMATERS FROM CALLING FLOW -->
   <input name="registration" type="com.trc.user.activation.Registration" />
   <input name="account" type="com.tscp.mvne.Account" />
   <input name="activationMessage" type="com.trc.user.activation.ActivationMessage" />
-  <input name="deviceInfo" type="com.tscp.mvne.Device" />
+  <input name="device" type="com.tscp.mvne.Device" />
   <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
   <input name="creditCardPayment" type="com.trc.user.activation.CreditCardPayment" />
 
   <!-- BEGIN PROCESSING -->
-  <view-state id="processing_createShellAccount" view="activation/processing/processingMessage" model="activationMessage">
-    <!-- <on-entry> <evaluate expression="activationMessage.setMessageCreateBilling()" /> </on-entry> -->
+  <view-state id="processingView" view="activation/processing/processingMessage" model="activationMessage">
     <transition on="autoSubmit" to="createShellAccount" validate="false" />
   </view-state>
 
   <subflow-state id="createShellAccount" subflow="createShellAccount">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_BILLING_ACCOUNT)" />
+    </on-entry>
     <input name="user" type="com.trc.user.User" value="registration.user" />
     <input name="account" type="com.tscp.mvne.Account" value="account" />
     <transition on="success" to="testActivation">
-      <evaluate expression="activationLogger.logCreateBilling()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </subflow-state>
 
   <subflow-state id="testActivation" subflow="testActivation">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.TEST_ACTIVATION)" />
+    </on-entry>
     <input name="user" value="registration.user" />
     <input name="account" value="account" />
-    <input name="deviceInfo" value="deviceInfo" />
+    <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
     <transition on="success" to="checkCoupon">
-      <evaluate expression="activationLogger.logTestActivation()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </subflow-state>
 
@@ -42,99 +47,105 @@
   </subflow-state>
 
   <subflow-state id="applyCouponPayment" subflow="applyCouponPayment">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.APPLY_COUPON_PAYMENT)" />
+    </on-entry>
     <input name="user" value="registration.user" />
     <input name="account" value="account" />
     <input name="creditCard" value="creditCardPayment.creditCard" />
     <input name="coupon" value="creditCardPayment.coupon" />
-    <transition on="success" to="activateService" />
+    <transition on="success" to="activateService">
+      <evaluate expression="activationLogger.endState()" />
+    </transition>
   </subflow-state>
 
   <subflow-state id="makeActivationPayment" subflow="makeActivationPayment">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_PAYMENT)" />
+    </on-entry>
     <input name="user" value="registration.user" />
     <input name="account" value="account" />
     <input name="creditCard" value="creditCardPayment.creditCard" />
     <transition on="success" to="activateService">
-      <evaluate expression="activationLogger.logPayment()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </subflow-state>
 
   <subflow-state id="activateService" subflow="activateService">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_NETWORK_SERVICE)" />
+    </on-entry>
     <input name="user" value="registration.user" />
     <input name="account" value="account" />
-    <input name="deviceInfo" value="deviceInfo" />
+    <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
     <transition on="success" to="createService">
-      <evaluate expression="activationLogger.logActivation()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </subflow-state>
 
-  <action-state id="createService">
-    <evaluate expression="deviceFlowManager.createServiceInstance(account, networkInfo)" />
-    <transition on="success" to="applyCouponContract">
-      <evaluate expression="activationLogger.logCreateService()" />
-    </transition>
-    <transition on-exception="com.trc.exception.WebFlowException" to="createService_secondAttempt" />
-  </action-state>
-
-  <action-state id="createService_secondAttempt">
-    <evaluate expression="deviceFlowManager.createServiceInstance(account, networkInfo)" />
-    <transition on="success" to="applyCouponContract">
-      <evaluate expression="activationLogger.logCreateService()" />
-    </transition>
-    <transition on-exception="com.trc.exception.WebFlowException" to="createService_thirdAttempt" />
-  </action-state>
-
-  <action-state id="createService_thirdAttempt">
-    <evaluate expression="deviceFlowManager.createServiceInstance(account, networkInfo)" />
-    <transition on="success" to="applyCouponContract">
-      <evaluate expression="activationLogger.logCreateService()" />
-    </transition>
-    <transition on-exception="com.trc.exception.WebFlowException" to="generalError">
-      <evaluate expression="deviceFlowManager.sendServiceErrorNotice(user, deviceInfo, account, networkInfo)" />
-    </transition>
-  </action-state>
-
-  <subflow-state id="applyCouponContract" subflow="applyCouponContract">
+  <subflow-state id="createService" subflow="createService">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_CREATE_SERVICE)" />
+    </on-entry>
     <input name="user" value="registration.user" />
     <input name="account" value="account" />
+    <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
-    <input name="coupon" value="creditCardPayment.coupon" />
-    <transition on="contractApplied" to="enableUser" />
-    <transition on="noContract" to="enableUser" />
+    <transition on="success" to="checkContract">
+      <evaluate expression="activationLogger.endState()" />
+    </transition>
   </subflow-state>
 
+  <decision-state id="checkContract">
+    <if test="creditCardPayment.coupon.isContract()" then="applyContract" else="enableUser" />
+  </decision-state>
+
+  <action-state id="applyContract">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.APPLY_CONTRACT)" />
+    </on-entry>
+    <evaluate expression="couponFlowManager.applyCoupon(creditCardPayment.coupon, registration.user, account, networkInfo.mdn)" />
+    <transition on="success" to="enableUser">
+      <evaluate expression="activationLogger.endState()" />
+    </transition>
+  </action-state>
+
   <action-state id="enableUser">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_ENABLE_USER)" />
+    </on-entry>
     <evaluate expression="userManager.enableUser(registration.user)" />
     <transition on="success" to="saveUser">
-      <evaluate expression="activationLogger.logEnableUser()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </action-state>
 
   <action-state id="saveUser">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_SAVE_USER)" />
+    </on-entry>
     <evaluate expression="userManager.updateUser(registration.user)" />
     <transition on="success" to="sendWebServiceActivationEmail">
-      <evaluate expression="activationLogger.logSaveUser()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
     <transition on-exception="com.trc.exception.management.UserManagementException" to="generalError" />
   </action-state>
 
   <action-state id="sendWebServiceActivationEmail">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.NOTIFY_WELCOME)" />
+    </on-entry>
     <evaluate expression="registrationManager.sendActivationEmail(registration.user, account)" />
     <transition on="success" to="success">
-      <evaluate expression="activationLogger.logWelcome()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
-    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </action-state>
 
   <!-- END STATES -->
   <end-state id="generalError" view="exception/uncaughtException" />
-
-  <end-state id="success" view="activation/registration/success">
-    <on-entry>
-      <evaluate expression="activationLogger.finishLogging()" />
-    </on-entry>
-  </end-state>
-
+  <end-state id="success" view="activation/registration/success" />
   <end-state id="cancel" view="externalRedirect:contextRelative:/">
     <on-entry>
       <evaluate expression="registrationManager.cancelRegistration(registration)" />
@@ -145,6 +156,7 @@
   <global-transitions>
     <transition on="cancel" to="cancel" validate="false" />
     <transition on="generalError" to="generalError" validate="false" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </global-transitions>
 
 </flow> 

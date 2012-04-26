@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.trc.user.User;
-import com.trc.util.logger.activation.ActivationState;
+import com.trc.user.activation.logger.ActivationState;
 
 public class UserActivationReport {
   private User User;

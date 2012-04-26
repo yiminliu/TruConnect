@@ -6,7 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
+import org.joda.time.DateTime;
 
 import com.trc.user.User;
 import com.tscp.mvne.Account;
@@ -42,6 +43,18 @@ public class UserCoupon implements Serializable {
     this.getId().setUserId(user.getUserId());
     this.getId().setCoupon(coupon);
     this.getId().setAccountNumber(account.getAccountno());
+  }
+
+  public UserCoupon(Coupon coupon, User user, Account account, DateTime dateTime) {
+    coupon = coupon == null ? new Coupon() : coupon;
+    user = user == null ? new User() : user;
+    account = account == null ? new Account() : account;
+    this.getId().setUserId(user.getUserId());
+    this.getId().setCoupon(coupon);
+    this.getId().setAccountNumber(account.getAccountno());
+    if (dateTime != null) {
+      this.getId().setDateApplied(dateTime);
+    }
   }
 
   /* *****************************************************************
@@ -83,23 +96,7 @@ public class UserCoupon implements Serializable {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer();
-    sb.append("userId=").append(getId().getUserId()).append(", ");
-    sb.append("coupon=").append(getId().getCoupon().toString()).append(", ");
-    sb.append("accountNumber=").append(getId().getAccountNumber()).append(", ");
-    sb.append("kenanContractid=").append(kenanContractId);
-    return sb.toString();
-  }
-
-  @Transient
-  public String toFormattedString() {
-    StringBuffer sb = new StringBuffer();
-    sb.append("--User Coupon--").append("\n");
-    sb.append("  User ID=").append(getId().getUserId()).append("\n");
-    sb.append("  Coupon=").append(getId().getCoupon().toString()).append("\n");
-    sb.append("  Account Number=").append(getId().getAccountNumber()).append("\n");
-    sb.append("  Kenan Contract ID=").append(kenanContractId);
-    return sb.toString();
+    return "UserCoupon [id=" + id + ", kenanContractId=" + kenanContractId + ", active=" + active + "]";
   }
 
 }

@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="<spring:url value="/static/styles/coupon.css" htmlEscape="true" />" type="text/css" />
 <h3>Manage Account</h3>
 <ul> 
   <li id="nav_overview"><a href="<spring:url value="/account"/>">Account Overview</a></li> 

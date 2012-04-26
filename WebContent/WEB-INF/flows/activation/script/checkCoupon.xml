@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
-    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
   <input name="coupon" type="com.trc.payment.coupon.Coupon" />
 
@@ -13,21 +12,32 @@
   </action-state>
 
   <decision-state id="isCoupon">
-    <on-entry>
-      <evaluate expression="activationLogger.logHasCoupon(coupon)" />
-    </on-entry>
     <if test="couponFlowManager.hasCoupon(coupon)" then="isCouponPayment" else="noCoupon" />
   </decision-state>
 
   <decision-state id="isCouponPayment">
-    <on-entry>
-      <evaluate expression="activationLogger.logIsCouponPayment()" />
-    </on-entry>
     <if test="couponFlowManager.isCouponPayment(coupon)" then="hasCouponPayment" else="hasRecurringCoupon" />
   </decision-state>
 
-  <end-state id="hasCouponPayment" />
-  <end-state id="hasRecurringCoupon" />
+  <!-- End States -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+  <end-state id="hasCouponPayment">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.HAS_COUPON_PAYMENT)" />
+      <evaluate expression="activationLogger.endState()" />
+    </on-entry>
+  </end-state>
+  <end-state id="hasRecurringCoupon">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.HAS_RECURRING_COUPON)" />
+      <evaluate expression="activationLogger.endState()" />
+    </on-entry>
+  </end-state>
   <end-state id="noCoupon" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on-exception="java.lang.Exception" to="generalError" />
+  </global-transitions>
 
 </flow>

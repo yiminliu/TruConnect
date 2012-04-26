@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.config.CONFIG;
+import com.trc.config.Config;
 import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 import com.trc.web.model.ResultModel;
@@ -35,7 +35,7 @@ public class SearchController {
   @RequestMapping(method = RequestMethod.GET)
   protected ModelAndView search(@RequestParam String param) {
     ResultModel model = new ResultModel("admin/search/jquery_username");
-    if (!CONFIG.ADMIN) {
+    if (!Config.ADMIN) {
       return model.getAccessDenied();
     }
     List<User> searchResults = new Vector<User>();
@@ -53,7 +53,7 @@ public class SearchController {
   @RequestMapping(method = RequestMethod.POST)
   protected ModelAndView showUser(@RequestParam String admin_search_id) {
     ResultModel model = new ResultModel("redirect:/account");
-    if (!CONFIG.ADMIN) {
+    if (!Config.ADMIN) {
       return model.getAccessDenied();
     }
     setUserToView(userManager.getUserById(Integer.parseInt(admin_search_id)));
@@ -61,7 +61,7 @@ public class SearchController {
   }
 
   protected void setUserToView(User user) throws AccessDeniedException {
-    if (CONFIG.ADMIN) {
+    if (Config.ADMIN) {
       userManager.setSessionUser(user);
       CacheManager.clearCache();
     } else {
@@ -79,7 +79,7 @@ public class SearchController {
   @RequestMapping(value = "getjson/email/ajax", method = RequestMethod.GET)
   public @ResponseBody
   SearchResponse searchByEmailAjax(@RequestParam String email) {
-    if (!CONFIG.ADMIN) {
+    if (!Config.ADMIN) {
       return new SearchResponse(false, new String[0]);
     }
     List<User> searchResults = userManager.searchByEmail(email);

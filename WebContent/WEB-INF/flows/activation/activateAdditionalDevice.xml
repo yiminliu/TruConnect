@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://www.springframework.org/schema/webflow  
     http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-  <var name="deviceInfo" class="com.tscp.mvne.Device" />
+  <var name="device" class="com.tscp.mvne.Device" />
   <var name="creditCard" class="com.tscp.mvne.CreditCard" />
   <var name="termsAndConditions" class="com.trc.user.activation.TermsAndConditions" />
   <var name="account" class="com.tscp.mvne.Account" />
@@ -17,10 +17,10 @@
   </on-start>
 
   <subflow-state id="requestDeviceInfo" subflow="addDevice_noAction">
-    <input name="deviceInfo" value="deviceInfo" />
+    <input name="device" value="device" />
     <input name="contactInfo" value="contactInfo" />
     <transition on="success" to="choosePaymentMethod">
-      <evaluate expression="activationLogger.startLogging(user)" />
+      <evaluate expression="activationLogger.start(user)" />
       <evaluate expression="activationLogger.logDeviceInfo()" />
     </transition>
   </subflow-state>
@@ -63,7 +63,7 @@
   <subflow-state id="testActivation" subflow="testActivation">
     <input name="user" value="user" />
     <input name="account" value="account" />
-    <input name="deviceInfo" value="deviceInfo" />
+    <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
     <transition on="success" to="processing_makeActivationPayment">
       <evaluate expression="activationLogger.logTestActivation()" />
@@ -96,7 +96,7 @@
   <subflow-state id="activateService" subflow="activateService">
     <input name="user" value="user" />
     <input name="account" value="account" />
-    <input name="deviceInfo" value="deviceInfo" />
+    <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
     <transition on="success" to="processing_createService">
       <evaluate expression="activationLogger.logActivation()" />
@@ -115,7 +115,7 @@
     <transition on="success" to="sendWebServiceActivationEmail">
       <evaluate expression="activationLogger.logCreateService()" />
     </transition>
-    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </action-state>
 
   <action-state id="sendWebServiceActivationEmail">
@@ -123,7 +123,7 @@
     <transition on="success" to="success">
       <evaluate expression="activationLogger.logWelcome()" />
     </transition>
-    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </action-state>
 
   <!-- END STATES -->

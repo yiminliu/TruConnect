@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.config.CONFIG;
+import com.trc.config.Config;
 import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 import com.trc.web.model.ResultModel;
@@ -29,7 +29,7 @@ public abstract class MemberController extends SearchController {
 
   protected ModelAndView showMembers(String title, List<User> users) {
     ResultModel model = new ResultModel("admin/members");
-    if (CONFIG.ADMIN) {
+    if (Config.ADMIN) {
       model.addObject("members", users);
       model.addObject("memberType", title);
       return model.getSuccess();

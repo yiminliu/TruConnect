@@ -6,7 +6,7 @@
   <input name="registration" type="com.trc.user.activation.Registration" />
   <input name="account" type="com.tscp.mvne.Account" />
   <input name="activationMessage" type="com.trc.user.activation.ActivationMessage" />
-  <input name="deviceInfo" type="com.tscp.mvne.Device" />
+  <input name="device" type="com.tscp.mvne.Device" />
   <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
   <input name="creditCardPayment" type="com.trc.user.activation.CreditCardPayment" />
 
@@ -36,7 +36,7 @@
   <subflow-state id="testActivation" subflow="testActivation">
     <input name="user" value="registration.user" />
     <input name="account" value="account" />
-    <input name="deviceInfo" value="deviceInfo" />
+    <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
     <transition on="success" to="processing_makeActivationPayment">
       <evaluate expression="activationLogger.logTestActivation()" />
@@ -120,7 +120,7 @@
   <subflow-state id="activateService" subflow="activateService">
     <input name="user" value="registration.user" />
     <input name="account" value="account" />
-    <input name="deviceInfo" value="deviceInfo" />
+    <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
     <transition on="success" to="processing_createService">
       <evaluate expression="activationLogger.logActivation()" />
@@ -139,7 +139,7 @@
     <transition on="success" to="checkCouponContract">
       <evaluate expression="activationLogger.logCreateService()" />
     </transition>
-    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </action-state>
 
   <decision-state id="checkCouponContract">
@@ -191,7 +191,7 @@
     <transition on="success" to="success">
       <evaluate expression="activationLogger.logWelcome()" />
     </transition>
-    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </action-state>
 
   <!-- END STATES -->
@@ -213,6 +213,7 @@
   <global-transitions>
     <transition on="cancel" to="cancel" validate="false" />
     <transition on="generalError" to="generalError" validate="false" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </global-transitions>
 
 </flow> 

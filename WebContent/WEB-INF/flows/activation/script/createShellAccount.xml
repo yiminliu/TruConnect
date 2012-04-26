@@ -35,5 +35,6 @@
   <!-- Global Transitions -->
   <global-transitions>
     <transition on="cancel" to="cancel" validate="false" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </global-transitions>
 </flow>

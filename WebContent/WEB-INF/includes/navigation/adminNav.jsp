@@ -1,16 +1,29 @@
 <link rel="stylesheet" href="<spring:url value="/static/styles/adminNav.css" htmlEscape="true" />" type="text/css" />
 
 <script type="text/javascript">
+	var submenuFocus = false;
+
 	$(function() {
 		var navOptions = $("li.nav_option");
 		$("li.nav_option").mouseover(function() {
 			var submenu = $(this).children("ul.nav_submenu");
 			$(this).css("color", "black");
 			$(submenu).slideDown();
+			$(submenu).css("display", "block");
 			$(navOptions).not(this).css("color", "");
 			$(navOptions).children("ul.nav_submenu").not(submenu).hide();
 		});
-
+		$("li.nav_option").mouseout(function() {
+			if (!submenuFocus) {
+				$(this).children("ul.nav_submenu").hide();
+			}
+		});
+		$("ul.nav_submenu").mouseenter(function() {
+			submenuFocus = true;
+		});
+		$("ul.nav_submenu").mouseleave(function() {
+			$(this).hide();
+		});
 	});
 </script>
 

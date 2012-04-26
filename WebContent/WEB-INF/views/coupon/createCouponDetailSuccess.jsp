@@ -28,8 +28,8 @@
            <a href="<spring:url value="/coupons/createCoupon" />" class="button action-m"><span style="margin-right: 15px;">Create A Coupon</span> </a>
         </div>
       </div>
-      <div class="span-6 last sub-navigation formProgress">
-        <%@ include file="/WEB-INF/includes/navigation/accountNav.jsp"%>
+      <div class="span-6 last sub-navigation">
+        <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
       </div>
     </div>
     <%@ include file="/WEB-INF/includes/footer_nolinks.jsp"%>

@@ -11,9 +11,10 @@
     <property name="dataSource" ref="dataSource" />
     <property name="annotatedClasses">
       <list>
-        <value>com.trc.util.logger.activation.ActivationStateId</value>
-        <value>com.trc.util.logger.activation.ActivationMap</value>
-        <value>com.trc.util.logger.activation.ActivationState</value>
+        <value>com.trc.user.activation.logger.ActivationStateId</value>
+        <value>com.trc.user.activation.logger.ActivationMap</value>
+        <value>
+  com.trc.user.activation.logger.ActivationState</value>
         <value>com.trc.user.User</value>
         <value>com.trc.user.authority.Authority</value>
         <value>com.trc.user.security.SecurityQuestion</value>

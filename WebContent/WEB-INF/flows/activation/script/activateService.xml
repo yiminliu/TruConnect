@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
-    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
   <input name="user" type="com.trc.user.User" />
   <input name="account" type="com.tscp.mvne.Account" />
-  <input name="deviceInfo" type="com.tscp.mvne.Device" />
+  <input name="device" type="com.tscp.mvne.Device" />
   <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
 
   <action-state id="addDeviceInfo">
-    <evaluate expression="deviceFlowManager.addDeviceInfo(deviceInfo, account, user)" />
+    <evaluate expression="deviceFlowManager.addDeviceInfo(device, account, user)" />
     <transition on="success" to="reserveMdn" />
-    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </action-state>
 
   <action-state id="reserveMdn">
@@ -21,7 +20,7 @@
   </action-state>
 
   <action-state id="setEsn">
-    <evaluate expression="deviceFlowManager.bindEsn(networkInfo, deviceInfo)" />
+    <evaluate expression="deviceFlowManager.bindEsn(networkInfo, device)" />
     <transition on="success" to="activateService" />
     <transition on="com.trc.exception.WebFlowException" to="generalError" />
   </action-state>
@@ -33,13 +32,13 @@
   </action-state>
 
   <action-state id="removeDeviceInfo">
-    <evaluate expression="deviceFlowManager.removeDeviceInfo(deviceInfo, account, user)" />
+    <evaluate expression="deviceFlowManager.removeDeviceInfo(device, account, user)" />
     <transition on="success" to="re-requestDeviceInfo" />
-    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </action-state>
 
   <subflow-state id="re-requestDeviceInfo" subflow="addDevice_noAction">
-    <input name="deviceInfo" value="deviceInfo" />
+    <input name="device" value="device" />
     <input name="contactInfo" value="user.contactInfo" />
     <transition on="success" to="addDeviceInfo" />
   </subflow-state>
@@ -52,5 +51,7 @@
   <!-- Global Transitions -->
   <global-transitions>
     <transition on="cancel" to="cancel" validate="false" />
+    <transition on-exception="java.lang.Exception" to="generalError" />
   </global-transitions>
+
 </flow>

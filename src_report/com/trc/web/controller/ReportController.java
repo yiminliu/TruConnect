@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.config.CONFIG;
+import com.trc.config.Config;
 import com.trc.manager.ActivationReportManager;
 import com.trc.report.ActivationReport;
 import com.trc.report.UserActivationReport;
+import com.trc.user.activation.logger.ActivationState;
 import com.trc.util.logger.DevLogger;
-import com.trc.util.logger.activation.ActivationState;
 import com.trc.web.model.ResultModel;
 
 @Controller
@@ -28,9 +28,9 @@ public class ReportController {
 
   @ModelAttribute
   private void dateReferenceData(ModelMap modelMap) {
-    modelMap.addAttribute("states", CONFIG.states.entrySet());
-    modelMap.addAttribute("months", CONFIG.months.entrySet());
-    modelMap.addAttribute("years", CONFIG.yearsPast.entrySet());
+    modelMap.addAttribute("states", Config.states.entrySet());
+    modelMap.addAttribute("months", Config.months.entrySet());
+    modelMap.addAttribute("years", Config.yearsPast.entrySet());
     int numDaysInMonth = new DateTime().dayOfMonth().getMaximumValue();
     int[] days = new int[numDaysInMonth];
     for (int i = 0; i < numDaysInMonth; i++) {

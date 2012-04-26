@@ -7,33 +7,39 @@
   <var name="registration" class="com.trc.user.activation.Registration" />
   <var name="termsAndConditions" class="com.trc.user.activation.TermsAndConditions" />
   <var name="activationMessage" class="com.trc.user.activation.ActivationMessage" />
-  <var name="deviceInfo" class="com.tscp.mvne.Device" />
+  <var name="device" class="com.tscp.mvne.Device" />
   <var name="networkInfo" class="com.tscp.mvne.NetworkInfo" />
   <var name="account" class="com.tscp.mvne.Account" />
-
   <var name="creditCardPayment" class="com.trc.user.activation.CreditCardPayment" />
 
   <!-- BEGIN GATHERING INFORMATION -->
   <subflow-state id="requestUserInfo" subflow="addUserInfo">
     <input name="registration" value="registration" />
     <transition on="success" to="requestContactInfo">
-      <evaluate expression="activationLogger.startLogging(registration.user)" />
-      <evaluate expression="activationLogger.logReserveProfile()" />
+      <evaluate expression="activationLogger.start(registration.user)" />
+      <evaluate expression="activationLogger.startState(actStateFactory.RESERVE_PROFILE)" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </subflow-state>
 
   <subflow-state id="requestContactInfo" subflow="addContactInfo">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.INFO_CONTACT)" />
+    </on-entry>
     <input name="contactInfo" value="registration.user.contactInfo" />
     <transition on="success" to="requestDeviceInfo">
-      <evaluate expression="activationLogger.logContactInfo()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </subflow-state>
 
   <subflow-state id="requestDeviceInfo" subflow="addDevice_noAction">
-    <input name="deviceInfo" value="deviceInfo" />
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.INFO_DEVICE)" />
+    </on-entry>
+    <input name="device" value="device" />
     <input name="contactInfo" value="registration.user.contactInfo" />
     <transition on="success" to="showPlansAndTerms">
-      <evaluate expression="activationLogger.logDeviceInfo()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </subflow-state>
 
@@ -42,10 +48,13 @@
   </view-state>
 
   <subflow-state id="requestCreditCardInfo" subflow="addCreditCard_initial">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.INFO_PAYMENT)" />
+    </on-entry>
     <input name="user" value="registration.user" />
     <input name="creditCardPayment" value="creditCardPayment" />
     <transition on="success" to="processActivation">
-      <evaluate expression="activationLogger.logPaymentInfo()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </subflow-state>
 
@@ -53,7 +62,7 @@
   <subflow-state id="processActivation" subflow="processActivation">
     <input name="registration" value="registration" />
     <input name="activationMessage" value="activationMessage" />
-    <input name="deviceInfo" value="deviceInfo" />
+    <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
     <input name="creditCardPayment" value="creditCardPayment" />
     <input name="account" value="account" />
@@ -62,13 +71,13 @@
   </subflow-state>
 
   <!-- END STATES -->
-  <end-state id="generalError" view="exception/uncaughtException" />
-
-  <end-state id="success" view="activation/registration/success">
+  <end-state id="generalError" view="exception/uncaughtException">
     <on-entry>
-      <evaluate expression="activationLogger.finishLogging()" />
+      <evaluate expression="activationLogger.exception(flowExecutionException, rootCauseException)" />
     </on-entry>
   </end-state>
+
+  <end-state id="success" view="activation/registration/success" />
 
   <end-state id="cancel" view="externalRedirect:contextRelative:/">
     <on-entry>
@@ -80,5 +89,6 @@
   <global-transitions>
     <transition on="cancel" to="cancel" validate="false" />
     <transition on="generalError" to="generalError" validate="false" />
+    <transition on="java.lang.Exception" to="generalError" />
   </global-transitions>
 </flow> 
