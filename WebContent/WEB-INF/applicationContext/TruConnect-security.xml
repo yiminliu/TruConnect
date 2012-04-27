@@ -53,8 +53,13 @@
     <intercept-url pattern="/" access="permitAll" />
     <intercept-url pattern="/**" access="isAuthenticated()" />
     <access-denied-handler error-page="/WEB-INF/views/exception/accessDenied.jsp" />
-    <logout invalidate-session="true" logout-success-url="http://www.truconnect.com/" />
+    <logout invalidate-session="true" success-handler-ref="myLogoutSuccessHandler" />
   </http>
+
+  <beans:bean id="myLogoutSuccessHandler" class="com.trc.web.security.authentication.MyLogoutSuccessHandler">
+    <beans:property name="defaultTargetUrl" value="http://www.truconnect.com/" />
+    <beans:property name="alwaysUseDefaultTargetUrl" value="true" />
+  </beans:bean>
 
   <!-- Begin Concurrency Filters -->
   <beans:bean id="authenticationProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">

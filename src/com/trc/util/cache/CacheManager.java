@@ -31,6 +31,7 @@ public final class CacheManager {
    * @param user
    */
   public static final void clearCache(final User user) {
+    logger.trace("Clearing cache for User {}:{}", user.getUserId(), user.getEmail());
     if (user == null)
       return;
     for (String key : cache.keySet()) {

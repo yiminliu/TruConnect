@@ -9,7 +9,7 @@ import com.trc.manager.impl.DeviceManager;
 import com.tscp.mvne.Device;
 
 @Component
-public class DeviceInfoValidator implements Validator {
+public class DeviceValidator implements Validator {
   @Autowired
   private DeviceManager deviceManager;
 
@@ -22,10 +22,16 @@ public class DeviceInfoValidator implements Validator {
 
   @Override
   public void validate(Object target, Errors errors) {
-    Device deviceInfo = (Device) target;
-    checkDeviceEsn(deviceInfo.getValue(), errors);
-    checkDeviceLabel(deviceInfo.getLabel(), errors);
-    checkDeviceAvailability(deviceInfo.getValue(), errors);
+    Device device = (Device) target;
+    checkDeviceEsn(device.getValue(), errors);
+    checkDeviceLabel(device.getLabel(), errors);
+    checkDeviceAvailability(device.getValue(), errors);
+  }
+
+  public void validateFields(Object target, Errors errors) {
+    Device device = (Device) target;
+    checkDeviceEsn(device.getValue(), errors);
+    checkDeviceLabel(device.getLabel(), errors);
   }
 
   protected void checkDeviceEsn(String esn, Errors errors) {

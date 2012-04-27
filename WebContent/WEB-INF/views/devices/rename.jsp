@@ -19,14 +19,14 @@
     <div id="main-content">
       <div class="span-18 colborder">
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Device Label</h3>
-        <form:form id="renameDevice" cssClass="validatedForm" method="post" commandName="deviceInfo">
+        <form:form id="renameDevice" cssClass="validatedForm" method="post" commandName="device">
 
-          <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.deviceInfo'].allErrors}">
+          <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.device'].allErrors}">
             <div class="row">
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
                 <form:errors path="label" />
-                <spring:bind path="deviceInfo">
+                <spring:bind path="device">
                   <c:forEach items="${status.errorMessages}" var="error" varStatus="status">
                     <span id="global.${status.index}.errors"><c:out value="${error}" /> </span>
                   </c:forEach>
@@ -40,6 +40,11 @@
           <div class="row">
             <form:label cssClass="required" path="label">Descriptive Name</form:label>
             <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="label" />
+          </div>
+
+          <div class="row hidden">
+            <form:label cssClass="required" path="value">Serial Number (ESN)</form:label>
+            <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="value" />
           </div>
 
           <!-- Buttons -->

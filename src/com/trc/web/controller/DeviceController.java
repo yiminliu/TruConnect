@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.exception.management.AccountManagementException;
 import com.trc.exception.management.DeviceManagementException;
+import com.trc.exception.management.DeviceSwapException;
 import com.trc.manager.impl.AccountManager;
 import com.trc.manager.impl.DeviceManager;
 import com.trc.manager.impl.UserManager;
@@ -22,9 +23,11 @@ import com.trc.security.encryption.SessionEncrypter;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
+import com.trc.util.logger.DevLogger;
 import com.trc.web.model.ResultModel;
-import com.trc.web.session.SessionRequest;
 import com.trc.web.session.SessionManager;
+import com.trc.web.session.SessionRequest;
+import com.trc.web.validation.DeviceValidator;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.Device;
 import com.tscp.mvne.NetworkInfo;
@@ -38,6 +41,8 @@ public class DeviceController {
   private AccountManager accountManager;
   @Autowired
   private DeviceManager deviceManager;
+  @Autowired
+  private DeviceValidator deviceValidator;
 
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView showDevices() {
@@ -60,7 +65,7 @@ public class DeviceController {
     try {
       Device deviceToRename = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       SessionManager.set(SessionRequest.DEVICE_RENAME, deviceToRename);
-      model.addObject("deviceInfo", deviceToRename);
+      model.addObject("device", deviceToRename);
       return model.getSuccess();
     } catch (DeviceManagementException e) {
       return model.getAccessException();
@@ -68,23 +73,29 @@ public class DeviceController {
   }
 
   @RequestMapping(value = "/rename/{encodedDeviceId}", method = RequestMethod.POST)
-  public ModelAndView postRenameDevice(@PathVariable String encodedDeviceId, @ModelAttribute Device deviceInfo, Errors errors) {
+  public ModelAndView postRenameDevice(@PathVariable String encodedDeviceId, @ModelAttribute Device device, Errors errors) {
     ResultModel model = new ResultModel("devices/renameSuccess", "devices/rename");
     User user = userManager.getCurrentUser();
-    String newDeviceLabel = deviceInfo.getLabel();
-    try {
-      deviceInfo = (Device) SessionManager.get(SessionRequest.DEVICE_RENAME);
-      if (deviceInfo == null) {
-        deviceInfo = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
-      }
-      model.addObject("oldDeviceLabel", deviceInfo.getLabel());
-      deviceInfo.setLabel(newDeviceLabel);
-      deviceManager.updateDeviceInfo(user, deviceInfo);
-      model.addObject("newDeviceLabel", deviceInfo.getLabel());
-      return model.getSuccess();
-    } catch (DeviceManagementException e) {
-      errors.reject("device.update.label.error", null, "There was an error renaming your device");
+    deviceValidator.validateFields(device, errors);
+    if (errors.hasErrors()) {
+      model.addObject("device", device);
       return model.getError();
+    } else {
+      String newDeviceLabel = device.getLabel();
+      try {
+        device = (Device) SessionManager.get(SessionRequest.DEVICE_RENAME);
+        if (device == null) {
+          device = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
+        }
+        model.addObject("oldDeviceLabel", device.getLabel());
+        device.setLabel(newDeviceLabel);
+        deviceManager.updateDeviceInfo(user, device);
+        model.addObject("newDeviceLabel", device.getLabel());
+        return model.getSuccess();
+      } catch (DeviceManagementException e) {
+        errors.reject("device.update.label.error", null, "There was an error renaming your device");
+        return model.getError();
+      }
     }
   }
 
@@ -93,9 +104,11 @@ public class DeviceController {
     ResultModel model = new ResultModel("devices/swapEsn");
     User user = userManager.getCurrentUser();
     try {
-      Device deviceToSwap = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
-      SessionManager.set(SessionRequest.DEVICE_SWAP, deviceToSwap);
-      model.addObject("deviceInfo", deviceToSwap);
+      Device deviceFrom = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
+      Device deviceTo = TruConnectUtil.clone(deviceFrom);
+      deviceTo.setValue(null);
+      SessionManager.set(SessionRequest.DEVICE_SWAP, deviceFrom);
+      model.addObject("device", deviceTo);
       return model.getSuccess();
     } catch (DeviceManagementException e) {
       return model.getAccessException();
@@ -103,29 +116,53 @@ public class DeviceController {
   }
 
   @RequestMapping(value = "/swap/{encodedDeviceId}", method = RequestMethod.POST)
-  public ModelAndView postSwapDevice(@PathVariable String encodedDeviceId, @ModelAttribute Device deviceInfo, Errors errors) {
+  public ModelAndView postSwapDevice(@PathVariable String encodedDeviceId, @ModelAttribute Device device, Errors errors) {
     ResultModel model = new ResultModel("devices/swapEsnSuccess", "devices/swapEsn");
     User user = userManager.getCurrentUser();
-    int deviceId = SessionEncrypter.decryptId(encodedDeviceId);
-    String newEsn = deviceInfo.getValue();
-    String newDeviceLabel = deviceInfo.getLabel();
-    try {
-      Device oldDeviceInfo = (Device) SessionManager.get(SessionRequest.DEVICE_SWAP);
-      Device newDeviceInfo = TruConnectUtil.clone(oldDeviceInfo);
-      if (oldDeviceInfo == null) {
-        oldDeviceInfo = deviceManager.getDeviceInfo(user, deviceId);
-      }
-      if (newDeviceInfo == null) {
-        newDeviceInfo = deviceManager.getDeviceInfo(user, deviceId);
-      }
-      newDeviceInfo.setValue(newEsn);
-      newDeviceInfo.setLabel(newDeviceLabel);
-      deviceManager.swapDevice(user, oldDeviceInfo, newDeviceInfo);
-      return model.getSuccess();
-    } catch (DeviceManagementException e) {
-      errors.rejectValue("value", "device.swap.error");
-      model.addObject("deviceInfo", deviceInfo);
+    deviceValidator.validate(device, errors);
+    if (errors.hasErrors()) {
+      model.addObject("device", device);
       return model.getError();
+    } else {
+      int deviceId = SessionEncrypter.decryptId(encodedDeviceId);
+      String newEsn = device.getValue();
+      String newDeviceLabel = device.getLabel();
+      try {
+        Device oldDeviceInfo = (Device) SessionManager.get(SessionRequest.DEVICE_SWAP);
+        Device newDeviceInfo = TruConnectUtil.clone(oldDeviceInfo);
+        if (oldDeviceInfo == null) {
+          oldDeviceInfo = deviceManager.getDeviceInfo(user, deviceId);
+        }
+        if (oldDeviceInfo.getStatusId() != 2) {
+          throw new DeviceSwapException("Device swapped from is not active");
+        }
+        if (newDeviceInfo == null) {
+          newDeviceInfo = deviceManager.getDeviceInfo(user, deviceId);
+        }
+        newDeviceInfo.setValue(newEsn);
+        newDeviceInfo.setLabel(newDeviceLabel);
+        deviceManager.swapDevice(user, oldDeviceInfo, newDeviceInfo);
+        return model.getSuccess();
+      } catch (DeviceSwapException e) {
+        DevLogger.log("DeviceSwapException caught: {}", e.getMessage(), e);
+        errors.rejectValue("value", "device.swap.error.inactive");
+        model.addObject("deviceInfo", device);
+        return model.getError();
+      } catch (DeviceManagementException e) {
+        DevLogger.log("DeviceManagementException caught: {}", e.getMessage());
+        if (e.getMessage().contains("Device is currently assigned")) {
+          DevLogger.log("rejecting value with code device.swap.error.active");
+          errors.rejectValue("value", "device.swap.error.active");
+        } else if (e.getMessage().contains("Device is currently in reserve")) {
+          DevLogger.log("rejecting value with code device.swap.error.active");
+          errors.rejectValue("value", "device.swap.error.active");
+        } else {
+          DevLogger.log("rejecting value with code device.swap.error");
+          errors.rejectValue("value", "device.swap.error");
+        }
+        model.addObject("deviceInfo", device);
+        return model.getError();
+      }
     }
   }
 
