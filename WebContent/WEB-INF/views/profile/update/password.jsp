@@ -6,6 +6,21 @@
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
 <script type="text/javascript" src="<spring:url value="/static/javascript/setupForms.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/highlight/navigation/profile.js" />"></script>
+
+<c:if test="${!empty sessionScope.controlling_user}">
+  <script type="text/javascript" src="<spring:url value="/static/javascript/randomString.js" />"></script>
+  <script type="text/javascript">
+			$(function() {
+				$("#generateValue").click(function(e) {
+					e.preventDefault();
+					var newPass = randomString(8, false);
+					$("#password").val(newPass);
+					$("#confirmPassword").val(newPass);
+					$("#generatedValue").text(newPass);
+				});
+			});
+		</script>
+</c:if>
 </head>
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
@@ -35,10 +50,19 @@
           </c:if>
           <!--End Error Display -->
 
-          <div class="row">
-            <form:label path="oldPassword" cssClass="required">Old Password</form:label>
-            <form:password path="oldPassword" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
-          </div>
+          <c:if test="${!empty sessionScope.controlling_user}">
+            <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+              <a id="generateValue" href="#" class="button semi-s"><span>Generate Random</span> </a> <span
+                id="generatedValue" style="color: blue; font-size: 1.5em; margin-left: 30px;"></span>
+            </div>
+          </c:if>
+          
+          <c:if test="${empty sessionScope.controlling_user}">
+            <div class="row">
+              <form:label path="oldPassword" cssClass="required">Old Password</form:label>
+              <form:password path="oldPassword" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+            </div>
+          </c:if>
 
           <div class="row">
             <form:label path="password" cssClass="required">New Password</form:label>

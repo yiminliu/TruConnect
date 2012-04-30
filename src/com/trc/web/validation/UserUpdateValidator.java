@@ -37,6 +37,10 @@ public class UserUpdateValidator extends UserValidator {
     }
   }
 
+  public void validateInternalPasswordChange(UpdatePassword updatePassword, Errors errors, User user) {
+    validateNewPassword(updatePassword, errors);
+  }
+
   public void validatePasswordChange(UpdatePassword updatePassword, Errors errors, User user) {
     if (!ValidationUtil.isCorrectPassword(updatePassword.getOldPassword(), user.getPassword())) {
       errors.rejectValue("oldPassword", "password.incorrect", "Incorrect Password");
@@ -48,6 +52,10 @@ public class UserUpdateValidator extends UserValidator {
     if (!ValidationUtil.isCorrectPassword(updateEmail.getOldPassword(), user.getPassword())) {
       errors.rejectValue("oldPassword", "password.incorrect", "Incorrect Password");
     }
+    validateNewEmail(updateEmail, errors);
+  }
+
+  public void validateInternalEmailChange(UpdateEmail updateEmail, Errors errors, User user) {
     validateNewEmail(updateEmail, errors);
   }
 

@@ -35,10 +35,12 @@
           </c:if>
           <!--End Error Display -->
 
-          <div class="row">
-            <form:label path="oldPassword" cssClass="required">Password</form:label>
-            <form:password path="oldPassword" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
-          </div>
+          <c:if test="${empty sessionScope.controlling_user}">
+            <div class="row">
+              <form:label path="oldPassword" cssClass="required">Password</form:label>
+              <form:password path="oldPassword" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+            </div>
+          </c:if>
 
           <div class="row">
             <form:label path="email" cssClass="required">New E-Mail Address</form:label>

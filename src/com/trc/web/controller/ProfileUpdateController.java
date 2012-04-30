@@ -60,25 +60,52 @@ public class ProfileUpdateController {
   public ModelAndView requestUpdateEmail(HttpSession session, @ModelAttribute UpdateEmail updateEmail, BindingResult result) {
     ResultModel model = new ResultModel("redirect:/profile", "profile/update/email");
     User user = userManager.getCurrentUser();
-    userUpdateValidator.validateEmailChange(updateEmail, result, user);
-    if (result.hasErrors()) {
-      return model.getError();
-    } else {
-      try {
-        SimpleMailMessage myMessage = new SimpleMailMessage();
-        myMessage.setTo(updateEmail.getEmail());
-        myMessage.setFrom("no-reply@truconnect.com");
-        myMessage.setSubject("Verify Your New Email Address");
-        Map<Object, Object> mailModel = new HashMap<Object, Object>();
-        mailModel.put("user", user);
-        mailModel.put("sessionId", session.getId());
-        velocityEmailService.send("profileUpdate", myMessage, mailModel);
-        session.setAttribute(UPDATE_EMAIL_VAL, updateEmail.getEmail());
-        session.setAttribute(UPDATE_EMAIL_NTF, "sent");
-      } catch (EmailException e) {
-        e.printStackTrace();
+    String oldEmail = user.getEmail();
+    User internalUser = userManager.getLoggedInUser();
+    if (internalUser.isAdmin() || internalUser.isSuperUser()) {
+      userUpdateValidator.validateInternalEmailChange(updateEmail, result, user);
+      if (result.hasErrors()) {
+        return model.getError();
+      } else {
+        try {
+          user.setUsername(updateEmail.getEmail());
+          user.setEmail(updateEmail.getEmail());
+          List<Account> accountList = accountManager.getAccounts(user);
+          for (Account account : accountList) {
+            account.setContactEmail(updateEmail.getEmail());
+            accountManager.updateEmail(account);
+          }
+          userManager.updateUser(user);
+          showProfileUpdateNotification(session, ATTR_EMAIL);
+        } catch (AccountManagementException e) {
+          e.printStackTrace();
+          showProfileUpdateFailureNotification(session, ATTR_EMAIL);
+          user.setEmail(oldEmail);
+          userManager.updateUser(user);
+        }
+        return model.getSuccess();
       }
-      return model.getSuccess();
+    } else {
+      userUpdateValidator.validateEmailChange(updateEmail, result, user);
+      if (result.hasErrors()) {
+        return model.getError();
+      } else {
+        try {
+          SimpleMailMessage myMessage = new SimpleMailMessage();
+          myMessage.setTo(updateEmail.getEmail());
+          myMessage.setFrom("no-reply@truconnect.com");
+          myMessage.setSubject("Verify Your New Email Address");
+          Map<Object, Object> mailModel = new HashMap<Object, Object>();
+          mailModel.put("user", user);
+          mailModel.put("sessionId", session.getId());
+          velocityEmailService.send("profileUpdate", myMessage, mailModel);
+          session.setAttribute(UPDATE_EMAIL_VAL, updateEmail.getEmail());
+          session.setAttribute(UPDATE_EMAIL_NTF, "sent");
+        } catch (EmailException e) {
+          e.printStackTrace();
+        }
+        return model.getSuccess();
+      }
     }
   }
 
@@ -119,7 +146,12 @@ public class ProfileUpdateController {
   public ModelAndView postUpdatePassword(HttpSession session, @ModelAttribute UpdatePassword updatePassword, BindingResult result) {
     ResultModel model = new ResultModel("redirect:/profile", "profile/update/password");
     User user = userManager.getCurrentUser();
-    userUpdateValidator.validatePasswordChange(updatePassword, result, user);
+    User internalUser = userManager.getLoggedInUser();
+    if (internalUser.isAdmin() || internalUser.isSuperUser()) {
+      userUpdateValidator.validateInternalPasswordChange(updatePassword, result, user);
+    } else {
+      userUpdateValidator.validatePasswordChange(updatePassword, result, user);
+    }
     if (result.hasErrors()) {
       return model.getError();
     } else {
