@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.trc.payment.coupon.contract.Contract;
 
@@ -185,27 +184,8 @@ public class CouponDetail implements Serializable {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer();
-    sb.append("couponDetailId=").append(couponDetailId).append(", ");
-    sb.append("duration=").append(duration).append(", ");
-    sb.append("durationUnit=").append(durationUnit).append(", ");
-    sb.append("amount=").append(amount).append(", ");
-    sb.append("contract=").append(contract.toString());
-    sb.append("stackable=").append(stackable.toString());
-    return sb.toString();
-  }
-
-  @Transient
-  public String toFormattedString() {
-    StringBuffer sb = new StringBuffer();
-    sb.append("--Coupon Detail--").append("\n");
-    sb.append("  Coupon Detail ID=").append(couponDetailId).append("\n");
-    sb.append("  Duration=").append(duration).append("\n");
-    sb.append("  Duration Unit=").append(durationUnit).append("\n");
-    sb.append("  Amount=").append(amount).append("\n");
-    sb.append("  Contract=").append(contract.toString()).append("\n");
-    sb.append("  Stackable=").append(stackable.toString());
-    return sb.toString();
+    return "CouponDetail [couponDetailId=" + couponDetailId + ", detailType=" + detailType + ", duration=" + duration + ", durationUnit=" + durationUnit
+        + ", amount=" + amount + ", accountLimit=" + accountLimit + ", contract=" + contract + "]";
   }
 
 }

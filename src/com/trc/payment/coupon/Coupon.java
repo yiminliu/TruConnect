@@ -143,29 +143,8 @@ public class Coupon implements Serializable {
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer();
-    sb.append("couponId=").append(couponId).append(", ");
-    sb.append("couponCode=").append(couponCode).append(", ");
-    sb.append("startDate=").append(startDate).append(", ");
-    sb.append("endDate=").append(endDate).append(", ");
-    sb.append("enabled=").append(enabled).append(", ");
-    sb.append("used=").append(used).append(", ");
-    sb.append("couponDetail=").append(couponDetail.toString());
-    return sb.toString();
-  }
-
-  @Transient
-  public String toFormattedString() {
-    StringBuffer sb = new StringBuffer();
-    sb.append("--Coupon--").append("\n");
-    sb.append("  Coupon ID=").append(couponId).append("\n");
-    sb.append("  Coupon Code=").append(couponCode).append("\n");
-    sb.append("  Start Date=").append(startDate).append("\n");
-    sb.append("  End Date=").append(endDate).append("\n");
-    sb.append("  Enabled=").append(enabled).append("\n");
-    sb.append("  Used=").append(used).append("\n");
-    sb.append("  Coupon Detail=").append(couponDetail.toString());
-    return sb.toString();
+    return "Coupon [couponId=" + couponId + ", couponCode=" + couponCode + ", startDate=" + startDate + ", endDate=" + endDate + ", quantity=" + quantity
+        + ", used=" + used + ", enabled=" + enabled + ", couponDetail=" + couponDetail + "]";
   }
 
 }

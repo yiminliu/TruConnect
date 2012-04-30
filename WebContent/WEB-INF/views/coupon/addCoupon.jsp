@@ -95,10 +95,12 @@
 
           <div class="slider hidden">
             <h3>Select the Device you want to apply the offer to</h3>
-            <div class="row deviceList">
+            <div id="deviceList" class="row deviceList">
               <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
-                <label><input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />
-                  ${accountDetail.deviceInfo.label}</label>
+                <c:if test="accountDetail.deviceInfo.statusId == 2">
+                  <label><input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />
+                    ${accountDetail.deviceInfo.label}</label>
+                </c:if>
               </c:forEach>
             </div>
 
@@ -117,7 +119,7 @@
       </div>
 
     </div>
-    <%@ include file="/WEB-INF/includes/footer_nolinks.jsp"%>
+    <%@ include file="/WEB-INF/includes/footer_links.jsp"%>
   </div>
 
 </body>

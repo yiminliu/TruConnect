@@ -60,7 +60,7 @@
 
   <!-- PROCESS ACTIVATION -->
   <subflow-state id="processActivation" subflow="processActivation">
-    <input name="registration" value="registration" />
+    <input name="user" value="registration.user" />
     <input name="activationMessage" value="activationMessage" />
     <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />

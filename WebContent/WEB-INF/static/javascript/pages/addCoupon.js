@@ -127,3 +127,9 @@ $(function() {
 		$(deviceButtons).get(0).click();
 	}
 });
+
+$(function() {
+	if ($("#deviceList").children().size() == 0) {
+		$("#deviceList").html("You have no active devices");
+	}
+});

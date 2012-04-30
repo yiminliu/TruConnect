@@ -73,7 +73,6 @@ public class CouponValidator implements Validator {
 
   public void validate(CouponRequest couponRequest, int accountNo, Errors errors) {
     errors.pushNestedPath("coupon");
-    DevLogger.log("nested path is " + errors.getNestedPath());
     validate(couponRequest.getCoupon(), accountNo, errors);
     errors.popNestedPath();
   }
@@ -219,9 +218,7 @@ public class CouponValidator implements Validator {
   public boolean isApplied(Coupon coupon, User user, Account account) throws ValidationException {
     try {
       UserCoupon userCoupon = couponManager.getUserCoupon(new UserCoupon(coupon, user, account));
-
-      return userCoupon != null;
-
+      return userCoupon != null && userCoupon.isActive();
     } catch (CouponManagementException e) {
       throw new ValidationException(e.getMessage(), e.getCause());
     }

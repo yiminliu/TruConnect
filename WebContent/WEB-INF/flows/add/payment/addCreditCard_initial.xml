@@ -9,6 +9,7 @@
     <evaluate expression="addressFlowManager.getAddresses(user)" result="flowScope.addresses" />
     <evaluate expression="config.months" result="flowScope.months" />
     <evaluate expression="config.yearsFuture" result="flowScope.years" />
+    <evaluate expression="config.states" result="flowScope.states" />
   </on-start>
 
   <view-state id="requestCreditCard" view="activation/payment/addCreditCard" model="creditCardPayment">

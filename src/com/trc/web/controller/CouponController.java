@@ -10,8 +10,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,8 +54,6 @@ import com.tscp.mvne.ServiceInstance;
 @RequestMapping("/coupons")
 @SessionAttributes("couponDetailList")
 public class CouponController {
-  private static final Logger errorLogger = LoggerFactory.getLogger(CouponController.class);
-  private static final Logger devLogger = LoggerFactory.getLogger("devLogger");
   @Autowired
   private CouponManager couponManager;
   @Autowired
@@ -101,13 +97,26 @@ public class CouponController {
     Overview overview = accountManager.getOverview(user).encodeAccountNo();
     List<AccountDetail> accountList = overview.getAccountDetails();
 
-    CouponRequest couponRequest = new CouponRequest();
-    couponRequest.setCoupon(new Coupon());
-    couponRequest.setSessionToken(SessionManager.createToken(SessionRequest.COUPON, "coupon request for user " + user.getUserId()));
+    boolean hasActiveDevice = false;
+    if (accountList != null) {
+      for (AccountDetail ad : accountList) {
+        if (ad.getDeviceInfo().getStatusId() == 2) {
+          hasActiveDevice = true;
+        }
+      }
+    }
+    if (hasActiveDevice) {
 
-    model.addObject("couponRequest", couponRequest);
-    model.addObject("accountList", accountList);
-    return model.getSuccess();
+      CouponRequest couponRequest = new CouponRequest();
+      couponRequest.setCoupon(new Coupon());
+      couponRequest.setSessionToken(SessionManager.createToken(SessionRequest.COUPON, "coupon request for user " + user.getUserId()));
+
+      model.addObject("couponRequest", couponRequest);
+      model.addObject("accountList", accountList);
+      return model.getSuccess();
+    } else {
+      return new ResultModel("coupon/noDevices").getSuccess();
+    }
   }
 
   @RequestMapping(method = RequestMethod.POST)
@@ -120,7 +129,6 @@ public class CouponController {
     if (encodedAccountNo != null) {
       accountNumber = SessionEncrypter.decryptId(encodedAccountNo);
     } else {
-      errorLogger.error("Cannot apply coupon for {}. Account number not set.", user);
       return model.getAccessException();
     }
 
@@ -130,7 +138,6 @@ public class CouponController {
         couponRequest.setCoupon(couponManager.getCouponByCode(couponRequest.getCoupon().getCouponCode()));
         couponValidator.validate(couponRequest, accountNumber, result);
         if (result.hasErrors()) {
-          devLogger.debug("Errors during validation {}", result.getAllErrors().toString());
           model.addObject("accountList", accountManager.getOverview(user).encodeAccountNo().getAccountDetails());
           return model.getError();
         } else {
@@ -163,7 +170,6 @@ public class CouponController {
         return model.getAccessException();
       }
     } else {
-      errorLogger.error("Cannot apply coupon for {}. Session token does not exist or does not match.", user);
       return model.getAccessException();
     }
 
@@ -198,7 +204,6 @@ public class CouponController {
   public ModelAndView postCreateCoupon(HttpServletRequest request, @ModelAttribute("coupon") Coupon coupon, BindingResult result, SessionStatus status) {
     ResultModel model = new ResultModel("coupon/createCouponSuccess", "coupon/createCoupon");
     couponValidator.validateForCreateCoupon(coupon, result);
-    DevLogger.log("from submission caught, input coupon: " + coupon.toFormattedString());
     if (result.hasErrors()) {
       return model.getError();
     }
@@ -279,7 +284,6 @@ public class CouponController {
    */
   @RequestMapping(value = "/createCouponDetail", method = RequestMethod.POST)
   public ModelAndView postCreateCouponDetail(HttpServletRequest request, @ModelAttribute("couponDetail") CouponDetail couponDetail, BindingResult result) {
-    DevLogger.log("form submission caught, input couponDetail: " + couponDetail.toFormattedString());
     ResultModel model = new ResultModel("coupon/createCouponDetailSuccess", "coupon/createCouponDetail");
     try {
       int couponDetailId = couponManager.insertCouponDetail(couponDetail);
@@ -326,7 +330,6 @@ public class CouponController {
   public ModelAndView postGetCouponByCode(@ModelAttribute("coupon") Coupon coupon, BindingResult result) {
     ResultModel model = new ResultModel("coupon/showAllCoupons", "coupon/getCouponByCode");
     couponValidator.checkCouponCode(coupon == null ? "" : coupon.getCouponCode(), result);
-    DevLogger.log("from submission caught, input coupon: " + coupon.toFormattedString());
     if (result.hasErrors()) {
       return model.getError();
     }
@@ -375,7 +378,6 @@ public class CouponController {
 
   @RequestMapping(value = "/createCouponContract", method = RequestMethod.POST)
   public ModelAndView postCreateCouponContract(HttpServletRequest request, @ModelAttribute("contract") Contract contract, BindingResult result) {
-    DevLogger.log("form submission caught, input couponDetail: " + contract.toFormattedString());
     ResultModel model = new ResultModel("coupon/createCouponContractSuccess", "coupon/createCouponContract");
     try {
       int contractType = couponManager.insertCouponContract(contract);

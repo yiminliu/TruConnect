@@ -5,6 +5,10 @@ import org.slf4j.LoggerFactory;
 public class DevLogger {
   private static org.slf4j.Logger logger = LoggerFactory.getLogger("devLogger");
 
+  public static void log(String message) {
+    logger.debug(message);
+  }
+
   public static void log(String message, Object... args) {
     logger.debug(message, args);
   }

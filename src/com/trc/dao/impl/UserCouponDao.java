@@ -32,14 +32,6 @@ public class UserCouponDao extends HibernateDaoSupport {
 
   public UserCoupon getUserCoupon(UserCoupon userCoupon) {
     return getHibernateTemplate().get(UserCoupon.class, userCoupon.getId());
-    // int userId = userCoupon.getId().getUserId();
-    // Coupon coupon = userCoupon.getId().getCoupon();
-    // int accountNumber = userCoupon.getId().getAccountNumber();
-    // List<UserCoupon> userCoupons = getHibernateTemplate().find(
-    // "from UserCoupon uc where uc.id.userId = ? and uc.id.coupon = ? and uc.id.accountNumber = ?",
-    // userId, coupon,
-    // accountNumber);
-    // return userCoupons;
   }
 
   public List<UserCoupon> getUserCoupons(int userId) {

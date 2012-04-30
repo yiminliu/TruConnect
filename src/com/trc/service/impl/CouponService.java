@@ -1,14 +1,14 @@
 package com.trc.service.impl;
 
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.WebServiceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,7 @@ import com.tscp.mvne.TruConnect;
 
 @Service
 public class CouponService {
+  private static final Logger logger = LoggerFactory.getLogger("TSCPMVNE");
   private TruConnect truConnect;
   private CouponDao couponDao;
   private CouponDetailDao couponDetailDao;
@@ -337,18 +338,7 @@ public class CouponService {
       kenanContract.setContractType(coupon.getCouponDetail().getContract().getContractType());
       kenanContract.setDuration(coupon.getCouponDetail().getDuration());
       int contractId = truConnect.applyContract(kenanContract);
-
-      // Previously wanted to credit the customer for the prorated amount they
-      // would be charged for the first month before the coupon took effect
-      //
-      // ProrationCalculator pc = new ProrationCalculator();
-      // double amount = pc.getProratedAmount();
-      // GregorianCalendar calendar = new GregorianCalendar();
-      // XMLGregorianCalendar xmlCal =
-      // DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
-      // String stringAmount = Formatter.formatDollarAmountQuery(amount);
-      // truConnect.applyCouponPayment(account, stringAmount, xmlCal);
-
+      kenanContract.setContractId(contractId);
       try {
         UserCoupon userCoupon = new UserCoupon(coupon, user, account);
         userCoupon.setKenanContractId(kenanContract.getContractId());
@@ -369,8 +359,15 @@ public class CouponService {
   @Transactional
   public void cancelCoupon(User user, Coupon coupon, Account account, ServiceInstance serviceInstance) throws CouponServiceException {
     try {
+      List<UserCoupon> userCoupons = userCouponDao.getUserCoupons(user.getUserId());
+      UserCoupon userCoupon = null;
+      for (UserCoupon uc : userCoupons) {
+        if (uc.getId().getCoupon().getCouponId() == coupon.getCouponId() && uc.isActive()) {
+          userCoupon = uc;
+        }
+      }
       List<KenanContract> contracts = truConnect.getContracts(account, serviceInstance);
-      KenanContract kenanContract = findContractInList(contracts, coupon.getCouponDetail().getContract().getContractType());
+      KenanContract kenanContract = findContractInList(contracts, userCoupon.getKenanContractId());
       if (kenanContract != null) {
         int originalDuration = kenanContract.getDuration();
         kenanContract.setAccount(account);
@@ -378,7 +375,6 @@ public class CouponService {
         kenanContract.setDuration(0);
         truConnect.updateContract(kenanContract);
         try {
-          UserCoupon userCoupon = new UserCoupon(coupon, user, account);
           userCoupon.setKenanContractId(kenanContract.getContractId());
           userCoupon.setActive(false);
           updateUserCoupon(userCoupon);
@@ -397,7 +393,8 @@ public class CouponService {
 
   private KenanContract findContractInList(List<KenanContract> contracts, int contractId) {
     for (KenanContract kc : contracts) {
-      if (kc.getContractType() == contractId) {
+      DevLogger.log("   ... contract id {}, type {}", kc.getContractId(), kc.getContractType());
+      if (kc.getContractId() == contractId) {
         return kc;
       }
     }

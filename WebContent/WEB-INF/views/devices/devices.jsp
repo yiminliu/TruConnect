@@ -41,13 +41,13 @@
             <span class="label" style="display: inline-block;">${device.deviceInfo.label}</span>
             <c:choose>
               <c:when test="${device.deviceInfo.status == 'Active'}">
-                (Active)
+                (Active)<a href="<spring:url value="/devices/rename/${device.encodedDeviceId}" />">rename</a>
               </c:when>
               <c:otherwise>
-                (Inactive)
+                (<span style="color:#991111;">Inactive</span>)
               </c:otherwise>
             </c:choose>
-            <a href="<spring:url value="/devices/rename/${device.encodedDeviceId}" />">rename</a>
+            
           </h4>
           <h4 style="float: right; display: inline-block">
             Current Balance: $

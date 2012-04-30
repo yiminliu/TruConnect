@@ -21,7 +21,7 @@
       <div class="span-18 colborder">
 
         <a id="addNewButton" href="#" onclick="$('#choosePaymentMethodNewSubmit').click()" class="button action-m"
-          style="float: right;"><span>Add New Card</span> </a>
+          style="float: right; display: none;"><span>Add New Card</span> </a>
         <h3 style="margin-bottom: 40px; padding-bottom: 0px;">Credit Cards</h3>
 
         <form:form id="choosePaymentMethod" cssClass="validatedForm" method="post" commandName="creditCard">

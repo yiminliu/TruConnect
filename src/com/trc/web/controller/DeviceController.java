@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.exception.management.AccountManagementException;
+import com.trc.exception.management.CouponManagementException;
 import com.trc.exception.management.DeviceManagementException;
 import com.trc.exception.management.DeviceSwapException;
 import com.trc.manager.impl.AccountManager;
+import com.trc.manager.impl.CouponManager;
 import com.trc.manager.impl.DeviceManager;
 import com.trc.manager.impl.UserManager;
+import com.trc.payment.coupon.UserCoupon;
 import com.trc.security.encryption.SessionEncrypter;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
@@ -31,6 +34,7 @@ import com.trc.web.validation.DeviceValidator;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.Device;
 import com.tscp.mvne.NetworkInfo;
+import com.tscp.mvne.ServiceInstance;
 
 @Controller
 @RequestMapping("/devices")
@@ -41,6 +45,8 @@ public class DeviceController {
   private AccountManager accountManager;
   @Autowired
   private DeviceManager deviceManager;
+  @Autowired
+  private CouponManager couponManager;
   @Autowired
   private DeviceValidator deviceValidator;
 
@@ -171,15 +177,15 @@ public class DeviceController {
     ResultModel model = new ResultModel("devices/deactivatePrompt");
     User user = userManager.getCurrentUser();
     try {
-      Device deviceInfo = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
-      Account account = accountManager.getAccount(deviceInfo.getAccountNo());
+      Device device = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
+      Account account = accountManager.getAccount(device.getAccountNo());
       XMLGregorianCalendar accessFeeDate = accountManager.getLastAccessFeeDate(user, account);
-      SessionManager.set(SessionRequest.DEVICE_DEACTIVATE, deviceInfo);
+      SessionManager.set(SessionRequest.DEVICE_DEACTIVATE, device);
       SessionManager.set(SessionRequest.DEVICE_ACCOUNT, account);
       SessionManager.set(SessionRequest.DEVICE_ACCESSFEEDATE, accessFeeDate);
       model.addObject("accessFeeDate", accessFeeDate);
       model.addObject("account", account);
-      model.addObject("deviceInfo", deviceInfo);
+      model.addObject("device", device);
       return model.getSuccess();
     } catch (DeviceManagementException e) {
       return model.getAccessException();
@@ -189,18 +195,18 @@ public class DeviceController {
   }
 
   @RequestMapping(value = "/deactivate/{encodedDeviceId}", method = RequestMethod.POST)
-  public ModelAndView postDeactivateDevice(@PathVariable String encodedDeviceId, @ModelAttribute Device deviceInfo, Errors errors) {
+  public ModelAndView postDeactivateDevice(@PathVariable String encodedDeviceId, @ModelAttribute Device device, Errors errors) {
     ResultModel model = new ResultModel("devices/deactivateSuccess", "devices/deactivatePrompt");
     User user = userManager.getCurrentUser();
-    Device deviceInfoLookup = (Device) SessionManager.get(SessionRequest.DEVICE_DEACTIVATE);
+    Device deviceLookup = (Device) SessionManager.get(SessionRequest.DEVICE_DEACTIVATE);
     Account account = (Account) SessionManager.get(SessionRequest.DEVICE_ACCOUNT);
     XMLGregorianCalendar accessFeeDate = (XMLGregorianCalendar) SessionManager.get(SessionRequest.DEVICE_ACCESSFEEDATE);
     try {
-      if (deviceInfoLookup == null) {
-        deviceInfoLookup = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
+      if (deviceLookup == null) {
+        deviceLookup = deviceManager.getDeviceInfo(user, SessionEncrypter.decryptId(encodedDeviceId));
       }
       if (account == null) {
-        account = accountManager.getAccount(deviceInfoLookup.getAccountNo());
+        account = accountManager.getAccount(deviceLookup.getAccountNo());
       }
       if (accessFeeDate == null) {
         accessFeeDate = accountManager.getLastAccessFeeDate(user, account);
@@ -212,22 +218,43 @@ public class DeviceController {
     }
 
     try {
-      NetworkInfo networkInfo = deviceManager.getNetworkInfo(deviceInfoLookup.getValue(), null);
-      if (!deviceManager.compareEsn(deviceInfoLookup, networkInfo)) {
+      NetworkInfo networkInfo = deviceManager.getNetworkInfo(deviceLookup.getValue(), null);
+      if (!deviceManager.compareEsn(deviceLookup, networkInfo)) {
         model.addObject("accessFeeDate", accessFeeDate);
         model.addObject("account", account);
-        model.addObject("deviceInfo", deviceInfoLookup);
+        model.addObject("deviceInfo", deviceLookup);
         errors.rejectValue("value", "device.deactivate.error");
         return model.getError();
       } else {
-        deviceManager.disconnectService(TruConnectUtil.toServiceInstance(networkInfo));
-        model.addObject("label", deviceInfoLookup.getLabel());
+        ServiceInstance serviceInstance = TruConnectUtil.toServiceInstance(networkInfo);
+
+        // cancel all coupons associated with account
+        List<UserCoupon> coupons = couponManager.getUserCoupons(user.getUserId());
+        DevLogger.log("found coupons {}", coupons);
+        if (coupons != null && !coupons.isEmpty()) {
+          for (UserCoupon uc : coupons) {
+            if (uc.getId().getAccountNumber() == account.getAccountno()) {
+              if (uc.getId().getCoupon().isContract()) {
+                couponManager.cancelCoupon(uc.getId().getCoupon(), user, account, serviceInstance);
+              }
+            }
+          }
+        }
+
+        deviceManager.disconnectService(serviceInstance);
+        model.addObject("label", deviceLookup.getLabel());
         return model.getSuccess();
       }
     } catch (DeviceManagementException e) {
       model.addObject("accessFeeDate", accessFeeDate);
       model.addObject("account", account);
-      model.addObject("deviceInfo", deviceInfoLookup);
+      model.addObject("device", deviceLookup);
+      errors.rejectValue("value", "device.deactivate.error");
+      return model.getError();
+    } catch (CouponManagementException e) {
+      model.addObject("accessFeeDate", accessFeeDate);
+      model.addObject("account", account);
+      model.addObject("device", deviceLookup);
       errors.rejectValue("value", "device.deactivate.error");
       return model.getError();
     }

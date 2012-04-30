@@ -5,6 +5,13 @@
   <input name="user" type="com.trc.user.User" />
   <input name="creditCard" type="com.tscp.mvne.CreditCard" />
 
+  <on-start>
+    <evaluate expression="addressFlowManager.getAddresses(user)" result="flowScope.addresses" />
+    <evaluate expression="config.months" result="flowScope.months" />
+    <evaluate expression="config.yearsFuture" result="flowScope.years" />
+    <evaluate expression="config.states" result="flowScope.states" />
+  </on-start>
+
   <view-state id="requestCreditCard" view="payment/addCreditCard" model="creditCard">
     <on-entry>
       <evaluate expression="addressFlowManager.getAddresses(user)" result="viewScope.addresses" />

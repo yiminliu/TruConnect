@@ -42,7 +42,7 @@
       </div>
 
     </div>
-    <%@ include file="/WEB-INF/includes/footer_nolinks.jsp"%>
+    <%@ include file="/WEB-INF/includes/footer_links.jsp"%>
   </div>
 
 </body>

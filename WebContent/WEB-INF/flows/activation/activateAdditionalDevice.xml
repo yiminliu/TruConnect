@@ -5,6 +5,7 @@
 
   <var name="device" class="com.tscp.mvne.Device" />
   <var name="creditCard" class="com.tscp.mvne.CreditCard" />
+  <var name="creditCardPayment" class="com.trc.user.activation.CreditCardPayment" />
   <var name="termsAndConditions" class="com.trc.user.activation.TermsAndConditions" />
   <var name="account" class="com.tscp.mvne.Account" />
   <var name="networkInfo" class="com.tscp.mvne.NetworkInfo" />
@@ -21,119 +22,57 @@
     <input name="contactInfo" value="contactInfo" />
     <transition on="success" to="choosePaymentMethod">
       <evaluate expression="activationLogger.start(user)" />
-      <evaluate expression="activationLogger.logDeviceInfo()" />
+      <evaluate expression="activationLogger.startState(actStateFactory.INFO_DEVICE)" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </subflow-state>
 
   <subflow-state id="choosePaymentMethod" subflow="choosePaymentMethod">
+    <on-entry>
+      <evaluate expression="activationLogger.startState(actStateFactory.INFO_PAYMENT)" />
+    </on-entry>
     <input name="user" value="user" />
-    <input name="creditCard" value="creditCard" />
+    <input name="creditCard" value="creditCardPayment.creditCard" />
     <transition on="success" to="showPlansAndTerms">
-      <evaluate expression="activationLogger.logPaymentInfo()" />
+      <evaluate expression="activationLogger.endState()" />
     </transition>
   </subflow-state>
 
   <view-state id="showPlansAndTerms" view="activation/terms/plansAndTerms" model="termsAndConditions">
-    <transition on="submit" to="processing_createShellAccount" />
+    <transition on="submit" to="processActivation" />
   </view-state>
 
-  <!-- BEGIN PROCESSING -->
-  <view-state id="processing_createShellAccount" view="activation/processing/processingMessage" model="activationMessage">
-    <on-entry>
-      <evaluate expression="activationMessage.setMessageCreateBilling()" />
-    </on-entry>
-    <transition on="autoSubmit" to="createShellAccount" validate="false" />
-  </view-state>
-
-  <subflow-state id="createShellAccount" subflow="createShellAccount">
-    <input name="user" type="com.trc.user.User" value="user" />
-    <input name="account" type="com.tscp.mvne.Account" value="account" />
-    <transition on="success" to="processing_testActivation">
-      <evaluate expression="activationLogger.logCreateBilling()" />
-    </transition>
-  </subflow-state>
-
-  <view-state id="processing_testActivation" view="activation/processing/processingMessage" model="activationMessage">
-    <on-entry>
-      <evaluate expression="activationMessage.setMessageTestingActivation()" />
-    </on-entry>
-    <transition on="autoSubmit" to="testActivation" validate="false" />
-  </view-state>
-
-  <subflow-state id="testActivation" subflow="testActivation">
+  <!-- PROCESS ACTIVATION -->
+  <subflow-state id="processActivation" subflow="processActivation">
     <input name="user" value="user" />
-    <input name="account" value="account" />
+    <input name="activationMessage" value="activationMessage" />
     <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
-    <transition on="success" to="processing_makeActivationPayment">
-      <evaluate expression="activationLogger.logTestActivation()" />
-    </transition>
-  </subflow-state>
-
-  <view-state id="processing_makeActivationPayment" view="activation/processing/processingMessage" model="activationMessage">
-    <on-entry>
-      <evaluate expression="activationMessage.setMessagePayment()" />
-    </on-entry>
-    <transition on="autoSubmit" to="makeActivationPayment" validate="false" />
-  </view-state>
-
-  <subflow-state id="makeActivationPayment" subflow="makeActivationPayment">
-    <input name="user" value="user" />
+    <input name="creditCardPayment" value="creditCardPayment" />
     <input name="account" value="account" />
-    <input name="creditCard" value="creditCard" />
-    <transition on="success" to="processing_activateService">
-      <evaluate expression="activationLogger.logPayment()" />
-    </transition>
+    <transition on="success" to="success" />
+    <transition on="generalError" to="generalError" />
   </subflow-state>
-
-  <view-state id="processing_activateService" view="activation/processing/processingMessage" model="activationMessage">
-    <on-entry>
-      <evaluate expression="activationMessage.setMessageActivation()" />
-    </on-entry>
-    <transition on="autoSubmit" to="activateService" validate="false" />
-  </view-state>
-
-  <subflow-state id="activateService" subflow="activateService">
-    <input name="user" value="user" />
-    <input name="account" value="account" />
-    <input name="device" value="device" />
-    <input name="networkInfo" value="networkInfo" />
-    <transition on="success" to="processing_createService">
-      <evaluate expression="activationLogger.logActivation()" />
-    </transition>
-  </subflow-state>
-
-  <view-state id="processing_createService" view="activation/processing/processingMessage" model="activationMessage">
-    <on-entry>
-      <evaluate expression="activationMessage.setMessageCreateService()" />
-    </on-entry>
-    <transition on="autoSubmit" to="createService" validate="false" />
-  </view-state>
-
-  <action-state id="createService">
-    <evaluate expression="deviceFlowManager.createServiceInstance(account, networkInfo)" />
-    <transition on="success" to="sendWebServiceActivationEmail">
-      <evaluate expression="activationLogger.logCreateService()" />
-    </transition>
-    <transition on-exception="java.lang.Exception" to="generalError" />
-  </action-state>
-
-  <action-state id="sendWebServiceActivationEmail">
-    <evaluate expression="registrationManager.sendActivationEmail(user, account)" />
-    <transition on="success" to="success">
-      <evaluate expression="activationLogger.logWelcome()" />
-    </transition>
-    <transition on-exception="java.lang.Exception" to="generalError" />
-  </action-state>
 
   <!-- END STATES -->
-  <end-state id="generalError" view="exception/uncaughtException" />
-  <end-state id="success" view="activation/activateAdditionalDevice/success" />
-  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+  <end-state id="generalError" view="exception/uncaughtException">
+    <on-entry>
+      <evaluate expression="activationLogger.exception(flowExecutionException, rootCauseException)" />
+    </on-entry>
+  </end-state>
 
-  <!-- GLOBAL TRANSITIONS -->
+  <end-state id="success" view="activation/activateAdditionalDevice/success" />
+
+  <end-state id="cancel" view="externalRedirect:contextRelative:/">
+    <on-entry>
+      <evaluate expression="registrationManager.cancelRegistration(registration)" />
+    </on-entry>
+  </end-state>
+
+  <!-- Global Transitions -->
   <global-transitions>
     <transition on="cancel" to="cancel" validate="false" />
     <transition on="generalError" to="generalError" validate="false" />
+    <transition on="java.lang.Exception" to="generalError" />
   </global-transitions>
 </flow>

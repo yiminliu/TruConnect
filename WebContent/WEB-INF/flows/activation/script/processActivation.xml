@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
   <!-- INPUT PARAMATERS FROM CALLING FLOW -->
-  <input name="registration" type="com.trc.user.activation.Registration" />
+  <input name="user" type="com.trc.user.User" />
   <input name="account" type="com.tscp.mvne.Account" />
   <input name="activationMessage" type="com.trc.user.activation.ActivationMessage" />
   <input name="device" type="com.tscp.mvne.Device" />
@@ -19,7 +19,7 @@
     <on-entry>
       <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_BILLING_ACCOUNT)" />
     </on-entry>
-    <input name="user" type="com.trc.user.User" value="registration.user" />
+    <input name="user" type="com.trc.user.User" value="user" />
     <input name="account" type="com.tscp.mvne.Account" value="account" />
     <transition on="success" to="testActivation">
       <evaluate expression="activationLogger.endState()" />
@@ -30,7 +30,7 @@
     <on-entry>
       <evaluate expression="activationLogger.startState(actStateFactory.TEST_ACTIVATION)" />
     </on-entry>
-    <input name="user" value="registration.user" />
+    <input name="user" value="user" />
     <input name="account" value="account" />
     <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
@@ -50,7 +50,7 @@
     <on-entry>
       <evaluate expression="activationLogger.startState(actStateFactory.APPLY_COUPON_PAYMENT)" />
     </on-entry>
-    <input name="user" value="registration.user" />
+    <input name="user" value="user" />
     <input name="account" value="account" />
     <input name="creditCard" value="creditCardPayment.creditCard" />
     <input name="coupon" value="creditCardPayment.coupon" />
@@ -63,7 +63,7 @@
     <on-entry>
       <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_PAYMENT)" />
     </on-entry>
-    <input name="user" value="registration.user" />
+    <input name="user" value="user" />
     <input name="account" value="account" />
     <input name="creditCard" value="creditCardPayment.creditCard" />
     <transition on="success" to="activateService">
@@ -75,7 +75,7 @@
     <on-entry>
       <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_NETWORK_SERVICE)" />
     </on-entry>
-    <input name="user" value="registration.user" />
+    <input name="user" value="user" />
     <input name="account" value="account" />
     <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
@@ -88,7 +88,7 @@
     <on-entry>
       <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_CREATE_SERVICE)" />
     </on-entry>
-    <input name="user" value="registration.user" />
+    <input name="user" value="user" />
     <input name="account" value="account" />
     <input name="device" value="device" />
     <input name="networkInfo" value="networkInfo" />
@@ -105,7 +105,7 @@
     <on-entry>
       <evaluate expression="activationLogger.startState(actStateFactory.APPLY_CONTRACT)" />
     </on-entry>
-    <evaluate expression="couponFlowManager.applyCoupon(creditCardPayment.coupon, registration.user, account, networkInfo.mdn)" />
+    <evaluate expression="couponFlowManager.applyCoupon(creditCardPayment.coupon, user, account, networkInfo.mdn)" />
     <transition on="success" to="enableUser">
       <evaluate expression="activationLogger.endState()" />
     </transition>
@@ -115,7 +115,7 @@
     <on-entry>
       <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_ENABLE_USER)" />
     </on-entry>
-    <evaluate expression="userManager.enableUser(registration.user)" />
+    <evaluate expression="userManager.enableUser(user)" />
     <transition on="success" to="saveUser">
       <evaluate expression="activationLogger.endState()" />
     </transition>
@@ -125,7 +125,7 @@
     <on-entry>
       <evaluate expression="activationLogger.startState(actStateFactory.ACTIVATE_SAVE_USER)" />
     </on-entry>
-    <evaluate expression="userManager.updateUser(registration.user)" />
+    <evaluate expression="userManager.updateUser(user)" />
     <transition on="success" to="sendWebServiceActivationEmail">
       <evaluate expression="activationLogger.endState()" />
     </transition>
@@ -136,7 +136,7 @@
     <on-entry>
       <evaluate expression="activationLogger.startState(actStateFactory.NOTIFY_WELCOME)" />
     </on-entry>
-    <evaluate expression="registrationManager.sendActivationEmail(registration.user, account)" />
+    <evaluate expression="registrationManager.sendActivationEmail(user, account)" />
     <transition on="success" to="success">
       <evaluate expression="activationLogger.endState()" />
     </transition>

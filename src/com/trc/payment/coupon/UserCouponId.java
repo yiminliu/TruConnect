@@ -94,4 +94,9 @@ public class UserCouponId implements Serializable {
     return true;
   }
 
+  @Override
+  public String toString() {
+    return "UserCouponId [userId=" + userId + ", accountNumber=" + accountNumber + ", dateApplied=" + dateApplied + ", coupon=" + coupon + "]";
+  }
+
 }

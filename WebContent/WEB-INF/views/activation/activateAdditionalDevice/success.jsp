@@ -22,12 +22,13 @@
           You can now install or activate your TruConnect device as described in the user manual. If you have any
           questions, please visit our <a href="support.truconnect.com">support page</a> or click on your device below.
         </p>
-        <p>
-          <a class="button action-m" href="<spring:url value="/devices" />"><span>Continue</span> </a>
-        </p>
         <p class="sub-navigation">
           <a href="http://www.truconnect.com/Knowledgebase/support/truconnect-usb-card/">TruConnect USB Card &raquo;</a><br />
           <a href="http://www.truconnect.com/Knowledgebase/support/truconnect-mifi/">TruConnect MiFi &raquo;</a>
+        </p>
+        <div class="clear"></div>
+        <p>
+          <a class="button action-m" href="<spring:url value="/devices" />"><span>Continue</span> </a>
         </p>
       </div>
 
