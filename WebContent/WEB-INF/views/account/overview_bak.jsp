@@ -30,9 +30,10 @@
               <h4 style="float: right; display: inline-block">Current Balance: Disconnected</h4>
             </c:when>
             <c:otherwise>
-              <div class="badge" style="float:right;">
-                Current Balance: $<fmt:formatNumber value="${accountDetail.account.balance}" pattern="0.00" />
-              </div>
+              <h4 style="float: right; display: inline-block">
+                Current Balance: $
+                <fmt:formatNumber value="${accountDetail.account.balance}" pattern="0.00" />
+              </h4>
             </c:otherwise>
           </c:choose>
           <c:set var="currentBalance" value="${accountDetail.account.balance}" />

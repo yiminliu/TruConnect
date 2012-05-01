@@ -1039,10 +1039,6 @@ a.escape-l span {
   bottom: 10px;
 }
 
-.address div:first-child {
-  font-weight: bold;
-}
-
 #jsCheck {
   width: 100%;
   height: 50px;

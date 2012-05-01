@@ -1,10 +1,10 @@
-<div class="admin_tooltip tooltip hidden">
+<div class="device_detail hidden" style="padding: 0px 8px 0px 8px; margin: 0px 8px 8px 8px;">
   <div>
-  <li class="header">Device Information</li>
-  <li>Account Number: ${device.deviceInfo.accountNo}</li>
-  <li>Device ID: ${device.deviceInfo.id}</li>
-  <li>Status: ${device.deviceInfo.status}</li>
-  <li>Status ID: ${device.deviceInfo.statusId}</li>
+    <li class="header">Device Information</li>
+    <li>Account Number: ${device.deviceInfo.accountNo}</li>
+    <li>Device ID: ${device.deviceInfo.id}</li>
+    <li>Status: ${device.deviceInfo.status}</li>
+    <li>Status ID: ${device.deviceInfo.statusId}</li>
   </div>
   <div>
     <c:forEach var="package" items="${device.account.packageList}">
@@ -21,13 +21,13 @@
     </c:forEach>
   </div>
   <div>
-  <li class="header">Service Information</li>
-  <c:forEach var="service" items="${device.account.serviceinstancelist}">
-    <li>Subscriber Number: ${service.subscriberNumber}</li>
-    <li>External ID: ${service.externalId}</li>
-    <li>External ID Type: ${service.externalIdType}</li>
-    <li>Active Date: ${service.activeDate}</li>
-    <li>Inactive Date: ${service.inactiveDate}</li>
-  </c:forEach>
+    <li class="header">Service Information</li>
+    <c:forEach var="service" items="${device.account.serviceinstancelist}">
+      <li>Subscriber Number: ${service.subscriberNumber}</li>
+      <li>External ID: ${service.externalId}</li>
+      <li>External ID Type: ${service.externalIdType}</li>
+      <li>Active Date: ${service.activeDate}</li>
+      <li>Inactive Date: ${service.inactiveDate}</li>
+    </c:forEach>
   </div>
 </div>

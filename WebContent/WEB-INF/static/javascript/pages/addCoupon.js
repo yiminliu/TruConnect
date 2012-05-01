@@ -12,6 +12,28 @@ $(function() {
 	});
 });
 
+$(function() {
+	$("#contract\\.contractType").change(function(e) {
+		var contractType = $("#contract\\.contractType option:selected").val();
+		if (contractType == -1) {
+			$("#amountRow").slideDown();
+			$("#durationRow").hide();
+			$("#durationUnitRow").hide();
+			$("#detailType\\.detailType").val(2);
+		} else if (contractType != 0) {
+			$("#durationRow").slideDown();
+			$("#durationUnitRow").slideDown();
+			$("#amountRow").hide();
+			$("#detailType\\.detailType").val(1);
+		} else if (contractType == 0) {
+			$("#durationRow").hide();
+			$("#durationUnitRow").hide();
+			$("#amountRow").hide();
+			$("#detailType\\.detailType").val(0);
+		}
+	});
+});
+
 // $(function() {
 // $("#couponCode").keyup(function(e) {
 // couponAjaxBufferTime = 1;

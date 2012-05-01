@@ -16,12 +16,10 @@ import com.trc.manager.impl.AccountManager;
 import com.trc.manager.impl.CouponManager;
 import com.trc.manager.impl.UserManager;
 import com.trc.payment.coupon.Coupon;
-import com.trc.payment.coupon.CouponDetail;
 import com.trc.payment.coupon.CouponRequest;
 import com.trc.payment.coupon.CouponStackable;
 import com.trc.payment.coupon.UserCoupon;
 import com.trc.user.User;
-import com.trc.util.logger.DevLogger;
 import com.tscp.mvne.Account;
 
 @Component
@@ -85,12 +83,6 @@ public class CouponValidator implements Validator {
       if (coupon.getEndDate() != null)
         checkEndDateForCreateCoupon(coupon.getEndDate(), coupon.getStartDate(), errors);
       checkQuantity(coupon, errors);
-    }
-  }
-
-  public void validateCouponDetail(Object target, Errors errors) {
-    CouponDetail couponDetail = (CouponDetail) target;
-    if (!errors.hasErrors()) {
     }
   }
 

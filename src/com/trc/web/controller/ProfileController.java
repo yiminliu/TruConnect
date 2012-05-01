@@ -22,6 +22,7 @@ import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
 import com.trc.user.contact.Address;
+import com.trc.util.logger.DevLogger;
 import com.trc.web.model.ResultModel;
 import com.trc.web.validation.AddressValidator;
 
@@ -81,6 +82,7 @@ public class ProfileController {
     AddressValidator addressValidator = new AddressValidator();
     addressValidator.validate(address, result);
     if (result.hasErrors()) {
+      DevLogger.log(result.getAllErrors().toString());
       model.addObject("states", Config.states.entrySet());
       model.addObject("months", Config.months.entrySet());
       model.addObject("years", Config.years.entrySet());

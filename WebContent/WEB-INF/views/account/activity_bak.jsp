@@ -10,8 +10,6 @@
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/accountActivity.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/highlight/navigation/activity.js" />"></script>
 
-<link rel="stylesheet" href="<spring:url value="/static/styles/bootstrap.css" htmlEscape="true" />" type="text/css"></link>
-
 </head>
 <body class="app" onload="highlightRadio('account', '${encodedAccountNumber}')">
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
@@ -38,10 +36,10 @@
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">History</h3>
         <c:forEach var="accountDetail" items="${accountDetails}">
           <h4 style="float: left; display: inline-block;">${accountDetail.deviceInfo.label}</h4>
-          <div class="badge" style="float:right;">
+          <h4 style="float: right; display: inline-block;">
             Current Balance: $
             <fmt:formatNumber value="${accountDetail.account.balance}" pattern="0.00" />
-          </div>
+          </h4>
           <c:set var="currentBalance" value="${accountDetail.account.balance}" />
           <table>
             <tr>

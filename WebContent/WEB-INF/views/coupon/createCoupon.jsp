@@ -19,8 +19,7 @@
   <div class="container">
     <div id="main-content">
       <div class="span-18 colborder">
-        <form:form id="createCoupon" cssClass="validatedForm" method="post" commandName="coupon"
-          cssStyle="overflow:hidden; height:300px;">
+        <form:form id="createCoupon" cssClass="validatedForm" method="post" commandName="coupon">
           <!-- Error Alert -->
           <c:if test="${not empty requestScope['org.springframework.validation.BindingResult.coupon'].allErrors}">
             <div class="row">
@@ -40,51 +39,58 @@
           </c:if>
           <!-- <div class="slider" style="height: 200px;">-->
           <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Enter Coupon Information</h3>
+
+
           <div class="row">
-            <div class="row">
-              <form:label path="couponDetail.couponDetailId" cssClass="required">Coupon Type</form:label>
-              <form:select path="couponDetail.couponDetailId" cssClass="span-8" cssErrorClass="span-8 validationFailed"
-                cssStyle="width:312px;">
-                <c:forEach var="couponDetail" items="${couponDetailList}" varStatus="status">
-                  <c:choose>
-                    <c:when test="${couponDetail.amount == 0.00}">
-                      <form:option value="${couponDetail.couponDetailId}">${couponDetail.contract.description},   ${couponDetail.duration}   ${couponDetail.durationUnit}</form:option>
-                    </c:when>
-                    <c:when test="${couponDetail.duration == 0}">
-                      <form:option value="${couponDetail.couponDetailId}">${couponDetail.contract.description},  $${couponDetail.amount}</form:option>
-                    </c:when>
-                    <c:otherwise>
-                      <form:option value="${couponDetail.couponDetailId}">${couponDetail.contract.description},   $${couponDetail.amount},   ${couponDetail.duration},  ${couponDetail.durationUnit}</form:option>
-                    </c:otherwise>
-                  </c:choose>
-                </c:forEach>
-                <form:option onClick="location.href='createCouponDetail'" value="${couponDetail.couponDetailId}">CREATE A NEW COUPON TYPE</form:option>
-              </form:select>
-            </div>
-            <div class="row">
-              <form:label path="couponCode" cssClass="required">Coupon Code</form:label>
-              <form:input path="couponCode" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
-            </div>
-            <div class="row">
-              <form:label path="startDate" cssClass="required">Start Date (MM/DD/YY)</form:label>
-              <form:input path="startDate" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
-            </div>
-            <div class="row">
-              <form:label path="endDate">End Data (MM/DD/YY)</form:label>
-              <form:input path="endDate" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
-            </div>
-            <div class="row">
-              <form:label path="quantity">Quantity</form:label>
-              <form:input path="quantity" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
-            </div>
-            <div class="row">
-              <form:label path="enabled">Enable</form:label>
-              <form:radiobutton path="enabled" value="true" label="True" cssClass="span-1"
-                cssErrorClass="span-5 validationFailed" />
-              <form:radiobutton path="enabled" value="false" label="False" cssClass="span-1"
-                cssErrorClass="span-5 validationFailed" />
-            </div>
+            <form:label path="couponDetail.couponDetailId" cssClass="required">Coupon Type</form:label>
+            <form:select path="couponDetail.couponDetailId" cssClass="span-8" cssErrorClass="span-8 validationFailed"
+              cssStyle="width:312px;">
+              <c:forEach var="couponDetail" items="${couponDetailList}" varStatus="status">
+                <c:choose>
+                  <c:when test="${couponDetail.detailType.detailType == 1}">
+                    <form:option value="${couponDetail.couponDetailId}">${couponDetail.contract.description} for ${couponDetail.duration} ${couponDetail.durationUnit}</form:option>
+                  </c:when>
+                  <c:when test="${couponDetail.detailType.detailType == 2}">
+                    <form:option value="${couponDetail.couponDetailId}">${couponDetail.contract.description} for $${couponDetail.amount}</form:option>
+                  </c:when>
+                  <c:otherwise>
+                    <form:option value="${couponDetail.couponDetailId}">${couponDetail.contract.description}, $${couponDetail.amount},  ${couponDetail.duration},  ${couponDetail.durationUnit}</form:option>
+                  </c:otherwise>
+                </c:choose>
+              </c:forEach>
+            </form:select>
+            <br /> <a href="<spring:url value="createCouponDetail" />" style="margin-left: 310px;">Create a new
+              coupon type</a>
           </div>
+
+          <div class="row">
+            <form:label path="couponCode" cssClass="required">Coupon Code</form:label>
+            <form:input path="couponCode" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+          </div>
+
+          <div class="row">
+            <form:label path="startDate" cssClass="required">Start Date (MM/DD/YY)</form:label>
+            <form:input path="startDate" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+          </div>
+
+          <div class="row">
+            <form:label path="endDate">End Data (MM/DD/YY)</form:label>
+            <form:input path="endDate" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+          </div>
+
+          <div class="row">
+            <form:label path="quantity">Quantity</form:label>
+            <form:input path="quantity" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+          </div>
+
+          <div class="row">
+            <form:label path="enabled">Enable</form:label>
+            <form:radiobutton path="enabled" value="true" label="True" cssClass="span-1"
+              cssErrorClass="span-5 validationFailed" />
+            <form:radiobutton path="enabled" value="false" label="False" cssClass="span-1"
+              cssErrorClass="span-5 validationFailed" />
+          </div>
+
           <div class="buttons">
             <a id="createCouponButton" href="#" class="button action-m"><span>Submit</span></a> <input
               id="createCouponSubmit" type="submit" name="_eventId_submit" value="Continue" class="hidden" />

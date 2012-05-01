@@ -6,11 +6,6 @@
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
 <script type="text/javascript" src="<spring:url value="/static/javascript/columnize.js" />"></script>
 <script type="text/javascript" src="<spring:url value="/static/javascript/pages/highlight/navigation/profile.js" />"></script>
-
-
-<script type="text/javascript" src="<spring:url value="/static/javascript/bootstrap-dropdown.js" />"></script>
-<link rel="stylesheet" href="<spring:url value="/static/styles/bootstrap.css" htmlEscape="true" />" type="text/css"></link>
-
 </head>
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
@@ -94,19 +89,14 @@
         <div id="addressList">
           <c:forEach var="address" items="${addresses}">
             <div class="address dontsplit">
-              <div class="btn-group">
-                <button class="btn_discreet dropdown-toggle_discreet" data-toggle="dropdown"
-                  style="background: white; border-width: 0 0 1px 0; margin: 0; padding: 0; text-align:left; min-width: 100px; position: relative;">
-                  ${address.address1} <span class="caret" style="position: absolute; top: 8px; right: 0;"></span>
-                </button>
-                <ul class="dropdown-menu" style="margin: 0; padding: 0;">
-                  <li><a href="<spring:url value="/profile/address/edit/${address.encodedAddressId}" />">Edit</a></li>
-                  <li style="margin-bottom: 10px;"><a
-                    href="<spring:url value="/profile/address/remove/${address.encodedAddressId}" />">Remove</a></li>
-                </ul>
-              </div>
-
-
+              <c:if test="${address.default}">
+                <div>
+                  <b>Default Address</b>
+                </div>
+              </c:if>
+              <c:if test="${!empty address.address1}">
+                <div>${address.address1}</div>
+              </c:if>
               <c:if test="${!empty address.address2}">
                 <div>${address.address2}</div>
               </c:if>
@@ -114,6 +104,15 @@
                 <div>${address.city}, ${address.state} ${address.zip}</div>
               </c:if>
 
+              <div class="addressButtons hidden">
+                <a href="<spring:url value="/profile/address/edit/${address.encodedAddressId}" />"
+                  class="button semi-s multi"><span>Edit</span> </a>
+                <c:if test="${fn:length(addresses) > 1}">
+                  <a class="button semi-s"
+                    href="<spring:url value="/profile/address/remove/${address.encodedAddressId}" />"><span>Remove</span>
+                  </a>
+                </c:if>
+              </div>
             </div>
           </c:forEach>
         </div>

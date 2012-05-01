@@ -46,6 +46,7 @@ import com.trc.web.model.ResultModel;
 import com.trc.web.session.SessionManager;
 import com.trc.web.session.SessionRequest;
 import com.trc.web.session.SessionToken;
+import com.trc.web.validation.CouponDetailValidator;
 import com.trc.web.validation.CouponValidator;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.ServiceInstance;
@@ -62,6 +63,8 @@ public class CouponController {
   private AccountManager accountManager;
   @Autowired
   private CouponValidator couponValidator;
+  @Autowired
+  private CouponDetailValidator couponDetailValidator;
 
   protected void encodeAccountNums(List<AccountDetail> accountDetailList) {
     for (AccountDetail accountDetail : accountDetailList) {
@@ -285,16 +288,21 @@ public class CouponController {
   @RequestMapping(value = "/createCouponDetail", method = RequestMethod.POST)
   public ModelAndView postCreateCouponDetail(HttpServletRequest request, @ModelAttribute("couponDetail") CouponDetail couponDetail, BindingResult result) {
     ResultModel model = new ResultModel("coupon/createCouponDetailSuccess", "coupon/createCouponDetail");
-    try {
-      int couponDetailId = couponManager.insertCouponDetail(couponDetail);
-      couponDetail.setCouponDetailId(couponDetailId);
-      couponManager.insertCouponStackable(couponDetail);
-    } catch (CouponManagementException e) {
-      return model.getAccessException();
+    couponDetailValidator.validate(couponDetail, result);
+    if (result.hasErrors()) {
+      model.addObject("couponDetail", couponDetail);
+      return model.getError();
+    } else {
+      try {
+        int couponDetailId = couponManager.insertCouponDetail(couponDetail);
+        couponDetail.setCouponDetailId(couponDetailId);
+        couponManager.insertCouponStackable(couponDetail);
+      } catch (CouponManagementException e) {
+        return model.getAccessException();
+      }
+      model.addObject("couponDetail", couponDetail);
+      return model.getSuccess();
     }
-
-    model.addObject("couponDetail", couponDetail);
-    return model.getSuccess();
   }
 
   @RequestMapping(value = "/showAllCoupons", method = RequestMethod.GET)

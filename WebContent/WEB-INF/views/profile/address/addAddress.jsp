@@ -26,6 +26,7 @@
               <div class="alert error">
                 <h1>Please correct the following problems</h1>
                 <form:errors path="address1" />
+                <form:errors path="address2" />
                 <form:errors path="city" />
                 <form:errors path="state" />
                 <form:errors path="zip" />
@@ -40,10 +41,7 @@
 
           <p>Add an additional address.</p>
 
-          <div class="row hidden">
-            <form:label path="addressId" cssClass="required">address ID</form:label>
-            <form:input cssClass="span-8" cssErrorClass="span-8 validationFailed" path="addressId" />
-          </div>
+
 
           <div class="row hidden">
             <form:label path="label">Label</form:label>
