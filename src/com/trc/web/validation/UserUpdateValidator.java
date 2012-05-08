@@ -3,6 +3,7 @@ package com.trc.web.validation;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
+import com.trc.config.Config;
 import com.trc.user.User;
 import com.trc.user.security.UpdateEmail;
 import com.trc.user.security.UpdatePassword;
@@ -37,25 +38,17 @@ public class UserUpdateValidator extends UserValidator {
     }
   }
 
-  public void validateInternalPasswordChange(UpdatePassword updatePassword, Errors errors, User user) {
-    validateNewPassword(updatePassword, errors);
-  }
-
   public void validatePasswordChange(UpdatePassword updatePassword, Errors errors, User user) {
-    if (!ValidationUtil.isCorrectPassword(updatePassword.getOldPassword(), user.getPassword())) {
+    if (!Config.ADMIN && !ValidationUtil.isCorrectPassword(updatePassword.getOldPassword(), user.getPassword())) {
       errors.rejectValue("oldPassword", "password.incorrect", "Incorrect Password");
     }
     validateNewPassword(updatePassword, errors);
   }
 
   public void validateEmailChange(UpdateEmail updateEmail, Errors errors, User user) {
-    if (!ValidationUtil.isCorrectPassword(updateEmail.getOldPassword(), user.getPassword())) {
+    if (!Config.ADMIN && !ValidationUtil.isCorrectPassword(updateEmail.getOldPassword(), user.getPassword())) {
       errors.rejectValue("oldPassword", "password.incorrect", "Incorrect Password");
     }
-    validateNewEmail(updateEmail, errors);
-  }
-
-  public void validateInternalEmailChange(UpdateEmail updateEmail, Errors errors, User user) {
     validateNewEmail(updateEmail, errors);
   }
 

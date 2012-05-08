@@ -28,14 +28,14 @@
           <div id="accountList" style="border-bottom: 1px #ccc solid; padding-bottom: 10px;">
             <c:forEach var="accountDetail" items="${accountList}">
               <label style="display: block; font-weight: normal;"><input type="radio" name="account"
-                value="${accountDetail.encodedAccountNum}" />${accountDetail.deviceInfo.label}</label>
+                value="${accountDetail.encodedAccountNum}" />${accountDetail.device.label}</label>
             </c:forEach>
           </div>
         </c:if>
 
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">History</h3>
         <c:forEach var="accountDetail" items="${accountDetails}">
-          <h4 style="float: left; display: inline-block;">${accountDetail.deviceInfo.label}</h4>
+          <h4 style="float: left; display: inline-block;">${accountDetail.device.label}</h4>
           <h4 style="float: right; display: inline-block;">
             Current Balance: $
             <fmt:formatNumber value="${accountDetail.account.balance}" pattern="0.00" />

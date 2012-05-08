@@ -12,7 +12,7 @@ import com.tscp.mvne.Device;
 public class AccountDetail {
   private Account account;
   private UsageHistory usageHistory;
-  private Device deviceInfo;
+  private Device device;
   private String topUp;
   private String encodedDeviceId;
   private String encodedAccountNum;
@@ -57,11 +57,11 @@ public class AccountDetail {
     this.account = account;
   }
 
-  public Device getDeviceInfo() {
-    return deviceInfo;
+  public Device getDevice() {
+    return device;
   }
 
-  public void setDeviceInfo(Device deviceInfo) {
-    this.deviceInfo = deviceInfo;
+  public void setDevice(Device device) {
+    this.device = device;
   }
 }

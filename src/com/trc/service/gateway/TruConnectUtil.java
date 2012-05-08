@@ -77,7 +77,7 @@ public final class TruConnectUtil {
 
   public static final void copyAccount(Account outAccount, Account inAccount) {
     outAccount.setAccountCategory(inAccount.getAccountCategory());
-    outAccount.setAccountno(inAccount.getAccountno());
+    outAccount.setAccountNo(inAccount.getAccountNo());
     outAccount.setActiveDate(inAccount.getActiveDate());
     outAccount.setBalance(inAccount.getBalance());
     outAccount.setContactAddress1(inAccount.getContactAddress1());

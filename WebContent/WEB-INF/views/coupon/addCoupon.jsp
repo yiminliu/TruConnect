@@ -12,11 +12,11 @@
 <style type="text/css">
 #addCoupon {
   overflow: hidden;
-  height: 350px;
+  min-height: 200px;
 }
 
 #addCoupon .slider {
-  height: 180px;
+  
 }
 
 #addCoupon .slider h3 {
@@ -41,7 +41,7 @@
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
   <div class="blueTruConnectGradient">
-    <div class="container">Redeem Coupon</div>
+    <div class="container">Enter a Coupon Code</div>
   </div>
 
   <div class="container">
@@ -76,7 +76,6 @@
           </div>
 
           <div class="slider">
-            <h3>Enter a Coupon Code</h3>
             <p>If you have a coupon code, enter the code below, select your device, and click "Apply". The coupon
               will be applied to your account automatically. If the coupon you have received is a discount on the
               monthly access fee, the discount will be applied when the monthly access fee is charged.</p>
@@ -96,12 +95,14 @@
           <div class="slider hidden">
             <h3>Select the Device you want to apply the offer to</h3>
             <div id="deviceList" class="row deviceList">
-              <c:forEach var="accountDetail" items="${accountList}" varStatus="status">
-                <c:if test="accountDetail.deviceInfo.statusId == 2">
-                  <label><input type="radio" name="account" value="${accountDetail.encodedAccountNum}" />
-                    ${accountDetail.deviceInfo.label}</label>
-                </c:if>
-              </c:forEach>
+              <select id="account" name="account" style="border-radius: 3px; border-color: #aaa;">
+                <option value="0">Select a device</option>
+                <c:forEach var="acc" items="${accountList}">
+                  <c:if test="${acc.device.statusId == 2 }">
+                    <option value="${acc.encodedAccountNum}">${acc.device.label}</option>
+                  </c:if>
+                </c:forEach>
+              </select>
             </div>
 
             <div class="buttons">

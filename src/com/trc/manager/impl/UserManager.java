@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -171,7 +172,7 @@ public class UserManager implements UserManagerModel {
 
   @Override
   @Transactional(readOnly = false)
-  // @PreAuthorize("isAuthenticated() and hasPermission(#user, 'canUpdate')")
+  @PreAuthorize("isAuthenticated() and hasPermission(#user, 'canUpdate')")
   public void updateUser(User user) {
     userDao.updateUser(user);
   }

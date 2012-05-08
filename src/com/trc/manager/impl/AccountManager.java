@@ -6,6 +6,7 @@ import java.util.List;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import com.trc.exception.management.AccountManagementException;
@@ -72,10 +73,10 @@ public class AccountManager implements AccountManagerModel {
     try {
       Account account = getAccount(accountNumber);
       AccountDetail accountDetail = new AccountDetail();
-      accountDetail.setDeviceInfo(deviceInfo);
+      accountDetail.setDevice(deviceInfo);
       accountDetail.setAccount(account);
       accountDetail.setTopUp(getTopUp(user, account).getTopupAmount());
-      accountDetail.setUsageHistory(new UsageHistory(getChargeHistory(user, account.getAccountno()), user, account.getAccountno()));
+      accountDetail.setUsageHistory(new UsageHistory(getChargeHistory(user, account.getAccountNo()), user, account.getAccountNo()));
       return accountDetail;
     } catch (AccountManagementException e) {
       throw e;
@@ -125,7 +126,7 @@ public class AccountManager implements AccountManagerModel {
       return cachedAccount;
     } else if (accountList != null) {
       for (Account account : accountList) {
-        if (account.getAccountno() == accountNumber) {
+        if (account.getAccountNo() == accountNumber) {
           return account;
         }
       }
@@ -223,7 +224,7 @@ public class AccountManager implements AccountManagerModel {
     XMLGregorianCalendar accessFeeDate = null;
     List<UsageDetail> usageDetails;
     try {
-      usageDetails = getChargeHistory(user, account.getAccountno());
+      usageDetails = getChargeHistory(user, account.getAccountNo());
     } catch (AccountManagementException e) {
       usageDetails = new ArrayList<UsageDetail>();
     }
@@ -310,7 +311,18 @@ public class AccountManager implements AccountManagerModel {
   public void updateEmail(Account account) throws AccountManagementException {
     try {
       accountService.updateEmail(account);
-      // CacheManager.clear(CacheKey.ACCOUNTS);
+      CacheManager.clearCache(userManager.getCurrentUser(), CacheKey.ALL_ACCOUNTS);
+    } catch (AccountServiceException e) {
+      throw new AccountManagementException(e.getMessage(), e.getCause());
+    }
+  }
+
+  @Loggable(value = LogLevel.TRACE)
+  @PreAuthorize("isAuthenticated() and hasPermission(#account, 'canUpdate')")
+  public void updateEmail(Account account, String newEmail) throws AccountManagementException {
+    try {
+      account.setContactEmail(newEmail);
+      accountService.updateEmail(account);
       CacheManager.clearCache(userManager.getCurrentUser(), CacheKey.ALL_ACCOUNTS);
     } catch (AccountServiceException e) {
       throw new AccountManagementException(e.getMessage(), e.getCause());

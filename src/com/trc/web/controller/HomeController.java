@@ -20,7 +20,7 @@ public class HomeController {
   @Autowired
   private UserManager userManager;
 
-  private String contextPath(String target) {
+  protected String contextPath(String target) {
     return contextPath + "/" + target;
   }
 

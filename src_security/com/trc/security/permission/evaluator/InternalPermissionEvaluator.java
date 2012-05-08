@@ -22,6 +22,18 @@ public class InternalPermissionEvaluator implements PermissionEvaluator {
     this.permissionNameToPermissionMap = permissionNameToPermissionMap;
   }
 
+  protected boolean canHandle(Authentication authentication, Object targetDomainObject, Object permission) {
+    // return targetDomainObject != null && authentication != null && permission
+    // instanceof String;
+    return authentication != null && permission instanceof String;
+  }
+
+  protected boolean checkPermission(Authentication authentication, Object targetDomainObject, String permissionKey) {
+    verifyPermissionIsDefined(permissionKey);
+    Permission permission = permissionNameToPermissionMap.get(permissionKey);
+    return targetDomainObject == null ? permission.isAllowed(authentication) : permission.isAllowed(authentication, targetDomainObject);
+  }
+
   @Override
   @Transactional
   public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
@@ -32,25 +44,16 @@ public class InternalPermissionEvaluator implements PermissionEvaluator {
     return hasPermission;
   }
 
-  private boolean canHandle(Authentication authentication, Object targetDomainObject, Object permission) {
-    return targetDomainObject != null && authentication != null && permission instanceof String;
+  @Override
+  @Transactional
+  public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
+    // TODO
+    throw new PermissionNotDefinedException("Id and Class permissions are not supported by " + this.getClass().toString());
   }
 
-  private boolean checkPermission(Authentication authentication, Object targetDomainObject, String permissionKey) {
-    verifyPermissionIsDefined(permissionKey);
-    Permission permission = permissionNameToPermissionMap.get(permissionKey);
-    return permission.isAllowed(authentication, targetDomainObject);
-  }
-
-  private void verifyPermissionIsDefined(String permissionKey) throws PermissionNotDefinedException {
+  protected void verifyPermissionIsDefined(String permissionKey) throws PermissionNotDefinedException {
     if (!permissionNameToPermissionMap.containsKey(permissionKey)) {
       throw new PermissionNotDefinedException("No permission with key " + permissionKey + " is defined in " + this.getClass().toString());
     }
-  }
-
-  @Override
-  public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
-    // not yet implemented
-    throw new PermissionNotDefinedException("Id and Class permissions are not supported by " + this.getClass().toString());
   }
 }

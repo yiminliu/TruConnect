@@ -15,15 +15,24 @@ import com.trc.user.authority.ROLE;
 public abstract class Permission {
   protected final Set<ROLE> roleRepository = new HashSet<ROLE>();
 
-  public abstract boolean isAllowed(Authentication authentication, Object targetDomainObject);
+  public Collection<GrantedAuthority> getAuthorities(Authentication authentication) {
+    return ((UserDetails) authentication.getPrincipal()).getAuthorities();
+  }
 
   public String getLogin(Authentication authentication) {
     return ((UserDetails) authentication.getPrincipal()).getUsername();
   }
 
-  public Collection<GrantedAuthority> getAuthorities(Authentication authentication) {
-    return ((UserDetails) authentication.getPrincipal()).getAuthorities();
+  public boolean isAllowed(Authentication authentication) {
+    boolean hasPermission = false;
+    if (isAuthenticated(authentication)) {
+      User user = (User) authentication.getPrincipal();
+      hasPermission = isRoleGrantedPermission(user);
+    }
+    return hasPermission;
   }
+
+  public abstract boolean isAllowed(Authentication authentication, Object targetDomainObject);
 
   public boolean isAuthenticated(Authentication authentication) {
     return authentication != null && authentication.getPrincipal() instanceof UserDetails;

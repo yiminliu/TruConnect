@@ -31,9 +31,9 @@ public class Overview {
         account = accountManager.getAccount(deviceInfo.getAccountNo());
         accountDetail = new AccountDetail();
         accountDetail.setAccount(account);
-        accountDetail.setDeviceInfo(deviceInfo);
+        accountDetail.setDevice(deviceInfo);
         accountDetail.setTopUp(accountManager.getTopUp(user, account).getTopupAmount());
-        accountDetail.setUsageHistory(new UsageHistory(accountManager.getChargeHistory(user, account.getAccountno()), user, account.getAccountno()));
+        accountDetail.setUsageHistory(new UsageHistory(accountManager.getChargeHistory(user, account.getAccountNo()), user, account.getAccountNo()));
         this.accountDetails.add(accountDetail);
       }
     } catch (AccountManagementException e) {
@@ -49,9 +49,9 @@ public class Overview {
     this.paymentHistory = paymentDetails;
   }
 
-  public AccountDetail getAccountDetail(int accountNum) {
+  public AccountDetail getAccountDetail(int accountNo) {
     for (AccountDetail accountDetail : accountDetails) {
-      if (accountDetail.getAccount().getAccountno() == accountNum) {
+      if (accountDetail.getAccount().getAccountNo() == accountNo) {
         return accountDetail;
       }
     }
@@ -68,22 +68,22 @@ public class Overview {
 
   public Overview encodeAll() {
     for (AccountDetail accountDetail : accountDetails) {
-      accountDetail.setEncodedAccountNum(SessionEncrypter.encryptId(accountDetail.getAccount().getAccountno()));
-      accountDetail.setEncodedDeviceId(SessionEncrypter.encryptId(accountDetail.getDeviceInfo().getId()));
+      accountDetail.setEncodedAccountNum(SessionEncrypter.encryptId(accountDetail.getAccount().getAccountNo()));
+      accountDetail.setEncodedDeviceId(SessionEncrypter.encryptId(accountDetail.getDevice().getId()));
     }
     return this;
   }
 
   public Overview encodeDeviceId() {
     for (AccountDetail accountDetail : accountDetails) {
-      accountDetail.setEncodedDeviceId(SessionEncrypter.encryptId(accountDetail.getDeviceInfo().getId()));
+      accountDetail.setEncodedDeviceId(SessionEncrypter.encryptId(accountDetail.getDevice().getId()));
     }
     return this;
   }
 
   public Overview encodeAccountNo() {
     for (AccountDetail accountDetail : accountDetails) {
-      accountDetail.setEncodedAccountNum(SessionEncrypter.encryptId(accountDetail.getAccount().getAccountno()));
+      accountDetail.setEncodedAccountNum(SessionEncrypter.encryptId(accountDetail.getAccount().getAccountNo()));
     }
     return this;
   }

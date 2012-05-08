@@ -1,6 +1,5 @@
 package com.trc.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +39,10 @@ public class AccountController {
   public ModelAndView showActivity() {
     ResultModel model = new ResultModel("account/activity");
     User user = userManager.getCurrentUser();
-    Overview overview = accountManager.getOverview(user).encodeAccountNo();
-    int numAccounts = overview.getAccountDetails().size();
-    List<AccountDetail> accountList = overview.getAccountDetails();
-    List<AccountDetail> firstAccount = numAccounts > 0 ? overview.getAccountDetails().subList(0, 1) : new ArrayList<AccountDetail>();
-    model.addObject("numAccounts", numAccounts);
+    List<AccountDetail> accountList = accountManager.getOverview(user).encodeAccountNo().getAccountDetails();
+    AccountDetail firstAccount = accountList.size() > 0 ? accountList.get(0) : new AccountDetail();
     model.addObject("accountList", accountList);
-    model.addObject("accountDetails", firstAccount);
-    model.addObject("encodedAccountNumber", firstAccount.get(0).getEncodedAccountNum());
+    model.addObject("accountDetail", firstAccount);
     return model.getSuccess();
   }
 
@@ -60,17 +55,11 @@ public class AccountController {
   public ModelAndView showAccountActivity(@PathVariable("encodedAccountNum") String encodedAccountNum, @PathVariable("page") int page) {
     ResultModel model = new ResultModel("account/activity");
     User user = userManager.getCurrentUser();
+    int accountNo = SessionEncrypter.decryptId(encodedAccountNum);
     Overview overview = accountManager.getOverview(user).encodeAccountNo();
-    int numAccounts = overview.getAccountDetails().size();
-    int accountNum = SessionEncrypter.decryptId(encodedAccountNum);
-    List<AccountDetail> accountList = overview.getAccountDetails();
-    overview.getAccountDetail(accountNum).getUsageHistory().setCurrentPageNum(page);
-    List<AccountDetail> accountDetails = new ArrayList<AccountDetail>();
-    accountDetails.add(overview.getAccountDetail(accountNum));
-    model.addObject("numAccounts", numAccounts);
-    model.addObject("accountList", accountList);
-    model.addObject("accountDetails", accountDetails);
-    model.addObject("encodedAccountNumber", encodedAccountNum);
+    overview.getAccountDetail(accountNo).getUsageHistory().setCurrentPageNum(page);
+    model.addObject("accountList", overview.getAccountDetails());
+    model.addObject("accountDetail", overview.getAccountDetail(accountNo));
     return model.getSuccess();
   }
 

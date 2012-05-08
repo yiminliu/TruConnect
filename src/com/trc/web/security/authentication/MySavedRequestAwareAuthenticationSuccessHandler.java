@@ -38,7 +38,7 @@ public class MySavedRequestAwareAuthenticationSuccessHandler extends SavedReques
       } else if (user.isManager()) {
         setDefaultTargetUrl("/manager/home");
       } else if (user.isServiceRep()) {
-        setDefaultTargetUrl("/servicerep/hom");
+        setDefaultTargetUrl("/servicerep/home");
       } else if (user.isSuperUser()) {
         setDefaultTargetUrl("/it/home");
       }

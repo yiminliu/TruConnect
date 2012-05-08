@@ -21,7 +21,7 @@
         <h3 style="margin-bottom: 20px; padding-bottom: 0px;">Change Top-Up Amount</h3>
         <p>You have successfully changed your top-up amount.</p>
         <p>
-          <strong>Device:</strong> ${accountDetail.deviceInfo.label}<br /> <strong>Top-Up:</strong>
+          <strong>Device:</strong> ${accountDetail.device.label}<br /> <strong>Top-Up:</strong>
           $${accountDetail.topUp}.
         </p>
         <a class="button action-m" href="<spring:url value="/devices" />"><span>Continue</span> </a>

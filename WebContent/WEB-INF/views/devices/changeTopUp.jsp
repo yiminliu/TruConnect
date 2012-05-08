@@ -22,8 +22,8 @@
         <h3 style="margin-bottom: 20px; padding-bottom: 0px;">Change Top-Up Amount</h3>
         <p>When the balance for this device runs low, it will be topped up with the amount selected below.</p>
 
-        <h4 style="float: left; display: inline-block">${accountDetail.deviceInfo.label}
-          (${accountDetail.deviceInfo.status})</h4>
+        <h4 style="float: left; display: inline-block">${accountDetail.device.label}
+          (${accountDetail.device.status})</h4>
         <h4 style="float: right; display: inline-block">
           Current Balance: $
           <fmt:formatNumber value="${accountDetail.account.balance}" pattern="0.00" />

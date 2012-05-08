@@ -8,6 +8,10 @@ function highlightRadio(name, val) {
 	$(radioButtons).selectRadioFromList($(selectedRadio));
 }
 
+function highlightSelected(name, val) {
+	$("#" + name).val(val).attr("selected", "selected");
+}
+
 $.fn.fadeInRadio = function() {
 	var label = $(this).parent("label");
 	$(label).css("font-style", "italic").css("color", "#0067B2").fadeTo("slow",

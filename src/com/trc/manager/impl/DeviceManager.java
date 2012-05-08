@@ -55,14 +55,14 @@ public class DeviceManager implements DeviceManagerModel {
   @Override
   @Loggable(value = LogLevel.TRACE)
   public List<Device> getDeviceInfoList(User user) throws DeviceManagementException {
-    List<Device> deviceInfoList = getDevicesFromCache(user);
-    if (deviceInfoList != null) {
-      return deviceInfoList;
+    List<Device> devices = getDevicesFromCache(user);
+    if (devices != null) {
+      return devices;
     } else {
       try {
-        deviceInfoList = deviceService.getDeviceInfoList(user);
-        saveDevicesToCache(user, deviceInfoList);
-        return deviceInfoList;
+        devices = deviceService.getDeviceInfoList(user);
+        saveDevicesToCache(user, devices);
+        return devices;
       } catch (DeviceServiceException e) {
         throw new DeviceManagementException(e.getMessage(), e.getCause());
       }
@@ -72,10 +72,10 @@ public class DeviceManager implements DeviceManagerModel {
   @Loggable(value = LogLevel.TRACE)
   public Device getDeviceInfo(User user, int deviceId) throws DeviceManagementException {
     try {
-      List<Device> deviceInfoList = getDeviceInfoList(user);
-      for (Device deviceInfo : deviceInfoList) {
-        if (deviceInfo.getId() == deviceId)
-          return deviceInfo;
+      List<Device> devices = getDeviceInfoList(user);
+      for (Device device : devices) {
+        if (device.getId() == deviceId)
+          return device;
       }
       return null;
     } catch (DeviceManagementException e) {
@@ -85,13 +85,13 @@ public class DeviceManager implements DeviceManagerModel {
 
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public Device addDeviceInfo(Device deviceInfo, Account account, User user) throws DeviceManagementException {
+  public Device addDeviceInfo(Device device, Account account, User user) throws DeviceManagementException {
     try {
-      deviceInfo.setId(0);
-      deviceInfo.setCustId(user.getUserId());
-      deviceInfo.setAccountNo(account.getAccountno());
+      device.setId(0);
+      device.setCustId(user.getUserId());
+      device.setAccountNo(account.getAccountNo());
       clearDevicesFromCache(user);
-      return deviceService.addDeviceInfo(user, deviceInfo);
+      return deviceService.addDeviceInfo(user, device);
     } catch (DeviceServiceException e) {
       throw new DeviceManagementException(e.getMessage(), e.getCause());
     }

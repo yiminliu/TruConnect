@@ -29,7 +29,7 @@
               <c:when test="${couponRequest.coupon.couponDetail.contract.contractType < 0}">${couponRequest.coupon.couponDetail.amount} dollars</c:when>
               <c:otherwise>your account</c:otherwise>
             </c:choose>
-          </b><br /> Device: ${accountDetail.deviceInfo.label}
+          </b><br /> Device: ${accountDetail.device.label}
         </div>
 
         <div class="buttons">

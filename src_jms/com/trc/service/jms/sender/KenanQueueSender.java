@@ -6,10 +6,8 @@ import javax.jms.Session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.springframework.stereotype.Service;
 
 import com.trc.service.jms.message.KenanServiceInstance;
 import com.tscp.mvne.Account;
@@ -24,7 +22,7 @@ public class KenanQueueSender {
 
   public void generateMessages() throws JMSException {
     Account account = new Account();
-    account.setAccountno(123456);
+    account.setAccountNo(123456);
     account.setFirstname("Captain");
     account.setLastname("Yesterday");
 
@@ -43,8 +41,8 @@ public class KenanQueueSender {
       public ObjectMessage createMessage(Session session) throws JMSException {
         ObjectMessage message = session.createObjectMessage(kenanActivationMsg);
         message.setIntProperty("attempt", 1);
-        logger.info("\n\tTC JMS! Sending object: " + session.getAcknowledgeMode() + " "
-            + kenanActivationMsg.getAccount().getFirstname() + " " + kenanActivationMsg.getAccount().getLastname());
+        logger.info("\n\tTC JMS! Sending object: " + session.getAcknowledgeMode() + " " + kenanActivationMsg.getAccount().getFirstname() + " "
+            + kenanActivationMsg.getAccount().getLastname());
         return message;
       }
     });

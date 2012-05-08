@@ -1027,7 +1027,8 @@ a.escape-l span {
   font-size: 14px;
   line-height: 18px;
   /* width: 230px; */
-  width: 32%; height : 85px;
+  width: 32%;
+  height: 85px;
   position: relative;
   margin: 10px 0px 10px 0px;
   padding-bottom: 5px;
@@ -1058,7 +1059,7 @@ a.escape-l span {
 #jsCheckCurtain {
   background-color: #111;
   opacity: 0.45;
-  filter: alpha(opacity =         0.45);
+  filter: alpha(opacity =     0.45);
   position: fixed;
   top: 0px;
   left: 0px;
@@ -1071,6 +1072,11 @@ a.escape-l span {
   display: none;
 }
 
+.hr {
+  border-bottom: 1px #ccc solid;
+  margin: 20px 0 20px 0;
+}
+
 #main-content h6 {
   font-size: 18px;
   color: #0067B2;
@@ -1079,4 +1085,22 @@ a.escape-l span {
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px #ccc dotted;
+}
+
+#main-content h3.two-col {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.v-mid {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+#main-content h3.two-col .right {
+  position: absolute;
+  right: 0;
 }

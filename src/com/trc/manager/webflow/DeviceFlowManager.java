@@ -151,7 +151,7 @@ public class DeviceFlowManager {
       mailModel.put("dateTime", new Date());
       mailModel.put("email", user.getEmail());
       mailModel.put("userId", user.getUserId());
-      mailModel.put("accountNo", account.getAccountno());
+      mailModel.put("accountNo", account.getAccountNo());
       mailModel.put("mdn", networkInfo.getMdn());
       mailModel.put("esn", networkInfo.getEsnmeiddec());
       velocityEmailService.send("error_test_activation", myMessage, mailModel);
@@ -165,12 +165,12 @@ public class DeviceFlowManager {
       SimpleMailMessage myMessage = new SimpleMailMessage();
       myMessage.setTo("truconnect_alerts@telscape.net");
       myMessage.setFrom("system-activations@truconnect.com");
-      myMessage.setSubject("Exception while creating service for Account " + account.getAccountno());
+      myMessage.setSubject("Exception while creating service for Account " + account.getAccountNo());
       Map<Object, Object> mailModel = new HashMap<Object, Object>();
       mailModel.put("dateTime", new Date());
       mailModel.put("email", user.getEmail());
       mailModel.put("userId", user.getUserId());
-      mailModel.put("accountNo", account.getAccountno());
+      mailModel.put("accountNo", account.getAccountNo());
       mailModel.put("mdn", networkInfo.getMdn());
       mailModel.put("esn", networkInfo.getEsnmeiddec());
       velocityEmailService.send("error_create_service", myMessage, mailModel);

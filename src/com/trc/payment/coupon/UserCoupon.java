@@ -42,7 +42,7 @@ public class UserCoupon implements Serializable {
     account = account == null ? new Account() : account;
     this.getId().setUserId(user.getUserId());
     this.getId().setCoupon(coupon);
-    this.getId().setAccountNumber(account.getAccountno());
+    this.getId().setAccountNumber(account.getAccountNo());
   }
 
   public UserCoupon(Coupon coupon, User user, Account account, DateTime dateTime) {
@@ -51,7 +51,7 @@ public class UserCoupon implements Serializable {
     account = account == null ? new Account() : account;
     this.getId().setUserId(user.getUserId());
     this.getId().setCoupon(coupon);
-    this.getId().setAccountNumber(account.getAccountno());
+    this.getId().setAccountNumber(account.getAccountNo());
     if (dateTime != null) {
       this.getId().setDateApplied(dateTime);
     }

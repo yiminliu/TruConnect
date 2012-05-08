@@ -233,7 +233,7 @@ public class DeviceController {
         DevLogger.log("found coupons {}", coupons);
         if (coupons != null && !coupons.isEmpty()) {
           for (UserCoupon uc : coupons) {
-            if (uc.getId().getAccountNumber() == account.getAccountno()) {
+            if (uc.getId().getAccountNumber() == account.getAccountNo()) {
               if (uc.getId().getCoupon().isContract()) {
                 couponManager.cancelCoupon(uc.getId().getCoupon(), user, account, serviceInstance);
               }
@@ -330,7 +330,7 @@ public class DeviceController {
 
   private void encodeDeviceIds(List<AccountDetail> accountDetailList) {
     for (AccountDetail accountDetail : accountDetailList) {
-      accountDetail.setEncodedDeviceId(SessionEncrypter.encryptId(accountDetail.getDeviceInfo().getId()));
+      accountDetail.setEncodedDeviceId(SessionEncrypter.encryptId(accountDetail.getDevice().getId()));
     }
   }
 

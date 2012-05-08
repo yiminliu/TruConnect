@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.config.Config;
+import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.Md5Encoder;
 import com.trc.user.SecurityQuestionAnswer;
 import com.trc.user.User;
 import com.trc.user.authority.Authority;
 import com.trc.user.authority.ROLE;
+import com.trc.util.cache.CacheManager;
 import com.trc.util.logger.DevLogger;
 import com.trc.web.model.ResultModel;
 import com.trc.web.validation.AdminValidator;
@@ -33,6 +35,14 @@ import com.trc.web.validation.AdminValidator;
 public class AdminController extends ManagerController {
   @Autowired
   private AdminValidator adminValidator;
+  @Autowired
+  private UserManager userManager;
+
+  @RequestMapping(value = "cache/clear", method = RequestMethod.GET)
+  public void clearCache(@PathVariable int userId) {
+    User user = userManager.getCurrentUser();
+    CacheManager.clearCache(user);
+  }
 
   @RequestMapping(value = "/create", method = RequestMethod.GET)
   public ModelAndView createServiceRep() {

@@ -10,7 +10,7 @@
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
   <div class="blueTruConnectGradient">
-    <div class="container">Acess Denied</div>
+    <div class="container">Access Denied</div>
   </div>
 
   <div class="container">

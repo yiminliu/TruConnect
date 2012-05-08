@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class CacheCleaner implements Runnable {
   private static final Logger logger = LoggerFactory.getLogger(CacheCleaner.class);
 
-  @Scheduled(fixedDelay = 300000)
+  @Scheduled(fixedDelay = 1800000)
   public void run() {
     if (CacheManager.cache != null && CacheManager.cache.size() > 0) {
       logger.trace("CacheCleaner running on Thread {}. Current size is {}.", Thread.currentThread().getName(), CacheManager.cache.size());

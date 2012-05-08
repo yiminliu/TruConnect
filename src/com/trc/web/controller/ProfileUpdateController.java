@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.trc.config.Config;
 import com.trc.exception.EmailException;
 import com.trc.exception.management.AccountManagementException;
 import com.trc.manager.impl.AccountManager;
@@ -50,6 +52,7 @@ public class ProfileUpdateController {
   public static final String ATTR_PASSWORD = "password";
 
   @RequestMapping(value = "/email", method = RequestMethod.GET)
+  @PreAuthorize("isAuthenticated() and hasPermission(#null, 'canUpdate')")
   public ModelAndView updateEmail() {
     ResultModel model = new ResultModel("profile/update/email");
     model.addObject("updateEmail", new UpdateEmail());
@@ -60,35 +63,14 @@ public class ProfileUpdateController {
   public ModelAndView requestUpdateEmail(HttpSession session, @ModelAttribute UpdateEmail updateEmail, BindingResult result) {
     ResultModel model = new ResultModel("redirect:/profile", "profile/update/email");
     User user = userManager.getCurrentUser();
-    String oldEmail = user.getEmail();
-    User internalUser = userManager.getLoggedInUser();
-    if (internalUser.isAdmin() || internalUser.isSuperUser()) {
-      userUpdateValidator.validateInternalEmailChange(updateEmail, result, user);
-      if (result.hasErrors()) {
-        return model.getError();
-      } else {
-        try {
-          user.setUsername(updateEmail.getEmail());
-          user.setEmail(updateEmail.getEmail());
-          List<Account> accountList = accountManager.getAccounts(user);
-          for (Account account : accountList) {
-            account.setContactEmail(updateEmail.getEmail());
-            accountManager.updateEmail(account);
-          }
-          userManager.updateUser(user);
-          showProfileUpdateNotification(session, ATTR_EMAIL);
-        } catch (AccountManagementException e) {
-          e.printStackTrace();
-          showProfileUpdateFailureNotification(session, ATTR_EMAIL);
-          user.setEmail(oldEmail);
-          userManager.updateUser(user);
-        }
-        return model.getSuccess();
-      }
+    userUpdateValidator.validateEmailChange(updateEmail, result, user);
+    if (result.hasErrors()) {
+      return model.getError();
     } else {
-      userUpdateValidator.validateEmailChange(updateEmail, result, user);
-      if (result.hasErrors()) {
-        return model.getError();
+      if (Config.ADMIN) {
+        session.setAttribute(UPDATE_EMAIL_VAL, updateEmail.getEmail());
+        session.setAttribute(UPDATE_EMAIL_NTF, "sent");
+        return verifyUpdateEmail(session, session.getId());
       } else {
         try {
           SimpleMailMessage myMessage = new SimpleMailMessage();
@@ -104,26 +86,31 @@ public class ProfileUpdateController {
         } catch (EmailException e) {
           e.printStackTrace();
         }
-        return model.getSuccess();
       }
+      return model.getSuccess();
     }
   }
 
   @RequestMapping(value = "/email/verify/{sessionId}", method = RequestMethod.GET)
-  public String verifyUpdateEmail(HttpSession session, @PathVariable("sessionId") String sessionId) {
+  public ModelAndView verifyUpdateEmail(HttpSession session, @PathVariable("sessionId") String sessionId) {
+    ResultModel model = new ResultModel("redirect:/profile");
     if (session.getId().equals(sessionId)) {
       User user = userManager.getCurrentUser();
       String newEmail = (String) session.getAttribute(UPDATE_EMAIL_VAL);
       String oldEmail = user.getEmail();
       try {
-        user.setUsername(newEmail);
-        user.setEmail(newEmail);
+        
+
         List<Account> accountList = accountManager.getAccounts(user);
         for (Account account : accountList) {
-          account.setContactEmail(newEmail);
-          accountManager.updateEmail(account);
+          // account.setContactEmail(newEmail);
+          accountManager.updateEmail(account, newEmail);
         }
+        
+        user.setUsername(newEmail);
+        user.setEmail(newEmail);
         userManager.updateUser(user);
+
         showProfileUpdateNotification(session, ATTR_EMAIL);
       } catch (AccountManagementException e) {
         e.printStackTrace();
@@ -132,10 +119,11 @@ public class ProfileUpdateController {
         userManager.updateUser(user);
       }
     }
-    return "redirect:/profile";
+    return model.getSuccess();
   }
 
   @RequestMapping(value = "/password", method = RequestMethod.GET)
+  @PreAuthorize("isAuthenticated() and hasPermission(#null, 'canUpdate')")
   public ModelAndView updatePassword() {
     ResultModel model = new ResultModel("profile/update/password");
     model.addObject("updatePassword", new UpdatePassword());
@@ -146,12 +134,7 @@ public class ProfileUpdateController {
   public ModelAndView postUpdatePassword(HttpSession session, @ModelAttribute UpdatePassword updatePassword, BindingResult result) {
     ResultModel model = new ResultModel("redirect:/profile", "profile/update/password");
     User user = userManager.getCurrentUser();
-    User internalUser = userManager.getLoggedInUser();
-    if (internalUser.isAdmin() || internalUser.isSuperUser()) {
-      userUpdateValidator.validateInternalPasswordChange(updatePassword, result, user);
-    } else {
-      userUpdateValidator.validatePasswordChange(updatePassword, result, user);
-    }
+    userUpdateValidator.validatePasswordChange(updatePassword, result, user);
     if (result.hasErrors()) {
       return model.getError();
     } else {

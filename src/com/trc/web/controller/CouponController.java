@@ -68,7 +68,7 @@ public class CouponController {
 
   protected void encodeAccountNums(List<AccountDetail> accountDetailList) {
     for (AccountDetail accountDetail : accountDetailList) {
-      accountDetail.setEncodedAccountNum(SessionEncrypter.encryptId(accountDetail.getAccount().getAccountno()));
+      accountDetail.setEncodedAccountNum(SessionEncrypter.encryptId(accountDetail.getAccount().getAccountNo()));
     }
   }
 
@@ -103,7 +103,7 @@ public class CouponController {
     boolean hasActiveDevice = false;
     if (accountList != null) {
       for (AccountDetail ad : accountList) {
-        if (ad.getDeviceInfo().getStatusId() == 2) {
+        if (ad.getDevice().getStatusId() == 2) {
           hasActiveDevice = true;
         }
       }
@@ -161,7 +161,7 @@ public class CouponController {
           List<AccountDetail> accountList = accountManager.getOverview(user).getAccountDetails();
           AccountDetail accountDetail = null;
           for (AccountDetail ad : accountList) {
-            if (ad.getAccount().getAccountno() == accountNumber) {
+            if (ad.getAccount().getAccountNo() == accountNumber) {
               accountDetail = ad;
             }
           }

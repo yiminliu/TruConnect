@@ -3,11 +3,30 @@
   position: relative;
 }
 
-.nav_submenu {
+.nav_label {
+  display: inline-block;
+  width: 135px;
+}
+
+.nav_label:hover {
+  color: black;
+}
+
+.nav_submenu,.nav_caret {
   display: none;
   position: absolute;
   top: 0px;
-  left: 130px;
   z-index: 5;
-  width: 250px;
+}
+
+.nav_submenu {
+  left: 135px;
+  width: 200px;
+}
+
+.nav_caret:after {
+  margin-left: -20px;
+  width: 0;
+  height: 0;
+  content: ' \BB ';
 }

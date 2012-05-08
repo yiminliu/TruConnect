@@ -65,7 +65,7 @@ public final class CacheManager {
 
   public static final Object get(final User user, final CacheKey cacheKey, final Object obj) {
     if (obj instanceof Account) {
-      return get(user, cacheKey, ((Account) obj).getAccountno());
+      return get(user, cacheKey, ((Account) obj).getAccountNo());
     } else if (obj instanceof Device) {
       return get(user, cacheKey, ((Device) obj).getId());
     } else if (obj instanceof Integer) {

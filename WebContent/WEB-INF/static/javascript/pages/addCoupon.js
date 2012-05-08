@@ -139,19 +139,19 @@ $(function() {
 	});
 });
 
-$(function() {
-	var deviceButtons = $(".deviceList input:radio");
-	var numDevices = $(deviceButtons).length;
-	$(deviceButtons).click(function(e) {
-		$(deviceButtons).selectRadioFromList($(this));
-	});
-	if (numDevices == 1) {
-		$(deviceButtons).get(0).click();
-	}
-});
+// $(function() {
+// var deviceButtons = $(".deviceList input:radio");
+// var numDevices = $(deviceButtons).length;
+// $(deviceButtons).click(function(e) {
+// $(deviceButtons).selectRadioFromList($(this));
+// });
+// if (numDevices == 1) {
+// $(deviceButtons).get(0).click();
+// }
+// });
 
-$(function() {
-	if ($("#deviceList").children().size() == 0) {
-		$("#deviceList").html("You have no active devices");
-	}
-});
+// $(function() {
+// if ($("#deviceList").children().size() == 0) {
+// //$("#deviceList").html("You have no active devices");
+// }
+// });

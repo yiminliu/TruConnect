@@ -51,7 +51,7 @@ public class PaymentController {
   private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
   @ModelAttribute
-  private void paymentReferenceData(ModelMap modelMap) {
+  protected void paymentReferenceData(ModelMap modelMap) {
     modelMap.addAttribute("states", Config.states.entrySet());
     modelMap.addAttribute("months", Config.months.entrySet());
     modelMap.addAttribute("years", Config.years.entrySet());

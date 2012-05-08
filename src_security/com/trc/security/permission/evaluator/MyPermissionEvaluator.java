@@ -6,6 +6,8 @@ import org.springframework.aop.framework.AopInfrastructureBean;
 import org.springframework.security.core.Authentication;
 
 public interface MyPermissionEvaluator extends AopInfrastructureBean {
+  
+  boolean hasPermission(Authentication authentication, Object permission);
 
   boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission);
 

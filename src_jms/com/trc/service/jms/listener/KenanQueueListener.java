@@ -6,7 +6,6 @@ import javax.jms.ObjectMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 
 import com.trc.service.jms.Listener;
@@ -29,7 +28,7 @@ public class KenanQueueListener extends Listener {
           KenanServiceInstance kenanServiceInstance = (KenanServiceInstance) objectMessage.getObject();
           logger.info("\n\tTC JMS! received object:\n\tredelivered: " + objectMessage.getJMSRedelivered()
               + "\n\tattempt number: " + objectMessage.getIntProperty("attempt") + "\n\taccount: "
-              + kenanServiceInstance.getAccount().getAccountno() + "\n\tfirst name: "
+              + kenanServiceInstance.getAccount().getAccountNo() + "\n\tfirst name: "
               + kenanServiceInstance.getAccount().getFirstname() + "\n\tlast name: "
               + kenanServiceInstance.getAccount().getLastname() + "\n\tesn: "
               + kenanServiceInstance.getNetworkInfo().getEsnmeiddec());

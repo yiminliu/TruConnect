@@ -6,6 +6,7 @@
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
 <script type="text/javascript"
   src="<spring:url value="/static/javascript/pages/highlight/navigation/paymentHistory.js" />"></script>
+
 </head>
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
@@ -19,7 +20,6 @@
     <div id="main-content">
       <div class="span-18 colborder">
 
-        <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Payments</h3>
         <table>
           <tr>
             <th>Date and Time</th>

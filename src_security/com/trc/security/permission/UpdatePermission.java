@@ -2,8 +2,11 @@ package com.trc.security.permission;
 
 import org.springframework.security.core.Authentication;
 
+import com.trc.config.Config;
 import com.trc.user.User;
 import com.trc.user.authority.ROLE;
+import com.trc.util.logger.DevLogger;
+import com.tscp.mvne.Account;
 
 /**
  * This was created as a test permission during development and is not
@@ -22,15 +25,27 @@ public class UpdatePermission extends Permission {
     roleRepository.add(ROLE.ROLE_MANAGER);
   }
 
+  public boolean isAllowed(Authentication authentication) {
+    boolean hasPermission = false;
+    if (isAuthenticated(authentication)) {
+      User user = (User) authentication.getPrincipal();
+      hasPermission = !Config.ADMIN || isRoleGrantedPermission(user);
+    }
+    return hasPermission;
+  }
+
   @Override
   public boolean isAllowed(Authentication authentication, Object targetDomainObject) {
     boolean hasPermission = false;
     if (isAuthenticated(authentication)) {
       User user = (User) authentication.getPrincipal();
-      if (isSelf(user, targetDomainObject)) {
-        hasPermission = true;
-      } else {
+      if (Config.ADMIN) {
         hasPermission = isRoleGrantedPermission(user);
+      } else if (isSelf(user, targetDomainObject)) {
+        hasPermission = true;
+      } else if (targetDomainObject instanceof Account) {
+        DevLogger.log("instance of account, user email {} account email {}", user.getEmail(), ((Account) targetDomainObject).getContactEmail());
+        hasPermission = user.getEmail().equals(((Account) targetDomainObject).getContactEmail());
       }
     }
     return hasPermission;

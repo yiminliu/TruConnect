@@ -24,7 +24,7 @@
       <div class="span-18 colborder">
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Account Activity</h3>
         <c:forEach var="accountDetail" items="${accountDetails}">
-          <h4 style="float: left; display: inline-block">${accountDetail.deviceInfo.label}</h4>
+          <h4 style="float: left; display: inline-block">${accountDetail.device.label}</h4>
           <c:choose>
             <c:when test="${not empty accountDetail.account.inactiveDate}">
               <h4 style="float: right; display: inline-block">Current Balance: Disconnected</h4>

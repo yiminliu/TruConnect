@@ -17,7 +17,7 @@ public class AccountValidator implements Validator {
   @Override
   public void validate(Object target, Errors errors) {
     Account account = (Account) target;
-    checkAccountNumber(account.getAccountno(), errors);
+    checkAccountNumber(account.getAccountNo(), errors);
   }
 
   protected void checkAccountNumber(int accountNumber, Errors errors) {

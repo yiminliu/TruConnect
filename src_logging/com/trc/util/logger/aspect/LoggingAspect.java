@@ -84,11 +84,10 @@ public class LoggingAspect {
     String methodName = joinPoint.getSignature().getName();
 
     if (ArrayUtils.isEmpty(joinPoint.getArgs())) {
-      logger.log(loggable.value(), clazz, null, BEFORE_STRING, loggingHelper.getUserStamp(), methodName,
-          constructArgString(clazz, joinPoint.getArgs()));
+      logger.log(loggable.value(), clazz, null, BEFORE_STRING, loggingHelper.getUserStamp(), methodName, constructArgString(clazz, joinPoint.getArgs()));
     } else {
-      logger.log(loggable.value(), clazz, null, BEFORE_WITH_PARAMS_STRING, loggingHelper.getUserStamp(), methodName,
-          constructArgString(clazz, joinPoint.getArgs()));
+      logger.log(loggable.value(), clazz, null, BEFORE_WITH_PARAMS_STRING, loggingHelper.getUserStamp(), methodName, constructArgString(clazz, joinPoint
+          .getArgs()));
     }
   }
 
@@ -99,8 +98,7 @@ public class LoggingAspect {
     // logger.log(LogLevel.ERROR, clazz, throwable, AFTER_THROWING,
     // loggingHelper.getUserStamp(), name, throwable
     // .getMessage(), constructArgString(clazz, joinPoint.getArgs()));
-    logger.log(LogLevel.ERROR, clazz, throwable, AFTER_THROWING_NO_PARAMS, loggingHelper.getUserStamp(), name,
-        throwable.getMessage());
+    logger.log(LogLevel.ERROR, clazz, throwable, AFTER_THROWING_NO_PARAMS, loggingHelper.getUserStamp(), name, throwable.getMessage());
   }
 
   @AfterReturning(value = "@annotation(trace)", returning = "returnValue", argNames = "joinPoint, trace, returnValue")
@@ -113,15 +111,13 @@ public class LoggingAspect {
       MethodSignature signature = (MethodSignature) joinPoint.getSignature();
       Class<?> returnType = signature.getReturnType();
       if (returnType.getName().compareTo("void") == 0) {
-        logger
-            .log(loggable.value(), clazz, null, AFTER_RETURNING_VOID, loggingHelper.getUserStamp(), name, elapsedTime);
+        logger.log(loggable.value(), clazz, null, AFTER_RETURNING_VOID, loggingHelper.getUserStamp(), name, elapsedTime);
         start = 0;
         elapsedTime = 0;
         return;
       }
     }
-    logger.log(loggable.value(), clazz, null, AFTER_RETURNING, loggingHelper.getUserStamp(), name, constructArgString(
-        clazz, returnValue), elapsedTime);
+    logger.log(loggable.value(), clazz, null, AFTER_RETURNING, loggingHelper.getUserStamp(), name, constructArgString(clazz, returnValue), elapsedTime);
     start = 0;
     elapsedTime = 0;
   }
@@ -202,7 +198,7 @@ public class LoggingAspect {
     } else if (arg instanceof com.tscp.mvne.Account) {
       Account account = (Account) arg;
       clazz = account.getClass().getSimpleName();
-      id = Integer.toString(account.getAccountno());
+      id = Integer.toString(account.getAccountNo());
       descriptor = account.getFirstname() + " " + account.getLastname();
     } else if (arg instanceof com.trc.user.activation.Registration) {
       Registration registration = (Registration) arg;
@@ -212,8 +208,8 @@ public class LoggingAspect {
     } else if (arg instanceof com.trc.user.account.AccountDetail) {
       AccountDetail accountDetail = (AccountDetail) arg;
       clazz = accountDetail.getClass().getSimpleName();
-      id = Integer.toString(accountDetail.getAccount().getAccountno());
-      descriptor = accountDetail.getDeviceInfo().getLabel();
+      id = Integer.toString(accountDetail.getAccount().getAccountNo());
+      descriptor = accountDetail.getDevice().getLabel();
     } else if (arg instanceof com.trc.user.contact.Address) {
       Address address = (Address) arg;
       clazz = address.getClass().getSimpleName();

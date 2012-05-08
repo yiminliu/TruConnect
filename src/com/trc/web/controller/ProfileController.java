@@ -1,5 +1,6 @@
 package com.trc.web.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.config.Config;
 import com.trc.exception.management.AddressManagementException;
+import com.trc.exception.management.PaymentManagementException;
 import com.trc.manager.impl.AddressManager;
+import com.trc.manager.impl.PaymentManager;
 import com.trc.manager.impl.UserManager;
 import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
@@ -25,6 +28,7 @@ import com.trc.user.contact.Address;
 import com.trc.util.logger.DevLogger;
 import com.trc.web.model.ResultModel;
 import com.trc.web.validation.AddressValidator;
+import com.tscp.mvne.CreditCard;
 
 @Controller
 @RequestMapping("/profile")
@@ -33,6 +37,8 @@ public class ProfileController {
   private UserManager userManager;
   @Autowired
   private AddressManager addressManager;
+  @Autowired
+  private PaymentManager paymentManager;
 
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView showProfile(HttpSession session) {
@@ -58,6 +64,19 @@ public class ProfileController {
       encodeAddressIds(addresses);
       model.addObject("addresses", addresses);
     } catch (AddressManagementException e) {
+      e.printStackTrace();
+    }
+
+    List<CreditCard> paymentMethods;
+    List<String> encodedPaymentIds = new ArrayList<String>();
+    try {
+      paymentMethods = paymentManager.getCreditCards(user);
+      for (CreditCard creditCard : paymentMethods) {
+        encodedPaymentIds.add(SessionEncrypter.encryptId(creditCard.getPaymentid()));
+      }
+      model.addObject("encodedPaymentIds", encodedPaymentIds);
+      model.addObject("paymentMethods", paymentMethods);
+    } catch (PaymentManagementException e) {
       e.printStackTrace();
     }
 

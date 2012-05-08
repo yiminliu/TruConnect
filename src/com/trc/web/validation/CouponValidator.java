@@ -231,7 +231,7 @@ public class CouponValidator implements Validator {
         userCouponType = userCoupon.getId().getCoupon().getCouponDetail().getDetailType().getDetailType();
         pendingCouponType = coupon.getCouponDetail().getDetailType().getDetailType();
         userCouponAccount = userCoupon.getId().getAccountNumber();
-        if ((userCouponType == pendingCouponType) && userCouponAccount == account.getAccountno()) {
+        if ((userCouponType == pendingCouponType) && userCouponAccount == account.getAccountNo()) {
           count++;
         }
       }

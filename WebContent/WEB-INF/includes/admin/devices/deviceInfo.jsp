@@ -1,10 +1,10 @@
-<div class="device_detail hidden" style="padding: 0px 8px 0px 8px; margin: 0px 8px 8px 8px;">
+<div class="device_detail hidden" style="padding: 0px 8px 0px 8px; margin: 30px 8px 8px 8px;">
   <div>
     <li class="header">Device Information</li>
-    <li>Account Number: ${device.deviceInfo.accountNo}</li>
-    <li>Device ID: ${device.deviceInfo.id}</li>
-    <li>Status: ${device.deviceInfo.status}</li>
-    <li>Status ID: ${device.deviceInfo.statusId}</li>
+    <li>Account Number: ${device.device.accountNo}</li>
+    <li>Device ID: ${device.device.id}</li>
+    <li>Status: ${device.device.status}</li>
+    <li>Status ID: ${device.device.statusId}</li>
   </div>
   <div>
     <c:forEach var="package" items="${device.account.packageList}">
