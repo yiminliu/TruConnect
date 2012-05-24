@@ -13,9 +13,7 @@ public interface TicketDaoModel {
   public void updateTicket(Ticket ticket);
   
   public List<Ticket> getAllTickets();
-  
-  public List<Ticket> getAllOpenTickets();
-  
+    
   public Ticket searchTicketById(int ticketId);
   
   public List<Ticket> searchTicketByTitle(String title);
@@ -25,6 +23,8 @@ public interface TicketDaoModel {
   public List<Ticket> searchTicketByOwner(String ownerName);  
   
   public List<Ticket> searchTicketByKeyword(String keyword);
+  
+  public List<Ticket> searchTicketByStatus(Enum status);
   
   public void reopenTicket(Ticket ticket);
   
