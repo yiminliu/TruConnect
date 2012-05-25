@@ -183,7 +183,9 @@ public class Ticket implements Serializable {
 	  StringBuilder sb = new StringBuilder();
 	  for(TicketNote note : notes){
 		  sb.append(note.getNote());
-		  sb.append("\n\r");		  
+		  if(note.getAuthor() != null)
+		     sb.append(" (by " + note.getAuthor().getUsername()+")");
+		  sb.append("\n");		  
 	  }	  
 	  noteMessages = sb.toString();	  
 	  return noteMessages;
