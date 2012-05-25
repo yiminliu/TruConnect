@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.LockMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -43,53 +44,32 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
 	    ticket.setStatus(TicketStatus.OPEN);
 	 
 	 ticket.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-	 
-	 Collection<TicketNote> noteList =  ticket.getNotes();
-	 
+	 	 	 
 	 int id = (Integer) getHibernateTemplate().save(ticket);
-	 
-	 for(TicketNote ticketNote : noteList) {
-		 if(ticketNote.getAuthor() == null){
-		    ticketNote.setAuthor(userManager.getCurrentUser());
-		 }
-		 ticketNote.setTicket(ticket);
-		 createTicketNote(ticketNote);
-	 }
 	 
 	 return id;
   }
 
   @Override
   @Transactional
-  public void deleteTicket(Ticket ticket) {
-	 validateTicket(ticket);	
-	 //List ticketNoteList = searchTicketNotes(ticket);
-	 //if(ticketNoteList != null)
-	 //   getHibernateTemplate().delete(ticketNoteList);
-	 getHibernateTemplate().delete(ticket);
+  public void updateTicket(Ticket ticket) {
+	 validateTicket(ticket);	 
+     ticket.setLastModifiedDate(new Timestamp(System.currentTimeMillis()));	 
+     getHibernateTemplate().saveOrUpdate(ticket);
   }
+
 
   @Override
   @Transactional
-  public void updateTicket(Ticket ticket) {
-	 validateTicket(ticket);	 
-     Collection<TicketNote> noteList =  ticket.getNotes();
-		 
-	 for(TicketNote ticketNote : noteList) {
-		 //ticket.addTicketNote(ticketNote);
-		 //if(ticketNote.getId() != 0)
-		 //	 ticketNote.setId(ticketNote.getId());
-		 ticketNote.setTicket(ticket);
-		 //updateTicketNote(ticketNote);
-	 }
-	 ticket.setLastModifiedDate(new Timestamp(System.currentTimeMillis()));
-     getHibernateTemplate().update(ticket);
+  public void deleteTicket(Ticket ticket) {
+	 validateTicket(ticket);	
+     getHibernateTemplate().delete(ticket);
   }
   
   @Override
   @Transactional(readOnly=true)
   public List<Ticket> getAllTickets(){
-	  return getHibernateTemplate().find("from Ticket");
+	  return getHibernateTemplate().find("from Ticket t order by t.id desc");
   }
     
   @Override
@@ -150,32 +130,13 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
   @Override
   @Transactional(readOnly=true)
   public List<Ticket> searchTicketByCustomer(String customerName) {
-	  HibernateTemplate ht = getHibernateTemplate();
-	  
-	  //List<User> userList = ht.find("from User u where u.username = ?", customerName);	 
-	  
-	  //if(userList != null && userList.size() > 0) {
-		// User customer = (User)userList.get(0);
-		 //int userId = customer.getUserId();
-		 //return  ht.find("from Ticket t where t.owner.userId = ?" , userId);
-	  return  ht.find("from Ticket t where t.customer.username like ?" , wildCardKeyword(customerName));
-	  
-	  
+     return  getHibernateTemplate().find("from Ticket t where t.customer.username like ? order by t.id desc" , wildCardKeyword(customerName));
   }
 
   @Override
   @Transactional(readOnly=true)
   public List<Ticket> searchTicketByOwner(String ownerName) {
-	  HibernateTemplate ht = getHibernateTemplate();
-	  	  
-	 // List<User> userList = ht.find("from User u where u.username = ?", ownerName);	  
-	  
-	  //if(userList != null && userList.size() > 0) {
-	//	 User owner = (User)userList.get(0);
-	 //    int userId = owner.getUserId();
-	  //   return  ht.find("from Ticket t where t.owner.userId = ?" , userId);
-	  //}	  
-	  return  ht.find("from Ticket t where t.owner.username like ?", wildCardKeyword(ownerName));
+	  return  getHibernateTemplate().find("from Ticket t where t.owner.username like ? order by t.id desc", wildCardKeyword(ownerName));
   }
 
   @Override
@@ -202,16 +163,7 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
   @Override
   @Transactional(readOnly=true)
   public List<Ticket> searchTicketByStatus(Enum status) {
-	  HibernateTemplate ht = getHibernateTemplate();
-	  	  
-	 // List<User> userList = ht.find("from User u where u.username = ?", ownerName);	  
-	  
-	  //if(userList != null && userList.size() > 0) {
-	//	 User owner = (User)userList.get(0);
-	 //    int userId = owner.getUserId();
-	  //   return  ht.find("from Ticket t where t.owner.userId = ?" , userId);
-	  //}	  
-	  return  ht.find("from Ticket t where t.status = ?", status);
+	 return  getHibernateTemplate().find("from Ticket t where t.status = ? order by t.id desc", status);
   }
   
 
@@ -239,6 +191,8 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
 	  }
 	  getHibernateTemplate().saveOrUpdate(ticketNote);
   }
+  
+  /***************  Utility Methods ******************/
   
   private String wildCardKeyword(String keyword){
 	  if(keyword == null || keyword.equals(""))
