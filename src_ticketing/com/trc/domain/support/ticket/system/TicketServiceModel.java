@@ -28,8 +28,10 @@ public interface TicketServiceModel {
   public Ticket getTicketById(int id)throws TicketServiceException;
 
   public List<Ticket> getTicketsByCustomer(String customerName)throws TicketServiceException;
+  
+  public List<Ticket> getTicketsByCreator(String creatorName)throws TicketServiceException;
 
-  public List<Ticket> getTicketsByOwner(String ownerName)throws TicketServiceException;
+  public List<Ticket> getTicketsByAssignee(String ownerName)throws TicketServiceException;
   
   public List<Ticket> getTicketByKeyword(String keyword)throws TicketServiceException;
   

@@ -23,7 +23,8 @@ import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 
 @Repository
-public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
+@Transactional
+public class HibernateTicketDao extends HibernateDaoSupport implements TicketDaoModel{
 
   @Autowired
   public void init(HibernateTemplate hibernateTemplate) {
@@ -35,13 +36,15 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
   
   /***************  Ticket Operations ******************/
   
-  @Override
-  @Transactional
+  @Override  
   public int createTicket(Ticket ticket) {
 	 validateTicket(ticket);	 
 	
 	 if(ticket.getStatus() == null || ticket.getStatus() != TicketStatus.OPEN)
 	    ticket.setStatus(TicketStatus.OPEN);
+	 
+	 if(ticket.getCreator() == null)
+		ticket.setCreator(userManager.getLoggedInUser());
 	 
 	 ticket.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	 	 	 
@@ -51,7 +54,6 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
   }
 
   @Override
-  @Transactional
   public void updateTicket(Ticket ticket) {
 	 validateTicket(ticket);	 
      ticket.setLastModifiedDate(new Timestamp(System.currentTimeMillis()));	 
@@ -60,7 +62,6 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
 
 
   @Override
-  @Transactional
   public void deleteTicket(Ticket ticket) {
 	 validateTicket(ticket);	
      getHibernateTemplate().delete(ticket);
@@ -73,7 +74,6 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
   }
     
   @Override
-  @Transactional
   public void closeTicket(Ticket ticket){
 	  validateTicket(ticket);
 	  ticket.setStatus(TicketStatus.CLOSED);
@@ -82,7 +82,6 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
   }
   
   @Override
-  @Transactional
   public void resolveTicket(Ticket ticket){
 	  validateTicket(ticket);
 	  ticket.setStatus(TicketStatus.RESOLVED);
@@ -91,7 +90,6 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
   }
   
   @Override
-  @Transactional
   public void rejectTicket(Ticket ticket){
 	  validateTicket(ticket);
 	  ticket.setStatus(TicketStatus.REJECTED);
@@ -100,7 +98,6 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
   }
     
   @Override
-  @Transactional
   public void reopenTicket(Ticket ticket) {
 	 validateTicket(ticket); 
 	 ticket.setStatus(TicketStatus.REOPEN);
@@ -132,11 +129,17 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
   public List<Ticket> searchTicketByCustomer(String customerName) {
      return  getHibernateTemplate().find("from Ticket t where t.customer.username like ? order by t.id desc" , wildCardKeyword(customerName));
   }
+  
+  @Override
+  @Transactional(readOnly=true)
+  public List<Ticket> searchTicketByCreator(String creatorName) {
+     return  getHibernateTemplate().find("from Ticket t where t.customer.username like ? order by t.id desc" , wildCardKeyword(creatorName));
+  }
 
   @Override
   @Transactional(readOnly=true)
-  public List<Ticket> searchTicketByOwner(String ownerName) {
-	  return  getHibernateTemplate().find("from Ticket t where t.owner.username like ? order by t.id desc", wildCardKeyword(ownerName));
+  public List<Ticket> searchTicketByAssignee(String assigneeName) {
+	  return  getHibernateTemplate().find("from Ticket t where t.assignee.username like ? order by t.id desc", wildCardKeyword(assigneeName));
   }
 
   @Override
@@ -148,12 +151,14 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
 	  List<Ticket> resultList = new ArrayList<Ticket>();
 	  
 	  List<Ticket> titleList  = ht.find("from Ticket t where t.title like ?", wildCardKeyword(keyword));
-	  List<Ticket> ownerList  = ht.find("from Ticket t where t.owner.username like ?", wildCardKeyword(keyword));//searchTicketByOwner(keyword);
+	  List<Ticket> creatorList  = ht.find("from Ticket t where t.creator.username like ?", wildCardKeyword(keyword));//searchTicket By Creator;
+	  List<Ticket> assigneeList  = ht.find("from Ticket t where t.assignee.username like ?", wildCardKeyword(keyword));		 
 	  List<Ticket> custList   = ht.find("from Ticket t where t.customer.username like ?", wildCardKeyword(keyword));//searchTicketByCustomer(keyword);
 	  //List<Ticket> noteList   = ht.find("from Ticket t where t.notes.note like ?", wildCardKeyword(keyword));
 		 
 	  resultList.addAll(titleList);
-	  resultList.addAll(ownerList);
+	  resultList.addAll(creatorList);
+	  resultList.addAll(assigneeList);
 	  resultList.addAll(custList);
 	  //resultList.addAll(noteList);
 	  
@@ -174,7 +179,6 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel{
     
 /***************  TicketNote Operations ******************/
   
-  @Transactional
   public int createTicketNote(TicketNote ticketNote) {
 	  return (Integer) getHibernateTemplate().save(ticketNote);
   }

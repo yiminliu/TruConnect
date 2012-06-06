@@ -1,6 +1,7 @@
 package com.trc.domain.support.ticket;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.stereotype.Repository;
 
 import com.trc.user.User;
 
@@ -23,9 +28,14 @@ public class TicketNote implements Serializable {
   @Column(name="ticket_note_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;  
-  
+    
   @Column(name="note", nullable = false, insertable = true, updatable = true)
   private String note;
+  
+  @Column(name = "created_date", updatable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  //@Generated(GenerationTime.ALWAYS)
+  Date createdDate;
   
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name="author_id", insertable = true, updatable = true)
@@ -59,6 +69,14 @@ public class TicketNote implements Serializable {
     this.note = note;
   }
 
+  public Date getCreatedDate() {
+	return createdDate;
+  }
+
+  public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+  }
+	
   public Ticket getTicket() {
 	 return ticket;
   }

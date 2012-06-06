@@ -1,8 +1,10 @@
 package com.trc.domain.support.ticket;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -28,24 +30,24 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.trc.user.User;
 import com.trc.domain.support.ticket.TicketStatus;
 
 
-@Component
 @Entity
 @Table(name="ticket")
 public class Ticket implements Serializable {
   private static final long serialVersionUID = 1495544695293668738L;
-  
+  private static final String DEFALT_TITLE = "Truconnect Issue With ";
   @Id
   @Column(name="ticket_id", updatable=false)
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
   
   @Column(name="title")
-  private String title;
+  private String title = DEFALT_TITLE;
   
   @Enumerated(EnumType.STRING)
   private TicketPriority priority;
@@ -64,8 +66,12 @@ public class Ticket implements Serializable {
   private User customer;
   
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "owner", nullable = false, insertable = true, updatable = true)
-  private User owner;   
+  @JoinColumn(name = "creator", nullable = false, insertable = true, updatable = false)
+  private User creator;  
+  
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "assignee", nullable = false, insertable = true, updatable = true)
+  private User assignee;
     
   @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "ticket")
   @Fetch(value = FetchMode.SUBSELECT)
@@ -82,7 +88,8 @@ public class Ticket implements Serializable {
   
   @Transient
   private String noteMessages;
-   
+ 
+  
   public int getId() {
     return id;
   }
@@ -118,10 +125,6 @@ public class Ticket implements Serializable {
   public Collection<TicketNote> getNotes() {
 	 return notes;
   }
-	  
-  public User getOwner() {
-    return owner;
-  }
 
   public TicketStatus getStatus() {
     return status;
@@ -153,11 +156,8 @@ public class Ticket implements Serializable {
       }	  
 	  note.setTicket(this);
 	  notes.add(note);
-  }
+  }  
   
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
 
   public void setStatus(TicketStatus status) {
     this.status = status;
@@ -165,6 +165,22 @@ public class Ticket implements Serializable {
  	
   public Date getCreatedDate() {
 	 return createdDate;
+  }
+
+  public User getCreator() {
+	return creator;
+  }
+
+  public void setCreator(User creator) {
+	this.creator = creator;
+  }
+
+  public User getAssignee() {
+	return assignee;
+  }
+
+  public void setAssignee(User assignee) {
+	this.assignee = assignee;
   }
 
   public void setCreatedDate(Date createdDate) {
@@ -180,11 +196,16 @@ public class Ticket implements Serializable {
   }
   
   public String getNoteMessages(){
+	  SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	  StringBuilder sb = new StringBuilder();
-	  for(TicketNote note : notes){
+	  for(TicketNote note : Collections.synchronizedCollection(notes)){
 		  sb.append(note.getNote());
-		  if(note.getAuthor() != null)
-		     sb.append(" (by " + note.getAuthor().getUsername()+")");
+		  sb.append("(");
+		  if(note.getCreatedDate() != null)
+			 sb.append(formatter.format(note.getCreatedDate()) + ", ");		  
+		  if(note.getAuthor() != null)			 
+		     sb.append("by " + note.getAuthor().getUsername());
+		  sb.append(")");
 		  sb.append("\n");		  
 	  }	  
 	  noteMessages = sb.toString();	  
@@ -193,10 +214,7 @@ public class Ticket implements Serializable {
   
   public void setNoteMessages(String noteMessages){
 	  this.noteMessages = noteMessages;
-  }
-  
-  
-  
+  }  
 
   @Override
   public int hashCode() {
@@ -206,7 +224,7 @@ public class Ticket implements Serializable {
 	result = prime * result + ((customer == null) ? 0 : customer.hashCode());
 	result = prime * result + priority.hashCode();
 	result = prime * result + ((notes == null) ? 0 : notes.hashCode());
-	result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+	result = prime * result + ((creator == null) ? 0 : creator.hashCode());
 	result = prime * result + ((status == null) ? 0 : status.hashCode());
 	result = prime * result + id;
 	return result;
@@ -217,7 +235,7 @@ public String toString() {
 	return "Ticket [id=" + id + ", title=" + title + ", priority="
 			+ priority + ", status=" + status + ", category=" + category
 			+ ", customer=" + (customer == null ? "" : customer.getEmail()) + 
-			", owner=" + (owner ==null? "" : owner.getEmail()) + 
+			", owner=" + (creator ==null? "" : creator.getEmail()) + 
 			", createdDate=" + createdDate + ", lastModifiedDate=" + lastModifiedDate 
 			//+ ", notes=" + (notes == null? "" : (notes.size() <= 0 ? "" : notes.get(0))) 
 			+ "]";	

@@ -26,7 +26,7 @@ import com.trc.user.User;
 public class TicketService implements TicketServiceModel {
 
   @Autowired
-  TicketDao ticketDao;
+  HibernateTicketDao ticketDao;
  
   /********************************************************************/
   /************************ Ticket Operations *************************/
@@ -88,8 +88,13 @@ public class TicketService implements TicketServiceModel {
   }
   
   @Override
-  public List<Ticket> getTicketsByOwner(String ownerName) throws TicketServiceException{
-	  return ticketDao.searchTicketByOwner(ownerName);
+  public List<Ticket> getTicketsByCreator(String creatorName) throws TicketServiceException{
+     return ticketDao.searchTicketByCreator(creatorName);
+  }
+  
+  @Override
+  public List<Ticket> getTicketsByAssignee(String assigneeName) throws TicketServiceException{
+	  return ticketDao.searchTicketByAssignee(assigneeName);
   }
   
   @Override
@@ -120,9 +125,9 @@ public class TicketService implements TicketServiceModel {
   	
   	ApplicationContext appCtx = new ClassPathXmlApplicationContext("application-context.xml");
   	
-   	ticketDao = (TicketDao)appCtx.getBean("ticketDao");
+   	ticketDao = (HibernateTicketDao)appCtx.getBean("ticketDao");
    	if(ticketDao == null)
-   		ticketDao = new TicketDao();
+   		ticketDao = new HibernateTicketDao();
   }    
     
   

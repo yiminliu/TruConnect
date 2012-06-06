@@ -20,7 +20,9 @@ public interface TicketDaoModel {
   
   public List<Ticket> searchTicketByCustomer(String customerName);
   
-  public List<Ticket> searchTicketByOwner(String ownerName);  
+  public List<Ticket> searchTicketByCreator(String creatorName);
+  
+  public List<Ticket> searchTicketByAssignee(String assigneeName);  
   
   public List<Ticket> searchTicketByKeyword(String keyword);
   

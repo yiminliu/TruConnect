@@ -17,6 +17,11 @@
   <context:component-scan base-package="com.trc.domain.support.ticket" />  
   <context:component-scan base-package="com.trc.domain.support.ticket.system.impl" />  
   <context:component-scan base-package="com.trc.user" />  
+   <context:component-scan base-package="com.trc.manager" />
+   <context:component-scan base-package="com.trc.manager.impl" />
+   <context:component-scan base-package="com.trc.dao.impl" />
+       
+    
   
    <!-- <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">-->
    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
@@ -24,9 +29,9 @@
     <property name="annotatedClasses">
       <list>
         <value>com.trc.domain.support.ticket.Ticket</value>
-        <value>com.trc.domain.support.ticket.TicketCategory</value>
-        <value>com.trc.domain.support.ticket.TicketNote</value>
         <value>com.trc.domain.support.ticket.TicketStatus</value>
+        <value>com.trc.domain.support.ticket.TicketCategory</value>
+        <value>com.trc.domain.support.ticket.TicketNote</value>        
         <value>com.trc.user.User</value>
         <value>com.trc.user.authority.ROLE</value>
         <value>com.trc.user.authority.Authority</value>
