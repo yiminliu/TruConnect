@@ -48,7 +48,7 @@
       <ul class="nav_submenu">
         <li id="nav_coupon_create"><a href="<spring:url value="/admin/report/activation"/>">Activation</a></li>
       </ul></li>
-      <li id="nav_ticket"><a href="<spring:url value="/ticket"/>">Ticket</a></li> 
+      <li id="nav_ticket"><a href="<spring:url value="/ticket"/>">Tickets</a></li> 
   </ul>
 
 </c:if>
