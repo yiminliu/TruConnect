@@ -12,12 +12,12 @@
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
   <div class="blueTruConnectGradient">
-    <div class="container">Update Ticket Detail</div>
+    <div class="container">Update Ticket</div>
   </div>
   <div class="container">
      <div id="main-content">
        <div class="span-18 colborder">
-         <form:form id="updateTicketDetail" cssClass="validatedForm" method="post" commandName="ticket">
+         <form:form id="updateTicket" cssClass="validatedForm" method="post" commandName="ticket">
             <!-- <div class="slider" style="height: 300px;">-->
             <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Ticket Details</h3>
             <div class="row">
@@ -40,7 +40,7 @@
           </div>
           <div class="row">
              <form:label path="category">Category</form:label>
-             <form:select path="category" cssClass="span-8" cssErrorClass="span-8 validationFailed" >
+             <form:select path="category" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:312px;">
                 <option value="0" selected="selected">${ticket.category}</option>
                 <c:forEach var="category" items="${categoryList}" varStatus="status">
                    <form:option value="${category}">${category}</form:option>
@@ -48,9 +48,9 @@
              </form:select>
           </div>
           <div class="row">
-            <form:label path="owner.username">Re-assign To</form:label>
-            <form:select path="owner.username" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:312px;">
-               <option value="0" selected="selected">${ticket.owner.username}</option>
+            <form:label path="assignee.username">Re-assign To</form:label>
+            <form:select path="assignee.username" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:312px;">
+               <option value="0" selected="selected">${ticket.assignee.username}</option>
                <c:forEach var="adminUser" items="${adminUserList}" varStatus="status">
                  <form:option value="${adminUser.username}">${adminUser.username}</form:option>
                </c:forEach>
@@ -87,8 +87,8 @@
             <!-- <textarea path="notes[1].note">${ticket.notes[1].note}</textarea>-->
           </div>  
           <div class="buttons">
-            <a id="updateTicketDetailButton" href="#" class="button action-m"><span>Submit</span></a> 
-            <input id="updateTicketDetailSubmit" type="submit" name="_eventId_submit" value="Submit" class="hidden" />
+            <a id="updateTicketButton" href="#" class="button action-m"><span>Submit</span></a> 
+            <input id="updateTicketSubmit" type="submit" name="_eventId_submit" value="Submit" class="hidden" />
           </div>
           <!-- </div>-->
         </form:form>

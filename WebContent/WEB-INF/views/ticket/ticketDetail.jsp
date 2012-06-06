@@ -47,19 +47,24 @@
                 </tr>         
                 <tr>
                     <td><span class="span-4">Customer: </span></td>
-                    <td><span class="span-4">${ticket.customer.username}</span></td>
+                    <td>
+                       <a href="<spring:url value="/account/activity" />" ><span class="span-4">${ticket.customer.username}</span></a>
+                    </td>
                 </tr>
                 <tr>
-                    <td><span class="span-4">Owner: </span></td>
-                    <td><span class="span-4">${ticket.owner.username}</span></td>                 
+                    <td><span class="span-4">Assigned to: </span></td>
+                    <td><span class="span-4">${ticket.assignee.username}</span></td>                 
                 </tr> 
+                <tr>
+                    <td><span class="span-4">Creator: </span></td>
+                    <td><span class="span-4">${ticket.creator.username}</span></td>
                 <tr>
                     <td><span class="span-4">Created Date: </span></td>
                     <td><fmt:formatDate type="date" value="${ticket.createdDate}"/></td>
                 </tr> 
                 <tr>
                     <td><span class="span-4">Last Modified Date: </span></td>
-                    <td><fmt:formatDate type="date" value="${ticket.lastModifiedDate}"/>
+                    <td><fmt:formatDate type="date" value="${ticket.lastModifiedDate}"/></td>
                 </tr>    
                 <tr>
                    <td><span class="span-4">Description:</td>
@@ -69,37 +74,35 @@
                    <td><span class="span-2">Note:</span></td>
                    <td><pre>${ticket.noteMessages}</pre></td>
                 </tr>                        
-              </table>                  
-                            
-             <table>
+              </table>                           
+              <table>
                 <tr>
                    <td>
-                       <form:form id="updateTicket" action="/TruConnect/ticket/updateTicket" method="get" commandName="ticket" >
+                       <!--<form:form id="updateTicket" action="/TruConnect/ticket/updateTicket" method="get" commandName="ticket" >
                        <input name="ticketId" value="${ticket.id}" type="hidden" />
-                       <div class="button action-m"> <input id="updateDetailSubmit" class="button action-m" type="submit" name="_eventId_submit" value="Update Ticket Information" style="padding-left: 5px; padding-right: 5px;"/></div>
-                        </form:form>
-                       <!--
-                       <c:set var="ticketId" value="${ticket.id}" />
-                       <a href="<spring:url value="/ticket/updateTicketDetail" />" class="button action-m"><span>Update Ticket Information</span></a>
-                       -->                     
+                       <div class="button action-m"> <input id="updateTicketSubmit" class="button action-m" type="submit" name="_eventId_submit" value="Update Ticket" style="padding-left: 5px; padding-right: 5px;"/></div>
+                        </form:form>-->                      
+                       <a href="<spring:url value="/ticket/updateTicket/${ticket.id}" />" class="button action-m"><span>Update Ticket</span></a>
                    </td>
                    <td>   
-                    <form:form id="deleteTicket" action="/TruConnect/ticket/deleteTicket" method="get" commandName="ticket" >
+                    <!--<form:form id="deleteTicket" action="/TruConnect/ticket/deleteTicket" method="get" commandName="ticket" >
                        <input name="ticketId" value="${ticket.id}" type="hidden" />
-                       <input id="deleteTicket" type="submit" name="_eventId_submit" value="Delete This Ticket" onClick="confirmDelete();" style="padding-left: 5px; padding-right: 5px;"/>
-                    </form:form>
-                 </td>
+                       <input id="deleteTicket" type="submit" name="_eventId_submit" value="Delete Ticket" onClick="confirmDelete();" style="padding-left: 5px; padding-right: 5px;"/>
+                    </form:form>-->
+                       <a href="<spring:url value="/ticket/deleteTicket/${ticket.id}" />" class="button action-m"><span>Delete Ticket</span></a>
+                   </td>
                    <td>    
-                        <form:form id="decketDetailBack" action="/TruConnect/ticket" method="get" commandName="ticket" >                       
-                           <div class="button action-m"> <input id="ticketOverviewSubmit" class="button action-m" type="submit" name="_eventId_submit" value="Ticket Main Page" style="padding-left: 5px; padding-right: 5px;"/></div>
-                        </form:form>                     
+                      <!--<form:form id="decketDetailBack" action="/TruConnect/ticket" method="get" commandName="ticket" >                       
+                         <div class="button action-m"> <input id="ticketOverviewSubmit" class="button action-m" type="submit" name="_eventId_submit" value="Ticket Home" style="padding-left: 5px; padding-right: 5px;"/></div>
+                      </form:form>-->
+                         <a href="<spring:url value="/ticket" />" class="button action-m"><span>Ticket Home</span></a>
                    </td>
                 </tr>       
              </table>
          </div><!-- colborder -->               
-            <div class="span-6 last sub-navigation">
-                <%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%>
-            </div>
+             <div class="span-6 last sub-navigation">
+        <span style="float: right;"><%@ include file="/WEB-INF/includes/navigation/adminNav.jsp"%></span>
+      </div>
         </div><!-- main-content -->
     </div><!-- container -->
     <%@ include file="/WEB-INF/includes/footer_nolinks.jsp"%>

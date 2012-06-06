@@ -31,10 +31,10 @@
               <input id="keywordSubmit" type="submit" value="Search By Keyword" />
            </div>  
         </form:form>  
-        <form:form id="searchTicketByOwner" cssClass="searchTicket" method="post" commandName="ticket">
+        <form:form id="searchTicketByCreator" cssClass="searchTicket" method="post" commandName="ticket">
            <div class="row">
-              <input type="text" name="ownerName" value=""/>                 
-              <input id="ownerSubmit" type="submit" value="Search By Owner Name" />
+              <input type="text" name="creatorName" value=""/>                 
+              <input id="creatorSubmit" type="submit" value="Search By Creator Name" />
            </div>  
         </form:form>  
         <form:form id="searchTicketByCustomer" cssClass="searchTicket" method="post" commandName="ticket">
@@ -53,12 +53,17 @@
                     <form:option value="${status}">${status}</form:option>
                  </c:forEach>
               </form:select>                 
-              <input id="ownerSubmit" type="submit" value="Search By Status" />
+              <input id="assigneeSubmit" type="submit" value="Search By Status" />
            </div>  
         </form:form>
         -->
      </div><!-- border -->  
    </div><!-- content -->
+   <div class="span-6 last sub-navigation">
+        <span style="float: right;"><%@ include file="/WEB-INF/includes/navigation/adminNav.jsp"%></span>
+   </div>
+   <%@ include file="/WEB-INF/includes/footer_nolinks.jsp"%>
  </div><!-- container -->
+  
  </body>
  </html>  

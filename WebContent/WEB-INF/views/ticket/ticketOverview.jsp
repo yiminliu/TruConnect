@@ -10,11 +10,30 @@
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
+  
+  <c:set var="loggedinUserTicketsCount" value="0" scope="page"/>
+  
   <div class="blueTruConnectGradient">   
-    <br/> 
-    <div class="container">
-      <div class="span-18"> 
-         <table border="1" cellspacing="10">
+     <div class="container">Ticket Overview</div>
+  </div>
+  <div class="container">  
+    <div id="main-content">  
+      <div class="span-18">
+        <c:forEach var="ticket" items="${ticketList}">
+           <c:if test="${ticket.assignee.username == loggedinUser.username && ticket.status == 'OPEN'}">
+              <c:set var="loggedinUserTicketsCount" value="${loggedinUserTicketsCount + 1}" scope="page"/>  
+           </c:if>
+        </c:forEach>
+        <c:if test="${loggedinUserTicketsCount > 0}"> 
+           <div class="info" style="text-align: center; font-size: medium; font-weight:bold;">
+               You have ${loggedinUserTicketsCount} open tickets 
+               <a id="showYourTickets" href="<spring:url value="/ticket/showLoggedinUserTickets" />" >           
+                 <img class="expand_device_detail" style="margin-right:5px;" src="/TruConnect/static/images/buttons/icons/add.png" />
+               </a> 
+           </div>     
+        </c:if>
+        <br/>      
+        <table border="1" cellspacing="10">
            <tr>
               <td>
                 <a id="createTicket" href="<spring:url value="/ticket/createTicket" />" class="button action-m"><span>Create Ticket</span></a>
@@ -29,21 +48,15 @@
                  <a id="showOpenTickets" href="<spring:url value="/ticket/showOpenTickets" />" class="button action-m"><span>Show Open Tickets</span></a>
               </td>                         
            </tr>
-        </table>
-      </div>    
-    </div>
-  </div>
-  <div class="container">
-    <div id="main-content">
-      <div class="span-18 colborder">
-        <table style="float: left" />
+        </table>      
+        <table>
           <tr>
-            <th>Id</th>
+            <th>ID</th>
             <th>Title</th>
             <th>Status</th>
             <th>Category</th>
             <th>Priority</th>
-            <th>Owner</th>
+            <th>Assigned to</th>
             <th>Detail</th>
           </tr>
           <c:forEach var="ticket" items="${ticketList}">
@@ -67,24 +80,19 @@
                     <td><c:out value="${fn:toLowerCase(ticket.priority)}"/></td>
                 </c:otherwise>
               </c:choose>        
-              <td><c:out value="${ticket.owner.username}"/></td>
+              <td><c:out value="${ticket.assignee.username}"/></td>
               <td>
-                  <form:form id="ticketDetail" action="/TruConnect/ticket/ticketDetail" method="get" commandName="ticket" >
-                     <input name="ticketId" value="${ticket.id}" type="hidden" />                 
-                     <input id="ticketDetailSubmit" type="submit" value="detail" style="background-color: transparent; text-align: left; border: none; cursor:pointer; text-decoration: underline; visited: purple;" />
-                  </form:form>
+                 <a href="<spring:url value="/ticket/ticketDetail/${ticket.id}" />" ><img class="info" src="<spring:url value="/static/images/buttons/i.png" />" /></a>
               </td>             
             </tr>
           </c:forEach>
         </table>
-      </div>
-      <!-- Close container -->
+       </div><!-- span-18 -->       
       <div class="span-6 last sub-navigation">
-        <span style="float: right;"><%@ include file="/WEB-INF/includes/navigation/navigation.jsp"%></span>
+        <span style="float: right;"><%@ include file="/WEB-INF/includes/navigation/adminNav.jsp"%></span>
       </div>
-    </div>
+    </div><!-- close main-content -->
     <%@ include file="/WEB-INF/includes/footer_nolinks.jsp"%>
-  </div>
-
+  </div> <!-- Close container -->
 </body>
 </html>

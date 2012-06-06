@@ -27,6 +27,15 @@
             <form:input path="title" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
           </div>
           <div class="row">
+            <form:label path="category">Category</form:label>
+            <form:select path="category" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:312px;">
+               <option value="0" selected="selected">Select One</option>            
+               <c:forEach var="category" items="${categoryList}" varStatus="status">  
+                  <form:option value="${category}">${category}</form:option>
+               </c:forEach>   
+            </form:select>
+          </div>
+          <div class="row">
             <form:label path="customer.username">User Name</form:label>
             <form:select path="customer.username" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:312px;">
                <option value="0" selected="selected">Select one</option>
@@ -36,8 +45,8 @@
             </form:select>
           </div>
           <div class="row">
-            <form:label path="owner">Assign To</form:label>
-            <form:select path="owner" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:312px;">
+            <form:label path="assignee">Assign To</form:label>
+            <form:select path="assignee.username" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:312px;">
                <option value="0" selected="selected">Select one</option>
                <c:forEach var="adminUser" items="${adminUserList}" varStatus="status">
                  <form:option value="${adminUser.username}">${adminUser.username}</form:option>
