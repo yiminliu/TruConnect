@@ -1,30 +1,33 @@
 package com.trc.domain.support.report.payment;
 
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import org.hibernate.Query;
-import org.hibernate.classic.Session;
+import com.trc.security.encryption.SessionEncrypter;
 
 @Entity
 @Table(name="pmt_trans")
-public class PaymentTransaction {
+public class PaymentTransaction implements Serializable {
+	  private static final long serialVersionUID = 1495544695293668738L;
 
   @Id
   @Column(name="trans_id")
   private int transId;
   @Column(name="session_id")
   private String sessionId;
+  @Column(name="cust_id", nullable = true)
+  private Integer custId;
   @Column(name="pmt_id")
-  private int pmtId;
+  private Integer pmtId;
   @Column(name="attempt_no")
-  private int attemptNo;
+  private Integer attemptNo;
   @Column(name="pmt_amount")
   private String paymentAmount;
   @Column(name="pmt_trans_date")
@@ -36,7 +39,7 @@ public class PaymentTransaction {
   @Column(name="pmt_unit_msg")
   private String paymentUnitMessage;
   @Column(name="billing_tracking_id")
-  private int billingTrackingId = 0;
+  private Integer billingTrackingId = 0;
   @Column(name="billing_unit_date")
   private Date billingUnitDate;
   @Column(name="pmt_source")
@@ -44,10 +47,13 @@ public class PaymentTransaction {
   @Column(name="pmt_method")
   private String paymentMethod;
   @Column(name="account_no")
-  private int accountNo;
+  private Integer accountNo;
+  
+  @Transient
+  private String encodedAccountNum;
+  
 
   public PaymentTransaction() {
-
   }
 
   public int getTransId() {
@@ -65,6 +71,30 @@ public class PaymentTransaction {
   public void setSessionId(String sessionId) {
     this.sessionId = sessionId;
   }
+  
+  public Integer getCustId() {
+		return custId;
+	}
+
+	public void setCustId(Integer custId) {
+		this.custId = custId;
+	}
+
+	public void setPmtId(Integer pmtId) {
+		this.pmtId = pmtId;
+	}
+
+	public void setAttemptNo(Integer attemptNo) {
+		this.attemptNo = attemptNo;
+	}
+
+	public void setBillingTrackingId(Integer billingTrackingId) {
+		this.billingTrackingId = billingTrackingId;
+	}
+
+	public void setAccountNo(Integer accountNo) {
+		this.accountNo = accountNo;
+	}
 
   public int getPmtId() {
     return pmtId;
@@ -154,12 +184,24 @@ public class PaymentTransaction {
     this.paymentMethod = paymentMethod;
   }
 
-  public int getAccountNo() {
-    return accountNo;
+  public Integer getAccountNo() {
+	 return accountNo;
   }
 
   public void setAccountNo(int accountNo) {
-    this.accountNo = accountNo;
+	 this.accountNo = accountNo;
   }
 
+  public String getEncodedAccountNum() {
+	if(encodedAccountNum == null)
+	   encodedAccountNum = SessionEncrypter.encryptId(accountNo); 
+	return encodedAccountNum;
+  }
+
+  public void setEncodedAccountNum(String encodedAccountNum) {
+	  if(encodedAccountNum == null)
+		 this.encodedAccountNum = SessionEncrypter.encryptId(accountNo); 
+	  else
+	     this.encodedAccountNum = encodedAccountNum;
+  }
 }
