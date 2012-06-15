@@ -2,6 +2,7 @@ package com.trc.dao;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import com.trc.user.User;
 
@@ -36,5 +37,7 @@ public interface UserDaoModel {
   public void enableUser(User user);
 
   public void disableUser(User user);
+  
+  public Collection<String> getAllUserNames();
 
 }

@@ -142,6 +142,12 @@ public class UserManager implements UserManagerModel {
   }
 
   @Override
+  @Transactional(readOnly = true)
+  public List<String> getAllUserNames() {
+    return userDao.getAllUserNames();
+  }
+  
+  @Override
   @Transactional(readOnly = false)
   public Serializable saveUser(User user) {
     if (user.getAuthorities().isEmpty()) {

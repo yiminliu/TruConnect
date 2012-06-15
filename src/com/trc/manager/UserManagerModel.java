@@ -2,6 +2,7 @@ package com.trc.manager;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import com.trc.user.User;
 
@@ -46,5 +47,7 @@ public interface UserManagerModel {
   public boolean isUsernameAvailable(String username);
 
   public boolean isEmailAvailable(String email);
+  
+  public List<String> getAllUserNames();
 
 }

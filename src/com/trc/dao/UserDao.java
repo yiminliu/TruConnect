@@ -146,6 +146,13 @@ public class UserDao extends HibernateDaoSupport implements UserDaoModel {
   public User getUserById(int id) {
     return getHibernateTemplate().get(User.class, id);
   }
+  
+  @Override
+  @Transactional(readOnly=true)
+  public List<String> getAllUserNames(){
+	  List<String> userNameList = getHibernateTemplate().find("select u.username from User u");
+	  return userNameList;
+  }
 
   @Override
   public void deleteUser(User user) {
