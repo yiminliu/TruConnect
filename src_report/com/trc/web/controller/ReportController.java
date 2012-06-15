@@ -1,9 +1,15 @@
 package com.trc.web.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,9 +19,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.config.Config;
+import com.trc.domain.support.report.payment.FailedPaymentHistory;
+import com.trc.domain.support.report.payment.PaymentTransaction;
+import com.trc.domain.support.report.payment.PaymentReport;
+import com.trc.exception.management.AccountManagementException;
 import com.trc.manager.ActivationReportManager;
+import com.trc.manager.UserManager;
 import com.trc.report.ActivationReport;
 import com.trc.report.UserActivationReport;
+import com.trc.service.report.PaymentReportService;
+import com.trc.user.User;
+import com.trc.user.account.PaymentHistory;
 import com.trc.util.logger.DevLogger;
 import com.trc.util.logger.activation.ActivationState;
 import com.trc.web.model.ResultModel;
@@ -25,7 +39,11 @@ import com.trc.web.model.ResultModel;
 public class ReportController {
   @Autowired
   private ActivationReportManager reportManager;
-
+  @Autowired 
+  private PaymentReportService paymentReportService;
+  @Autowired
+  private UserManager userManager;
+  
   @ModelAttribute
   private void dateReferenceData(ModelMap modelMap) {
     modelMap.addAttribute("states", Config.states.entrySet());
@@ -93,8 +111,7 @@ public class ReportController {
     String period = "From " + startDate.toString("MM/dd/yyyy") + " to " + endDate.toString("MM/dd/yyyy");
 
     ActivationReport report = reportManager.getActivationReport(startDate, endDate);
-    model.addObject("report", report);
-    model.addObject("period", period);
+    model.addObject("report", report);    
     return model.getSuccess();
   }
 
@@ -104,7 +121,7 @@ public class ReportController {
     UserActivationReport report = reportManager.getUserActivationReport(userId);
     model.addObject("report", report);
     return model.getSuccess();
-  }
+  } 
 
   private void printChildren(ActivationState actState) {
     for (ActivationState child : actState.getChildren()) {
@@ -112,5 +129,225 @@ public class ReportController {
       printChildren(child);
     }
   }
+  
+  /**
+   * This method handles the overall failed payment report requests
+   * @return ModelAndView
+   */
+  @RequestMapping(value="/payment", method=RequestMethod.GET)
+  public String getAllFailedPayments(Model model){
+	  Collection<Integer> accountNoList = getAllAccountNumbers();
+	  List<String> userNameList = getUserNames();
+	  model.addAttribute("accountNoList", accountNoList);
+	  model.addAttribute("userNameList", userNameList);
+     return "admin/report/payment/request";	  
+  }
+  
+  /**
+   * This method handles the pre-defined date range requests
+   * @param quickLink
+   * @return String
+   */    
+  @RequestMapping(value = "/payment/{quickLink}", method = RequestMethod.GET)
+  public String getQuickPaymentReport(@PathVariable("quickLink") String quickLink) {
+	 return "redirect:/admin/report/payment/"+ quickLink + "/1";		  
+  }
+  
+  /**
+   * This method handles the pre-defined date range requests. It handles the pagination as well.
+   * @param quickLink
+   * @Param page
+   * @return ModelAndView
+   */    
+  @RequestMapping(value = "/payment/{quickLink}/{page}", method = RequestMethod.GET)
+  public ModelAndView getQuickPaymentReport(@PathVariable("quickLink") String quickLink, @PathVariable("page") int page) {
+     ResultModel model = new ResultModel("admin/report/payment/report");
+     DateTime startDate = new DateTime();
+     DateTime endDate = new DateTime();
+     String period = null;
+     String periodShort = null;
+     List<PaymentReport> reportList = null;
+      
+     if (quickLink.equals("lastMonth")) {
+         startDate = startDate.minusMonths(1).dayOfMonth().withMinimumValue();
+         endDate = startDate.dayOfMonth().withMaximumValue();
+         period = "Last Month " + startDate.toString("MMMM yyyy");
+         periodShort = "lastMonth";
+     } 
+     else if (quickLink.equals("lastWeek")) {
+        startDate = startDate.withDayOfWeek(DateTimeConstants.MONDAY).minusWeeks(1).toDateMidnight().toDateTime(); 
+        endDate = startDate.withDayOfWeek(DateTimeConstants.SUNDAY);
+        period = "Last Week " + startDate.toString("MMMM dd yyyy") + " to " + endDate.toString("MMMM dd yyyy");
+        periodShort = "lastWeek"; 
+     }
+     else if (quickLink.equals("thisMonth")) {
+        startDate = startDate.dayOfMonth().withMinimumValue();
+        period = "This Month " + startDate.toString("MMMM yyyy");
+        periodShort = "thisMonth";
+     }
+     else if (quickLink.equals("thisWeek")) {
+        startDate = startDate.withDayOfWeek(DateTimeConstants.MONDAY).toDateMidnight().toDateTime();  
+        period = "This Week " + endDate.toString("MMMM dd yyyy");
+        periodShort = "thisWeek";
+     }
+     else if (quickLink.equals("yesterday")) {
+    	startDate = startDate.minusDays(1).toDateMidnight().toDateTime();    	
+        endDate = endDate.toDateMidnight().toDateTime();
+        period = "Yesterday " + startDate.toString("MMMM dd yyyy");
+    	periodShort = "yesterday ";
+     }
+     else if (quickLink.equals("today")) {
+    	startDate = startDate.minus(startDate.getMillisOfDay()); 
+       	period = "Today " + startDate.toString("MMMM dd yyyy");  
+       	periodShort = "today";
+     }    
+     reportList = paymentReportService.getFailedPaymentReportByDate(startDate.toDate(), endDate.toDate());     
+  	 FailedPaymentHistory failedPaymentHistory = new FailedPaymentHistory(reportList);
+  	 failedPaymentHistory.setCurrentPageNum(page);	
+     model.addObject("reportList", reportList);
+     model.addObject("failedPaymentHistory", failedPaymentHistory);
+     model.addObject("period", period);
+     model.addObject("periodShort", periodShort);
+     return model.getSuccess();
+  }
+  
+  /**
+   * This method handles form input requests
+   * @param 
+   * @return ModelAndView
+   */
+  @RequestMapping(value="/payment", method=RequestMethod.POST)
+  public ModelAndView getFailedPaymentReportNoPageNo(@RequestParam(value="month_start", required=false) Integer monthStart,
+		                                   @RequestParam(value="day_start", required=false) Integer dayStart, 
+		                                   @RequestParam(value="year_start", required=false) Integer yearStart,
+		                                   @RequestParam(value="month_end", required=false) Integer monthEnd, 
+		                                   @RequestParam(value="day_end", required=false) Integer dayEnd,
+		                                   @RequestParam(value="year_end", required=false) Integer yearEnd,
+		                                   @RequestParam(value="userName", required=false) String userName,
+		                                   @RequestParam(value="accountNo", required=false) Integer accountNo){
+	  ResultModel model = new ResultModel("admin/report/payment/report");
+	  DateTime startDate = null;
+	  DateTime endDate = null;
+	  List<PaymentReport> reportList = null;	 
+	  if(yearStart != null && monthStart != null && dayStart != null ) 
+	     startDate = new DateTime(yearStart, monthStart, dayStart, 0, 0);
+	  if(yearEnd != null && monthEnd != null && dayEnd != null )    
+	     endDate = new DateTime(yearEnd, monthEnd, dayEnd, 23, 59);
 
+	  if(startDate != null){
+	     String period = "From " + startDate.toString("MM/dd/yyyy") + " to " + endDate.toString("MM/dd/yyyy");
+	     reportList = paymentReportService.getFailedPaymentReportByDate(startDate.toDate(), endDate.toDate());
+	     model.addObject("period", period);
+	  }
+	  else if(userName != null && userName.length() > 0){
+		  reportList = paymentReportService.getFailedPaymentReportByUserName(userName);
+      }
+	  else if(accountNo != null && accountNo > 0){
+		  reportList = paymentReportService.getFailedPaymentReportByAccountNo(accountNo);
+	  }    
+	  
+	  FailedPaymentHistory failedPaymentHistory = new FailedPaymentHistory(reportList);
+	  failedPaymentHistory.setCurrentPageNum(1);
+	  model.addObject("reportList", reportList);
+	  model.addObject("failedPaymentHistory", failedPaymentHistory);
+	
+	  model.addObject("month_start", monthStart);
+	  model.addObject("day_start", dayStart);
+	  model.addObject("year_start", yearStart);
+	  model.addObject("month_end", monthEnd);
+	  model.addObject("day_end", dayEnd);
+	  model.addObject("year_end", yearEnd);
+	  model.addObject("userName", userName);
+	  model.addObject("accountNo", accountNo);
+	  	  
+	  return model.getSuccess();	  
+  }  
+  
+  /**
+   * This handles form requests. it also handles pagination
+   * @param 
+   * @return ModelAndView
+   */  
+  @RequestMapping(value="/payment/{page}", method=RequestMethod.POST)
+  public ModelAndView getFailedPaymentReport(@RequestParam(value="month_start", required=false) Integer monthStart,
+                                             @RequestParam(value="day_start", required=false) Integer dayStart, 
+                                             @RequestParam(value="year_start", required=false) Integer yearStart,
+                                             @RequestParam(value="month_end", required=false) Integer monthEnd, 
+                                             @RequestParam(value="day_end", required=false) Integer dayEnd,
+                                             @RequestParam(value="year_end", required=false) Integer yearEnd,
+                                             @RequestParam(value="userName", required=false) String userName,
+                                             @RequestParam(value="accountNo", required=false) Integer accountNo,
+                                             @PathVariable("page") Integer page){
+	  ResultModel model = new ResultModel("admin/report/payment/report");
+	  DateTime startDate = null;
+	  DateTime endDate = null;
+	  List<PaymentReport> reportList = null;	 
+	  if(yearStart != null && monthStart != null && dayStart != null ) 
+	     startDate = new DateTime(yearStart, monthStart, dayStart, 0, 0);
+	  if(yearEnd != null && monthEnd != null && dayEnd != null )    
+	     endDate = new DateTime(yearEnd, monthEnd, dayEnd, 23, 59);
+	  if(startDate != null){
+	     String period = "From " + startDate.toString("MM/dd/yyyy") + " to " + endDate.toString("MM/dd/yyyy");
+	     reportList = paymentReportService.getFailedPaymentReportByDate(startDate.toDate(), endDate.toDate());
+	     model.addObject("period", period);
+	  }
+	  else if(userName != null && userName.length() > 0){
+		  reportList = paymentReportService.getFailedPaymentReportByUserName(userName);
+      }
+	  else if(accountNo != null && accountNo > 0){
+		  reportList = paymentReportService.getFailedPaymentReportByAccountNo(accountNo);
+	  }    
+	  FailedPaymentHistory failedPaymentHistory = new FailedPaymentHistory(reportList);
+	  failedPaymentHistory.setCurrentPageNum(page);
+	  
+	  model.addObject("month_start", monthStart);
+	  model.addObject("day_start", dayStart);
+	  model.addObject("year_start", yearStart);
+	  model.addObject("month_end", monthEnd);
+	  model.addObject("day_end", dayEnd);
+	  model.addObject("year_end", yearEnd);
+	  model.addObject("userName", userName);
+	  model.addObject("accountNo", accountNo);	 
+	  model.addObject("reportList", reportList);
+	  model.addObject("failedPaymentHistory", failedPaymentHistory);
+	  
+	  return model.getSuccess();	
+  }
+    
+  
+  /**
+   * This will return the failed payment detail for the given transaction id
+   * @param trans id
+   * @return ModelAndView
+   */
+  @RequestMapping(value = "/payment/detail/{transId}", method = RequestMethod.GET)
+  public ModelAndView getPaymentReportDetail(@PathVariable int transId) {
+     ResultModel model = new ResultModel("admin/report/payment/detail");
+     
+     PaymentReport report = null;
+     report = paymentReportService.getPaymentReportByTransId(transId);
+     model.addObject("report", report);
+     return model.getSuccess();
+  }
+  
+  /**
+   * Thses are utility methods
+   */
+  
+  //@ModelAttribute("userNameList")
+  private List<String> getUserNames(){
+	List<String> userNameList = userManager.getAllUserNames();
+    List<String> newUserNameList = new ArrayList<String>();
+	User user = null;
+	for(String userName : userNameList){
+        if(userName != null && userName.length() > 1 && !userName.startsWith("reserve_"))
+    	   newUserNameList.add(userName);	
+    }
+	return newUserNameList;
+  }
+  
+  //@ModelAttribute("accountNumbers")
+  private Collection<Integer> getAllAccountNumbers(){
+	return paymentReportService.getAllAccountNumbers();	
+  }
 }
