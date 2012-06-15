@@ -14,12 +14,19 @@
   <div class="container">
     <div id="main-content">
       <div class="span-18 colborder">
-        <h4>Activation Reports</h4>
-        <div>
-          <a href="<spring:url value="/admin/report/activation" />">Activation Report</a>
-        </div>
+        <ul>
+          <li>
+             <h4>Activation Reports</h4>
+                <div><a href="<spring:url value="/admin/report/activation" />">Activation Report</a></div>
+                <p></p>
+          </li>   
+          <li>
+             <h4>Payment Reports</h4>
+                <div><a href="<spring:url value="/admin/report/payment" />">Failed Payment Report</a></div>
+          </li>
+       </ul>   
       </div>
-
+    </div>
       <sec:authorize ifAnyGranted="ROLE_ADMIN">
         <div class="span-6 last sub-navigation">
           <%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%>

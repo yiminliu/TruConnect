@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/includes/taglibs.jsp"%>
 <%@ include file="/WEB-INF/includes/doctype.jsp"%>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
 <head>
 <title>TruConnect Account Management</title>
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
