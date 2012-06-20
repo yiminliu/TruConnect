@@ -3,7 +3,6 @@ package com.trc.web.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -20,16 +19,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.config.Config;
 import com.trc.domain.support.report.payment.FailedPaymentHistory;
-import com.trc.domain.support.report.payment.PaymentTransaction;
 import com.trc.domain.support.report.payment.PaymentReport;
-import com.trc.exception.management.AccountManagementException;
 import com.trc.manager.ActivationReportManager;
 import com.trc.manager.UserManager;
 import com.trc.report.ActivationReport;
 import com.trc.report.UserActivationReport;
 import com.trc.service.report.PaymentReportService;
 import com.trc.user.User;
-import com.trc.user.account.PaymentHistory;
 import com.trc.util.logger.DevLogger;
 import com.trc.util.logger.activation.ActivationState;
 import com.trc.web.model.ResultModel;
@@ -131,11 +127,11 @@ public class ReportController {
   }
   
   /**
-   * This method handles the overall failed payment report requests
+   * This method will show the overall failed payment report requests
    * @return ModelAndView
    */
   @RequestMapping(value="/payment", method=RequestMethod.GET)
-  public String getAllFailedPayments(Model model){
+  public String showFailedPaymentReportRequest(Model model){
 	  Collection<Integer> accountNoList = getAllAccountNumbers();
 	  List<String> userNameList = getUserNames();
 	  model.addAttribute("accountNoList", accountNoList);
@@ -144,7 +140,7 @@ public class ReportController {
   }
   
   /**
-   * This method handles the pre-defined date range requests
+   * This method handles the pre-defined quick date range requests
    * @param quickLink
    * @return String
    */    
@@ -212,7 +208,7 @@ public class ReportController {
   }
   
   /**
-   * This method handles form input requests
+   * This method handles form input requests with user specified parameters
    * @param 
    * @return ModelAndView
    */
@@ -251,6 +247,7 @@ public class ReportController {
 	  model.addObject("reportList", reportList);
 	  model.addObject("failedPaymentHistory", failedPaymentHistory);
 	
+	  //These parameters will be used when processing paged reports
 	  model.addObject("month_start", monthStart);
 	  model.addObject("day_start", dayStart);
 	  model.addObject("year_start", yearStart);
@@ -322,16 +319,16 @@ public class ReportController {
    */
   @RequestMapping(value = "/payment/detail/{transId}", method = RequestMethod.GET)
   public ModelAndView getPaymentReportDetail(@PathVariable int transId) {
-     ResultModel model = new ResultModel("admin/report/payment/detail");
-     
+     ResultModel model = new ResultModel("admin/report/payment/detail");     
      PaymentReport report = null;
      report = paymentReportService.getPaymentReportByTransId(transId);
+     userManager.setSessionUser(report.getUser());
      model.addObject("report", report);
      return model.getSuccess();
   }
   
   /**
-   * Thses are utility methods
+   * The followings are utility methods
    */
   
   //@ModelAttribute("userNameList")

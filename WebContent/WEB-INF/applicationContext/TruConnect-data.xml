@@ -6,6 +6,7 @@
   http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
 
   <jee:jndi-lookup id="dataSource" jndi-name="jdbc/TrcMySql" />
+  <!-- <jee:jndi-lookup id="dataSourceTSCPMVNE" jndi-name="jdbc/TSCPMVNE" />-->
 
   <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
     <property name="dataSource" ref="dataSource" />
@@ -41,6 +42,28 @@
     </property>
   </bean>
 
+  <!-- 
+  <bean id="sessionFactoryTSCPMVNE" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+    <property name="dataSource" ref="dataSourceTSCPMVNE" />
+    <property name="annotatedClasses">
+      <list>
+          <value>com.trc.domain.support.report.payment.PaymentTransaction</value>
+      </list>
+    </property>
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+        <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+        <prop key="hibernate.show_sql">true</prop>
+        <prop key="hibernate.format_sql">true</prop>
+        <prop key="hibernate.use_sql_comments">${hibernate.use_sql_comments}</prop>
+        <prop key="hibernate.current_session_context_class">thread</prop>
+        <prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>    
+      </props>
+    </property>
+  </bean>
+  -->
+  
   <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
     <property name="transactionManager" ref="transactionManager" />
     <property name="transactionAttributes">
@@ -58,4 +81,9 @@
   <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
+  <!-- 
+  <bean id="hibernateTemplateTSCPVMNE" class="org.springframework.orm.hibernate3.HibernateTemplate">
+    <property name="sessionFactory" ref="sessionFactoryTSCPMVNE" />
+  </bean>
+  -->
 </beans>

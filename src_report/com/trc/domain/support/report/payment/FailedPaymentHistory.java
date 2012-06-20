@@ -23,7 +23,5 @@ public class FailedPaymentHistory extends Paginator<PaymentReport>{
 
 	public void setPaymentReports(List<PaymentReport> paymentReports) {
 		this.paymentReports = paymentReports;
-	}
-	
-	
+	}	
 }

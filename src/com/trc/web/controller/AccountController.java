@@ -16,6 +16,7 @@ import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
 import com.trc.user.account.AccountDetail;
 import com.trc.user.account.Overview;
+import com.trc.user.account.UsageHistory;
 import com.trc.web.model.ResultModel;
 
 @Controller
@@ -65,6 +66,7 @@ public class AccountController {
     int accountNum = SessionEncrypter.decryptId(encodedAccountNum);
     List<AccountDetail> accountList = overview.getAccountDetails();
     overview.getAccountDetail(accountNum).getUsageHistory().setCurrentPageNum(page);
+    
     List<AccountDetail> accountDetails = new ArrayList<AccountDetail>();
     accountDetails.add(overview.getAccountDetail(accountNum));
     model.addObject("numAccounts", numAccounts);

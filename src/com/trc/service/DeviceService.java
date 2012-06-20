@@ -12,14 +12,18 @@ import com.trc.service.gateway.TruConnectGateway;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
 import com.tscp.mvne.Account;
-import com.tscp.mvne.BillingException_Exception;
+//import com.tscp.mvne.BillingException;
 import com.tscp.mvne.Device;
-import com.tscp.mvne.DeviceException_Exception;
-import com.tscp.mvne.NetworkException_Exception;
+//import com.tscp.mvne.DeviceException_Exception;
+//import com.tscp.mvne.NetworkException_Exception;
 import com.tscp.mvne.NetworkInfo;
-import com.tscp.mvne.ProvisionException_Exception;
+//import com.tscp.mvne.ProvisionException_Exception;
 import com.tscp.mvne.ServiceInstance;
 import com.tscp.mvne.TruConnect;
+import com.tscp.mvne.billing.exception.BillingServerException;
+import com.tscp.mvne.billing.exception.ProvisionException;
+import com.tscp.mvne.customer.DeviceException;
+import com.tscp.mvne.network.exception.NetworkException;
 
 @Service
 public class DeviceService implements DeviceServiceModel {
@@ -36,9 +40,10 @@ public class DeviceService implements DeviceServiceModel {
       return truConnect.getNetworkInfo(esn, msid);
     } catch (WebServiceException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (NetworkException_Exception e) {
-      throw new DeviceServiceException(e.getMessage(), e.getCause());
-    }
+    } 
+    //catch (NetworkException e) {
+     // throw new DeviceServiceException(e.getMessage(), e.getCause());
+    //}
   }
 
   @Override
@@ -101,15 +106,15 @@ public class DeviceService implements DeviceServiceModel {
       truConnect.suspendAccount(userId, accountNo, deviceId);
     } catch (WebServiceException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (ProvisionException_Exception e) {
+    } /*catch (ProvisionException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (NetworkException_Exception e) {
+    } catch (NetworkException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (DeviceException_Exception e) {
+    } catch (DeviceException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
     } catch (BillingException_Exception e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
-    }
+    }*/
   }
 
   @Override
@@ -118,15 +123,15 @@ public class DeviceService implements DeviceServiceModel {
       truConnect.restoreAccount(userId, accountNo, deviceId);
     } catch (WebServiceException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (ProvisionException_Exception e) {
+    } /*catch (ProvisionException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
     } catch (NetworkException_Exception e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (DeviceException_Exception e) {
+    } catch (DeviceException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
-    } catch (BillingException_Exception e) {
+    } catch (BillingServerException e) {
       throw new DeviceServiceException(e.getMessage(), e.getCause());
-    }
+    }*/
   }
 
   @Override

@@ -41,13 +41,30 @@
                       <th>Failure Reason</th>
                       <th>Detail</th>
                    </tr>                               
-                   <c:forEach var="report" items="${failedPaymentHistory.currentPage}" varStatus="rowCounter">          
-                       <tr>                  
+                   <c:forEach var="report" items="${failedPaymentHistory.currentPage}" varStatus="rowCounter">  
+                   <c:set var="dateAndTime" value="${report.paymentTransaction.paymentTransDate}" />
+                         <tr>                  
                           <td>${report.user.username}</td>            
                           <td>${report.paymentTransaction.accountNo}</td>                  
                           <td>$<fmt:formatNumber value="${report.paymentTransaction.paymentAmount}" pattern="0.00"/></td>
-                          <td>${report.paymentTransaction.paymentMethod}: ${report.paymentTransaction.paymentSource}</td>
-                          <td><fmt:formatDate type="both" pattern="MM/dd/yy hh:mm"  value="${report.paymentTransaction.paymentTransDate}"/></td>
+                          <td>${report.paymentTransaction.paymentMethod}: 
+                              <c:choose>
+                                 <c:when test="${fn:length(report.paymentTransaction.paymentSource) > 4}">
+                                     ${report.paymentTransaction.paymentSource}
+                                 </c:when>
+                                 <c:otherwise>
+                                     -${report.paymentTransaction.paymentSource}
+                                 </c:otherwise>        
+                               </c:choose>
+                          </td>
+                          <td>
+                              ${dateAndTime.month}/${dateAndTime.day}/${dateAndTime.year}
+                              ${dateAndTime.hour}:<fmt:formatNumber value="${dateAndTime.minute}" pattern="00" />
+                              <c:choose>
+                                 <c:when test="${dateAndTime.hour >= 12}">pm</c:when>
+                                 <c:otherwise>am</c:otherwise>
+                              </c:choose>          
+                          </td>             
                           <td>${fn:replace(report.paymentTransaction.paymentUnitMessage,"Unsuccessful Charge AuthCode::", "")}</td>    
                           <td><a href="<spring:url value="/admin/report/payment/detail/${report.paymentTransaction.transId}" />" ><img class="info" src="<spring:url value="/static/images/buttons/i.png" />" /></a></td>           
                        </tr>                 

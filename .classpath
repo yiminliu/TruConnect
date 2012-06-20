@@ -7,9 +7,11 @@
 	<classpathentry kind="src" path="src_logging"/>
 	<classpathentry kind="src" path="src_jms"/>
 	<classpathentry kind="src" path="WebContent/WEB-INF/resources"/>
+	<classpathentry kind="src" path="src_ticketing"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/com.sun.enterprise.jst.server.runtimeTarget/GlassFish 3.1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_25"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TSCPMVNE-Jon"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

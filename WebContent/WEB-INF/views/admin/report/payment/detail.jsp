@@ -19,6 +19,7 @@
         <div class="span-18">
            <table cellspacing="10">
              <tr border-spacing="0">
+             <c:set var="dateAndTime" value="${report.paymentTransaction.paymentTransDate}" />
                <td>Account</td>              
                <c:if test="${report.paymentTransaction.accountNo > 0}">
                   <td>
@@ -40,15 +41,32 @@
              </tr>   
              <tr>
                <td>Payment Method</td>
-               <td>${report.paymentTransaction.paymentMethod}</td>
+               <td>{report.paymentTransaction.paymentMethod}</td>
              </tr>
              <tr>
                <td>Payment Source</td>
-               <td>${report.paymentTransaction.paymentSource}</td>
+               <td>
+                  <c:choose>
+                     <c:when test="${fn: length(report.paymentTransaction.paymentSource) > 4}">
+                        ${report.paymentTransaction.paymentSource}
+                     </c:when>
+                     <c:otherwise>
+                        -${report.paymentTransaction.paymentSource}
+                     </c:otherwise>        
+                  </c:choose>
+               </td>
              </tr>    
              <tr>
                <td>Date and Time</td>
-               <td><fmt:formatDate type="both" value="${report.paymentTransaction.paymentTransDate}"/></td>
+                 
+               <td>
+                   ${dateAndTime.month}/${dateAndTime.day}/${dateAndTime.year}
+                   ${dateAndTime.hour}:<fmt:formatNumber value="${dateAndTime.minute}" pattern="00" />
+                   <c:choose>
+                      <c:when test="${dateAndTime.hour >= 12}">pm</c:when>
+                      <c:otherwise>am</c:otherwise>
+                   </c:choose> 
+               </td>
              </tr>
              <tr>
                <td>Payment Failure Reason</td>
