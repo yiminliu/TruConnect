@@ -23,11 +23,10 @@
                <td>Account</td>              
                <c:if test="${report.paymentTransaction.accountNo > 0}">
                   <td>
-                    <!-- <a href="<spring:url value="/account/activity/${report.paymentTransaction.encodedAccountNum}" />" >-->
-                    <a href="<spring:url value="/account" />" >
-                        ${report.paymentTransaction.accountNo}
-                       <img class="info" src="<spring:url value="/static/images/buttons/i.png" />" />
-                    </a>           
+                     ${report.paymentTransaction.accountNo}
+                      <a href="<spring:url value="/account" />" >
+                         <img class="info" src="<spring:url value="/static/images/buttons/i.png" />" />
+                      </a>           
                   </td>
                </c:if>   
              </tr>
@@ -41,13 +40,13 @@
              </tr>   
              <tr>
                <td>Payment Method</td>
-               <td>{report.paymentTransaction.paymentMethod}</td>
+               <td>${report.paymentTransaction.paymentMethod}</td>
              </tr>
              <tr>
                <td>Payment Source</td>
                <td>
                   <c:choose>
-                     <c:when test="${fn: length(report.paymentTransaction.paymentSource) > 4}">
+                     <c:when test="${fn:length(report.paymentTransaction.paymentSource) > 4}">
                         ${report.paymentTransaction.paymentSource}
                      </c:when>
                      <c:otherwise>
@@ -58,7 +57,6 @@
              </tr>    
              <tr>
                <td>Date and Time</td>
-                 
                <td>
                    ${dateAndTime.month}/${dateAndTime.day}/${dateAndTime.year}
                    ${dateAndTime.hour}:<fmt:formatNumber value="${dateAndTime.minute}" pattern="00" />
@@ -69,7 +67,7 @@
                </td>
              </tr>
              <tr>
-               <td>Payment Failure Reason</td>
+               <td>Payment Failure Code</td>
                <td>${report.paymentTransaction.paymentUnitMessage}</td>
              </tr>
              <tr>
@@ -85,68 +83,7 @@
                   <!-- <td>${report.user.contactInfo.phoneNumber}</td>-->
                   <td>${report.account.contactNumber}</td>
                </tr>
-             </c:if>  
-             <!-- <tr>
-               <td>Account Balance</td>
-                  <c:if test="${!empty report.account}">
-                     <td>$<fmt:formatNumber value="${report.account.balance}" pattern="0.00"/></td>
-                  </c:if>   
-             </tr>  
-             <tr>
-               <td>Active Date</td>
-               <td><fmt:formatDate type="both" pattern="MM/dd/yy hh:mm" value="${report.account.activeDate}"/></td>
-             </tr>  
-             <tr>
-               <td>Inactive Date</td>
-               <td><fmt:formatDate type="both" pattern="MM/dd/yy hh:mm" value="${report.account.inactiveDate}"/></td>
-             </tr>
-               <c:forEach var="serviceinstance" items="${report.account.serviceinstancelist}">
-             <tr>
-                     <td>MDN</td>
-                     <td>${serviceinstance.externalId}
-                         <c:choose>
-                            <c:when test="${empty serviceinstance.inactiveDate}">
-                              (Active)
-                            </c:when>
-                            <c:otherwise>
-                              (Inactive)
-                            </c:otherwise>
-                         </c:choose>                            
-                     </td>
-                  </tr>
-             </c:forEach>    
-             <c:if test="not empty ${report.device.value}">
-               <tr>
-                 <td>ESN</td>
-                 <td>${report.device.value}</td>
-                   <c:choose>
-                     <c:when test="${report.device.statusId == 1}">
-                       <td>(New)</td>
-                     </c:when>   
-                     <c:when test="${report.device.statusId == 2}">
-                       <td>(Active)</td> 
-                     </c:when>
-                     <c:when test="${report.device.statusId == 3}">
-                        <td>(Released / Reactivate-able)</td>
-                     </c:when>  
-                     <c:when test="${report.device.statusId == 2}">
-                        <td>(Active)</td> 
-                     </c:when>
-                     <c:when test="${report.device.statusId == 3}">
-                        <td>(Released / Reactivate-able)</td>
-                     </c:when> 
-                     <c:when test="${report.device.statusId == 4}">
-                        <td>(Released / Removed)</td> 
-                     </c:when>
-                     <c:when test="${report.device.statusId == 5}">
-                        <td>(Released / System-Reactivate)</td>
-                     </c:when>   
-                     <c:when test="${report.device.statusId == 6}">
-                        <td>(Blocked)</td>
-                     </c:when> 
-                   </c:choose>   
-                 </tr>
-               </c:if>-->  
+             </c:if>            
          </table> 
           <div style="margin-left:220px; text-align:center;">
              <a id="showOpenTickets" href="<spring:url value="/admin/report/payment"/>" class="button action-m"><span>Failed Payment Report Home</span></a>

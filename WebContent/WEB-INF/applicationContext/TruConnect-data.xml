@@ -26,6 +26,11 @@
         <value>com.trc.coupon.CouponStackable</value>
         <value>com.trc.coupon.CouponStackableId</value>
         <value>com.trc.coupon.CouponDetailType</value>
+        <value>com.trc.domain.support.ticket.Ticket</value>
+        <value>com.trc.domain.support.ticket.TicketStatus</value>
+        <value>com.trc.domain.support.ticket.TicketCategory</value>
+        <value>com.trc.domain.support.ticket.TicketNote</value>        
+        <!-- <value>com.trc.user.authority.ROLE</value>-->
       </list>
     </property>
     <property name="hibernateProperties">

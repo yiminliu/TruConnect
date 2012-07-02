@@ -105,6 +105,22 @@
             <input id="paymentReportByAccountNoSubmit" class="hidden" type="submit" value="Get Report" />
           </div>    
         </form>
+        <h4 style="margin-bottom: 10px; padding-bottom: 0px;">View by Failure Code:</h4>
+        <form id="paymentReportByFailureCode" class="validatedForm" method="POST">
+          <div class="row">
+            <label class="required" for="failureCode">Failure Code</label>
+              <select name="failureCode" style="width: 190px;">
+                 <option value="0" selected="selected">Select one</option>
+                 <c:forEach var="failureCode" items="${failureCodeList}" varStatus="status"> 
+                    <option value="${failureCode}">${failureCode}</option>            
+                 </c:forEach>
+              </select>
+          </div>
+          <div class="buttons">
+            <a href="#" id="paymentReportByFailureCodeButton" class="button action-m"><span>Get Report</span> </a> 
+            <input id="paymentReportByFailureCodeSubmit" class="hidden" type="submit" value="Get Report" />
+          </div>    
+        </form>
      </div> <!--  close span-18 colborder-->
        <sec:authorize ifAnyGranted="ROLE_ADMIN">
          <div class="span-6 last sub-navigation">

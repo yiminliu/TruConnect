@@ -14,17 +14,18 @@
   <div class="blueTruConnectGradient">
     <div class="container">
         <div class="span-18 colborder">
-           Failed Payment Report: <span style="color: #666;">${period}</span><br/>
+           Failed Payment Report: <span style="color: #666;">${period}</span><br/>           
            <c:if test="${fn:length(reportList) > 1}">
-              <span style="color: #666; margin-left: 20px; font-size: small">
-                Total Failed Payment Transactions: ${fn:length(reportList)}<br/>
-              </span>
+              <c:set var="reportList" value="${reportList}" scope="session" />
+              <span style="color: #666; margin-left: 20px; font-size: small">Total Failed Payment Transactions: ${fn:length(reportList)}</span>
+              <span style="float:right; color:#666; margin-left: 20px; font-size: small">
+              <a href="<spring:url value="/admin/report/payment/viewtype/excel" />">View Report in Excel format</a>
+           </span>
            </c:if>      
            <br/><hr/>
          </div>
     </div>
   </div>
-
   <div class="container">
      <div id="main-content">      
         <div class="span-18 colborder">           
@@ -38,7 +39,7 @@
                       <th>Amount</th>           
                       <th>Payment Source</th>
                       <th>Date and Time</th>
-                      <th>Failure Reason</th>
+                      <th>Failure Code</th>
                       <th>Detail</th>
                    </tr>                               
                    <c:forEach var="report" items="${failedPaymentHistory.currentPage}" varStatus="rowCounter">  
@@ -66,7 +67,10 @@
                               </c:choose>          
                           </td>             
                           <td>${fn:replace(report.paymentTransaction.paymentUnitMessage,"Unsuccessful Charge AuthCode::", "")}</td>    
-                          <td><a href="<spring:url value="/admin/report/payment/detail/${report.paymentTransaction.transId}" />" ><img class="info" src="<spring:url value="/static/images/buttons/i.png" />" /></a></td>           
+                          <td><a href="<spring:url value="/admin/report/payment/detail/${report.paymentTransaction.transId}" />" >
+                                 <img class="info" src="<spring:url value="/static/images/buttons/i.png" />" />
+                              </a>
+                          </td>           
                        </tr>                 
                     </c:forEach>  
                 </table>
@@ -120,7 +124,7 @@
          </c:choose>  
          <br></br>
          <div style="margin-left:220px; text-align:center;">
-             <a id="showOpenTickets" href="<spring:url value="/admin/report/payment"/>" class="button action-m"><span>Failed Payment Report Home</span></a>
+             <a id="paymentReport" href="<spring:url value="/admin/report/payment"/>" class="button action-m"><span>Failed Payment Report Home</span></a>
          </div>  
       </div><!-- close span-18 -->
       <sec:authorize ifAnyGranted="ROLE_ADMIN">
