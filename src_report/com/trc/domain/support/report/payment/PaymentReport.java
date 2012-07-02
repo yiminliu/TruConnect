@@ -1,21 +1,19 @@
 package com.trc.domain.support.report.payment;
 
-import java.util.List;
+import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.trc.user.User;
-import com.trc.util.Paginator;
 import com.tscp.mvne.Account;
 import com.tscp.mvne.Device;
 import com.tscp.mvne.PaymentTransaction;
 
-public class PaymentReport{
+public class PaymentReport implements Comparable<PaymentReport>{
 
 	private PaymentTransaction paymentTransaction;
 	private User user;
 	private Account account;
-	private Device device;
 	private int failedPaymentCount;
 		
 	public Account getAccount() {
@@ -23,13 +21,7 @@ public class PaymentReport{
 	}
 	public void setAccount(Account account) {
 		this.account = account;
-	}
-	public Device getDevice() {
-		return device;
-	}
-	public void setDevice(Device device) {
-		this.device = device;
-	}
+	}	
 	public PaymentTransaction getPaymentTransaction() {
 		return paymentTransaction;
 	}
@@ -53,11 +45,8 @@ public class PaymentReport{
 	
 	public PaymentReport(){}	
 	
-	public java.util.Date toDate(XMLGregorianCalendar gc){
-		 if(gc == null)
-			return null;
-		 else
-		    return gc.toGregorianCalendar().getTime();
-	  }
-	
+	public int compareTo(PaymentReport paymentReport){
+		Date paymentTransactionDate = paymentReport.getPaymentTransaction().getPaymentTransDate().toGregorianCalendar().getTime();
+		return paymentTransactionDate.compareTo(this.paymentTransaction.getPaymentTransDate().toGregorianCalendar().getTime());
+	}	
 }

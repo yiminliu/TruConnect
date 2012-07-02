@@ -2,7 +2,13 @@ package com.trc.web.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -127,16 +133,19 @@ public class ReportController {
   }
   
   /**
-   * This method will show the overall failed payment report requests
-   * @return ModelAndView
+   * This method will display all failed payment report requests
+   * @return String
    */
   @RequestMapping(value="/payment", method=RequestMethod.GET)
   public String showFailedPaymentReportRequest(Model model){
 	  Collection<Integer> accountNoList = getAllAccountNumbers();
 	  List<String> userNameList = getUserNames();
+	  Collection<String> failureCodeList = getAllFailureCodes();
 	  model.addAttribute("accountNoList", accountNoList);
 	  model.addAttribute("userNameList", userNameList);
-     return "admin/report/payment/request";	  
+	  model.addAttribute("failureCodeList", failureCodeList);	  
+	  userManager.setSessionUser(null);
+      return "admin/report/payment/request";	  
   }
   
   /**
@@ -213,14 +222,15 @@ public class ReportController {
    * @return ModelAndView
    */
   @RequestMapping(value="/payment", method=RequestMethod.POST)
-  public ModelAndView getFailedPaymentReportNoPageNo(@RequestParam(value="month_start", required=false) Integer monthStart,
-		                                   @RequestParam(value="day_start", required=false) Integer dayStart, 
-		                                   @RequestParam(value="year_start", required=false) Integer yearStart,
-		                                   @RequestParam(value="month_end", required=false) Integer monthEnd, 
-		                                   @RequestParam(value="day_end", required=false) Integer dayEnd,
-		                                   @RequestParam(value="year_end", required=false) Integer yearEnd,
-		                                   @RequestParam(value="userName", required=false) String userName,
-		                                   @RequestParam(value="accountNo", required=false) Integer accountNo){
+  public ModelAndView getFailedPaymentReport(@RequestParam(value="month_start", required=false) Integer monthStart,
+		                                             @RequestParam(value="day_start", required=false) Integer dayStart, 
+		                                             @RequestParam(value="year_start", required=false) Integer yearStart,
+		                                             @RequestParam(value="month_end", required=false) Integer monthEnd, 
+		                                             @RequestParam(value="day_end", required=false) Integer dayEnd,
+		                                             @RequestParam(value="year_end", required=false) Integer yearEnd,
+		                                             @RequestParam(value="userName", required=false) String userName,
+		                                             @RequestParam(value="accountNo", required=false) Integer accountNo,
+		                                             @RequestParam(value="failureCode", required=false) String failureCode){
 	  ResultModel model = new ResultModel("admin/report/payment/report");
 	  DateTime startDate = null;
 	  DateTime endDate = null;
@@ -229,7 +239,6 @@ public class ReportController {
 	     startDate = new DateTime(yearStart, monthStart, dayStart, 0, 0);
 	  if(yearEnd != null && monthEnd != null && dayEnd != null )    
 	     endDate = new DateTime(yearEnd, monthEnd, dayEnd, 23, 59);
-
 	  if(startDate != null){
 	     String period = "From " + startDate.toString("MM/dd/yyyy") + " to " + endDate.toString("MM/dd/yyyy");
 	     reportList = paymentReportService.getFailedPaymentReportByDate(startDate.toDate(), endDate.toDate());
@@ -240,13 +249,14 @@ public class ReportController {
       }
 	  else if(accountNo != null && accountNo > 0){
 		  reportList = paymentReportService.getFailedPaymentReportByAccountNo(accountNo);
-	  }    
-	  
+	  }	 
+	  else if(failureCode != null && failureCode.length() > 0){
+		  reportList = paymentReportService.getFailedPaymentReportByFailureCode(failureCode);
+      }
 	  FailedPaymentHistory failedPaymentHistory = new FailedPaymentHistory(reportList);
 	  failedPaymentHistory.setCurrentPageNum(1);
 	  model.addObject("reportList", reportList);
-	  model.addObject("failedPaymentHistory", failedPaymentHistory);
-	
+	  model.addObject("failedPaymentHistory", failedPaymentHistory);	
 	  //These parameters will be used when processing paged reports
 	  model.addObject("month_start", monthStart);
 	  model.addObject("day_start", dayStart);
@@ -256,12 +266,13 @@ public class ReportController {
 	  model.addObject("year_end", yearEnd);
 	  model.addObject("userName", userName);
 	  model.addObject("accountNo", accountNo);
+	  model.addObject("failureCode", failureCode);
 	  	  
 	  return model.getSuccess();	  
   }  
   
   /**
-   * This handles form requests. it also handles pagination
+   * This handles form requests with user-specified date range. it also handles pagination
    * @param 
    * @return ModelAndView
    */  
@@ -274,6 +285,7 @@ public class ReportController {
                                              @RequestParam(value="year_end", required=false) Integer yearEnd,
                                              @RequestParam(value="userName", required=false) String userName,
                                              @RequestParam(value="accountNo", required=false) Integer accountNo,
+                                             @RequestParam(value="failureCode", required=false) String failureCode,
                                              @PathVariable("page") Integer page){
 	  ResultModel model = new ResultModel("admin/report/payment/report");
 	  DateTime startDate = null;
@@ -294,6 +306,9 @@ public class ReportController {
 	  else if(accountNo != null && accountNo > 0){
 		  reportList = paymentReportService.getFailedPaymentReportByAccountNo(accountNo);
 	  }    
+	  else if(failureCode != null && failureCode.length() > 0){
+		  reportList = paymentReportService.getFailedPaymentReportByFailureCode(failureCode);
+      }
 	  FailedPaymentHistory failedPaymentHistory = new FailedPaymentHistory(reportList);
 	  failedPaymentHistory.setCurrentPageNum(page);
 	  
@@ -305,12 +320,11 @@ public class ReportController {
 	  model.addObject("year_end", yearEnd);
 	  model.addObject("userName", userName);
 	  model.addObject("accountNo", accountNo);	 
+	  model.addObject("failureCode", failureCode);
 	  model.addObject("reportList", reportList);
 	  model.addObject("failedPaymentHistory", failedPaymentHistory);
-	  
 	  return model.getSuccess();	
-  }
-    
+  }    
   
   /**
    * This will return the failed payment detail for the given transaction id
@@ -326,6 +340,24 @@ public class ReportController {
      model.addObject("report", report);
      return model.getSuccess();
   }
+  
+  /**
+   * This method handles output formats
+   * @param 
+   * @return ModelAndView
+   */  
+  @RequestMapping(value="/payment/viewtype/{type}", method=RequestMethod.GET)
+  public ModelAndView getFailedPaymentReport(HttpServletRequest request, HttpServletResponse response,
+		                                    @PathVariable String type){	 
+	  List<PaymentReport> reportList = (List<PaymentReport>)request.getSession().getAttribute("reportList");
+	  ModelAndView resultModel = null;	  
+	  Map<String, List<PaymentReport>> reportListMap = new HashMap<String, List<PaymentReport>>();
+	  reportListMap.put("reportList", reportList);
+	  if("excel".equalsIgnoreCase(type))
+    	  resultModel = new ModelAndView("ExcelPaymentReportView");	
+	  resultModel.addObject(reportListMap);
+	  return resultModel;	
+  }      
   
   /**
    * The followings are utility methods
@@ -347,4 +379,8 @@ public class ReportController {
   private Collection<Integer> getAllAccountNumbers(){
 	return paymentReportService.getAllAccountNumbers();	
   }
+  
+  private Collection<String> getAllFailureCodes(){
+	return paymentReportService.getAllFailureCodes();	
+	  }
 }
