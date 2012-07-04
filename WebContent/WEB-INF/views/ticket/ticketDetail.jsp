@@ -56,7 +56,7 @@
                     <td><span class="span-4">${ticket.assignee.username}</span></td>                 
                 </tr> 
                 <tr>
-                    <td><span class="span-4">Creator: </span></td>
+                    <td><span class="span-4">Requester: </span></td>
                     <td><span class="span-4">${ticket.creator.username}</span></td>
                 <tr>
                     <td><span class="span-4">Created Date: </span></td>
