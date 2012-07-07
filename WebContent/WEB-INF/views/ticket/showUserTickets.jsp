@@ -5,7 +5,6 @@
 <title>Show Ticket Information</title>
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
 <script type="text/javascript" src="<spring:url value="/static/javascript/setupForms.js" />"></script>
-<script type="text/javascript" src="<spring:url value="/static/javascript/pages/addCoupon.js" />"></script>
 </head>
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>

@@ -40,7 +40,7 @@
                       <th>Status</th>
                       <th>Category</th>
                       <th>Priority</th>
-                      <th>Assigned to</th> 
+                      <th>Created Date</th> 
                       <th style="float: right">Detail</th>         
                   </tr>
                 </c:if>
@@ -59,7 +59,7 @@
                             <td>${fn:toLowerCase(ticket.priority)}</td>
                          </c:otherwise>
                        </c:choose>     
-                      <td>${ticket.assignee.username}</td>
+                      <td><fmt:formatDate type="date" value="${ticket.createdDate}"/></td>
                       <c:if test="${!empty ticket.title}">
                          <td>
                            <a href="<spring:url value="/ticket/ticketDetail/${ticket.id}" />" ><img class="info" src="<spring:url value="/static/images/buttons/i.png" />" /></a>
