@@ -29,6 +29,8 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -73,8 +75,10 @@ public class Ticket implements Serializable {
   @JoinColumn(name = "assignee", insertable = true, updatable = true)
   private User assignee;
     
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "ticket")
-  @Fetch(value = FetchMode.SUBSELECT)
+  @OneToMany(cascade=CascadeType.ALL, mappedBy = "ticket")
+  @LazyCollection(LazyCollectionOption.FALSE)
+  //@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "ticket")
+  //@Fetch(value = FetchMode.SUBSELECT)
   private Collection<TicketNote> notes = new ArrayList<TicketNote>();
  
   @Column(name = "created_date", updatable = false)
@@ -145,7 +149,7 @@ public class Ticket implements Serializable {
 	this.priority = priority;
   }
 
-  private void setNotes(Collection<TicketNote> notes) {
+  public void setNotes(Collection<TicketNote> notes) {
     this.notes = notes;
   }
       
@@ -199,14 +203,16 @@ public class Ticket implements Serializable {
 	  SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	  StringBuilder sb = new StringBuilder();
 	  for(TicketNote note : Collections.synchronizedCollection(notes)){
-		  sb.append(note.getNote());
-		  sb.append("(");
-		  if(note.getCreatedDate() != null)
-			 sb.append(formatter.format(note.getCreatedDate()) + ", ");		  
-		  if(note.getAuthor() != null)			 
-		     sb.append("by " + note.getAuthor().getUsername());
-		  sb.append(")");
-		  sb.append("\n");		  
+		  if(note.getNote() != null && note.getNote().length() > 0) {
+   		     sb.append(note.getNote());
+		     sb.append("(");
+		     if(note.getCreatedDate() != null)
+			    sb.append(formatter.format(note.getCreatedDate()) + ", ");		  
+		     if(note.getAuthor() != null)			 
+		        sb.append("by " + note.getAuthor().getUsername());
+		     sb.append(")");
+		     sb.append("\n");
+		  }   
 	  }	  
 	  noteMessages = sb.toString();	  
 	  return noteMessages;
