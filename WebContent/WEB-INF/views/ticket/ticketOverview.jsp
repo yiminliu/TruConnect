@@ -5,7 +5,6 @@
 <title>Show Ticket Information</title>
 <%@ include file="/WEB-INF/includes/headTags.jsp"%>
 <script type="text/javascript" src="<spring:url value="/static/javascript/setupForms.js" />"></script>
-<script type="text/javascript" src="<spring:url value="/static/javascript/pages/addCoupon.js" />"></script>
 </head>
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
@@ -58,7 +57,7 @@
             <th>Status</th>
             <th>Category</th>
             <th>Priority</th>
-            <th>Assigned to</th>
+            <th>Created Date</th>
             <th>Detail</th>
           </tr>
           <c:forEach var="ticket" items="${ticketStorage.currentPage}" varStatus="rowCounter"> 
@@ -82,7 +81,7 @@
                     <td><c:out value="${fn:toLowerCase(ticket.priority)}"/></td>
                 </c:otherwise>
               </c:choose>        
-              <td><c:out value="${ticket.assignee.username}"/></td>
+              <td><fmt:formatDate type="date" value="${ticket.createdDate}"/></td>
               <td>
                  <a href="<spring:url value="/ticket/ticketDetail/${ticket.id}" />" ><img class="info" src="<spring:url value="/static/images/buttons/i.png" />" /></a>
               </td>             

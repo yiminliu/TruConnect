@@ -82,8 +82,8 @@
            <form:input path="description" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
           </div> 
           <div class="row">
-            <form:label path="notes[${numOfNotes}].note">Note</form:label>
-            <form:textarea path="notes[${numOfNotes}].note" cssClass="span-9" cssErrorClass="span-8 validationFailed" />
+               <form:label path="notes[0].note">Note</form:label>
+            <form:textarea path="notes[0].note" cssClass="span-9" cssErrorClass="span-8 validationFailed" />
            </div>  
           <div class="buttons">
             <a id="updateTicketButton" href="#" class="button action-m"><span>Submit</span></a> 
