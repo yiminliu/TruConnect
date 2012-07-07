@@ -53,8 +53,6 @@ public class HibernateTicketDao extends HibernateDaoSupport implements TicketDao
   public void updateTicket(Ticket ticket) {
 	 validateTicket(ticket);	 
      ticket.setLastModifiedDate(new Timestamp(System.currentTimeMillis()));	
-     System.out.println("ticket = "+ticket.toString());
-     System.out.println("ticket note =" +ticket.getNotes().size());
      getHibernateTemplate().saveOrUpdate(ticket);
   }
 
