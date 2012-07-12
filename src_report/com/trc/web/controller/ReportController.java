@@ -366,7 +366,6 @@ public class ReportController {
   private List<String> getUserNames(){
 	List<String> userNameList = userManager.getAllUserNames();
     List<String> newUserNameList = new ArrayList<String>();
-	User user = null;
 	for(String userName : userNameList){
         if(userName != null && userName.length() > 1 && !userName.startsWith("reserve_"))
     	   newUserNameList.add(userName);	
