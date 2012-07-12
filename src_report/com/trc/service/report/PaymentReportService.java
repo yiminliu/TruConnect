@@ -213,8 +213,7 @@ public class PaymentReportService{
 		}		
 		Collections.sort(paymentReportList);
 		return processPaymentReportList(paymentReportList);
-	}
-        
+	}       
     
     private void setReportCount(List<PaymentReport> paymentReportList) {
     	int count = 0;
@@ -235,11 +234,7 @@ public class PaymentReportService{
     	    newList.add(paymentReportI);
     	    if(j == paymentReportList.size()-1)
     	    count = 0;   
-      	} 
-    	for(PaymentReport paymentReport : paymentReportList){
-    		 if(paymentReport.getAccount() != null) 
-	    	System.out.println("count: " + paymentReport.getAccount().getAccountno() +": "+ count);
-    	}
+      	}    	
     }
   
     private List<PaymentReport> processPaymentReportList(List<PaymentReport> paymentReportList){
@@ -250,7 +245,6 @@ public class PaymentReportService{
     	        paymentReportList.remove(i);	
     	}
     	return paymentReportList;
-    }
-    
+    } 
     
 }
