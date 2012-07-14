@@ -2,11 +2,8 @@ package com.trc.domain.support.report.payment;
 
 import java.util.Date;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import com.trc.user.User;
 import com.tscp.mvne.Account;
-import com.tscp.mvne.Device;
 import com.tscp.mvne.PaymentTransaction;
 
 public class PaymentReport implements Comparable<PaymentReport>{
@@ -19,18 +16,23 @@ public class PaymentReport implements Comparable<PaymentReport>{
 	public Account getAccount() {
 		return account;
 	}
+	
 	public void setAccount(Account account) {
 		this.account = account;
 	}	
+	
 	public PaymentTransaction getPaymentTransaction() {
 		return paymentTransaction;
 	}
+	
 	public void setPaymentTransaction(PaymentTransaction paymentTransaction) {
 		this.paymentTransaction = paymentTransaction;
 	}
+	
 	public User getUser() {
 		return user;
 	}
+	
 	public void setUser(User user) {
 		this.user = user;
 	}
