@@ -41,6 +41,7 @@ public class AccountManager implements AccountManagerModel {
   private AddressManager addressManager;
   @Autowired
   private DeviceManager deviceManager;
+ 
 
   @Override
   @Loggable(value = LogLevel.TRACE)

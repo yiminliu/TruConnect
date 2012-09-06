@@ -12,7 +12,7 @@
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
   <div class="blueTruConnectGradient">
-    <div class="container">Create Ticket</div>
+    <div class="container">Create Notification</div>
   </div>
 
   <div class="container">
@@ -40,7 +40,7 @@
           <!-- <div class="slider" style="height: 250px;">-->
           <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Enter Ticket Information</h3>
           <div class="row">
-            <form:label path="title" cssClass="required">Ticket Title</form:label>
+            <form:label path="title" cssClass="required">Title</form:label>
             <form:input path="title" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
           </div>
           <div class="row">

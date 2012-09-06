@@ -1,0 +1,30 @@
+
+#nav_manage_notification {
+    float: left;
+
+}
+
+.nav_notification a:hover { background-color: white; }
+
+#nav_manage_notification:hover div:first-child { border-bottom: none; }
+
+#nav_manage_notification .nav_notification { display: none; }
+
+#nav_manage_notification:hover .nav_notification { 
+    display: block; 
+    background-color: white; 
+}
+
+
+#nav_manage_notification div {
+    width: 175px;
+    background-color: white;
+    padding: 5px;
+    border: dotted 1px yellow;
+    display: none;
+}
+
+
+.nav_notification div, .nav_notification a { display:block; text-decoration: none; margin: 2px 2px 2px 10px; }
+.nav_notification div + div, .nav_notification a + a { margin-top: 10px; } 
+

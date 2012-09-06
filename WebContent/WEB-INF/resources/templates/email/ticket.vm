@@ -1,0 +1,16 @@
+<html>
+<body >
+<div>
+	<div style="border-bottom:1px solid #999; margin-bottom:15px; font-size:15px;">
+		<img src="https://activate.truconnect.com/static/images/logo/logo_s1.jpg">
+	</div>
+	<div style="width: 95%; margin:0px auto;">
+		<h3 style="color:gray;">A New IT HelpDesk Ticket Has Been Assigned To You</h3>
+		<p>
+			Please look at the ticket detail: 
+			<a href="https://activate.truconnect.com/TruConnect//ticket/ticketDetail/${ticketId}">Ticket Detail</a>
+		</p>
+	</div>
+</div>
+</body>
+</html>

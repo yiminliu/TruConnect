@@ -13,33 +13,11 @@
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
   <div class="blueTruConnectGradient">
+    <div class="container">Account Overview</div>
   </div>
 
   <div class="container">
     <div id="main-content">
-	
-	 <div style="line-height: 30px; font-size: 20px; font-weight: normal; margin-bottom: 20px; color: #0067B2;">
-        Account Overview</div>
-		
-		<div class="info hidden">
-      <h1>Sprint Network Maintenance</h1>
-      <p>
-	  Due to scheduled maintenance on the Sprint network the usage in your account activity may be delayed and top-ups will not occur during this time.
-	  </p>
-      </div>
-
-<div class="info hidden">
-      <h1>Sprint Network Maintenance</h1>
-      <p>
-	  Due to scheduled maintenance on the Sprint network the usage in your account activity may not be displayed.
-	  </p>
-      </div>      
-           <c:forEach var="notificationMessage" items="${notificationMessages}" varStatus="status">
-             <div class="info">
-                <h1>${notificationMessage.title}</h1> 
-                <p>${notificationMessage.message}</p>
-             </div>
-          </c:forEach>         
       <div class="span-18 colborder">
         <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Account Activity</h3>
         <c:forEach var="accountDetail" items="${accountDetails}">
