@@ -1,4 +1,4 @@
-package com.trc.domain.support.ticket;
+package com.trc.domain.ticket;
 
 public enum TicketStatus {
 	OPEN, IN_PROCESS, CLOSED, RESOLVED, ON_HOLD, UNRESOLVED, REJECTED, REOPEN;

@@ -54,4 +54,5 @@
   <!-- <bean id="customizableTraceInterceptor" class="com.trc.util.logger.aspect.TraceInterceptor"> <property name="userManager" ref="userManager" 
     /> <property name="loggerName" value="truconnect" /> <property name="enterMessage" value="Entering $[methodName]($[arguments])" /> <property name="exitMessage" 
     value="Leaving $[methodName](): $[returnValue]" /> </bean> -->
+   
 </beans>

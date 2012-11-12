@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import com.trc.domain.support.ticket.Ticket;
-import com.trc.domain.support.ticket.TicketCategory;
-import com.trc.domain.support.ticket.TicketNote;
-import com.trc.domain.support.ticket.TicketStatus;
+import com.trc.domain.ticket.Ticket;
+import com.trc.domain.ticket.TicketCategory;
+import com.trc.domain.ticket.TicketNote;
+import com.trc.domain.ticket.TicketStatus;
 import com.trc.exception.service.TicketServiceException;
 import com.trc.user.User;
 

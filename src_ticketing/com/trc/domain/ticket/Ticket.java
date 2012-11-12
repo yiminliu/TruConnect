@@ -1,4 +1,4 @@
-package com.trc.domain.support.ticket;
+package com.trc.domain.ticket;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.trc.user.User;
-import com.trc.domain.support.ticket.TicketStatus;
+import com.trc.domain.ticket.TicketStatus;
 
 
 @Entity

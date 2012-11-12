@@ -26,14 +26,20 @@
         <value>com.trc.coupon.CouponStackable</value>
         <value>com.trc.coupon.CouponStackableId</value>
         <value>com.trc.coupon.CouponDetailType</value>
-        <value>com.trc.domain.support.ticket.Ticket</value>
-        <value>com.trc.domain.support.ticket.TicketStatus</value>
-        <value>com.trc.domain.support.ticket.TicketCategory</value>
-        <value>com.trc.domain.support.ticket.TicketNote</value>      
+        <value>com.trc.domain.ticket.Ticket</value>
+        <value>com.trc.domain.ticket.TicketStatus</value>
+        <value>com.trc.domain.ticket.TicketCategory</value>
+        <value>com.trc.domain.ticket.TicketNote</value>     
+        <value>com.trc.domain.ticket.TicketType</value>    
         <value>com.trc.domain.support.notification.NotificationSchedule</value>
         <value>com.trc.domain.support.notification.NotificationMessage</value>
         <value>com.trc.domain.support.notification.NotificationPage</value>
-        <value>com.trc.domain.support.notification.NotificationDateTime</value>  
+        <value>com.trc.domain.support.notification.NotificationDateTime</value> 
+        <value>com.trc.domain.support.knowledgebase.Article</value>
+        <value>com.trc.domain.support.knowledgebase.ArticleData</value>
+        <value>com.trc.domain.support.knowledgebase.ArticleLink</value>
+        <value>com.trc.domain.support.knowledgebase.Category</value> 
+        <value>com.trc.domain.support.knowledgebase.ArticleCategoryMap</value>        
         <!-- <value>com.trc.user.authority.ROLE</value>-->
       </list>
     </property>
@@ -95,4 +101,10 @@
     <property name="sessionFactory" ref="sessionFactoryTSCPMVNE" />
   </bean>
   -->
+  <!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+   <property name="url" value="jdbc:mysql://localhost:3306/truconnect"/>
+ <property name="username" value="root" />
+ <property name="password" value="admin"/>
+ <property name="driverClassName" value="com.mysql.jdbc.Driver"/> 
+  </bean>-->
 </beans>

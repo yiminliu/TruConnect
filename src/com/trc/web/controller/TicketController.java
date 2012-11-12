@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 
-import com.trc.domain.support.ticket.Ticket;
-import com.trc.domain.support.ticket.TicketCategory;
-import com.trc.domain.support.ticket.TicketNote;
-import com.trc.domain.support.ticket.TicketPriority;
-import com.trc.domain.support.ticket.TicketStatus;
-import com.trc.domain.support.ticket.TicketStorage;
-import com.trc.exception.management.TicketManagementException;
+import com.trc.domain.ticket.Ticket;
+import com.trc.domain.ticket.TicketCategory;
+import com.trc.domain.ticket.TicketNote;
+import com.trc.domain.ticket.TicketPriority;
+import com.trc.domain.ticket.TicketStatus;
+import com.trc.domain.ticket.TicketStorage;
+import com.trc.exception.management.SupportManagementException;
 import com.trc.manager.TicketManagerImpl;
 import com.trc.manager.UserManager;
 import com.trc.user.User;
@@ -84,7 +84,7 @@ public class TicketController {
 		try {			
 			ticketId = ticketManager.createTicket(ticket);		    
 		}
-		catch(TicketManagementException te){
+		catch(SupportManagementException te){
 			return resultModel.getAccessException();
 		}
         try{
@@ -108,7 +108,7 @@ public class TicketController {
 		try{
 		    ticketList = ticketManager.getAllTickets();
 		}
-		catch(TicketManagementException te){
+		catch(SupportManagementException te){
 			throw new RuntimeException(te);
 		}
 		TicketStorage ticketStorage = new TicketStorage(ticketList);
@@ -133,7 +133,7 @@ public class TicketController {
 		    openTicketList = ticketManager.getTicketByStatus(TicketStatus.OPEN);
 		    inProcessTicketList = ticketManager.getTicketByStatus(TicketStatus.IN_PROCESS);
 		}
-		catch(TicketManagementException te){
+		catch(SupportManagementException te){
 			throw new RuntimeException(te);
 		}
 		openTicketList.addAll(inProcessTicketList);
@@ -157,7 +157,7 @@ public class TicketController {
 			model.addAttribute("creators", ticketManager.getAllTicketCreators());
 			model.addAttribute("ticketList", ticketManager.getAllTickets()); 
 		}
-		catch(TicketManagementException te) {
+		catch(SupportManagementException te) {
 			te.printStackTrace();
 		}
 		return "ticket/searchTickets";
@@ -195,7 +195,7 @@ public class TicketController {
 		   	   ticketList = ticketManager.getTicketByStatus(ticket.getStatus());
 		    }
 		}   
-		catch(TicketManagementException te){
+		catch(SupportManagementException te){
 		   return resultModel.getAccessException();
 		}						
 		resultModel.addObject("ticketList", ticketList); 		
@@ -213,7 +213,7 @@ public class TicketController {
 		try{
 			ticket = ticketManager.getTicketById(ticketId);
 		}
-		catch(TicketManagementException te){
+		catch(SupportManagementException te){
 			throw new RuntimeException(te);
 		}
 		model.addAttribute("ticket", ticket);
@@ -233,7 +233,7 @@ public class TicketController {
 			User customer = ticket.getCustomer();
 			userManager.setSessionUser(customer);
 		}
-		catch(TicketManagementException te){
+		catch(SupportManagementException te){
 			throw new RuntimeException(te);
 		}
 		model.addAttribute("ticket", ticket);
@@ -254,7 +254,7 @@ public class TicketController {
 			ticketManager.updateTicket(ticket);			
 		    resultModel.addObject("ticket", ticket);
 		}
-		catch(TicketManagementException te){
+		catch(SupportManagementException te){
 			return resultModel.getAccessException();
 		}
 		return resultModel.getSuccess();
@@ -267,7 +267,7 @@ public class TicketController {
     	try{
 			ticket = ticketManager.getTicketById(ticketId);
 		}	    
-		catch(TicketManagementException te){
+		catch(SupportManagementException te){
 			throw new RuntimeException(te);
 		}
 		if(ticket != null) {
@@ -286,7 +286,7 @@ public class TicketController {
 	       ticketManager.updateTicket(ticket);
 		   resultModelAndView.addObject("ticket", ticketManager.getTicketById(ticket.getId()));
 	    }
-	    catch(TicketManagementException te){
+	    catch(SupportManagementException te){
 		    return resultModelAndView.getAccessException();
 	    }
 	    return resultModelAndView.getSuccess();	
@@ -305,7 +305,7 @@ public class TicketController {
 			ticketManager.deleteTicket(ticket);
 		 	model.addAttribute("ticketList", ticketManager.getAllTickets());
 		}
-		catch(TicketManagementException te){
+		catch(SupportManagementException te){
 			throw new RuntimeException(te);
 		}
 		return "redirect:/ticket/1";
@@ -327,7 +327,7 @@ public class TicketController {
 		    model.addAttribute("customer", customer);
 			model.addAttribute("ticketList", ticketList);
 		}
-		catch(TicketManagementException te){
+		catch(SupportManagementException te){
 			throw new RuntimeException(te);
 		}
 		return "redirect:/ticket/showUserTickets";

@@ -10,12 +10,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
 import com.trc.exception.EmailException;
-import com.trc.exception.management.TicketManagementException;
+import com.trc.exception.management.SupportManagementException;
 import com.trc.exception.service.TicketServiceException;
 import com.trc.manager.UserManager;
-import com.trc.domain.support.ticket.Ticket;
-import com.trc.domain.support.ticket.TicketNote;
-import com.trc.domain.support.ticket.TicketStatus;
+import com.trc.domain.ticket.Ticket;
+import com.trc.domain.ticket.TicketNote;
+import com.trc.domain.ticket.TicketStatus;
 import com.trc.service.email.VelocityEmailService;
 import com.trc.service.ticket.TicketServiceImpl;
 import com.trc.user.User;
@@ -40,7 +40,7 @@ public class TicketManagerImpl implements TicketManager {
 
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public int createTicket(Ticket ticket) throws TicketManagementException {
+  public int createTicket(Ticket ticket) throws SupportManagementException {
 	 User customer = null;
 	 User assignee = null;
      try {
@@ -57,23 +57,23 @@ public class TicketManagerImpl implements TicketManager {
         return ticketService.createTicket(ticket);
     } 
     catch (TicketServiceException e) {
-      throw new TicketManagementException(e.getMessage(), e.getCause());
+      throw new SupportManagementException(e.getMessage(), e.getCause());
     }
   }
   
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public void deleteTicket(Ticket ticket) throws TicketManagementException {
+  public void deleteTicket(Ticket ticket) throws SupportManagementException {
     try {
       ticketService.deleteTicket(ticket);
     } catch (TicketServiceException e) {
-      throw new TicketManagementException(e.getMessage(), e.getCause());
+      throw new SupportManagementException(e.getMessage(), e.getCause());
     }
   }
   
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public void updateTicket(Ticket ticket) throws TicketManagementException {
+  public void updateTicket(Ticket ticket) throws SupportManagementException {
 	 User customer = null;
    	 User assignee = null;
    	 List<TicketNote> notes = (List<TicketNote>)ticket.getNotes();
@@ -95,93 +95,93 @@ public class TicketManagerImpl implements TicketManager {
 	     ticketService.updateTicket(ticket);
     } 
     catch (TicketServiceException e) {
-       throw new TicketManagementException(e.getMessage(), e.getCause());
+       throw new SupportManagementException(e.getMessage(), e.getCause());
     }
   }   
     
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public Ticket getTicketById(int ticketId) throws TicketManagementException {
+  public Ticket getTicketById(int ticketId) throws SupportManagementException {
     try {
       return ticketService.getTicketById(ticketId);
     } catch (TicketServiceException e) {
-      throw new TicketManagementException(e.getMessage(), e.getCause());
+      throw new SupportManagementException(e.getMessage(), e.getCause());
     }
   }
 
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public List<Ticket> getAllTickets() throws TicketManagementException {
+  public List<Ticket> getAllTickets() throws SupportManagementException {
     try {
       return ticketService.getAllTickets();
     } catch (TicketServiceException e) {
-      throw new TicketManagementException(e.getMessage(), e.getCause());
+      throw new SupportManagementException(e.getMessage(), e.getCause());
     }
   }
   
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public List<Ticket> getTicketByCustomer(String customerName) throws TicketManagementException {
+  public List<Ticket> getTicketByCustomer(String customerName) throws SupportManagementException {
     try {
       List<Ticket> ticketList = ticketService.getTicketsByCustomer(customerName);
       return ticketList;
     } catch (TicketServiceException e) {
-      throw new TicketManagementException(e.getMessage(), e.getCause());
+      throw new SupportManagementException(e.getMessage(), e.getCause());
     }
   }
   
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public List<Ticket> getTicketByCreator(String creatorName) throws TicketManagementException {
+  public List<Ticket> getTicketByCreator(String creatorName) throws SupportManagementException {
     try {
       List<Ticket> ticketList = ticketService.getTicketsByCreator(creatorName);
       return ticketList;
     } catch (TicketServiceException e) {
-      throw new TicketManagementException(e.getMessage(), e.getCause());
+      throw new SupportManagementException(e.getMessage(), e.getCause());
     }
   }
   
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public List<Ticket> getTicketByAssignee(String assigneeName) throws TicketManagementException {
+  public List<Ticket> getTicketByAssignee(String assigneeName) throws SupportManagementException {
     try {
       List<Ticket> ticketList = ticketService.getTicketsByAssignee(assigneeName);
       return ticketList;
     } catch (TicketServiceException e) {
-      throw new TicketManagementException(e.getMessage(), e.getCause());
+      throw new SupportManagementException(e.getMessage(), e.getCause());
     }
   }
   
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public List<Ticket> getTicketByKeyword(String keyword) throws TicketManagementException {
+  public List<Ticket> getTicketByKeyword(String keyword) throws SupportManagementException {
     try {
       List<Ticket> ticketList = ticketService.getTicketByKeyword(keyword);
       return ticketList;
     } catch (TicketServiceException e) {
-      throw new TicketManagementException(e.getMessage(), e.getCause());
+      throw new SupportManagementException(e.getMessage(), e.getCause());
     }
   }
   
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public List<Ticket> getTicketByStatus(Enum status) throws TicketManagementException {
+  public List<Ticket> getTicketByStatus(Enum status) throws SupportManagementException {
     try {
       return ticketService.getTicketByStatus(status);
     } 
     catch (TicketServiceException e) {
-      throw new TicketManagementException(e.getMessage(), e.getCause());
+      throw new SupportManagementException(e.getMessage(), e.getCause());
     }
   }
   
   @Override
   @Loggable(value = LogLevel.TRACE)
-  public List<User> getAllTicketCreators() throws TicketManagementException {
+  public List<User> getAllTicketCreators() throws SupportManagementException {
 	List<User> creators = null;
 	try {
        creators = ticketService.getAllTicketCreators();      
     } catch (TicketServiceException e) {
-      throw new TicketManagementException(e.getMessage(), e.getCause());
+      throw new SupportManagementException(e.getMessage(), e.getCause());
     }
     return creators;
   }

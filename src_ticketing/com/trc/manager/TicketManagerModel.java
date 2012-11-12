@@ -2,7 +2,7 @@ package com.trc.manager;
 
 import java.util.Collection;
 
-import com.trc.domain.support.ticket.Ticket;
+import com.trc.domain.ticket.Ticket;
 
 public interface TicketManagerModel {
 

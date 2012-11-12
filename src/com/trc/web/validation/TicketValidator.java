@@ -5,7 +5,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.trc.domain.support.ticket.Ticket;
+import com.trc.domain.ticket.Ticket;
 
 @Component
 public class TicketValidator implements Validator {
