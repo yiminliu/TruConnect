@@ -11,8 +11,7 @@
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
   <div class="blueTruConnectGradient">
-     <div class="container">
-       
+     <div class="container">       
             <c:if test="${!empty assigneeName}">
                <p>All Tickets Assigned to ${assigneeName}</p>
             </c:if>    
@@ -45,7 +44,6 @@
                   </tr>
                 </c:if>
                   <c:forEach var="ticket" items="${ticketList}">
-                    <set name="ticketId" value="${ticket.id}" type="int">
                     <tr>
                       <td>${ticket.id}</td>
                       <td>${ticket.title}</td>
@@ -60,7 +58,7 @@
                          </c:otherwise>
                        </c:choose>     
                       <td><fmt:formatDate type="date" value="${ticket.createdDate}"/></td>
-                      <c:if test="${!empty ticket.title}">
+                      <c:if test="${!empty ticket.id}">
                          <td>
                            <a href="<spring:url value="/ticket/ticketDetail/${ticket.id}" />" ><img class="info" src="<spring:url value="/static/images/buttons/i.png" />" /></a>
                          </td>
@@ -73,10 +71,7 @@
               <table border="1" cellspacing="10">
                 <tr>
                   <td>
-                     <a id="searchTickets" href="<spring:url value="/ticket/searchTickets" />" class="button action-m"><span>Continue Search Tickets</span></a>
-                  </td>
-                  <td>
-                     <a id="showOpenTickets" href="<spring:url value="/ticket/ticketOverview" />" class="button action-m"><span>Ticket Home</span></a>
+                     <a id="showOpenTickets" href="<spring:url value="/ticket/ticketOverview" />" class="button action-m"><span>Back To Tickets Home</span></a>
                   </td>                         
                 </tr>
              </table>
@@ -88,7 +83,7 @@
               </c:if>
           </div> <!-- close main-content -->           
           <div class="span-6 last sub-navigation">
-             <span style="float: right;"><%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%></span>
+             <span style="float: right; float: bottom;"><%@ include file="/WEB-INF/includes/admin/navigation/adminNav.jsp"%></span>    
           </div>
     </div> <!-- Close container -->
     <%@ include file="/WEB-INF/includes/footer_nolinks.jsp"%>

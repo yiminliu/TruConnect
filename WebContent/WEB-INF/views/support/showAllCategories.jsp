@@ -27,16 +27,6 @@
                     <c:set var="nextPageNum" value="${ticketStorage.currentPageNum + 1}" />   
                   </c:forEach>
               </table>
-              <table border="1" cellspacing="10">
-                <tr>
-                  <td>
-                     <a id="searchTickets" href="<spring:url value="/ticket/searchTickets" />" class="button action-m"><span>Continue Search Tickets</span></a>
-                  </td>
-                  <td>
-                     <a id="showOpenTickets" href="<spring:url value="/ticket/ticketOverview" />" class="button action-m"><span>Ticket Home</span></a>
-                  </td>                         
-                </tr>
-             </table>
               <c:if test="${prevPageNum > 0}">
                  <span style="float: left"><a href="<spring:url value="/support/${prevPageNum}" />">&laquo; Previous Page</a> </span>
               </c:if>

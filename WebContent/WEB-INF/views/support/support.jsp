@@ -19,7 +19,9 @@
           <div class="row">
              <li id="nav_support"><a href="<spring:url value="/support/showAllCategories"/>">Q&A Knowledgebase</a></li> 
              <li id="nav_support"><a href="<spring:url value="/support/search"/>">Search</a></li> 
-           </div>  
+             <li id="nav_ticket"><a href="<spring:url value="/ticket/customerTicketOverview"/>">Contact Us</a></li> 
+             <li id="nav_support"><a href="<spring:url value="/support/insertArticle"/>">Insert An Article</a></li> 
+          </div>  
    </div><!-- content -->
    </div> <!-- close main-content -->           
           <div class="span-6 last sub-navigation">

@@ -1,5 +1,8 @@
 package com.trc.domain.support.knowledgebase;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -10,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 @Entity
@@ -25,7 +29,8 @@ public class Category implements java.io.Serializable{
 	@Column(name="title")
 	String title;
 	
-	@Column(name="totalarticles")
+	//@Column(name="totalarticles")
+	@Transient
 	int totalArticles;
 	
 	@Column(name="categorytype")
@@ -34,8 +39,8 @@ public class Category implements java.io.Serializable{
 	@Column(name="displayorder")
 	int displyOrder;
 		
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
-	private Set<Article> articles;
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "categories")
+	private Set<Article> articles = new HashSet<Article>();
 	
 	public Category(){}
 	
@@ -56,11 +61,15 @@ public class Category implements java.io.Serializable{
 	}
 
 	public int getTotalArticles() {
-		return totalArticles;
+		//return totalArticles;
+		if(articles == null && articles.isEmpty())
+		   return 0;	
+		else
+	  	   return articles.size();
 	}
 
-	public void setTotalArticles(int totalArticles) {
-		this.totalArticles = totalArticles;
+	public void setTotalArticles(){//int totalArticles) {
+		this.totalArticles = articles.size();
 	}
 
 	public int getCategoryType() {
@@ -82,10 +91,22 @@ public class Category implements java.io.Serializable{
 	public Set<Article> getArticles() {
 		return articles;
 	}
-
+	
 	public void setArticles(Set<Article> articles) {
 		this.articles = articles;
 	}
-		
 	
+	public void addArticle(Article article) {
+	    article.addCategory(this);
+		articles.add(article);	
+	}
+	/*	
+	public class CategoryIdComparator<Category> implements Comparator<Category>{  
+		  public int compare( Object c1, Object c2) {
+              Integer id1 = ((Category)c1).getId();
+              Integer id2 = ((Category)c2).getId();
+              return id1.compareTo(id2);
+        }
+	} 
+    */   
 }

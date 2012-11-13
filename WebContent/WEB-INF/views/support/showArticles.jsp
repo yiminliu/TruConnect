@@ -19,12 +19,19 @@
             <div class="span-18 colborder">
                <table border="1" cellspacing="10">
                  <c:if test="${empty articleList}">
-                    <c:out value="Article list is empty!"/>
+                    <c:out value="No Article Found!"/>
                  </c:if>   
                  <c:forEach var="article" items="${articleList}">
                     <tr>
                       <td>
-                         <h3><a href="<spring:url value="/support/showArticle/${article.id}"/>">${article.subject}</a></h3>
+                         <c:choose>
+                            <c:when test="${fn:length(articleList) > 1}">
+                                 <h3><a href="<spring:url value="/support/showArticle/${article.id}"/>">${article.subject}</a></h3>
+                           </c:when>   
+                           <c:otherwise>
+                               <h3>${article.subject}</h3>
+                           </c:otherwise>
+                        </c:choose> 
                       </td>
                     </tr>
                     <tr>

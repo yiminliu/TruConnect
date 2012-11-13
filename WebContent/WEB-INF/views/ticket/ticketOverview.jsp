@@ -37,29 +37,35 @@
            <tr style="float:middle;">
               <td>
                 <a id="createTicket" href="<spring:url value="/ticket/createTicket" />" class="button action-m"><span>Create Ticket</span></a>
-              </td> 
-              <td>
-                 <a id="searchTickets" href="<spring:url value="/ticket/searchTickets" />" class="button action-m"><span>Search Tickets</span></a>
               </td>
               <!-- <td>
                  <a id="showYourTickets" href="<spring:url value="/ticket/showLoggedinUserTickets/1" />" class="button action-m"><span>Show Your Tickets</span></a>
               </td>
               -->     
                <td>
-                 <a id="showOpenTickets" href="<spring:url value="/ticket/showOpenTickets/1" />" class="button action-m"><span>Show Open Tickets</span></a>
-              </td>                         
+                 <!-- <a id="showOpenTickets" href="<spring:url value="/ticket/showOpenTickets/1" />" class="button action-m"><span>Show Open Tickets</span></a>-->
+                 <a id="showOpenTickets" href="<spring:url value="/ticket/showOpenTickets" />" class="button action-m"><span>Show Open Tickets</span></a>
+               </td>
+               <td>
+                 <a id="showOpenTickets" href="<spring:url value="/ticket/showAllTickets" />" class="button action-m"><span>Show All Tickets</span></a>
+              </td> 
+              <td>
+                 <a id="searchTickets" href="<spring:url value="/ticket/searchTickets" />" class="button action-m"><span>Search Tickets</span></a>
+              </td>                                       
            </tr>
         </table>      
         <table>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Category</th>
-            <th>Priority</th>
-            <th>Created Date</th>
-            <th>Detail</th>
-          </tr>
+          <c:if test="${openTicketsCount > 0}"> 
+           <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Category</th>
+              <th>Priority</th>
+              <th>Created Date</th>
+              <th>Detail</th>
+            </tr>
+          </c:if>  
           <c:forEach var="ticket" items="${ticketStorage.currentPage}" varStatus="rowCounter"> 
             <tr>
               <td><c:out value="${ticket.id}"/></td>

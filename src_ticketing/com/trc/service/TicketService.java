@@ -1,4 +1,4 @@
-package com.trc.service.ticket;
+package com.trc.service;
 
 import java.util.Collection;
 import java.util.List;

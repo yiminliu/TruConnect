@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.trc.domain.support.knowledgebase.Article;
 import com.trc.domain.support.knowledgebase.ArticleData;
 import com.trc.domain.support.knowledgebase.Category;
-import com.trc.domain.ticket.Ticket;
 
 @Repository("articleDao")
 @Transactional

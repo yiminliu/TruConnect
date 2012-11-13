@@ -21,8 +21,9 @@ public class ArticleData {
 	Integer id;
 	
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinColumn(name = "kbarticleid", nullable=false, insertable=true, updatable=true)
+	//@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	//@JoinColumn(name = "kbarticleid", nullable=false, insertable=true, updatable=true)
+	@OneToOne(mappedBy="articleData")
 	private Article article;
 	
 	@Column(name="contents")

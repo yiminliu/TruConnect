@@ -48,6 +48,15 @@
              </form:select>
           </div>
           <div class="row">
+             <form:label path="category">Type</form:label>
+             <form:select path="type" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:312px;">
+                <option value="0" selected="selected">${ticket.type}</option>
+                <c:forEach var="type" items="${typeList}" varStatus="status">
+                   <form:option value="${type}">${type}</form:option>
+                </c:forEach>
+             </form:select>
+          </div>
+          <div class="row">
             <form:label path="assignee.username">Re-assign To</form:label>
             <form:select path="assignee.username" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:312px;">
                <option value="0" selected="selected">${ticket.assignee.username}</option>
@@ -67,7 +76,9 @@
           </div>
           <div class="row">
                <form:label path="customer.username">Customer</form:label>
-               <form:input path="customer.username" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+               <!--<form:input path="customer.username" cssClass="span-8" cssErrorClass="span-8 validationFailed" />-->
+               <form:input path="customer.username" value="${ticket.customer.username}" type="hidden"/>
+               <c:out value="${ticket.customer.username}"/>
             </div>
           <div class="row">
               <form:label path="createdDate">Created Date</form:label>
@@ -79,7 +90,9 @@
           </div>
           <div>
             <form:label path="description">Description</form:label>
-           <form:input path="description" cssClass="span-8" cssErrorClass="span-8 validationFailed" />
+            <!--<form:input path="description" cssClass="span-8" cssErrorClass="span-8 validationFailed" />-->
+            <form:input path="description" value="${ticket.description}" type="hidden"/>
+            <c:out value="${ticket.description}"/>
           </div> 
           <div class="row">
                <form:label path="notes[0].note">Note</form:label>

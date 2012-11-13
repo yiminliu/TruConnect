@@ -45,7 +45,7 @@
             <li><a href="http://www.truconnect.com/">Home</a></li>
             <li><a href="http://www.truconnect.com/plans/">Plans</a></li>
             <li><a href="https://store.truconnect.com/">Devices</a></li>
-            <li><a href="http://www.truconnect.com/support/">Support</a></li>
+            <li><a href="/TruConnect/support/">Support</a></li>
           </ul>
         </sec:authorize>
       </div>

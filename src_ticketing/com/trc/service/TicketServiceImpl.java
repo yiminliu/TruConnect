@@ -1,4 +1,4 @@
-package com.trc.service.ticket;
+package com.trc.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +20,6 @@ import com.trc.domain.ticket.TicketNote;
 import com.trc.domain.ticket.TicketPriority;
 import com.trc.exception.service.CouponServiceException;
 import com.trc.exception.service.TicketServiceException;
-import com.trc.service.ArticleService;
 import com.trc.user.User;
 
 
@@ -28,7 +27,7 @@ import com.trc.user.User;
 public class TicketServiceImpl implements TicketService {
 
   @Autowired
-  private HibernateTicketDao ticketDao;
+  HibernateTicketDao ticketDao;
  
   /********************************************************************/
   /************************ Ticket Operations *************************/
@@ -146,18 +145,11 @@ public class TicketServiceImpl implements TicketService {
   
   private void initForTest() {
   	
-  	//ApplicationContext appCtx = new ClassPathXmlApplicationContext("application-context.xml");
-	  ApplicationContext appCtx = new ClassPathXmlApplicationContext("truConnect-context.xml");
+  	ApplicationContext appCtx = new ClassPathXmlApplicationContext("application-context.xml");
   	
    	ticketDao = (HibernateTicketDao)appCtx.getBean("ticketDao");
    	if(ticketDao == null)
    		ticketDao = new HibernateTicketDao();
   }    
-  
-  public static void main(String[] arg){
-	  TicketServiceImpl as = new TicketServiceImpl();
-	  as.initForTest();
-	  as.ticketDao.getAllTickets();
-  }
   
 }

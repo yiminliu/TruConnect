@@ -1,5 +1,7 @@
 package com.trc.domain.support.knowledgebase;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -38,13 +40,15 @@ public class Article implements java.io.Serializable{
 	@Column
 	private String articlestatus;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinTable(name = "article_category", 
-			   joinColumns={@JoinColumn(name="kbarticleid")}, 
-			   inverseJoinColumns={@JoinColumn(name="kbcategoryid")})
-	private Set<Category> categories;
+			   joinColumns={@JoinColumn(name="articleid")}, 
+			   inverseJoinColumns={@JoinColumn(name="categoryid")})
+	private List<Category> categories = new ArrayList<Category>();
 		
-	@OneToOne(mappedBy="article")	
+	//@OneToOne(mappedBy="article")
+	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinColumn(name = "kbarticleid", nullable=false, insertable=true, updatable=true)
 	private ArticleData articleData;
 		
 	public Article(){}
@@ -105,13 +109,18 @@ public class Article implements java.io.Serializable{
 		this.articlestatus = articlestatus;
 	}
 
-	public Set<Category> getCategories() {
+	public List<Category> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(Set<Category> categories) {
+	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
+	
+	public void addCategory(Category category) {
+		categories.add(category);
+	}
+	
 
 	public ArticleData getArticleData() {
 		return articleData;

@@ -40,6 +40,10 @@ public class SupportManager {
 	}
 	
 	public int insertArticle(Article article){
+		List<Category> cl = article.getCategories();  
+		for(Category c : cl){
+		    c.addArticle(article);
+   	     }
 		return articleService.saveArticle(article);
 	}
 	

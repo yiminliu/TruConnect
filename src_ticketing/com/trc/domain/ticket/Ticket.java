@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,12 +24,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import com.trc.user.User;
 import com.trc.domain.ticket.TicketStatus;
@@ -49,7 +42,10 @@ public class Ticket implements Serializable {
   private Integer id;
   
   @Column(name="title")
-  private String title = DEFALT_TITLE;
+  private String title;
+  
+  @Enumerated(EnumType.STRING)
+  private TicketType type;
   
   @Enumerated(EnumType.STRING)
   private TicketPriority priority;
@@ -107,8 +103,16 @@ public class Ticket implements Serializable {
 
   public void setTitle(String title) {
 	this.title = title;
+  } 
+  
+  public TicketType getType() {
+	return type;
   }
- 
+
+  public void setType(TicketType type) {
+	this.type = type;
+  }
+
   public TicketCategory getCategory() {
 	 return category;
   }

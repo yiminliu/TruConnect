@@ -25,8 +25,8 @@ public class HibernateTicketDao extends HibernateDaoSupport implements TicketDao
 	 setHibernateTemplate(hibernateTemplate);
   }
 
-  //@Autowired
-  UserManager userManager = new UserManager();
+  @Autowired
+  UserManager userManager;// = new UserManager();
   
   /***************  Ticket Operations ******************/
   
