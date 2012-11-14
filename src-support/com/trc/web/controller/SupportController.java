@@ -42,7 +42,7 @@ public class SupportController {
   /**
    * This method is used to retrieve all categories
    * 
-   * @return String
+   * @return ModelAndView
    */
   @RequestMapping(value = "/showAllCategories", method = RequestMethod.GET)
   public ModelAndView getAllCategories() {
@@ -59,9 +59,9 @@ public class SupportController {
   }
 
   /**
-   * This method is used to retrieve an article by using category
+   * This method is used to retrieve all articles by using category id
    * 
-   * @return String
+   * @return ModelAndView
    */
   @RequestMapping(value = "/showArticlesByCategory/{categoryId}", method = RequestMethod.GET)
   public ModelAndView getArticlesByCategory(@PathVariable int categoryId, Model model) {
@@ -82,7 +82,7 @@ public class SupportController {
   /**
    * This method is used to retrieve an article by using article id
    * 
-   * @return String
+   * @return ModelAndView
    */
   @RequestMapping(value = "/showArticle/{articleId}", method = RequestMethod.GET)
   public ModelAndView getArticleById(@PathVariable int articleId, Model model) {	  
@@ -111,7 +111,7 @@ public class SupportController {
   }	
   
   /**
-   * This method is used to retrieve articles
+   * This method is used to return articles based on textual search input
    * 
    * @return ModelAndView
    */
@@ -132,38 +132,37 @@ public class SupportController {
 	  else
 		 throw new IllegalArgumentException("No keyword specified.");  
    }
-   
-   /**
+      
+	 /**
 	   * This method is used to insert an article
 	   * 
-	   * @return ModelAndView
-	   */
-	   @RequestMapping(value="/insertArticle", method=RequestMethod.POST)
-	   public ModelAndView processInsertArticle(@ModelAttribute("article") Article article){
-	      ResultModel resultModel = new ResultModel("support/showAllCategories");
-		  try {	
-		      int articleId = supportManager.insertArticle(article);
-	      }
-		  catch(SupportManagementException te){
-			   return resultModel.getAccessException();
-		  }						
-		  return resultModel.getSuccess();
-	   }
-	   
-   
-	/**
-	   * This method is used to insert an article
-	   * 
-	   * @return ModelAndView
+	   * @return String
 	   */
 	   @RequestMapping(value="/insertArticle", method=RequestMethod.GET)
 	   public String insertArticle(Model model){
 		   model.addAttribute("article", new Article());  		
 		  return "/support/insertArticle";
 	   }
-	   
+	 
+	    /**
+		  * This method is used to insert an article to the database
+		  * 
+		  * @return ModelAndView
+		  */
+		  @RequestMapping(value="/insertArticle", method=RequestMethod.POST)
+		  public ModelAndView processInsertArticle(@ModelAttribute("article") Article article){
+		      ResultModel resultModel = new ResultModel("support/showAllCategories");
+			  try {	
+			      supportManager.insertArticle(article);
+		      }
+			  catch(SupportManagementException te){
+				   return resultModel.getAccessException();
+			  }						
+			  return resultModel.getSuccess();
+		  }
+		   
 	   /**
-		 * This method is used to insert a category
+		 * This method is used to create a category in db
 		 * 
 		 * @return ModelAndView
 		 */
@@ -185,8 +184,8 @@ public class SupportController {
    * The followings are utility methods
    */
     @ModelAttribute("categoryList")
-	public List getCategories() {
-    	List categoryList = null;
+	public List<Category> getCategories() {
+    	List<Category> categoryList = null;
     	try{
     		categoryList = supportManager.getAllCategories();
     	}
