@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.trc.domain.support.knowledgebase.Article;
 import com.trc.domain.support.knowledgebase.Category;
+import com.trc.exception.management.SupportManagementException;
 import com.trc.manager.SupportManager;
 import com.trc.web.model.ResultModel;
 
@@ -25,10 +26,17 @@ public class SupportController {
   private SupportManager supportManager;
  
   @RequestMapping(method = RequestMethod.GET)
-  public String showQuestionAndAnswers(Model model) {
-	  List<Article> articleList = supportManager.getAllArticles();
-	  model.addAttribute("articleList", articleList);
-      return "support/support";
+  public ModelAndView showSupport() {
+	  List<Article> articleList = null;
+	  ResultModel resultModel = new ResultModel("support/support");
+	  try{
+	      articleList = supportManager.getAllArticles();
+	  }
+	  catch(SupportManagementException te){
+		   return resultModel.getAccessException();
+	  }	    
+	  resultModel.addObject("articleList", articleList);
+	  return resultModel.getSuccess();
   }
   
   /**
@@ -37,10 +45,17 @@ public class SupportController {
    * @return String
    */
   @RequestMapping(value = "/showAllCategories", method = RequestMethod.GET)
-  public String getAllCategories(Model model) {
-	  List<Category> categoryList = supportManager.getAllCategories();
-	  model.addAttribute("categoryList", categoryList);
-      return "support/showAllCategories";
+  public ModelAndView getAllCategories() {
+	  List<Category> categoryList = null;
+	  ResultModel resultModel = new ResultModel("support/showAllCategories");
+	  try{
+		  categoryList = supportManager.getAllCategories();
+	  }
+	  catch(SupportManagementException te){
+		   return resultModel.getAccessException();
+	  }	
+	  resultModel.addObject("categoryList", categoryList);
+	  return resultModel.getSuccess();
   }
 
   /**
@@ -49,12 +64,19 @@ public class SupportController {
    * @return String
    */
   @RequestMapping(value = "/showArticlesByCategory/{categoryId}", method = RequestMethod.GET)
-  public String getArticlesByCategory(@PathVariable int categoryId, Model model) {
-	  Category category = supportManager.getCategoryById(categoryId);
-	  List<Article> articleList = supportManager.getArticlesByCategory(categoryId);
-	  model.addAttribute("category", category);
-	  model.addAttribute("articleList", articleList);
-      return "support/showArticles";
+  public ModelAndView getArticlesByCategory(@PathVariable int categoryId, Model model) {
+	  List<Article> articleList = null;
+	  ResultModel resultModel = new ResultModel("support/showArticles");
+	  try{
+	     Category category = supportManager.getCategoryById(categoryId);
+	     articleList = supportManager.getArticlesByCategory(categoryId);
+	     resultModel.addObject("category", category);
+	     resultModel.addObject("articleList", articleList);
+	  }
+	  catch(SupportManagementException te){
+		  return resultModel.getAccessException();
+	  }	   
+	  return resultModel.getSuccess();
   }
   
   /**
@@ -63,12 +85,18 @@ public class SupportController {
    * @return String
    */
   @RequestMapping(value = "/showArticle/{articleId}", method = RequestMethod.GET)
-  public String getArticleById(@PathVariable int articleId, Model model) {
-	  Article article = supportManager.getArticleById(articleId);
+  public ModelAndView getArticleById(@PathVariable int articleId, Model model) {	  
 	  List<Article> articleList = new ArrayList<Article>();
-	  articleList.add(article);
-	  model.addAttribute("articleList", articleList);
-      return "support/showArticles";
+	  ResultModel resultModel = new ResultModel("support/showArticles");
+	  try{
+		  Article article = supportManager.getArticleById(articleId);
+		  articleList.add(article);
+	  }
+	  catch(SupportManagementException te){
+		   return resultModel.getAccessException();
+	  }	
+	  resultModel.addObject("articleList", articleList);
+	  return resultModel.getSuccess();   
   }
   
   /**
@@ -92,15 +120,17 @@ public class SupportController {
 	  ResultModel resultModel = new ResultModel("support/showArticles");
 	  List<Article> articleList = new ArrayList<Article>();	
 	  if(keyword != null && !keyword.equals("")) {
-	   //try {	
+	    try {	
 		   articleList = supportManager.searchArticlesByKeyword(keyword);
-       //}
-	   //catch(SupportManagementException te){
-	 ///	   return resultModel.getAccessException();
-		//}						
+        }
+	    catch(SupportManagementException te){
+	 	   return resultModel.getAccessException();
+		}						
 	 	 resultModel.addObject("articleList", articleList); 		
-	  }	
-	  return resultModel.getSuccess();
+	     return resultModel.getSuccess();
+	  }
+	  else
+		 throw new IllegalArgumentException("No keyword specified.");  
    }
    
    /**
@@ -111,14 +141,12 @@ public class SupportController {
 	   @RequestMapping(value="/insertArticle", method=RequestMethod.POST)
 	   public ModelAndView processInsertArticle(@ModelAttribute("article") Article article){
 	      ResultModel resultModel = new ResultModel("support/showAllCategories");
-		  //try {	
-		  int articleId = supportManager.insertArticle(article);
-	    //}
-		 //catch(SupportManagementException te){
-		///	   return resultModel.getAccessException();
-			//}						
-			//resultModel.addObject("articleList", articleList); 		
-				   
+		  try {	
+		      int articleId = supportManager.insertArticle(article);
+	      }
+		  catch(SupportManagementException te){
+			   return resultModel.getAccessException();
+		  }						
 		  return resultModel.getSuccess();
 	   }
 	   
@@ -144,30 +172,28 @@ public class SupportController {
 	      ResultModel resultModel = new ResultModel("support/showAllCategories");
 	      Category category = new Category();
 	      category.setTitle(categoryName);
-		  //try {	
-		  int articleId = supportManager.createCategory(category);
-	      //}
-		  //catch(SupportManagementException te){
-		 ///	   return resultModel.getAccessException();
-		 //}						
-		//resultModel.addObject("articleList", articleList); 		
-					   
+		  try {	
+		       supportManager.createCategory(category);
+	      }
+		  catch(SupportManagementException te){
+		     return resultModel.getAccessException();
+		  }					   
 		  return resultModel.getSuccess();
-		}
-  
-  
+		}  
   
   /**
    * The followings are utility methods
    */
     @ModelAttribute("categoryList")
 	public List getCategories() {
-    	List categoryList = supportManager.getAllCategories();
-    	if(categoryList == null)
-    	   return null;
-    	else {
-    	  // Collections.sort(categoryList, new CategoryIdComparator());
-    	   return categoryList;
-    	}   
+    	List categoryList = null;
+    	try{
+    		categoryList = supportManager.getAllCategories();
+    	}
+    	catch(SupportManagementException te){
+	       te.printStackTrace();
+    	}
+    	// Collections.sort(categoryList, new CategoryIdComparator());
+    	return categoryList;    	   
 	}    
 }
