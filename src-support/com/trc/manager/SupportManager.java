@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trc.domain.support.knowledgebase.Article;
+import com.trc.domain.support.knowledgebase.ArticleData;
 import com.trc.domain.support.knowledgebase.Category;
 import com.trc.exception.management.SupportManagementException;
-import com.trc.exception.management.TicketManagementException;
 import com.trc.exception.service.SupportServiceException;
-import com.trc.exception.service.TicketServiceException;
 import com.trc.service.ArticleService;
 
 @Service
@@ -75,11 +74,17 @@ public class SupportManager {
 	
 	public int insertArticle(Article article)throws SupportManagementException{
 		try{
-			List<Category> cl = article.getCategories(); 		
-		    for(Category c : cl){
-		        c.addArticle(article);
+			/*List<Category> cl = article.getCategories();
+			ArticleData articledData = article.getArticleData();
+			Category c = null;			
+			articledData.setArticle(article);
+		    for(int i=0; i<=cl.size(); i++){
+		        c = cl.get(i);
+		    	c.addArticle(article);
    	        }
-		    return articleService.saveArticle(article);
+		    article.setCategories(cl);
+		    */
+			return articleService.saveArticle(article);
 		}
 		catch (SupportServiceException e) {
 		   throw new SupportManagementException(e.getMessage(), e.getCause());
