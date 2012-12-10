@@ -11,7 +11,7 @@
   <%@ include file="/WEB-INF/includes/header.jsp"%>
   <div class="blueTruConnectGradient">     
     <c:if test="${!empty category}">
-       <div class="container">Frequently Asked Questions :${category.title}</div> 
+       <div class="container">Frequently Asked Questions : ${category.title}</div> 
     </c:if>       
   </div>
   <div class="container">
@@ -19,7 +19,7 @@
             <div class="span-18 colborder">
                <table border="1" cellspacing="10">
                  <c:if test="${empty articleList}">
-                    <c:out value="No Article Found!"/>
+                    <h3><c:out value="Nothing Found!"/></h3>
                  </c:if>   
                  <c:forEach var="article" items="${articleList}">
                     <tr>
