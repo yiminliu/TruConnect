@@ -53,7 +53,7 @@ public class CustomerTicketController {
 	   */
 	@RequestMapping(value="/customerTicketOverview", method=RequestMethod.GET)
 	public String showAllTickets(Model model){
-		if(userManager.getSessionUser() != null) { // for existing
+		if(userManager.getSessionUser() != null) { // for existing customer
    		   List<Ticket> ticketList = null;
 		   try{
 		       ticketList = (List<Ticket>)ticketManager.getAllTickets();
