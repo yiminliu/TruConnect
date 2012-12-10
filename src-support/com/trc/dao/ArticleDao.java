@@ -97,7 +97,7 @@ public class ArticleDao extends HibernateDaoSupport{
 
 	  @Transactional(readOnly=true)
 	  public Category getCategoryById(int categoryId){
-		  return (Category)getHibernateTemplate().find("from Category").get(0);
+		  return (Category)getHibernateTemplate().find("from Category c where c.id =?", categoryId).get(0);
 	  }
 	  
 	  public int createCategory(Category category){
