@@ -14,7 +14,11 @@
   <div class="blueTruConnectGradient">
     <div class="container">Please Describe Your Issue Specifically</div>
   </div>
-
+  <div class="container">
+     <div class="span-18 colborder">
+         <p>Please provide as much information that is relevant to the issue as possible.</p>
+     </div>
+  </div>
   <div class="container">
     <div id="main-content">
       <div class="span-18 colborder">
