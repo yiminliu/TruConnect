@@ -122,7 +122,6 @@ public class TicketManagerImpl implements TicketManager {
   @Loggable(value = LogLevel.TRACE)
   public void customerUpdateTicket(Ticket ticket) throws TicketManagementException {
 	 User customer = null;
-   	 User assignee = null;
    	 List<TicketNote> notes = (List<TicketNote>)ticket.getNotes();
      try {
       	 if(ticket != null && ticket.getCustomer() != null && ticket.getCustomer().getEmail() == null) {	
@@ -135,7 +134,7 @@ public class TicketManagerImpl implements TicketManager {
 		    note.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	        ticket.addNote(note);		  
 	     }   
-	     if(TicketType.CUSTOMER.equals(ticket.getType()))
+	     if(TicketType.CUSTOMER.equals(ticket.getType()) && !ticket.getStatus().equals(TicketStatus.OPEN))
 	    	 ticket.setStatus(TicketStatus.REOPEN);		 
 	     ticketService.updateTicket(ticket);
     } 
