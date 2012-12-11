@@ -198,6 +198,11 @@ public class CustomerTicketController {
 		return resultModel.getSuccess();
 	}	
 	
+	/**
+	  * This method is used to show update customer ticket form
+	  * 
+	  * @return String
+	  */
 	@RequestMapping(value="/updateCustomerTicket/{ticketId}", method = RequestMethod.GET)
 	public String updateCustomerTicket(@PathVariable("ticketId") int ticketId, Model model){
         Ticket ticket = null;
@@ -223,6 +228,11 @@ public class CustomerTicketController {
 		return "ticket/updateCustomerTicket";	
 	}
 		
+	/**
+	  * This method is used to show update customer ticket form
+	  * 
+	  * @return ModelAndView
+	  */
 	@RequestMapping(value="/updateCustomerTicket/{ticketId}", method = RequestMethod.POST)
 	public ModelAndView processUpdateCustomerTicket(@ModelAttribute("ticket") Ticket ticket, BindingResult result){     	
 		ResultModel resultModelAndView = new ResultModel("ticket/customerCreateTicketSuccess");     	
