@@ -7,5 +7,4 @@
   <li id="nav_paymentHistory"><a href="<spring:url value="/account/payment/history"/>">Payment History</a></li> 
   <li id="nav_paymentMethods"><a href="<spring:url value="/account/payment/methods"/>">Manage Payment Methods</a></li>
   <li id="nav_coupons"><a href="<spring:url value="/coupons"/>">Redeem Coupon</a></li> 
-  <li id="nav_ticket"><a href="<spring:url value="/ticket/customerTicketOverview"/>">Issue Report/Solution Center</a></li> 
-</ul>
+ </ul>
