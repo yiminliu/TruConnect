@@ -25,20 +25,14 @@ public class Category implements java.io.Serializable{
 	@Column(name="kbcategoryid", updatable=false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	Integer id;
-	
 	@Column(name="title")
 	String title;
-	
-	//@Column(name="totalarticles")
 	@Transient
 	int totalArticles;
-	
 	@Column(name="categorytype")
     int categoryType;
-	
 	@Column(name="displayorder")
 	int displyOrder;
-		
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "categories")
 	private Set<Article> articles = new HashSet<Article>();
 	
@@ -61,14 +55,13 @@ public class Category implements java.io.Serializable{
 	}
 
 	public int getTotalArticles() {
-		//return totalArticles;
-		if(articles == null && articles.isEmpty())
+		if(articles == null || articles.isEmpty())
 		   return 0;	
 		else
 	  	   return articles.size();
 	}
 
-	public void setTotalArticles(){//int totalArticles) {
+	public void setTotalArticles(){
 		this.totalArticles = articles.size();
 	}
 

@@ -25,8 +25,7 @@ public class Article implements java.io.Serializable{
 	@Id
 	@Column(name="kbarticleid", updatable=false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	Integer id;
-	
+	Integer id;	
 	@Column(name="subject")
 	String subject;
 	@Column
