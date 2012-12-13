@@ -11,10 +11,10 @@
   <%@ include file="/WEB-INF/includes/header.jsp"%>
   <div class="blueTruConnectGradient">
      <div class="container">       
-            <c:if test="${!empty articleList}">
-               <p>${articleList}</p>
-            </c:if>                 
-        </div>  
+          <c:if test="${!empty articleList}">
+             <p>${articleList}</p>
+          </c:if>                 
+     </div>  
          <c:choose>
             <c:when test="${empty articleList}">
                <div class="container">No article</div>

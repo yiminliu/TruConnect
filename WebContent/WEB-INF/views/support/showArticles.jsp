@@ -9,6 +9,12 @@
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
+  
+  <table bgcolor="DodgerBlue">
+     <tr>         
+         <td class="container" style="color: white;"><h1 style="color:white;">Support</h1></td>
+     </tr>
+  </table>
   <div class="blueTruConnectGradient">     
     <c:if test="${!empty category}">
        <div class="container">Frequently Asked Questions : ${category.title}</div> 

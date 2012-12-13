@@ -9,9 +9,16 @@
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
+  
+  <table bgcolor="DodgerBlue">
+     <tr>         
+         <td class="container" style="color: white;"><h1 style="color:white;">Support</h1></td>
+     </tr>
+  </table>
   <div class="blueTruConnectGradient">
       <div class="container">Knowledgebase</div>     
   </div>
+  
       <div class="container">
          <div id="main-content">
             <div class="span-18 colborder">

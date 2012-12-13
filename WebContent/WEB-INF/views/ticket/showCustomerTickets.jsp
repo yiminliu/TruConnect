@@ -9,16 +9,22 @@
 <body>
   <%@ include file="/WEB-INF/includes/popups.jsp"%>
   <%@ include file="/WEB-INF/includes/header.jsp"%>
+  
+  <table bgcolor="DodgerBlue">
+     <tr>         
+         <td class="container" style="color: white;"><h1 style="color:white;">Support</h1></td>
+     </tr>
+  </table>
   <div class="blueTruConnectGradient">
      <div class="container">
          <c:choose>
             <c:when test="${empty ticketList}">
-               <div class="container">No Issue/Solution Found</div>
+               <div class="container">No Ticket Found</div>
             </c:when>   
             <c:otherwise>
                <c:choose>
                   <c:when test="${!empty customer}">
-                     <div class="container">Information about the issues you reported (${customer.username})</div>
+                     <div class="container">Information about your tickets (${customer.username})</div>
                   </c:when>
                   <c:otherwise> 
                      <div class="container">Ticket Information</div>
@@ -34,7 +40,7 @@
                <table border="1" cellspacing="10">
                  <c:if test="${!empty ticketList}">
                   <tr>
-                      <th>Issue Id</th>
+                      <th>Ticket Id</th>
                       <th>Category</th>
                       <th>Status</th>
                       <th>Created Date</th>
@@ -58,7 +64,7 @@
               <table cellspacing="10">
                 <tr style="float: center">
                    <td> 
-                      <a href="<spring:url value="/ticket/customerTicketOverview" />" class="button action-m"><span>Back To Issue/Solution Page</span></a>
+                      <a href="<spring:url value="/ticket/customerTicketOverview" />" class="button action-m"><span>Back To Ticket/Solution Page</span></a>
                    </td>
                    <td>
                       <a id="account" href="<spring:url value="/account" />" class="button action-m"><span>Back To Account Overview</span></a>

@@ -12,12 +12,17 @@
   
   <c:set var="loggedinUserTicketsCount" value="0" scope="page"/>
   
+   <table bgcolor="DodgerBlue">
+     <tr>         
+         <td class="container" style="color: white;"><h1 style="color:white;">Support</h1></td>
+     </tr>
+  </table>
   <div class="blueTruConnectGradient">    
-    <div class="container">Customer Issue Report and Solution Center</div>  
+    <div class="container">Customer Ticket and Solution Center</div>  
   </div>
   <div class="container">  
     <div id="main-content">  
-      <p>Report any issue or view the status of the issues you reported</p>
+      <p>Create a ticket or view the statuses/solutions of your ticket(s)</p>
       <div class="span-18">
         <c:set var="openTicketsCount" value="0" scope="page"/>
         <c:set var="status" value="OPEN" scope="page"/>
@@ -38,10 +43,10 @@
         <table border="1" cellspacing="10">
            <tr style="float:middle;">
               <td>
-                <a id="createTicket" href="<spring:url value="/ticket/customerCreateTicket" />" class="button action-m"><span>Report An Issue</span></a>
+                <a id="createTicket" href="<spring:url value="/ticket/customerCreateTicket" />" class="button action-m"><span>Create a Ticket</span></a>
               </td> 
               <td>
-                 <a id="showOpenTickets" href="<spring:url value="/ticket/showLoggedinCustomerTickets" />" class="button action-m"><span>View Reported Issues And Solutions</span></a>
+                 <a id="showOpenTickets" href="<spring:url value="/ticket/showLoggedinCustomerTickets" />" class="button action-m"><span>View Ticket Statuses And Solutions</span></a>
               </td>                         
            </tr>
         </table>             
