@@ -11,7 +11,7 @@
   <%@ include file="/WEB-INF/includes/header.jsp"%>
 
     <div class="blueTruConnectGradient">
-       <div class="container"><span style="align: center">Information about the issue: Issue ID: ${ticket.id}</span></div>
+       <div class="container"><span style="align: center">Information about the issue: Issue ID ${ticket.id}</span></div>
     </div>
     <div class="container">
        <div id="main-content">
