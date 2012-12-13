@@ -3,7 +3,6 @@ package com.trc.web.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 
@@ -25,13 +23,9 @@ import com.trc.domain.ticket.TicketNote;
 import com.trc.domain.ticket.TicketPriority;
 import com.trc.domain.ticket.TicketStatus;
 import com.trc.domain.ticket.TicketType;
-//import com.trc.domain.support.ticket.system.impl.TicketManager;
 import com.trc.exception.management.TicketManagementException;
-import com.trc.manager.AccountManager;
 import com.trc.manager.TicketManager;
 import com.trc.manager.UserManager;
-//import com.trc.manager.impl.AccountManager;
-//import com.trc.manager.impl.UserManager;
 import com.trc.user.User;
 import com.trc.web.model.ResultModel;
 
@@ -43,8 +37,6 @@ public class TicketController {
 	private TicketManager ticketManager;	
 	@Autowired 
 	private UserManager userManager;	
-	@Autowired
-	private AccountManager accountManager;
 	
 	/**
 	   * This method is used to show all tickets
@@ -67,7 +59,7 @@ public class TicketController {
 	/**
 	   * This method is used to show the form to create a ticket
 	   * 
-	   * @return ModelAndView
+	   * @return String
 	   */
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
 	@RequestMapping(value="/createTicket", method = RequestMethod.GET)
@@ -160,7 +152,6 @@ public class TicketController {
 		}
 		model.addAttribute("Creator", Creator);
 		model.addAttribute("ticketList", openTicketList);	
-		//return "ticket/ticketOverview";
 		return "ticket/showTickets";
 	}		
 	
@@ -204,7 +195,7 @@ public class TicketController {
 	}
 	
 	 /**
-	   * This method is used to process the ticket form input to create a ticket
+	   * This method is used to create a ticket
 	   * 
 	   * @return ModelAndView
 	   */
@@ -227,7 +218,7 @@ public class TicketController {
 	/**
 	   * This method is used to show the form to search tickets
 	   * 
-	   * @return ModelAndView
+	   * @return String
 	   */
 	@RequestMapping(value="/searchTickets", method=RequestMethod.GET)
 	public String searchTickets(Model model){
@@ -236,7 +227,7 @@ public class TicketController {
 	}
 	
 	/**
-	   * This method is used to show the form to show the searched tickets
+	   * This method is used to search tickets with given criteria
 	   * 
 	   * @return ModelAndView
 	   */
@@ -272,29 +263,11 @@ public class TicketController {
 		return resultModel.getSuccess();   	   
 	}	 
 		
-	/*
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-	@RequestMapping(value="/updateTicket", method = RequestMethod.GET)
-	public String updateTicket(@RequestParam("ticketId") int ticketId, Model model){
-        Ticket ticket = null;
-        int numOfNotes = 0;
-		try{
-			ticket = ticketManager.getTicketById(ticketId);
-		}	    
-		catch(TicketManagementException te){
-			throw new RuntimeException(te);
-		}
-		if(ticket != null) {
-			Collection<TicketNote> notes = ticket.getNotes();
-		    numOfNotes = notes.size();
-	    }    
-		
-		model.addAttribute("ticket", ticket);
-		model.addAttribute("numOfNotes", numOfNotes);
-		return "ticket/updateTicket";	
-	}
-	*/
-	
+	/**
+	   * This method is used to show the form to update a ticket
+	   * 
+	   * @return String
+	   */
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
 	@RequestMapping(value="/updateTicket/{ticketId}", method = RequestMethod.GET)
 	public String updateTicket(@PathVariable("ticketId") int ticketId, Model model){
@@ -316,25 +289,15 @@ public class TicketController {
 	}
 	
 	/**
-	   * This method is used to update a ticket
-	   * 
-	   * @return String
-	   */	
+	  * This method is used to update a ticket
+	  * 
+	  * @return String
+	  */	
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
 	@RequestMapping(value="/updateTicket/{ticketId}", method = RequestMethod.POST)
 	public ModelAndView processUpdateTicket(@ModelAttribute("ticket") Ticket ticket, BindingResult result){
      	ResultModel resultModelAndView = new ResultModel("ticket/ticketDetail");  
-     	Collection<TicketNote> notes = null;
-     	List<TicketNote> adminNotes = new ArrayList<TicketNote>();
-     	try{	       
-     		/*if(ticket != null) {
- 			   notes = ticket.getNotes();
- 	     	   for(TicketNote note : notes){
- 	       		   note.setType(TicketType.ADMIN);
- 	     		   adminNotes.add(note);
- 	     	   }	 
- 			   ticket.setNotes(adminNotes);		    
- 		    }*/				
+     	try{     				
 	       ticketManager.updateTicket(ticket);
 		   resultModelAndView.addObject("ticket", ticketManager.getTicketById(ticket.getId()));
 	    }
@@ -356,7 +319,6 @@ public class TicketController {
 	    	Ticket ticket = ticketManager.getTicketById(ticketId);	    	
 			ticketManager.deleteTicket(ticket);
 		    List<Ticket> ticketList = (List<Ticket>)ticketManager.getAllTickets();
-		
 			model.addAttribute("ticketList", ticketList);
 		}
 		catch(TicketManagementException te){
@@ -374,10 +336,8 @@ public class TicketController {
 	@RequestMapping(value = "/history", method = RequestMethod.GET)
 	public String history(Model model){
 	    try{
-	    	User customer = userManager.getSessionUser();	    	
-			
+	    	User customer = userManager.getSessionUser();			
 		    List<Ticket> ticketList = (List<Ticket>)ticketManager.getTicketByCustomer(customer.getUsername());
-		
 		    model.addAttribute("customer", customer);
 			model.addAttribute("ticketList", ticketList);
 		}
@@ -410,10 +370,20 @@ public class TicketController {
 	public List<TicketType> getTicketType() {
 	return Arrays.asList(TicketType.values());
 	}
+		
+	@ModelAttribute("allTickets")
+	public List<Ticket> getAllTickets(){
+	  try {	
+	      return (List<Ticket>)ticketManager.getAllTickets();	
+	  }
+	  catch(TicketManagementException tme)
+	  { return null;
+	  }
+	}
 	
-	@ModelAttribute("userList")
-	public List<User> getUsers(){
-	  return userManager.getAllUsers();	
+	@ModelAttribute("userNameList")
+	public List<String> getUserNames(){
+	  return userManager.getAllUserNames();	
 	}
 	
 	@ModelAttribute("adminUserList")
