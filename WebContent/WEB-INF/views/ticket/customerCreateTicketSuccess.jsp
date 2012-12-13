@@ -18,7 +18,7 @@
      </tr>
   </table>
   <div class="blueTruConnectGradient">
-    <div class="container">You Issue Report/Update Has Been Submitted Successfully!</div>
+    <div class="container">Your Request Has Been Submitted Successfully!</div>
   </div>
 
   <div class="container">
@@ -29,7 +29,7 @@
            <table>
               <tr>  
                  <td> 
-                   <a href="<spring:url value="/ticket/customerTicketOverview" />" class="button action-m"><span>Back To Issue/Solution Page</span></a>
+                   <a href="<spring:url value="/ticket/customerTicketOverview" />" class="button action-m"><span>Back to Ticket/Solution Center</span></a>
                  </td>                
                  <td>    
                    <a id="account" href="<spring:url value="/account" />" class="button action-m"><span>Back To Account Overview</span></a>
