@@ -18,12 +18,12 @@
   <div class="container">
     <div id="main-content">
       <div class="span-18 colborder">
-        <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Enter Ticket Information</h3>
+        <h3 style="margin-bottom: 10px; padding-bottom: 0px;">Enter Ticket Search Information</h3>
         <form:form id="searchById" cssClass="searchTicket" method="post" commandName="ticket">
            <div class="row">              
               <form:select path="id" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:280px;">
                  <option value="0" selected="selected">Select One</option>
-                    <c:forEach var="aTicket" items="${ticketList}">
+                    <c:forEach var="aTicket" items="${allTickets}">
                        <form:option value="${aTicket.id}">${aTicket.id}</form:option>
                     </c:forEach>
               </form:select>     
@@ -61,7 +61,7 @@
             </div>        
           </div>  
         </form:form>            
-        <form:form id="searchTicketByCreator" cssClass="searchTicket" method="post" commandName="ticket">
+        <!--<form:form id="searchTicketByCreator" cssClass="searchTicket" method="post" commandName="ticket">
            <div class="row">
              <form:select path="creator.username" cssClass="span-8" cssErrorClass="span-8 validationFailed" cssStyle="width:280px;">
                  <option value="0" selected="selected">Select One</option>
@@ -74,7 +74,7 @@
                  <input id="searchTicketByCreatorSubmit" type="submit" name="_eventId_submit" class="hidden" />
               </div>                  
            </div>  
-        </form:form>             
+        </form:form>-->             
         <form:form id="searchTicketByKeyword" cssClass="searchTicket" method="post" commandName="ticket">
            <div class="row">
              <table>
