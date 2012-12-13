@@ -115,7 +115,7 @@ public class SupportController {
    * 
    * @return ModelAndView
    */
-   @RequestMapping(value="/search", method=RequestMethod.POST)
+   @RequestMapping(value={"/search", "/support"}, method=RequestMethod.POST)
    public ModelAndView processSearchArticles(@RequestParam(value="keyword", required=true) String keyword){
 	  ResultModel resultModel = new ResultModel("support/showArticles");
 	  List<Article> articleList = new ArrayList<Article>();	
