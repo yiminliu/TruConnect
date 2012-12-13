@@ -40,12 +40,12 @@
          </table>
          <table style="border: 1px solid lightgrey; background-color: white; width: 60%; CELLPADDING: 10; position:relative; top:10px; right: 10px; float: right;">
             <tr style="border: 1px solid lightgrey; background-color: Azure;">
-                <td id="nav_support" style="padding: 5px;"><a href="<spring:url value="/support/showAllCategories"/>"><h3>Frequently asked questions</h3></a></td> 
+                <td id="nav_support" style="padding: 5px;"><a href="<spring:url value="/support/showAllCategories"/>"><h3>Frequently Asked Questions</h3></a></td> 
             </tr>
          </table>
          <table style="border: 1px solid lightgrey; background-color: white; width: 60%; CELLPADDING: 10; position:relative; top:40px; right: 10px; float: right;">
             <tr style="border: 1px solid lightgrey; background-color: Azure;">
-                <td id="nav_ticket" style="padding: 5px;"><a href="<spring:url value="/ticket/customerTicketOverview"/>"><h3>Contact Us</h3></a></td>          
+                <td id="nav_ticket" style="padding: 5px;"><a href="<spring:url value="/ticket/customerTicketOverview"/>"><h3>Ticket and Solution Center</h3></a></td>          
             </tr>
          </table>       
          <form:form id="search" cssClass="search" method="post" commandName="article">
