@@ -104,14 +104,17 @@ public class HibernateTicketDao extends HibernateDaoSupport implements TicketDao
   @Override
   @Transactional(readOnly=true)
   public Ticket searchTicketById(int ticketId) {
+	  Ticket ticket = null;
 	  try{
 		  //return (Ticket)getHibernateTemplate().get(Ticket.class, ticketId);
-		  return (Ticket)getHibernateTemplate().find("from Ticket t where t.id = ?", ticketId).get(0);
+		  ticket = (Ticket)getHibernateTemplate().find("from Ticket t where t.id = ?", ticketId).get(0);
+		  ticket.setStatus(TicketStatus.IN_PROCESS_LOCKED);		  
 	  }
 	  catch(Exception e){
 		  e.printStackTrace();
 		  return null;
-	  }
+	  }	  
+	  return ticket;
   }
   
   @Override
