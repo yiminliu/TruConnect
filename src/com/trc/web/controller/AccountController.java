@@ -11,11 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trc.domain.support.notification.NotificationMessage;
-import com.trc.domain.support.notification.NotificationPage;
-import com.trc.domain.support.notification.NotificationSchedule;
 import com.trc.manager.AccountManager;
-import com.trc.manager.NotificationManager;
 import com.trc.manager.UserManager;
 import com.trc.security.encryption.SessionEncrypter;
 import com.trc.user.User;
@@ -31,18 +27,14 @@ public class AccountController {
   private UserManager userManager;
   @Autowired
   private AccountManager accountManager;
-  @Autowired
-  private NotificationManager notificationManager;
-
+ 
   @RequestMapping(value = { "", "/", "manage" }, method = RequestMethod.GET)
   public ModelAndView showOverview() {
     ResultModel model = new ResultModel("account/overview");
     User user = userManager.getCurrentUser();
     Overview overview = accountManager.getOverview(user).encodeAccountNo();
-    Set<NotificationMessage> notificationMessages = (Set<NotificationMessage>)notificationManager.getSelectededNotificationMessages("account/overview");
     model.addObject("accountDetails", overview.getAccountDetails());
     model.addObject("paymentHistory", overview.getPaymentDetails());
-    model.addObject("notificationMessages", notificationMessages);
     return model.getSuccess();
   }
 
