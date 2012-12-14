@@ -48,9 +48,9 @@ public class TicketManagerImpl implements TicketManager {
     	if(ticket != null && ticket.getCustomer() != null)
     	   customer = userManager.getUserByUsername(ticket.getCustomer().getUsername());
     	if(ticket.getType() != null && !ticket.getType().equals(TicketType.CUSTOMER)) {
-    	   if(ticket != null && ticket.getAssignee() == null)
-    		  assignee = userManager.getUserByUsername("yiminliu");		
-    	   else
+    	   //if(ticket != null && ticket.getAssignee() == null)
+    	   //	  assignee = userManager.getUserByUsername("yiminliu");		
+    	   //else
               assignee = userManager.getUserByUsername(ticket.getAssignee().getUsername());        	   
     	   ticket.setAssignee(assignee);
     	   ticket.setCreator(userManager.getLoggedInUser());
@@ -147,11 +147,14 @@ public class TicketManagerImpl implements TicketManager {
   @Override
   @Loggable(value = LogLevel.TRACE)
   public Ticket getTicketById(int ticketId) throws TicketManagementException {
-    try {
-      return ticketService.getTicketById(ticketId);
+      Ticket ticket = null;
+	  try {
+           ticket = ticketService.getTicketById(ticketId);
+           ticket.setStatus(TicketStatus.IN_PROCESS_LOCKED);	
     } catch (TicketServiceException e) {
       throw new TicketManagementException(e.getMessage(), e.getCause());
     }
+    return ticket;
   }
 
   @Override
