@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trc.exception.service.AccountServiceException;
+import com.trc.service.AccountServiceModel;
 import com.trc.service.gateway.TruConnectGateway;
 import com.trc.service.gateway.TruConnectUtil;
 import com.trc.user.User;
