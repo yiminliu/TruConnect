@@ -150,7 +150,7 @@ public class TicketManagerImpl implements TicketManager {
       Ticket ticket = null;
 	  try {
            ticket = ticketService.getTicketById(ticketId);
-           ticket.setStatus(TicketStatus.IN_PROCESS_LOCKED);	
+           //ticket.setStatus(TicketStatus.IN_PROCESS_LOCKED);	
     } catch (TicketServiceException e) {
       throw new TicketManagementException(e.getMessage(), e.getCause());
     }
