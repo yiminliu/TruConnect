@@ -31,10 +31,6 @@
         <value>com.trc.domain.ticket.TicketCategory</value>
         <value>com.trc.domain.ticket.TicketNote</value>     
         <value>com.trc.domain.ticket.TicketType</value>    
-        <value>com.trc.domain.support.notification.NotificationSchedule</value>
-        <value>com.trc.domain.support.notification.NotificationMessage</value>
-        <value>com.trc.domain.support.notification.NotificationPage</value>
-        <value>com.trc.domain.support.notification.NotificationDateTime</value> 
         <value>com.trc.domain.support.knowledgebase.Article</value>
         <value>com.trc.domain.support.knowledgebase.ArticleData</value>
         <value>com.trc.domain.support.knowledgebase.ArticleLink</value>
