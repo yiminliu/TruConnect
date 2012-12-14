@@ -40,8 +40,5 @@
   <context:component-scan base-package="com.trc.web.validation.**" />
   <context:component-scan base-package="com.trc.util.logger.**" scoped-proxy="targetClass" />
   <context:component-scan base-package="com.trc.web.session.**" />
-  <context:component-scan base-package="com.trc.service.report.**" />
-    
-  <!-- This bean definition is used to generated Excel view for failed payment report -->
-  <bean name="ExcelPaymentReportView" class="com.trc.service.report.ExcelPaymentReportView"/>
+  <context:component-scan base-package="com.trc.service.report.**" />  
 </beans>
