@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="user" type="com.trc.user.User" />
+
+  <decision-state id="isUserDefined">
+    <if test="user == null" then="fetchUser" else="fetchExistingPaymentMethods" />
+  </decision-state>
+
+  <action-state id="fetchUser">
+    <evaluate expression="userManager.getCurrentUser()" result="user" />
+    <transition on="success" to="fetchExistingPaymentMethods" />
+    <transition on="com.trc.exception.management.UserManagementException" to="generalError" />
+  </action-state>
+
+  <action-state id="fetchExistingPaymentMethods">
+    <evaluate expression="simpleActivationManager.fetchPaymentMethods(user)" result="flowScope.existingPaymentMethods" />
+    <transition on="success" to="ifHasExistingPaymentMethods" />
+    <transition on="com.trc.exception.management.PaymentManagementException" to="generalError" />
+  </action-state>
+
+  <decision-state id="ifHasExistingPaymentMethods">
+    <if test="simpleActivationManager.isListEmpty(existingPaymentMethods)" then="requestPaymentMethod" else="choosePaymentMethod" />
+  </decision-state>
+
+  <subflow-state id="choosePaymentMethod" subflow="choosePaymentMethod">
+    <input name="existingPaymentMethods" value="existingPaymentMethods" />
+    <transition on="success" to="success">
+      <set name="flowScope.creditCardPayment" value="currentEvent.attributes.creditCardPayment" />
+    </transition>
+  </subflow-state>
+
+  <subflow-state id="requestPaymentMethod" subflow="requestPaymentMethod">
+    <transition on="success" to="success">
+      <set name="flowScope.creditCardPayment" value="currentEvent.attributes.creditCardPayment" />
+    </transition>
+  </subflow-state>
+
+  <!-- End States -->
+  <end-state id="success" view="register/success">
+    <output name="creditCardPayment" value="creditCardPayment" />
+  </end-state>
+
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+
+  <end-state id="generalError" view="exception/uncaughtException" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+    <transition on="generalError" to="generalError" validate="false" />
+  </global-transitions>
+</flow>

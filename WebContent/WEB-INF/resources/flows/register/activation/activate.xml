@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <!-- DECLARE REQUIRED OBJECTS -->
+  <var name="sa" class="com.trc.user.activation.simple.SimpleActivation" />
+  <var name="device" class="com.tscp.mvne.Device" />
+
+  <on-start>
+    <set name="sa.user" value="userManager.getCurrentUser()" />
+    <set name="conversationScope.user" value="sa.user" />
+  </on-start>
+
+  <!-- Request user to input device -->
+  <view-state id="requestDeviceInfo" view="register/activation/requestDevice" model="device">
+    <on-entry>
+      <set name="sa.device" value="device" />
+      <evaluate expression="simpleActivationManager.trace('User {} has begun activation', sa.user.email)" />
+      <evaluate expression="sa.device.setLabel(simpleActivationManager.getSuggestedName(sa.user.contactInfo.firstName))" />
+    </on-entry>
+    <transition on="submit" to="chooseOrRequestPaymentMethod">
+      <evaluate expression="simpleActivationManager.trace('ESN {} queued for activation', sa.device.value)" />
+    </transition>
+  </view-state>
+
+  <!-- Choose an existing payment method or enter a new one -->
+  <subflow-state id="chooseOrRequestPaymentMethod" subflow="chooseOrRequestPaymentMethod">
+    <input name="user" value="sa.user" />
+    <transition on="success" to="createAccount">
+      <set name="sa.creditCardPayment" value="currentEvent.attributes.creditCardPayment" />
+    </transition>
+  </subflow-state>
+
+  <!-- Create account for activation based on payment method information -->
+  <action-state id="createAccount">
+    <evaluate expression="simpleActivationManager.createShellAccount(sa)" result="conversationScope.createdAccount" />
+    <transition on="success" to="applyCoupon">
+      <set name="sa.account" value="createdAccount" />
+    </transition>
+    <transition on-exception="com.trc.exception.management.AccountManagementException" to="generalError" />
+    <transition on-exception="com.trc.exception.management.AddressManagementException" to="generalError" />
+  </action-state>
+
+  <!-- Apply coupon if exists -->
+  <action-state id="applyCoupon">
+    <evaluate expression="simpleActivationManager.applyCoupon(sa)" />
+    <transition on="success" to="takePayment" />
+    <transition on-exception="com.trc.exception.management.CouponManagementException" to="editPaymentMethod_applyCoupon">
+      <evaluate expression="simpleActivationManager.addFlowError('flow.coupon.apply', null)" />
+    </transition>
+  </action-state>
+
+  <!-- Take payment -->
+  <action-state id="takePayment">
+    <evaluate expression="simpleActivationManager.makeActivationPayment(sa)" result="flowScope.paymentUnitResponse" />
+    <transition on="success" to="applyContract" />
+    <transition on-exception="com.trc.exception.management.PaymentManagementException" to="editPaymentMethod_takePayment">
+      <evaluate expression="simpleActivationManager.addFlowError('flow.payment.submit', null)" />
+    </transition>
+  </action-state>
+
+  <!-- Apply contract if exists -->
+  <action-state id="applyContract">
+    <evaluate expression="simpleActivationManager.applyContract(sa)" />
+    <transition on="success" to="activateDevice" />
+    <transition on-exception="com.trc.exception.management.CouponManagementException" to="editPaymentMethod_applyCoupon">
+      <evaluate expression="simpleActivationManager.addFlowError('flow.coupon.apply', null)" />
+    </transition>
+  </action-state>
+
+  <subflow-state id="activateDevice" subflow="activateDevice">
+    <input name="sa" value="sa" />
+    <transition on="success" to="createService" />
+    <transition on="unsuccessfulDeviceAddition" to="editDeviceInfo_activateDevice">
+      <evaluate expression="simpleActivationManager.trace('unsuccessful device addition', null)" />
+      <evaluate expression="simpleActivationManager.addFlowError('flow.device.add', null)" />
+    </transition>
+    <transition on="unsuccessfulReservation" to="editDeviceInfo_activateDevice">
+      <evaluate expression="simpleActivationManager.trace('unsuccessful device reservation', null)" />
+      <evaluate expression="simpleActivationManager.addFlowError('flow.device.reservation', null)" />
+    </transition>
+    <transition on="unsuccessfulActivation" to="editDeviceInfo_activateDevice">
+      <evaluate expression="simpleActivationManager.trace('unsuccessful device activation', null)" />
+      <evaluate expression="simpleActivationManager.addFlowError('flow.device.activaiton', null)" />
+    </transition>
+  </subflow-state>
+
+  <action-state id="createService">
+    <evaluate expression="simpleActivationManager.createService(sa)" />
+    <transition on="success" to="sendNotification" />
+    <transition on-exception="com.trc.exception.management.DeviceManagementException" to="rollbackDeviceActivation" />
+  </action-state>
+
+  <action-state id="sendNotification">
+    <evaluate expression="simpleActivationManager.sendActivationNotice(sa)" />
+    <transition on="success" to="success" />
+  </action-state>
+
+  <!-- Re-request payment info if there is an error during payment processing -->
+  <subflow-state id="editPaymentMethod_takePayment" subflow="requestPaymentMethod">
+    <input name="creditCardPayment_edit" value="sa.creditCardPayment" />
+    <transition on="success" to="takePayment">
+      <set name="sa.creditCardPayment" value="currentEvent.attributes.createdCreditCardPayment" />
+    </transition>
+  </subflow-state>
+
+  <subflow-state id="editPaymentMethod_applyCoupon" subflow="requestPaymentMethod">
+    <input name="creditCardPayment_edit" value="sa.creditCardPayment" />
+    <transition on="success" to="applyCoupon">
+      <set name="sa.creditCardPayment" value="currentEvent.attributes.createdCreditCardPayment" />
+    </transition>
+  </subflow-state>
+
+  <!-- Re-request user to input device -->
+  <view-state id="editDeviceInfo_activateDevice" view="register/activation/requestDevice" model="device">
+    <transition on="submit" to="activateDevice">
+      <evaluate expression="simpleActivationManager.trace('ESN {} queued for activation', sa.device.value)" />
+    </transition>
+  </view-state>
+
+  <!-- Rollback device activation if creation of service in Kenan fails -->
+  <action-state id="rollbackDeviceActivation">
+    <evaluate expression="simpleActivationManager.removeDevice(sa)" />
+    <evaluate expression="simpleActivationManager.releaseMdn(sa)" />
+    <transition on="success" to="editDeviceInfo_activateDevice">
+      <evaluate expression="simpleActivationManager.addFlowError('flow.device.service', null)" />
+    </transition>
+    <transition on-exception="com.trc.exception.management.DeviceManagementException" to="generalError" />
+    <transition on-exception="com.trc.exception.management.DeviceDisconnectException" to="generalError">
+      <evaluate expression="simpleActivationManager.sendDisconnectExceptionNotice(sa)" />
+    </transition>
+  </action-state>
+
+  <!-- END STATES -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+
+  <end-state id="success" view="register/success" />
+
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+    <transition on="generalError" to="generalError" validate="false" />
+  </global-transitions>
+</flow>

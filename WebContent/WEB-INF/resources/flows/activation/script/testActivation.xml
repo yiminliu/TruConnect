@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="user" type="com.trc.user.User" />
+  <input name="account" type="com.tscp.mvne.Account" />
+  <input name="deviceInfo" type="com.tscp.mvne.Device" />
+  <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
+
+  <subflow-state id="testActivation" subflow="activateService">
+    <input name="user" value="user" />
+    <input name="account" value="account" />
+    <input name="deviceInfo" value="deviceInfo" />
+    <input name="networkInfo" value="networkInfo" />
+    <transition on="success" to="deactivateService" />
+    <transition on="generalError" to="generalError" />
+  </subflow-state>
+
+  <action-state id="deactivateService">
+    <evaluate expression="deviceFlowManager.disconnectService(networkInfo)" />
+    <transition on="success" to="removeDeviceInfo" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="deactivateService_secondAttempt" />
+  </action-state>
+
+  <action-state id="deactivateService_secondAttempt">
+    <evaluate expression="deviceFlowManager.disconnectService(networkInfo)" />
+    <transition on="success" to="removeDeviceInfo" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="deactivateService_thirdAttempt" />
+  </action-state>
+
+  <action-state id="deactivateService_thirdAttempt">
+    <evaluate expression="deviceFlowManager.disconnectService(networkInfo)" />
+    <transition on="success" to="removeDeviceInfo" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError">
+      <evaluate expression="deviceFlowManager.sendDisconnectErrorNotice(user, deviceInfo, account, networkInfo)" />
+    </transition>
+  </action-state>
+
+  <action-state id="removeDeviceInfo">
+    <evaluate expression="deviceFlowManager.removeDeviceInfo(deviceInfo, account, user)" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+  </action-state>
+
+  <!-- End States -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+  <end-state id="success" view="externalRedirect:contextRelative:/" />
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+  </global-transitions>
+</flow>

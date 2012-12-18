@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <var name="creditCardPayment" class="com.trc.user.activation.CreditCardPayment" />
+
+  <input name="creditCardPayment_edit" type="com.trc.user.activation.CreditCardPayment" />
+
+  <on-start>
+    <set name="creditCardPayment.creditCard.paymentid" value="0" />
+  </on-start>
+
+  <decision-state id="ifGivenInput">
+    <if test="creditCardPayment_edit != null" then="setInput" else="requestPaymentMethod" />
+  </decision-state>
+
+  <action-state id="setInput">
+    <set name="creditCardPayment" value="creditCardPayment_edit" />
+    <transition on="success" to="requestPaymentMethod" />
+  </action-state>
+
+  <view-state id="requestPaymentMethod" view="register/activation/requestCreditCardPayment" model="creditCardPayment">
+    <on-entry>
+      <set name="viewScope.months" value="T(com.trc.config.Config).getMonths()" />
+      <set name="viewScope.years" value="T(com.trc.config.Config).getYearsFuture()" />
+      <set name="viewScope.states" value="T(com.trc.config.Config).getStates()" />
+    </on-entry>
+    <transition on="submit" to="ifHasCoupon" />
+  </view-state>
+
+  <decision-state id="ifHasCoupon">
+    <if test="simpleActivationManager.hasCoupon(creditCardPayment.coupon)" then="fetchCoupon" else="savePaymentMethod" />
+  </decision-state>
+
+  <action-state id="fetchCoupon">
+    <evaluate expression="simpleActivationManager.getCouponByCode(creditCardPayment.coupon)" result="flowScope.fetchedCoupon" />
+    <transition on="success" to="savePaymentMethod">
+      <set name="creditCardPayment.coupon" value="fetchedCoupon" />
+    </transition>
+    <transition on-exception="com.trc.exception.management.CouponManagementException" to="requestPaymentMethod">
+      <evaluate expression="simpleActivationManager.addFlowError('flow.coupon.fetch', null)" />
+    </transition>
+    <transition on-exception="com.trc.exception.management.CouponDoesNotExistException" to="requestPaymentMethod">
+      <evaluate expression="simpleActivationManager.addFlowError('flow.coupon.invalid', null)" />
+    </transition>
+  </action-state>
+
+  <action-state id="savePaymentMethod">
+    <evaluate expression="simpleActivationManager.saveOrUpdatePaymentMethod(user, creditCardPayment.creditCard)" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.management.PaymentManagementException" to="requestCreditCard">
+      <evaluate expression="simpleActivationManager.addFlowError('flow.payment.add', null)" />
+    </transition>
+  </action-state>
+
+  <!-- End States -->
+  <end-state id="success" view="externalRedirect:contextRelative:/">
+    <output name="creditCardPayment" value="creditCardPayment" />
+  </end-state>
+
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+
+  <end-state id="generalError" view="exception/uncaughtException" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+    <transition on="generalError" to="generalError" validate="false" />
+  </global-transitions>
+</flow>

@@ -1,0 +1,245 @@
+/***********************************************
+Style inputs for the entire page
+************************************************/
+input[type="text"],input[type="password"],select {
+	outline: none;
+	transition: all 0.25s ease-in-out;
+	-moz-transition: all 0.25s ease-in-out;
+	-webkit-transition: all 0.25s ease-in-out;
+	height: 20px;
+}
+
+input:focus,select:focus,checkbox:focus {
+	border: 1px solid #56B4EF;
+	box-shadow: 0 0 5px rgba(0, 103, 178, 1);
+	-webkit-box-shadow: 0 0 5px rgba(0, 103, 178, 1);
+	-moz-box-shadow: 0 0 5px rgba(0, 103, 178, 1);
+	height: 20px;
+}
+
+input.displayOnly {
+	border: none;
+}
+
+form label::after {
+	content: ':';
+}
+
+form label.required::after {
+	content: '*';
+	color: #9C1111;
+}
+
+/***********************************************
+Button styles
+************************************************/
+input[type="submit"],input[type="button"],input[type="reset"] {
+	padding: 2px 25px 2px 25px;
+}
+
+form.validatedForm .buttons {
+	text-align: right;
+	clear: both;
+	width: 100%;
+	height: 30px;
+	position: absolute;
+	bottom: 0px;
+	float: right;
+}
+
+form.validatedForm .buttons a.button {
+	float: right;
+}
+
+/***********************************************
+Form definition
+***********************************************/
+form.validatedForm {
+	position: relative;
+	padding-bottom: 60px;
+}
+
+form.validatedForm div.buttons::before {
+	float: left;
+	/* content: '* required information';*/
+	color: #9C1111;
+}
+
+form div.row {
+	clear: both;
+	min-height: 25px;
+	line-height: 25px;
+	padding: 4px;
+	position: relative;
+}
+
+/***********************************************
+Generic Validated Form - 
+formatted to allow for error messages and tooltips
+to appear on the right.
+***********************************************/
+input.validationFailed,select.validationFailed {
+	background: #FAEBE7 !important;
+}
+
+input.validationFailed:focus,select.validationFailed:focus {
+	background: #FAF6F6 !important;
+	box-shadow: 0 0 5px rgba(255, 0, 0, 0.6);
+	-webkit-box-shadow: 0 0 5px rgba(255, 0, 0, 0.6);
+	-moz-box-shadow: 0 0 5px rgba(255, 0, 0, 0.6);
+}
+
+form.validatedForm input[type="text"],form.validatedForm input[type="password"]
+	{
+	width: 300px;
+	margin: 0px;
+	float: left;
+	height: 20px;
+}
+
+form.validatedForm select {
+	width: 303px;
+	margin: 3px 0px 0px 0px;
+	float: left;
+}
+
+form.validatedForm label {
+	float: left;
+	width: 160px;
+	line-height: 25px;
+	font-weight: normal;
+}
+
+form.validatedForm .pushed {
+	margin: 0px 0px 0px 160px;
+}
+
+form.validatedForm span[id*="errors"] {
+	display: list-item;
+	list-style-position: inside;
+	color: #666;
+	font-size: 12px;
+	line-height: 16px;
+	margin-left: 10px;
+}
+
+form.validatedForm .padded {
+	margin: 0.2em 1em 0.2em 1em;
+}
+
+.validation {
+	display: none;
+}
+
+.validation span {
+	display: none;
+	margin-left: 3px;
+	padding-left: 16px;
+}
+
+.validation span.accept {
+	background: url('../../static/images/buttons/icons/accept.png')
+		no-repeat center left;
+}
+
+.validation span.reject {
+	background: url('../../static/images/buttons/icons/error.png') no-repeat
+		center left;
+}
+
+/***********************************************
+ToolTips
+these appear to the right of an input box as a 
+span
+***********************************************/
+form.validatedForm .tooltip {
+	position: absolute;
+	z-index: 10;
+	display: none;
+	width: 220px;
+	margin-left: 8px;
+	padding: 3px;
+	background: #CCE0E6;
+	box-shadow: 1px 1px 10px #999;
+	-moz-box-shadow: 1px 1px 10px #999;
+	-webkit-box-shadow: 1px 1px 10px #999;
+	border: 1px gray dotted;
+}
+
+#main-content form.validatedForm span.tooltip p {
+	line-height: 14px;
+	font-size: 12px;
+	color: #333;
+	margin: 2px;
+}
+
+/** adds a left arrow to the div. left should be set to -border-width x 2 */
+form.validatedForm span.tooltip_bak:after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: -20px;
+	width: 0;
+	height: 0;
+	border-color: transparent #FFFFCC transparent transparent;
+	border-style: solid;
+	border-width: 10px;
+	z-index: 10;
+}
+
+form.validatedForm span.tooltip .ttExample {
+	border-top: 1px #333 dashed;
+	padding-top: 4px;
+	margin-top: 4px;
+	color: #333;
+}
+
+form.validatedForm div.terms {
+	width: 630px;
+	height: 220px;
+	margin: 10px auto 10px auto;
+	border: 1px #404040 solid;
+	height: 200px;
+	padding: 20px;
+	overflow: auto;
+}
+
+form.validatedForm div.registrationTerms {
+	height: 220px;
+	border: 1px #bbb solid;
+	height: 150px;
+	padding: 20px;
+	overflow: auto;
+}
+
+.objectSelect {
+	margin: 8px 0 8px 0;
+	padding: 4px;
+	border: 1px solid;
+	border-radius: 4px;
+}
+
+.highlightSelect {
+	box-shadow: 0 0 8px rgba(0, 103, 178, 1);
+	-webkit-box-shadow: 0 0 px rgba(0, 103, 178, 1);
+	-moz-box-shadow: 0 0 8px rgba(0, 103, 178, 1);
+	border-color: #56B4EF;
+}
+
+.yellowSelect {
+	background-image: -webkit-linear-gradient(#FFEF5E, #EDA121);
+	background-image: -o-linear-gradient(#FFEF5E, #EDA121);
+	background-image: linear-gradient(#FFEF5E, #EDA121);
+	background-position: 0 0;
+	border-color: #ED9200;
+}
+
+.unselected {
+	opacity: 0.75;
+	/*background-image: -webkit-linear-gradient(#FFF9BF, #EBC98F);
+	background-image: -o-linear-gradient(#FFF9BF, #EBC98F);
+	background-image: linear-gradient(#FFF9BF, #EBC98F);
+	background-position: 0 0;
+	border-color: #E8C284;*/
+}

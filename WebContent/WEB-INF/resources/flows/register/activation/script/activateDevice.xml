@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="sa" type="com.trc.user.activation.simple.SimpleActivation" />
+
+  <action-state id="addDevice">
+    <evaluate expression="simpleActivationManager.addDevice(sa)" />
+    <transition on="success" to="reserveAndActivate" />
+    <transition on-exception="com.trc.exception.management.DeviceManagementException" to="unsuccessfulDeviceAddition">
+      <evaluate expression="simpleActivationManager.trace('1', null)" />
+    </transition>
+  </action-state>
+
+  <action-state id="reserveAndActivate">
+    <evaluate expression="simpleActivationManager.reserveAndActivate(sa)" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.management.DeviceReservationException" to="unsuccessfulReservation">
+      <evaluate expression="simpleActivationManager.removeDevice(sa)" />
+    </transition>
+    <transition on-exception="com.trc.exception.management.DeviceActivationException" to="releaseMdn" />
+  </action-state>
+
+  <action-state id="releaseMdn">
+    <evaluate expression="simpleActivationManager.releaseMdn(sa)" />
+    <transition on="success" to="unsuccessfulActivation" />
+    <transition on-exception="com.trc.exception.management.DeviceDisconnectException" to="unsuccessfulActivation">
+      <evaluate expression="simpleActivationManager.notifyReleaseMdnException(sa)" />
+    </transition>
+  </action-state>
+
+  <!-- END STATES -->
+  <end-state id="unsuccessfulDeviceAddition" />
+
+  <end-state id="unsuccessfulReservation">
+    <on-entry>
+      <evaluate expression="simpleActivationManager.trace('2', null)" />
+    </on-entry>
+  </end-state>
+
+  <end-state id="unsuccessfulActivation">
+    <on-entry>
+      <evaluate expression="simpleActivationManager.trace('3', null)" />
+    </on-entry>
+  </end-state>
+
+  <end-state id="success" view="activation/registration/success" />
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+  <end-state id="generalError" view="exception/uncaughtException" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+    <transition on="generalError" to="generalError" validate="false" />
+  </global-transitions>
+</flow>
