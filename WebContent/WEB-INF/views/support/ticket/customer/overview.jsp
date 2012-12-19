@@ -36,7 +36,7 @@
           </div>
         </c:if>
 
-        <a id="createTicket" href="<spring:url value="/ticket/customerCreateTicket" />" class="button action-m"><span>Create a Ticket</span></a>
+        <a id="createTicket" href="<spring:url value="/support/ticket/customer/customerCreateTicket" />" class="button action-m"><span>Create a Ticket</span></a>
 
       </div>
       <!-- span-18 -->

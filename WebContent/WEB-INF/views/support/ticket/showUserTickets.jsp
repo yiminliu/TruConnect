@@ -59,7 +59,7 @@
                   </c:choose>
                   <td>${ticket.assignee.username}</td>
                   <c:if test="${!empty ticket.title}">
-                    <td><a href="<spring:url value="/ticket/ticketDetail/${ticket.id}" />"><img class="info"
+                    <td><a href="<spring:url value="/support/ticket/ticketDetail/${ticket.id}" />"><img class="info"
                         src="<spring:url value="/static/images/buttons/i.png" />" /></a></td>
                   </c:if>
                 </tr>
@@ -71,7 +71,7 @@
           </c:otherwise>
         </c:choose>
 
-        <a id="showOpenTickets" href="<spring:url value="/ticket/ticketOverview" />" class="button action-m"><span>Back</span></a>
+        <a id="showOpenTickets" href="<spring:url value="/support/ticket/ticketOverview" />" class="button action-m"><span>Back</span></a>
 
       </div>
 

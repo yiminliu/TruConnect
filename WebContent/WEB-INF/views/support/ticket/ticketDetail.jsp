@@ -74,7 +74,7 @@
         </table>
 
 
-        <a href="<spring:url value="/ticket/updateTicket/${ticket.id}" />" class="button action-m"><span>Update Ticket</span></a>
+        <a href="<spring:url value="/support/ticket/updateTicket/${ticket.id}" />" class="button action-m"><span>Update Ticket</span></a>
 
         <div class="clear" style="height: 20px;"></div>
 
