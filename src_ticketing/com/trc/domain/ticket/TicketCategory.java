@@ -7,6 +7,8 @@ public enum TicketCategory {
 	ACCOUNT_SETTINGS ("Account settings"),
 	BALANCE_REFUND ("Refund / Dispute Usage"),
 	USAGE ("Usage"),
+	SWAP_DEVICE("Swap service"),
+	TOPUP("Topup"),
 	COUPON ("Coupons"),
 	OTHER ("Other");
 	
