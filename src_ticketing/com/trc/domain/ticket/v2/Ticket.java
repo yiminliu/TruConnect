@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -31,6 +32,7 @@ import com.trc.domain.ticket.TicketPriority;
 import com.trc.domain.ticket.TicketStatus;
 import com.trc.domain.ticket.TicketType;
 
+@MappedSuperclass
 @Entity
 @Table(name = "TICKET")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -59,6 +61,7 @@ abstract class Ticket implements Serializable {
 		this.id = id;
 	}
 
+	
 	@Column(name = "type")
 	@Enumerated(EnumType.STRING)
 	public TicketType getType() {
@@ -68,7 +71,7 @@ abstract class Ticket implements Serializable {
 	public void setType(TicketType type) {
 		this.type = type;
 	}
-
+	
 	@Column(name = "priority")
 	@Enumerated(EnumType.STRING)
 	public TicketPriority getPriority() {
