@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
+import com.trc.dao.TicketDao;
 import com.trc.domain.ticket.Ticket;
 import com.trc.domain.ticket.TicketNote;
 import com.trc.domain.ticket.TicketStatus;
@@ -42,26 +43,34 @@ public class TicketManager implements TicketManagerModel {
 	public int createTicket(Ticket ticket) throws TicketManagementException {
 		User customer = null;
 		User assignee = null;
+		Integer ticketId = null;
 		try {
-			if (ticket != null && ticket.getCustomer() != null)
-				customer = userManager.getUserByUsername(ticket.getCustomer().getUsername());
+			//if (ticket != null && ticket.getCustomer() != null)
+		//		customer = userManager.getUserByUsername(ticket.getCustomer().getUsername());
+			//if (customer == null)
+				//customer = userManager.getCurrentUser();
+			
+			//new TicketDao().getHibernateTemplate().persist(customer);
+			
 			if (ticket.getType() != null && !ticket.getType().equals(TicketType.CUSTOMER)) {
-				// if(ticket != null && ticket.getAssignee() == null)
-				// assignee = userManager.getUserByUsername("yiminliu");
+				 //if(ticket != null && ticket.getAssignee() == null)
+				 //assignee = userManager.getUserByUsername("yiminliu");
 				// else
-				assignee = userManager.getUserByUsername(ticket.getAssignee().getUsername());
-				ticket.setAssignee(assignee);
-				ticket.setCreator(userManager.getLoggedInUser());
+				//assignee = userManager.getUserByUsername(ticket.getAssignee().getUsername());
+				//ticket.setAssignee(assignee);
+				//ticket.setCreator(userManager.getLoggedInUser());
 			}
-			if (customer != null)
-				ticket.setCustomer(customer);
-			else
-				ticket.setCustomer(userManager.getLoggedInUser());
-			ticket.setStatus(TicketStatus.OPEN);
-			return ticketService.createTicket(ticket);
+			//if (customer != null)
+				//ticket.setCustomer(customer);
+			//else
+				//ticket.setCustomer(userManager.getLoggedInUser());
+			ticket.setStatus(TicketStatus.OPEN);			
+			
+			ticketId =ticketService.createTicket(ticket);
 		} catch (TicketServiceException e) {
 			throw new TicketManagementException(e.getMessage(), e.getCause());
 		}
+		return ticketId;
 	}
 
 	@Override
@@ -108,9 +117,13 @@ public class TicketManager implements TicketManagerModel {
 				ticket.addNote(note);
 			}
 			ticketService.updateTicket(ticket);
+			//sendEmailToPreCustomer("yliu@telscape.net", ticket.getId());
 		} catch (TicketServiceException e) {
 			throw new TicketManagementException(e.getMessage(), e.getCause());
 		}
+	    //catch (EmailException e) {
+		//    throw new TicketManagementException(e.getMessage(), e.getCause());
+  	    //}
 	}
 
 	@Override
