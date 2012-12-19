@@ -40,7 +40,7 @@ public class CustomerTicketController {
 	private AccountManager accountManager;
 
 	@Deprecated
-	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	@RequestMapping(value = {"/all", "/overview"}, method = RequestMethod.GET)
 	public ModelAndView showAllTickets() {
 		ResultModel resultModel = new ResultModel("support/ticket/customer/overview");
 		try {
@@ -82,7 +82,7 @@ public class CustomerTicketController {
 	@RequestMapping(value = "/customerCreateTicket", method = RequestMethod.GET)
 	public String customerCreateTicket(Model model) {
 		model.addAttribute("ticket", new Ticket());
-		return "ticket/customer/customerCreateTicket";
+		return "support/ticket/customer/customerCreateTicket";
 	}
 
 	/**
@@ -92,11 +92,14 @@ public class CustomerTicketController {
 	 */
 	@RequestMapping(value = "/customerCreateTicket", method = RequestMethod.POST)
 	public ModelAndView processCustomerCreateTicket(@ModelAttribute("ticket") Ticket ticket, BindingResult result) {
-		ResultModel resultModel = new ResultModel("ticket/customerCreateTicketSuccess");
+		ResultModel resultModel = new ResultModel("support/ticket/customer/customerCreateTicketSuccess");
 		try {
 			if (ticket != null) {
 				ticket.setType(TicketType.CUSTOMER);
 				ticket.setPriority(TicketPriority.HIGH);
+				ticket.setCustomer(userManager.getCurrentUser());
+				ticket.setCreator(userManager.getCurrentUser());
+				System.out.println("in controller, customer="+ticket.getCustomer());
 				ticketManager.createTicket(ticket);
 			}
 			resultModel.addObject("Ticket", ticket);
@@ -121,7 +124,7 @@ public class CustomerTicketController {
 			throw new RuntimeException(te);
 		}
 		model.addAttribute("ticket", ticket);
-		return "ticket/customerTicketDetail";
+		return "support/ticket/customerTicketDetail";
 	}
 
 	/**
@@ -149,7 +152,7 @@ public class CustomerTicketController {
 			throw new RuntimeException(te);
 		}
 		model.addAttribute("ticket", ticket);
-		return "ticket/customerTicketDetail";
+		return "support/ticket/customer/customerTicketDetail";
 	}
 
 	/**
@@ -159,7 +162,7 @@ public class CustomerTicketController {
 	 */
 	@RequestMapping(value = "/customerTicketDetail", method = RequestMethod.POST)
 	public ModelAndView processCustomerTicketDetail(@ModelAttribute("ticket") Ticket ticket, BindingResult result) {
-		ResultModel resultModel = new ResultModel("ticket/customerTicketDetail");
+		ResultModel resultModel = new ResultModel("support/ticket/customer/customerTicketDetail");
 		try {
 			User customer = userManager.getUserByUsername(ticket.getCustomer().getUsername());
 			ticket.setCustomer(customer);
@@ -198,7 +201,7 @@ public class CustomerTicketController {
 		}
 		model.addAttribute("ticket", ticket);
 		model.addAttribute("numOfNotes", numOfNotes);
-		return "ticket/updateCustomerTicket";
+		return "support/ticket/customer/updateCustomerTicket";
 	}
 
 	/**
@@ -209,7 +212,7 @@ public class CustomerTicketController {
 	@Deprecated
 	@RequestMapping(value = "/updateCustomerTicket/{ticketId}", method = RequestMethod.POST)
 	public ModelAndView processUpdateCustomerTicket(@ModelAttribute("ticket") Ticket ticket, BindingResult result) {
-		ResultModel resultModelAndView = new ResultModel("ticket/customerCreateTicketSuccess");
+		ResultModel resultModelAndView = new ResultModel("support/ticket/customer/customerCreateTicketSuccess");
 		try {
 			ticketManager.customerUpdateTicket(ticket);
 			resultModelAndView.addObject("ticket", ticketManager.getTicketById(ticket.getId()));
