@@ -27,17 +27,19 @@ public class TicketService implements TicketServiceModel {
 	/********************************************************************/
 
 	@Override
-	@Transactional
+	//@Transactional
 	public int createTicket(Ticket ticket) throws TicketServiceException {
+		Integer ticketId= null;
 		try {
-			return ticketDao.createTicket(ticket);
+			ticketId = ticketDao.createTicket(ticket);
 		} catch (DataAccessException e) {
 			throw new TicketServiceException("Error creating ticket from DAO layer: " + e.getMessage());
 		}
+		return ticketId;
 	}
 
 	@Override
-	@Transactional
+	//@Transactional
 	public void updateTicket(Ticket ticket) throws TicketServiceException {
 		ticketDao.updateTicket(ticket);
 	}
