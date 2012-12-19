@@ -9,5 +9,6 @@
     <li id="nav_createUser"><a href="<spring:url value="/admin/create" />">Create New Agent</a></li>
     <li id="nav_articles"><a href="<spring:url value="/support/faq/create/article" />">Create Articles</a></li>
     <li id="nav_reports"><a href="<spring:url value="/admin/report" />">Reports</a></li>
+    <li id="nav_coupons"><a href="<spring:url value="/support/ticket/ticketOverview"/>">Ticket And Solution Center</a></li>
   </sec:authorize>
 </ul>
