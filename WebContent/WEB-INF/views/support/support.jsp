@@ -31,7 +31,7 @@
 
           <div style="border: 1px solid lightgrey; background-color: azure; padding: 5px; margin: 20px 0 20px 0;">
             <h3>
-              <a href="<spring:url value="/support/ticket/customerTicketOverview"/>">Ticket and Solution Center</a>
+              <a href="<spring:url value="/support/ticket/customer/overview"/>">Ticket and Solution Center</a>
             </h3>
           </div>
 
