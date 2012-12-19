@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.trc.domain.ticket.Ticket;
 import com.trc.domain.ticket.TicketNote;
 import com.trc.domain.ticket.TicketStatus;
+import com.trc.domain.ticket.TicketType;
 import com.trc.manager.UserManager;
 import com.trc.user.User;
 
@@ -29,7 +30,7 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel {
 	UserManager userManager;// = new UserManager();
 
 	/*************** Ticket Operations ******************/
-
+/*
 	@Override
 	public int createTicket(Ticket ticket) {
 		validateTicket(ticket);
@@ -41,7 +42,54 @@ public class TicketDao extends HibernateDaoSupport implements TicketDaoModel {
 		int id = (Integer) getHibernateTemplate().save(ticket);
 		return id;
 	}
-
+*/
+	
+	
+	@Override
+	public int createTicket(Ticket ticket) {
+		validateTicket(ticket);
+		User customer = null;
+		User creator = null;
+		HibernateTemplate ht = getHibernateTemplate();		
+		if (ticket.getCustomer() != null)
+			customer = userManager.getUserByUsername(ticket.getCustomer().getUsername());//have a persistent customer object
+		//retrieve customer from session
+		else {
+			if ((TicketType.CUSTOMER).equals(ticket.getType())) 
+				customer = userManager.getCurrentUser();
+			else if ((TicketType.INQUIRY).equals(ticket.getType())) 
+				customer = null;
+			if ((TicketType.ADMIN).equals(ticket.getType()) || (TicketType.AGENT).equals(ticket.getType())) 
+				customer = userManager.getLoggedInUser();
+			if(customer != null)
+			   getHibernateTemplate().persist(customer);
+		}	
+		//if(customer != null) 
+	       ticket.setCustomer(customer);
+		//retrieve creator from session
+		if (ticket.getCreator() != null)
+			creator = userManager.getUserByUsername(ticket.getCreator().getUsername());//have a persistent customer object
+		else {
+			if ((TicketType.CUSTOMER).equals(ticket.getType())) 
+				creator = userManager.getCurrentUser();
+			else if ((TicketType.INQUIRY).equals(ticket.getType()))
+				creator = null;
+			if ((TicketType.ADMIN).equals(ticket.getType()) || (TicketType.AGENT).equals(ticket.getType()))
+			    creator = userManager.getSessionUser();
+			if(creator != null)
+			   getHibernateTemplate().persist(creator);			
+		}	
+		//if(creator != null)
+		   ticket.setCreator(creator);		
+		if (ticket.getStatus() == null || ticket.getStatus() != TicketStatus.OPEN)
+			ticket.setStatus(TicketStatus.OPEN);
+		ticket.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		int id = (Integer) ht.save(ticket);
+		return id;
+	}
+	
+		
+		
 	@Override
 	public void updateTicket(Ticket ticket) {
 		validateTicket(ticket);
