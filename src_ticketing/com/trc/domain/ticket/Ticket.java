@@ -67,17 +67,17 @@ public class Ticket implements Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@NotFound(action = NotFoundAction.IGNORE)
-	@JoinColumn(name = "customer", insertable = true, updatable = true, nullable = true)
+	@JoinColumn(name = "customer", insertable = true, updatable = false, nullable = true)
 	private User customer;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@NotFound(action = NotFoundAction.IGNORE)
-	@JoinColumn(name = "creator", insertable = true, updatable = false, nullable = true)
+	@JoinColumn(name = "creator", insertable = true, updatable = false, nullable = true)	
 	private User creator;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@NotFound(action = NotFoundAction.IGNORE)
-	@JoinColumn(name = "assignee", insertable = true, updatable = true, nullable = true)
+	@JoinColumn(name = "assignee", insertable = true, updatable = false, nullable = true)
 	private User assignee;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "ticket")
@@ -111,6 +111,7 @@ public class Ticket implements Serializable {
 		this.title = title;
 	}
 
+	@Enumerated
 	public TicketType getType() {
 		return type;
 	}
@@ -119,6 +120,7 @@ public class Ticket implements Serializable {
 		this.type = type;
 	}
 
+	@Enumerated
 	public TicketCategory getCategory() {
 		return category;
 	}
@@ -139,6 +141,7 @@ public class Ticket implements Serializable {
 		return notes;
 	}
 
+	@Enumerated
 	public TicketStatus getStatus() {
 		return status;
 	}
@@ -151,6 +154,7 @@ public class Ticket implements Serializable {
 		this.customer = customer;
 	}
 
+	@Enumerated
 	public TicketPriority getPriority() {
 		return priority;
 	}
