@@ -30,7 +30,7 @@ import com.trc.user.User;
 import com.trc.web.model.ResultModel;
 
 @Controller
-@RequestMapping("/ticket")
+@RequestMapping("/support/ticket")
 public class TicketController {
 
 	@Autowired
@@ -52,7 +52,7 @@ public class TicketController {
 			throw new RuntimeException(te);
 		}
 		model.addAttribute("ticketList", ticketList);
-		return "ticket/ticketOverview";
+		return "support/ticket/ticketOverview";
 	}
 
 	/**
@@ -66,9 +66,9 @@ public class TicketController {
 		model.addAttribute("ticket", new Ticket());
 		User customer = userManager.getSessionUser();
 		if (customer != null)
-			return "ticket/createTicket";
+			return "support/ticket/createTicket";
 		else
-			return "ticket/preCustomerCreateTicket";
+			return "support/ticket/preCustomerCreateTicket";
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class TicketController {
 			throw new RuntimeException(te);
 		}
 		model.addAttribute("ticketList", ticketList);
-		return "ticket/showTickets";
+		return "support/ticket/showTickets";
 	}
 
 	/**
@@ -96,9 +96,11 @@ public class TicketController {
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
 	@RequestMapping(value = "/createTicket", method = RequestMethod.POST)
 	public ModelAndView processCreateTicket(@ModelAttribute("ticket") Ticket ticket, BindingResult result) {
-		ResultModel resultModel = new ResultModel("ticket/createTicketSuccess");
+		ResultModel resultModel = new ResultModel("support/ticket/createTicketSuccess");
 		if (ticket != null)
 			ticket.setType(TicketType.AGENT);
+		    ticket.setCustomer(userManager.getLoggedInUser());
+		    ticket.setCreator(userManager.getSessionControllingUser());
 		try {
 			ticketManager.createTicket(ticket);
 			resultModel.addObject("Ticket", ticket);
@@ -125,7 +127,7 @@ public class TicketController {
 		}
 		model.addAttribute("assignee", assignee);
 		model.addAttribute("ticketList", ticketList);
-		return "ticket/ticketOverview";
+		return "support/ticket/ticketOverview";
 	}
 
 	/**
@@ -150,7 +152,7 @@ public class TicketController {
 		}
 		model.addAttribute("Creator", Creator);
 		model.addAttribute("ticketList", openTicketList);
-		return "ticket/showTickets";
+		return "support/ticket/showTickets";
 	}
 
 	/**
@@ -167,7 +169,7 @@ public class TicketController {
 			throw new RuntimeException(te);
 		}
 		model.addAttribute("ticket", ticket);
-		return "ticket/ticketDetail";
+		return "support/ticket/ticketDetail";
 	}
 
 	/**
@@ -186,7 +188,7 @@ public class TicketController {
 			throw new RuntimeException(te);
 		}
 		model.addAttribute("ticket", ticket);
-		return "ticket/ticketDetail";
+		return "support/ticket/ticketDetail";
 	}
 
 	/**
@@ -196,7 +198,7 @@ public class TicketController {
 	 */
 	@RequestMapping(value = "/ticketDetail", method = RequestMethod.POST)
 	public ModelAndView processTicketDetail(@ModelAttribute("ticket") Ticket ticket, BindingResult result) {
-		ResultModel resultModel = new ResultModel("ticket/ticketDetail");
+		ResultModel resultModel = new ResultModel("support/ticket/ticketDetail");
 		try {
 			User customer = userManager.getUserByUsername(ticket.getCustomer().getUsername());
 			ticket.setCustomer(customer);
@@ -216,7 +218,7 @@ public class TicketController {
 	@RequestMapping(value = "/searchTickets", method = RequestMethod.GET)
 	public String searchTickets(Model model) {
 		model.addAttribute("ticket", new Ticket());
-		return "ticket/searchTickets";
+		return "support/ticket/searchTickets";
 	}
 
 	/**
@@ -228,7 +230,7 @@ public class TicketController {
 	public ModelAndView processSearchTickets(@RequestParam(value = "ticketId", required = false) Integer ticketId,
 			@RequestParam(value = "keyword", required = false) String keyword, @RequestParam(value = "customerName", required = false) String customerName,
 			@RequestParam(value = "creatorName", required = false) String creatorName) {
-		ResultModel resultModel = new ResultModel("ticket/showTickets");
+		ResultModel resultModel = new ResultModel("support/ticket/showTickets");
 		List<Ticket> ticketList = new ArrayList<Ticket>();
 
 		try {
@@ -272,7 +274,7 @@ public class TicketController {
 		}
 		model.addAttribute("ticket", ticket);
 		model.addAttribute("numOfNotes", numOfNotes);
-		return "ticket/updateTicket";
+		return "support/ticket/updateTicket";
 	}
 
 	/**
@@ -283,7 +285,8 @@ public class TicketController {
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
 	@RequestMapping(value = "/updateTicket/{ticketId}", method = RequestMethod.POST)
 	public ModelAndView processUpdateTicket(@ModelAttribute("ticket") Ticket ticket, BindingResult result) {
-		ResultModel resultModelAndView = new ResultModel("ticket/ticketDetail");
+		//ResultModel resultModelAndView = new ResultModel("support/ticket/ticketDetail");
+		ResultModel resultModelAndView = new ResultModel("support/ticket/ticketOverview");//showAllTickets");
 		try {
 			ticketManager.updateTicket(ticket);
 			resultModelAndView.addObject("ticket", ticketManager.getTicketById(ticket.getId()));
@@ -309,7 +312,7 @@ public class TicketController {
 		} catch (TicketManagementException te) {
 			throw new RuntimeException(te);
 		}
-		return "ticket/ticketOverview";
+		return "support/ticket/ticketOverview";
 	}
 
 	/**
@@ -328,7 +331,7 @@ public class TicketController {
 		} catch (TicketManagementException te) {
 			throw new RuntimeException(te);
 		}
-		return "ticket/showUserTickets";
+		return "support/ticket/showUserTickets";
 	}
 
 	/**
